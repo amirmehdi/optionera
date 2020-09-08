@@ -42,6 +42,10 @@ public class CacheConfiguration {
             createCache(cm, com.gitlab.amirmehdi.domain.User.class.getName());
             createCache(cm, com.gitlab.amirmehdi.domain.Authority.class.getName());
             createCache(cm, com.gitlab.amirmehdi.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.gitlab.amirmehdi.domain.Instrument.class.getName());
+            createCache(cm, com.gitlab.amirmehdi.domain.Instrument.class.getName() + ".options");
+            createCache(cm, com.gitlab.amirmehdi.domain.Option.class.getName());
+            createCache(cm, com.gitlab.amirmehdi.domain.InstrumentHistory.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

@@ -1,0 +1,28 @@
+entity Instrument {
+	name String required,
+    isin String required,
+    tseId String,
+    volatility30 Double,
+	volatility60 Double,
+    volatility90 Double,
+    updatedAt LocalDate
+}
+
+entity Option {
+	name String required,
+    callIsin String required,
+	putIsin String required,
+    expDate LocalDate required,
+    strikePrice Integer required,
+	contractSize Integer
+}
+
+
+relationship OneToMany {
+	Instrument to Option{instrument required},
+}
+
+paginate Option, Instrument with pagination
+paginate Option with infinite-scroll
+
+service Option with serviceClass

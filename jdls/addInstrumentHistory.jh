@@ -1,0 +1,10 @@
+
+entity InstrumentHistory {
+	isin String required,
+    closing Integer,
+    updatedAt LocalDate
+}
+
+paginate InstrumentHistory with pagination
+
+service InstrumentHistory with serviceClass

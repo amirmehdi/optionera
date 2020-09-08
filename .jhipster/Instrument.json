@@ -1,0 +1,58 @@
+{
+    "name": "Instrument",
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "isin",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "tseId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "volatility30",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "volatility60",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "volatility90",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "updatedAt",
+            "fieldType": "LocalDate"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "option",
+            "otherEntityRelationshipName": "instrument",
+            "relationshipName": "option"
+        }
+    ],
+    "changelogDate": "20200908140900",
+    "entityTableName": "instrument",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}

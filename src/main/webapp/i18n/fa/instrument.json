@@ -1,0 +1,29 @@
+{
+  "eTradeApp": {
+    "instrument": {
+      "home": {
+        "title": "Instruments",
+        "createLabel": "Create a new Instrument",
+        "createOrEditLabel": "Create or edit a Instrument",
+        "notFound": "No Instruments found"
+      },
+      "created": "A new Instrument is created with identifier {{ param }}",
+      "updated": "A Instrument is updated with identifier {{ param }}",
+      "deleted": "A Instrument is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Instrument {{ id }}?"
+      },
+      "detail": {
+        "title": "Instrument"
+      },
+      "name": "Name",
+      "isin": "Isin",
+      "tseId": "Tse Id",
+      "volatility30": "Volatility 30",
+      "volatility60": "Volatility 60",
+      "volatility90": "Volatility 90",
+      "updatedAt": "Updated At",
+      "option": "Option"
+    }
+  }
+}
