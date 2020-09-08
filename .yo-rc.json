@@ -1,0 +1,48 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.gitlab.amirmehdi",
+      "nativeLanguage": "fa"
+    },
+    "jhipsterVersion": "6.8.0",
+    "applicationType": "monolith",
+    "baseName": "eTrade",
+    "packageName": "com.gitlab.amirmehdi",
+    "packageFolder": "com/gitlab/amirmehdi",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Memory",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "ZDZjYjZlOTZhZWI2MTBlN2U5NmEwYWM4MDZhMzg3Mjc2YmQxZTAyMmZkY2JhYzMwMzZiYWMyMGIzMDQxZTJkZTY3MDVhMDk2Y2U3MDkxOGM5NmYwYzdiYzNjZWU4N2E4ZDkwNjM4NTI3Njk4MDdmOWE1ZjBmMzYyMDRhMzEwZjg=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "react",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "creationTimestamp": 1599573394438,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [
+      {
+        "name": "generator-jhipster-primeng-charts",
+        "version": "1.2.0"
+      }
+    ],
+    "enableTranslation": true,
+    "nativeLanguage": "fa",
+    "languages": ["fa", "en"],
+    "blueprints": []
+  }
+}
