@@ -2,9 +2,8 @@ import { Moment } from 'moment';
 import { IOption } from 'app/shared/model/option.model';
 
 export interface IInstrument {
-  id?: number;
-  name?: string;
   isin?: string;
+  name?: string;
   tseId?: string;
   volatility30?: number;
   volatility60?: number;

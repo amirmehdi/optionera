@@ -50,6 +50,7 @@ public class Option implements Serializable {
     private Integer contractSize;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "instrument_id")
     @NotNull
     @JsonIgnoreProperties("options")
     private Instrument instrument;

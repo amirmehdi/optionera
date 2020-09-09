@@ -22,7 +22,7 @@ export const InstrumentDetail = (props: IInstrumentDetailProps) => {
     <Row>
       <Col md="8">
         <h2>
-          <Translate contentKey="eTradeApp.instrument.detail.title">Instrument</Translate> [<b>{instrumentEntity.id}</b>]
+          <Translate contentKey="eTradeApp.instrument.detail.title">Instrument</Translate> [<b>{instrumentEntity.isin}</b>]
         </h2>
         <dl className="jh-entity-details">
           <dt>
@@ -77,7 +77,7 @@ export const InstrumentDetail = (props: IInstrumentDetailProps) => {
           </span>
         </Button>
         &nbsp;
-        <Button tag={Link} to={`/instrument/${instrumentEntity.id}/edit`} replace color="primary">
+        <Button tag={Link} to={`/instrument/${instrumentEntity.isin}/edit`} replace color="primary">
           <FontAwesomeIcon icon="pencil-alt" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.edit">Edit</Translate>

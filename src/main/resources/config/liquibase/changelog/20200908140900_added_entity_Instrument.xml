@@ -6,20 +6,17 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    
+
     <!--
         Added the entity Instrument.
     -->
     <changeSet id="20200908140900-1" author="jhipster">
         <createTable tableName="instrument">
-            <column name="id" type="bigint">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
             <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
             <column name="isin" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="tse_id" type="varchar(255)">
                 <constraints nullable="true" />
@@ -58,9 +55,8 @@
                   file="config/liquibase/fake-data/instrument.csv"
                   separator=";"
                   tableName="instrument">
-            <column name="id" type="numeric"/>
-            <column name="name" type="string"/>
             <column name="isin" type="string"/>
+            <column name="name" type="string"/>
             <column name="tse_id" type="string"/>
             <column name="volatility_30" type="numeric"/>
             <column name="volatility_60" type="numeric"/>

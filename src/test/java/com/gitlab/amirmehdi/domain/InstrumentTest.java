@@ -10,13 +10,13 @@ public class InstrumentTest {
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Instrument.class);
         Instrument instrument1 = new Instrument();
-        instrument1.setId(1L);
+        instrument1.setIsin("1");
         Instrument instrument2 = new Instrument();
-        instrument2.setId(instrument1.getId());
+        instrument2.setIsin(instrument1.getIsin());
         assertThat(instrument1).isEqualTo(instrument2);
-        instrument2.setId(2L);
+        instrument2.setIsin("2");
         assertThat(instrument1).isNotEqualTo(instrument2);
-        instrument1.setId(null);
+        instrument1.setIsin(null);
         assertThat(instrument1).isNotEqualTo(instrument2);
     }
 }

@@ -27,7 +27,7 @@ export const InstrumentDeleteDialog = (props: IInstrumentDeleteDialogProps) => {
   }, [props.updateSuccess]);
 
   const confirmDelete = () => {
-    props.deleteEntity(props.instrumentEntity.id);
+    props.deleteEntity(props.instrumentEntity.isin);
   };
 
   const { instrumentEntity } = props;
@@ -37,7 +37,7 @@ export const InstrumentDeleteDialog = (props: IInstrumentDeleteDialogProps) => {
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
       <ModalBody id="eTradeApp.instrument.delete.question">
-        <Translate contentKey="eTradeApp.instrument.delete.question" interpolate={{ id: instrumentEntity.id }}>
+        <Translate contentKey="eTradeApp.instrument.delete.question" interpolate={{ id: instrumentEntity.isin }}>
           Are you sure you want to delete this Instrument?
         </Translate>
       </ModalBody>

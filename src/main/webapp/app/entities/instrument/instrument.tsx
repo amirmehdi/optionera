@@ -17,19 +17,19 @@ export const Instrument = (props: IInstrumentProps) => {
   const [paginationState, setPaginationState] = useState(getSortState(props.location, ITEMS_PER_PAGE));
 
   const getAllEntities = () => {
-    props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
+    props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `updatedAt,${paginationState.order}`);
   };
 
   const sortEntities = () => {
     getAllEntities();
     props.history.push(
-      `${props.location.pathname}?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`
+      `${props.location.pathname}?page=${paginationState.activePage}&sort=updatedAt,${paginationState.order}`
     );
   };
 
   useEffect(() => {
     sortEntities();
-  }, [paginationState.activePage, paginationState.order, paginationState.sort]);
+  }, [paginationState.activePage, paginationState.order, 'updatedAt']);
 
   const sort = p => () => {
     setPaginationState({
@@ -61,14 +61,11 @@ export const Instrument = (props: IInstrumentProps) => {
           <Table responsive>
             <thead>
               <tr>
-                <th className="hand" onClick={sort('id')}>
-                  <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="hand" onClick={sort('isin')}>
+                  <Translate contentKey="eTradeApp.instrument.isin">Isin</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={sort('name')}>
                   <Translate contentKey="eTradeApp.instrument.name">Name</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={sort('isin')}>
-                  <Translate contentKey="eTradeApp.instrument.isin">Isin</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={sort('tseId')}>
                   <Translate contentKey="eTradeApp.instrument.tseId">Tse Id</Translate> <FontAwesomeIcon icon="sort" />
@@ -92,12 +89,11 @@ export const Instrument = (props: IInstrumentProps) => {
               {instrumentList.map((instrument, i) => (
                 <tr key={`entity-${i}`}>
                   <td>
-                    <Button tag={Link} to={`${match.url}/${instrument.id}`} color="link" size="sm">
-                      {instrument.id}
+                    <Button tag={Link} to={`${match.url}/${instrument.isin}`} color="link" size="sm">
+                      {instrument.isin}
                     </Button>
                   </td>
                   <td>{instrument.name}</td>
-                  <td>{instrument.isin}</td>
                   <td>{instrument.tseId}</td>
                   <td>{instrument.volatility30}</td>
                   <td>{instrument.volatility60}</td>
@@ -107,7 +103,7 @@ export const Instrument = (props: IInstrumentProps) => {
                   </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${instrument.id}`} color="info" size="sm">
+                      <Button tag={Link} to={`${match.url}/${instrument.isin}`} color="info" size="sm">
                         <FontAwesomeIcon icon="eye" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.view">View</Translate>
@@ -115,7 +111,7 @@ export const Instrument = (props: IInstrumentProps) => {
                       </Button>
                       <Button
                         tag={Link}
-                        to={`${match.url}/${instrument.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                        to={`${match.url}/${instrument.isin}/edit?page=${paginationState.activePage}&sort=updatedAt,${paginationState.order}`}
                         color="primary"
                         size="sm"
                       >
@@ -126,7 +122,7 @@ export const Instrument = (props: IInstrumentProps) => {
                       </Button>
                       <Button
                         tag={Link}
-                        to={`${match.url}/${instrument.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                        to={`${match.url}/${instrument.isin}/delete?page=${paginationState.activePage}&sort=updatedAt,${paginationState.order}`}
                         color="danger"
                         size="sm"
                       >

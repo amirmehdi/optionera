@@ -72,7 +72,7 @@ export const InstrumentUpdate = (props: IInstrumentUpdateProps) => {
                   <Label for="instrument-id">
                     <Translate contentKey="global.field.id">ID</Translate>
                   </Label>
-                  <AvInput id="instrument-id" type="text" className="form-control" name="id" required readOnly />
+                  <AvInput id="instrument-id" type="text" className="form-control" name="isin" required readOnly />
                 </AvGroup>
               ) : null}
               <AvGroup>

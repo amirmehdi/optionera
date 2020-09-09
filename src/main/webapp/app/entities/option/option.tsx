@@ -132,7 +132,7 @@ export const Option = (props: IOptionProps) => {
                     </td>
                     <td>{option.strikePrice}</td>
                     <td>{option.contractSize}</td>
-                    <td>{option.instrument ? <Link to={`instrument/${option.instrument.id}`}>{option.instrument.id}</Link> : ''}</td>
+                    <td>{option.instrument ? <Link to={`instrument/${option.instrument.isin}`}>{option.instrument.isin}</Link> : ''}</td>
                     <td className="text-right">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`${match.url}/${option.id}`} color="info" size="sm">

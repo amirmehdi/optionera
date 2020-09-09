@@ -7,11 +7,11 @@
         Added the constraints for entity Option.
     -->
     <changeSet id="20200908141000-2" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="instrument_id"
                                  baseTableName="option"
                                  constraintName="fk_option_instrument_id"
-                                 referencedColumnNames="id"
+                                 referencedColumnNames="isin"
                                  referencedTableName="instrument"/>
 
     </changeSet>

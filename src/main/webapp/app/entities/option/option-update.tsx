@@ -161,13 +161,13 @@ export const OptionUpdate = (props: IOptionUpdateProps) => {
                   type="select"
                   className="form-control"
                   name="instrument.id"
-                  value={isNew ? instruments[0] && instruments[0].id : optionEntity.instrument.id}
+                  value={isNew ? instruments[0] && instruments[0].isin : optionEntity.instrument.isin}
                   required
                 >
                   {instruments
                     ? instruments.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.id}
+                        <option value={otherEntity.isin} key={otherEntity.isin}>
+                          {otherEntity.isin}
                         </option>
                       ))
                     : null}

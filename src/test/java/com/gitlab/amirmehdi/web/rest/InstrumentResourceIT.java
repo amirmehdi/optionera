@@ -134,7 +134,7 @@ public class InstrumentResourceIT {
         int databaseSizeBeforeCreate = instrumentRepository.findAll().size();
 
         // Create the Instrument with an existing ID
-        instrument.setId(1L);
+        instrument.setIsin("1");
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restInstrumentMockMvc.perform(post("/api/instruments")
@@ -194,7 +194,7 @@ public class InstrumentResourceIT {
         restInstrumentMockMvc.perform(get("/api/instruments?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(instrument.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(instrument.getIsin())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].isin").value(hasItem(DEFAULT_ISIN)))
             .andExpect(jsonPath("$.[*].tseId").value(hasItem(DEFAULT_TSE_ID)))
@@ -203,7 +203,7 @@ public class InstrumentResourceIT {
             .andExpect(jsonPath("$.[*].volatility90").value(hasItem(DEFAULT_VOLATILITY_90.doubleValue())))
             .andExpect(jsonPath("$.[*].updatedAt").value(hasItem(DEFAULT_UPDATED_AT.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getInstrument() throws Exception {
@@ -211,12 +211,11 @@ public class InstrumentResourceIT {
         instrumentRepository.saveAndFlush(instrument);
 
         // Get the instrument
-        restInstrumentMockMvc.perform(get("/api/instruments/{id}", instrument.getId()))
+        restInstrumentMockMvc.perform(get("/api/instruments/{id}", instrument.getIsin()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(instrument.getId().intValue()))
+            .andExpect(jsonPath("$.isin").value(instrument.getIsin()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.isin").value(DEFAULT_ISIN))
             .andExpect(jsonPath("$.tseId").value(DEFAULT_TSE_ID))
             .andExpect(jsonPath("$.volatility30").value(DEFAULT_VOLATILITY_30.doubleValue()))
             .andExpect(jsonPath("$.volatility60").value(DEFAULT_VOLATILITY_60.doubleValue()))
@@ -241,7 +240,7 @@ public class InstrumentResourceIT {
         int databaseSizeBeforeUpdate = instrumentRepository.findAll().size();
 
         // Update the instrument
-        Instrument updatedInstrument = instrumentRepository.findById(instrument.getId()).get();
+        Instrument updatedInstrument = instrumentRepository.findById(instrument.getIsin()).get();
         // Disconnect from session so that the updates on updatedInstrument are not directly saved in db
         em.detach(updatedInstrument);
         updatedInstrument
@@ -298,7 +297,7 @@ public class InstrumentResourceIT {
         int databaseSizeBeforeDelete = instrumentRepository.findAll().size();
 
         // Delete the instrument
-        restInstrumentMockMvc.perform(delete("/api/instruments/{id}", instrument.getId())
+        restInstrumentMockMvc.perform(delete("/api/instruments/{id}", instrument.getIsin())
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 

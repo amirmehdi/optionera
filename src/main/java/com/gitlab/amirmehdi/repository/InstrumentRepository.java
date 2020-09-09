@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface InstrumentRepository extends JpaRepository<Instrument, Long> {
+public interface InstrumentRepository extends JpaRepository<Instrument, String> {
     Instrument findOneByName(String name);
 }

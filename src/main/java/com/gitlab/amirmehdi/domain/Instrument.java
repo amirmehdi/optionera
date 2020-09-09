@@ -20,13 +20,7 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Instrument implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
-
     @NotNull
     @Column(name = "isin", nullable = false)
     private String isin;
@@ -55,12 +49,17 @@ public class Instrument implements Serializable {
     private Set<Option> options = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
-        return id;
+    public String getIsin() {
+        return isin;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIsin(String isin) {
+        this.isin = isin;
+    }
+
+    public Instrument isin(String id) {
+        this.isin = id;
+        return this;
     }
 
     public String getName() {
@@ -74,19 +73,6 @@ public class Instrument implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getIsin() {
-        return isin;
-    }
-
-    public Instrument isin(String isin) {
-        this.isin = isin;
-        return this;
-    }
-
-    public void setIsin(String isin) {
-        this.isin = isin;
     }
 
     public String getTseId() {
@@ -188,7 +174,7 @@ public class Instrument implements Serializable {
         if (!(o instanceof Instrument)) {
             return false;
         }
-        return id != null && id.equals(((Instrument) o).id);
+        return isin != null && isin.equals(((Instrument) o).isin);
     }
 
     @Override
@@ -199,9 +185,8 @@ public class Instrument implements Serializable {
     @Override
     public String toString() {
         return "Instrument{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
             ", isin='" + getIsin() + "'" +
+            ", name='" + getName() + "'" +
             ", tseId='" + getTseId() + "'" +
             ", volatility30=" + getVolatility30() +
             ", volatility60=" + getVolatility60() +

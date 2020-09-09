@@ -66,7 +66,7 @@ export const OptionDetail = (props: IOptionDetailProps) => {
           <dt>
             <Translate contentKey="eTradeApp.option.instrument">Instrument</Translate>
           </dt>
-          <dd>{optionEntity.instrument ? optionEntity.instrument.id : ''}</dd>
+          <dd>{optionEntity.instrument ? optionEntity.instrument.isin : ''}</dd>
         </dl>
         <Button tag={Link} to="/option" replace color="info">
           <FontAwesomeIcon icon="arrow-left" />{' '}
