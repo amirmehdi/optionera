@@ -1,9 +1,8 @@
 package com.gitlab.amirmehdi.repository;
 
-import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.domain.Option;
-
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -16,4 +15,9 @@ import java.util.Optional;
 @Repository
 public interface OptionRepository extends JpaRepository<Option, Long> {
     Optional<Option> findByInstrumentIsinAndStrikePriceAndExpDate(String isin, Integer strikePrice, LocalDate expDate);
+
+    @Query(value = "select o from Option o where" +
+        " o.callIsin=?1 or " +
+        " o.putIsin=?1 ")
+    Optional<Option> findByCallIsinOrPutIsin(String isin);
 }

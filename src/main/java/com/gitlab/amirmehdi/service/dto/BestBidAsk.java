@@ -1,12 +1,11 @@
 package com.gitlab.amirmehdi.service.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BestBidAsk {
     private int bidPrice;
     private int askPrice;
