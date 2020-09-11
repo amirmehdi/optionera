@@ -9,7 +9,6 @@
         "main": "Entities",
         "instrument": "Instrument",
         "option": "Option",
-        "instrumentHistory": "Instrument History",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

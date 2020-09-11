@@ -15,9 +15,9 @@
 
 logging:
   level:
-    ROOT: DEBUG
+    ROOT: INFO
     io.github.jhipster: DEBUG
-    com.gitlab.amirmehdi: DEBUG
+    com.gitlab.amirmehdi: INFO
 
 spring:
   profiles:
@@ -48,7 +48,7 @@ spring:
       enabled: false
   jpa:
     database-platform: io.github.jhipster.domain.util.FixedH2Dialect
-    show-sql: true
+    show-sql: false
     properties:
       hibernate.id.new_generator_mappings: true
       hibernate.connection.provider_disables_autocommit: true
