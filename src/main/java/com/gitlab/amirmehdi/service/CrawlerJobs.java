@@ -8,6 +8,8 @@ import com.gitlab.amirmehdi.repository.InstrumentRepository;
 import com.gitlab.amirmehdi.repository.OptionRepository;
 import com.gitlab.amirmehdi.service.dto.BestBidAsk;
 import com.gitlab.amirmehdi.service.dto.OptionStockWatch;
+import com.gitlab.amirmehdi.service.dto.core.BidAsk;
+import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import com.gitlab.amirmehdi.service.dto.tsemodels.BDatum;
 import com.gitlab.amirmehdi.service.dto.tsemodels.OptionResponse;
 import com.gitlab.amirmehdi.util.DateUtil;
@@ -21,6 +23,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -70,6 +73,10 @@ public class CrawlerJobs {
             .stream()
             .collect(Collectors.groupingBy(optionStats -> optionStats.getOption().getInstrument().getIsin()))
             .forEach((s, optionStats) -> {
+                StockWatch stockWatch = market.getStockWatch(s);
+                if (stockWatch == null || stockWatch.getState() == null || !stockWatch.getIsin().equals("A")) {
+                    return;
+                }
                 List<String> optionsIsin = new ArrayList<>();
                 for (OptionStats optionStat : optionStats) {
                     optionsIsin.add(optionStat.getOption().getCallIsin());
@@ -103,6 +110,12 @@ public class CrawlerJobs {
                 throwable.printStackTrace();
             } else {
                 market.saveAllStockWatch(stockWatches);
+                Map<String, StockWatch> map = stockWatches.stream()
+                    .collect(Collectors.toMap(StockWatch::getIsin, stockWatch -> stockWatch));
+                optionStatService.findAll().parallelStream().forEach(optionStats -> {
+                    optionStats.setBaseStockWatch(map.get(optionStats.getOption().getInstrument().getIsin()));
+                    optionStatService.save(optionStats);
+                });
             }
         });
         omidRLCConsumer.getBulkBidAsk(instruments).whenCompleteAsync((bidAsks, throwable) -> {
@@ -110,11 +123,17 @@ public class CrawlerJobs {
                 throwable.printStackTrace();
             } else {
                 market.saveAllBidAsk(bidAsks);
+                Map<String, BidAsk> map = bidAsks.stream()
+                    .collect(Collectors.toMap(BidAsk::getIsin, bidAsk -> bidAsk));
+                optionStatService.findAll().parallelStream().forEach(optionStats -> {
+                    optionStats.setBaseBidAsk(map.get(optionStats.getOption().getInstrument().getIsin()));
+                    optionStatService.save(optionStats);
+                });
             }
         });
     }
 
-    @Scheduled(fixedRate = 60000*5)
+    @Scheduled(fixedRate = 60000 * 5)
     public void realTimeDataUpdater() {
         OptionResponse optionResponse = restTemplate.getForEntity("https://tse.ir/json/MarketWatch/data_7.json?1599569952420?1599569952420", OptionResponse.class).getBody();
         optionResponse.getBData()
@@ -215,13 +234,13 @@ public class CrawlerJobs {
         int zeroNum = 0;
         if (number.contains("K")) {
             zeroNum += 3;
-            number = number.replace("K","");
+            number = number.replace("K", "");
         } else if (number.contains("M")) {
             zeroNum += 6;
-            number = number.replace("M","");
+            number = number.replace("M", "");
         } else if (number.contains("B")) {
             zeroNum += 9;
-            number = number.replace("B","");
+            number = number.replace("B", "");
         }
         if (number.contains(".")) {
             zeroNum--;
