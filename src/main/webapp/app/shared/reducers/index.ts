@@ -21,6 +21,10 @@ import option, {
   OptionState
 } from 'app/entities/option/option.reducer';
 // prettier-ignore
+// prettier-ignore
+import optionStats, {
+  OptionStatsState
+} from 'app/entities/option-stats/option-stats.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -36,6 +40,7 @@ export interface IRootState {
   readonly settings: SettingsState;
   readonly instrument: InstrumentState;
   readonly option: OptionState;
+  readonly optionStats: OptionStatsState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -53,6 +58,7 @@ const rootReducer = combineReducers<IRootState>({
   settings,
   instrument,
   option,
+  optionStats,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

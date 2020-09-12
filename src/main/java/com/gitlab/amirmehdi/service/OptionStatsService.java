@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Log4j2
-public class OptionStatService {
+public class OptionStatsService {
     //key : instrument.id + strike + date
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
@@ -34,7 +34,7 @@ public class OptionStatService {
     private final String key = "OPTION_STAT";
     public static final double RISK_FREE = 0.35;
 
-    public OptionStatService(RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper, OptionRepository optionRepository) {
+    public OptionStatsService(RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper, OptionRepository optionRepository) {
         this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
         this.optionRepository = optionRepository;

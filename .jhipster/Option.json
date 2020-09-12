@@ -41,25 +41,17 @@
             "fieldType": "Integer"
         }
     ],
-    "relationships": [
-        {
-            "relationshipType": "many-to-one",
-            "otherEntityName": "instrument",
-            "otherEntityRelationshipName": "option",
-            "relationshipValidateRules": "required",
-            "relationshipName": "instrument",
-            "otherEntityField": "id"
-        }
-    ],
+    "relationships": [],
     "changelogDate": "20200908141000",
     "entityTableName": "option",
     "dto": "no",
     "pagination": "infinite-scroll",
-    "service": "serviceClass",
+    "service": "no",
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,
     "readOnly": false,
     "embedded": false,
     "clientRootFolder": "",
-    "applications": "*"
+    "applications": "*",
+    "skipServer": true
 }

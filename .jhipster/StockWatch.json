@@ -1,0 +1,74 @@
+{
+    "name": "StockWatch",
+    "fields": [
+        {
+            "fieldName": "isin",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "last",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "closing",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "first",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "high",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "low",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "min",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "max",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "string",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "tradeValue",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "tradeVolume",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "tradesCount",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "referencePrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "dateTime",
+            "fieldType": "Instant"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20200912144800",
+    "entityTableName": "stock_watch",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*",
+    "skipServer": true
+}

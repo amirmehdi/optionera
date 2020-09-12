@@ -13,7 +13,9 @@ import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import com.gitlab.amirmehdi.service.dto.tsemodels.BDatum;
 import com.gitlab.amirmehdi.service.dto.tsemodels.OptionResponse;
 import com.gitlab.amirmehdi.util.DateUtil;
+import com.gitlab.amirmehdi.util.MarketTimeUtil;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
@@ -22,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,16 +36,19 @@ public class CrawlerJobs {
     private final RestTemplate restTemplate;
     private final OptionRepository optionRepository;
     private final InstrumentRepository instrumentRepository;
-    private final OptionStatService optionStatService;
+    private final OptionStatsService optionStatsService;
     private final OmidRLCConsumer omidRLCConsumer;
     private final Market market;
 
+    @Value("${application.market-time-check}")
+    private boolean marketTimeCheck;
 
-    public CrawlerJobs(RestTemplate restTemplate, OptionRepository optionRepository, InstrumentRepository instrumentRepository, OptionStatService optionStatService, OmidRLCConsumer omidRLCConsumer, Market market) {
+
+    public CrawlerJobs(RestTemplate restTemplate, OptionRepository optionRepository, InstrumentRepository instrumentRepository, OptionStatsService optionStatsService, OmidRLCConsumer omidRLCConsumer, Market market) {
         this.restTemplate = restTemplate;
         this.optionRepository = optionRepository;
         this.instrumentRepository = instrumentRepository;
-        this.optionStatService = optionStatService;
+        this.optionStatsService = optionStatsService;
         this.omidRLCConsumer = omidRLCConsumer;
         this.market = market;
     }
@@ -51,10 +57,10 @@ public class CrawlerJobs {
 //        value = {Exception.class},
 //        maxAttempts = 5,
 //        backoff = @Backoff(delay = 5 * 1000))
-    @Scheduled(fixedRate = 5000)
-    public void listener() throws Exception {
-//        if (!MarketTimeUtil.isMarketOpen(new Date()))
-//            return;
+    @Scheduled(fixedRateString = "${application.market-updater-fixed-rate}")
+    public void marketUpdater() throws Exception {
+        if (marketTimeCheck && !MarketTimeUtil.isMarketOpen(new Date()))
+            return;
 
         StopWatch stopWatch = new StopWatch("market listener");
         stopWatch.start("updateInstrumentMarket");
@@ -69,7 +75,7 @@ public class CrawlerJobs {
     }
 
     private void updateOptionStats() {
-        optionStatService.findAll()
+        optionStatsService.findAll()
             .stream()
             .collect(Collectors.groupingBy(optionStats -> optionStats.getOption().getInstrument().getIsin()))
             .forEach((s, optionStats) -> {
@@ -87,14 +93,14 @@ public class CrawlerJobs {
                         if (throwable != null) {
                             throwable.printStackTrace();
                         } else {
-                            optionStatService.saveAllBidAsk(bidAsks);
+                            optionStatsService.saveAllBidAsk(bidAsks);
                         }
                     });
                     omidRLCConsumer.getBulkStockWatch(optionsIsin).whenCompleteAsync((stockWatches, throwable) -> {
                         if (throwable != null) {
                             throwable.printStackTrace();
                         } else {
-                            optionStatService.saveAllStockWatch(stockWatches);
+                            optionStatsService.saveAllStockWatch(stockWatches);
                         }
                     });
                 } catch (JsonProcessingException e) {
@@ -112,9 +118,9 @@ public class CrawlerJobs {
                 market.saveAllStockWatch(stockWatches);
                 Map<String, StockWatch> map = stockWatches.stream()
                     .collect(Collectors.toMap(StockWatch::getIsin, stockWatch -> stockWatch));
-                optionStatService.findAll().parallelStream().forEach(optionStats -> {
+                optionStatsService.findAll().parallelStream().forEach(optionStats -> {
                     optionStats.setBaseStockWatch(map.get(optionStats.getOption().getInstrument().getIsin()));
-                    optionStatService.save(optionStats);
+                    optionStatsService.save(optionStats);
                 });
             }
         });
@@ -125,16 +131,18 @@ public class CrawlerJobs {
                 market.saveAllBidAsk(bidAsks);
                 Map<String, BidAsk> map = bidAsks.stream()
                     .collect(Collectors.toMap(BidAsk::getIsin, bidAsk -> bidAsk));
-                optionStatService.findAll().parallelStream().forEach(optionStats -> {
+                optionStatsService.findAll().parallelStream().forEach(optionStats -> {
                     optionStats.setBaseBidAsk(map.get(optionStats.getOption().getInstrument().getIsin()));
-                    optionStatService.save(optionStats);
+                    optionStatsService.save(optionStats);
                 });
             }
         });
     }
 
-    @Scheduled(fixedRate = 60000 * 5)
-    public void realTimeDataUpdater() {
+    @Scheduled(fixedRateString = "${application.open-interest-updater-fixed-rate}")
+    public void openInterestUpdater() {
+        if (marketTimeCheck && !MarketTimeUtil.isMarketOpen(new Date()))
+            return;
         OptionResponse optionResponse = restTemplate.getForEntity("https://tse.ir/json/MarketWatch/data_7.json?1599569952420?1599569952420", OptionResponse.class).getBody();
         optionResponse.getBData()
             .stream()
@@ -147,7 +155,7 @@ public class CrawlerJobs {
                         String[] dateInfo = bDatum.getVal().get(1).getV().split("-")[2].split("/");
                         LocalDate expDate = DateUtil.convertToLocalDateViaInstant(DateUtil.jalaliToGregorian(Integer.parseInt(yearNormalizer(dateInfo[0])), Integer.parseInt(dateInfo[1]), Integer.parseInt(dateInfo[2])));
                         int strike = Integer.parseInt(bDatum.getVal().get(1).getV().split("-")[1]);
-                        OptionStats optionStat = optionStatService.findById(instrument.getIsin(), strike, expDate);
+                        OptionStats optionStat = optionStatsService.findById(instrument.getIsin(), strike, expDate);
                         if (optionStat == null) {
                             optionStat = OptionStats.builder()
                                 .option(new Option()
@@ -197,7 +205,7 @@ public class CrawlerJobs {
                         return optionStat;
                     })
                     .collect(Collectors.toList());
-                optionStatService.saveAll(optionStats);
+                optionStatsService.saveAll(optionStats);
             });
     }
 

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-import static com.gitlab.amirmehdi.service.OptionStatService.RISK_FREE;
+import static com.gitlab.amirmehdi.service.OptionStatsService.RISK_FREE;
 
 @Data
 @Builder
@@ -36,18 +36,30 @@ public class OptionStats {
     private BidAsk baseBidAsk;
 
     public int getBlackScholes30() {
+        if (checkForNull()) {
+            return 0;
+        }
         return (int) BlackScholes.callPrice(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility30(), ChronoUnit.DAYS.between(option.getExpDate(), LocalDate.now()));
     }
 
     public int getBlackScholes60() {
+        if (checkForNull()) {
+            return 0;
+        }
         return (int) BlackScholes.callPrice(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility60(), ChronoUnit.DAYS.between(option.getExpDate(), LocalDate.now()));
     }
 
     public int getBlackScholes90() {
+        if (checkForNull()) {
+            return 0;
+        }
         return (int) BlackScholes.callPrice(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility90(), ChronoUnit.DAYS.between(option.getExpDate(), LocalDate.now()));
     }
 
     public float getPutAskPriceToBS() {
+        if (checkForNull()) {
+            return 0;
+        }
         if (putBidAsk.getAskPrice() == 0) {
             return Integer.MAX_VALUE;
         }
@@ -55,6 +67,9 @@ public class OptionStats {
     }
 
     public float getCallAskPriceToBS() {
+        if (checkForNull()) {
+            return 0;
+        }
         if (callBidAsk.getAskPrice() == 0) {
             return Integer.MAX_VALUE;
         }
@@ -62,6 +77,9 @@ public class OptionStats {
     }
 
     public Integer getCallEffectivePrice() {
+        if (checkForNull()) {
+            return 0;
+        }
         if (callBidAsk.getAskPrice() == 0) {
             return Integer.MAX_VALUE;
         }
@@ -69,6 +87,9 @@ public class OptionStats {
     }
 
     public Integer getPutEffectivePrice() {
+        if (checkForNull()) {
+            return 0;
+        }
         if (putBidAsk.getAskPrice() == 0) {
             return Integer.MAX_VALUE;
         }
@@ -76,12 +97,20 @@ public class OptionStats {
     }
 
     public float getCallBreakEven() {
+        if (checkForNull()) {
+            return 0;
+        }
         return (float) (Math.round((getCallEffectivePrice() * 1.0 / baseStockWatch.getLast() - 1) * 100.0) / 100.0);
     }
 
     public float getPutBreakEven() {
+        if (checkForNull()) {
+            return 0;
+        }
         return (float) (Math.round((getPutEffectivePrice() * 1.0 / baseStockWatch.getLast() - 1) * 100.0) / 100.0);
     }
 
-
+    private boolean checkForNull() {
+        return option == null || putBidAsk == null || baseStockWatch == null || baseBidAsk == null || callBidAsk == null || callStockWatch == null || putStockWatch == null;
+    }
 }

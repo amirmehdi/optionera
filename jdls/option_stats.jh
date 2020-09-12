@@ -1,3 +1,11 @@
+entity Option {
+	name String required,
+    callIsin String required,
+	putIsin String required,
+    expDate LocalDate required,
+    strikePrice Integer required,
+	contractSize Integer
+}
 
 entity OptionStats {
 
@@ -49,7 +57,8 @@ relationship ManyToOne {
 }
 
 
-paginate OptionStats with pagination
-paginate OptionStats with infinite-scroll
+paginate Option, OptionStats with pagination
+paginate Option,OptionStats with infinite-scroll
 
-skipServer OptionStats
+
+skipServer OptionStats,Option

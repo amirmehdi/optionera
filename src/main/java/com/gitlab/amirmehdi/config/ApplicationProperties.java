@@ -16,4 +16,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ApplicationProperties {
     private String oaBaseUrl;
     private int oaRateLimit;
+
+    private boolean marketTimeCheck;
+    private String marketUpdaterFixedRate;
+    private String openInterestUpdaterFixedRate;
 }
