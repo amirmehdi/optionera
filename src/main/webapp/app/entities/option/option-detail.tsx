@@ -94,6 +94,18 @@ export const OptionDetail = (props: IOptionDetailProps) => {
           </dt>
           <dd>{optionEntity.putAskToBS}</dd>
           <dt>
+            <span id="callLeverage">
+              <Translate contentKey="eTradeApp.option.callLeverage">Call Leverage</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.callLeverage}</dd>
+          <dt>
+            <span id="putLeverage">
+              <Translate contentKey="eTradeApp.option.putLeverage">Put Leverage</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.putLeverage}</dd>
+          <dt>
             <Translate contentKey="eTradeApp.option.instrument">Instrument</Translate>
           </dt>
           <dd>{optionEntity.instrument ? optionEntity.instrument.isin : ''}</dd>

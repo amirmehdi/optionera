@@ -1,1 +1,1 @@
-id;name;call_isin;put_isin;exp_date;strike_price;contract_size;call_in_the_money;call_break_even;put_break_even;call_ask_to_bs;put_ask_to_bs;instrument_id
+id;name;call_isin;put_isin;exp_date;strike_price;contract_size;call_in_the_money;call_break_even;put_break_even;call_ask_to_bs;put_ask_to_bs;call_leverage;put_leverage;instrument_id

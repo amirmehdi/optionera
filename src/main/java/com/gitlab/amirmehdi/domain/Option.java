@@ -67,6 +67,14 @@ public class Option implements Serializable {
     @Column(name = "put_ask_to_bs", nullable = false)
     private Float putAskToBS;
 
+    @NotNull
+    @Column(name = "call_leverage", nullable = false)
+    private Float callLeverage;
+
+    @NotNull
+    @Column(name = "put_leverage", nullable = false)
+    private Float putLeverage;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "instrument_id")
     @NotNull
@@ -225,6 +233,32 @@ public class Option implements Serializable {
         this.putAskToBS = putAskToBS;
     }
 
+    public Float getCallLeverage() {
+        return callLeverage;
+    }
+
+    public Option callLeverage(Float callLeverage) {
+        this.callLeverage = callLeverage;
+        return this;
+    }
+
+    public void setCallLeverage(Float callLeverage) {
+        this.callLeverage = callLeverage;
+    }
+
+    public Float getPutLeverage() {
+        return putLeverage;
+    }
+
+    public Option putLeverage(Float putLeverage) {
+        this.putLeverage = putLeverage;
+        return this;
+    }
+
+    public void setPutLeverage(Float putLeverage) {
+        this.putLeverage = putLeverage;
+    }
+
     public Instrument getInstrument() {
         return instrument;
     }
@@ -270,6 +304,8 @@ public class Option implements Serializable {
             ", putBreakEven=" + getPutBreakEven() +
             ", callAskToBS=" + getCallAskToBS() +
             ", putAskToBS=" + getPutAskToBS() +
+            ", callLeverage=" + getCallLeverage() +
+            ", putLeverage=" + getPutLeverage() +
             "}";
     }
 }

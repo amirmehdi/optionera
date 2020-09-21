@@ -27,6 +27,8 @@
       "putBreakEven": "Put Break Even",
       "callAskToBS": "Call Ask To BS",
       "putAskToBS": "Put Ask To BS",
+      "callLeverage": "Call Leverage",
+      "putLeverage": "Put Leverage",
       "instrument": "Instrument"
     }
   }

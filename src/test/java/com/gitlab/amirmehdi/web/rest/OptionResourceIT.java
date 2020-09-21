@@ -75,6 +75,14 @@ public class OptionResourceIT {
     private static final Float UPDATED_PUT_ASK_TO_BS = 2F;
     private static final Float SMALLER_PUT_ASK_TO_BS = 1F - 1F;
 
+    private static final Float DEFAULT_CALL_LEVERAGE = 1F;
+    private static final Float UPDATED_CALL_LEVERAGE = 2F;
+    private static final Float SMALLER_CALL_LEVERAGE = 1F - 1F;
+
+    private static final Float DEFAULT_PUT_LEVERAGE = 1F;
+    private static final Float UPDATED_PUT_LEVERAGE = 2F;
+    private static final Float SMALLER_PUT_LEVERAGE = 1F - 1F;
+
     @Autowired
     private OptionRepository optionRepository;
 
@@ -110,7 +118,9 @@ public class OptionResourceIT {
             .callBreakEven(DEFAULT_CALL_BREAK_EVEN)
             .putBreakEven(DEFAULT_PUT_BREAK_EVEN)
             .callAskToBS(DEFAULT_CALL_ASK_TO_BS)
-            .putAskToBS(DEFAULT_PUT_ASK_TO_BS);
+            .putAskToBS(DEFAULT_PUT_ASK_TO_BS)
+            .callLeverage(DEFAULT_CALL_LEVERAGE)
+            .putLeverage(DEFAULT_PUT_LEVERAGE);
         // Add required entity
         Instrument instrument;
         if (TestUtil.findAll(em, Instrument.class).isEmpty()) {
@@ -141,7 +151,9 @@ public class OptionResourceIT {
             .callBreakEven(UPDATED_CALL_BREAK_EVEN)
             .putBreakEven(UPDATED_PUT_BREAK_EVEN)
             .callAskToBS(UPDATED_CALL_ASK_TO_BS)
-            .putAskToBS(UPDATED_PUT_ASK_TO_BS);
+            .putAskToBS(UPDATED_PUT_ASK_TO_BS)
+            .callLeverage(UPDATED_CALL_LEVERAGE)
+            .putLeverage(UPDATED_PUT_LEVERAGE);
         // Add required entity
         Instrument instrument;
         if (TestUtil.findAll(em, Instrument.class).isEmpty()) {
@@ -186,6 +198,8 @@ public class OptionResourceIT {
         assertThat(testOption.getPutBreakEven()).isEqualTo(DEFAULT_PUT_BREAK_EVEN);
         assertThat(testOption.getCallAskToBS()).isEqualTo(DEFAULT_CALL_ASK_TO_BS);
         assertThat(testOption.getPutAskToBS()).isEqualTo(DEFAULT_PUT_ASK_TO_BS);
+        assertThat(testOption.getCallLeverage()).isEqualTo(DEFAULT_CALL_LEVERAGE);
+        assertThat(testOption.getPutLeverage()).isEqualTo(DEFAULT_PUT_LEVERAGE);
     }
 
     @Test
@@ -390,6 +404,42 @@ public class OptionResourceIT {
 
     @Test
     @Transactional
+    public void checkCallLeverageIsRequired() throws Exception {
+        int databaseSizeBeforeTest = optionRepository.findAll().size();
+        // set the field null
+        option.setCallLeverage(null);
+
+        // Create the Option, which fails.
+
+        restOptionMockMvc.perform(post("/api/options")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(option)))
+            .andExpect(status().isBadRequest());
+
+        List<Option> optionList = optionRepository.findAll();
+        assertThat(optionList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkPutLeverageIsRequired() throws Exception {
+        int databaseSizeBeforeTest = optionRepository.findAll().size();
+        // set the field null
+        option.setPutLeverage(null);
+
+        // Create the Option, which fails.
+
+        restOptionMockMvc.perform(post("/api/options")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(option)))
+            .andExpect(status().isBadRequest());
+
+        List<Option> optionList = optionRepository.findAll();
+        assertThat(optionList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllOptions() throws Exception {
         // Initialize the database
         optionRepository.saveAndFlush(option);
@@ -409,7 +459,9 @@ public class OptionResourceIT {
             .andExpect(jsonPath("$.[*].callBreakEven").value(hasItem(DEFAULT_CALL_BREAK_EVEN.doubleValue())))
             .andExpect(jsonPath("$.[*].putBreakEven").value(hasItem(DEFAULT_PUT_BREAK_EVEN.doubleValue())))
             .andExpect(jsonPath("$.[*].callAskToBS").value(hasItem(DEFAULT_CALL_ASK_TO_BS.doubleValue())))
-            .andExpect(jsonPath("$.[*].putAskToBS").value(hasItem(DEFAULT_PUT_ASK_TO_BS.doubleValue())));
+            .andExpect(jsonPath("$.[*].putAskToBS").value(hasItem(DEFAULT_PUT_ASK_TO_BS.doubleValue())))
+            .andExpect(jsonPath("$.[*].callLeverage").value(hasItem(DEFAULT_CALL_LEVERAGE.doubleValue())))
+            .andExpect(jsonPath("$.[*].putLeverage").value(hasItem(DEFAULT_PUT_LEVERAGE.doubleValue())));
     }
 
     @Test
@@ -433,7 +485,9 @@ public class OptionResourceIT {
             .andExpect(jsonPath("$.callBreakEven").value(DEFAULT_CALL_BREAK_EVEN.doubleValue()))
             .andExpect(jsonPath("$.putBreakEven").value(DEFAULT_PUT_BREAK_EVEN.doubleValue()))
             .andExpect(jsonPath("$.callAskToBS").value(DEFAULT_CALL_ASK_TO_BS.doubleValue()))
-            .andExpect(jsonPath("$.putAskToBS").value(DEFAULT_PUT_ASK_TO_BS.doubleValue()));
+            .andExpect(jsonPath("$.putAskToBS").value(DEFAULT_PUT_ASK_TO_BS.doubleValue()))
+            .andExpect(jsonPath("$.callLeverage").value(DEFAULT_CALL_LEVERAGE.doubleValue()))
+            .andExpect(jsonPath("$.putLeverage").value(DEFAULT_PUT_LEVERAGE.doubleValue()));
     }
 
 
@@ -1479,6 +1533,216 @@ public class OptionResourceIT {
 
     @Test
     @Transactional
+    public void getAllOptionsByCallLeverageIsEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callLeverage equals to DEFAULT_CALL_LEVERAGE
+        defaultOptionShouldBeFound("callLeverage.equals=" + DEFAULT_CALL_LEVERAGE);
+
+        // Get all the optionList where callLeverage equals to UPDATED_CALL_LEVERAGE
+        defaultOptionShouldNotBeFound("callLeverage.equals=" + UPDATED_CALL_LEVERAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallLeverageIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callLeverage not equals to DEFAULT_CALL_LEVERAGE
+        defaultOptionShouldNotBeFound("callLeverage.notEquals=" + DEFAULT_CALL_LEVERAGE);
+
+        // Get all the optionList where callLeverage not equals to UPDATED_CALL_LEVERAGE
+        defaultOptionShouldBeFound("callLeverage.notEquals=" + UPDATED_CALL_LEVERAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallLeverageIsInShouldWork() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callLeverage in DEFAULT_CALL_LEVERAGE or UPDATED_CALL_LEVERAGE
+        defaultOptionShouldBeFound("callLeverage.in=" + DEFAULT_CALL_LEVERAGE + "," + UPDATED_CALL_LEVERAGE);
+
+        // Get all the optionList where callLeverage equals to UPDATED_CALL_LEVERAGE
+        defaultOptionShouldNotBeFound("callLeverage.in=" + UPDATED_CALL_LEVERAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallLeverageIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callLeverage is not null
+        defaultOptionShouldBeFound("callLeverage.specified=true");
+
+        // Get all the optionList where callLeverage is null
+        defaultOptionShouldNotBeFound("callLeverage.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallLeverageIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callLeverage is greater than or equal to DEFAULT_CALL_LEVERAGE
+        defaultOptionShouldBeFound("callLeverage.greaterThanOrEqual=" + DEFAULT_CALL_LEVERAGE);
+
+        // Get all the optionList where callLeverage is greater than or equal to UPDATED_CALL_LEVERAGE
+        defaultOptionShouldNotBeFound("callLeverage.greaterThanOrEqual=" + UPDATED_CALL_LEVERAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallLeverageIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callLeverage is less than or equal to DEFAULT_CALL_LEVERAGE
+        defaultOptionShouldBeFound("callLeverage.lessThanOrEqual=" + DEFAULT_CALL_LEVERAGE);
+
+        // Get all the optionList where callLeverage is less than or equal to SMALLER_CALL_LEVERAGE
+        defaultOptionShouldNotBeFound("callLeverage.lessThanOrEqual=" + SMALLER_CALL_LEVERAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallLeverageIsLessThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callLeverage is less than DEFAULT_CALL_LEVERAGE
+        defaultOptionShouldNotBeFound("callLeverage.lessThan=" + DEFAULT_CALL_LEVERAGE);
+
+        // Get all the optionList where callLeverage is less than UPDATED_CALL_LEVERAGE
+        defaultOptionShouldBeFound("callLeverage.lessThan=" + UPDATED_CALL_LEVERAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallLeverageIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callLeverage is greater than DEFAULT_CALL_LEVERAGE
+        defaultOptionShouldNotBeFound("callLeverage.greaterThan=" + DEFAULT_CALL_LEVERAGE);
+
+        // Get all the optionList where callLeverage is greater than SMALLER_CALL_LEVERAGE
+        defaultOptionShouldBeFound("callLeverage.greaterThan=" + SMALLER_CALL_LEVERAGE);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutLeverageIsEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putLeverage equals to DEFAULT_PUT_LEVERAGE
+        defaultOptionShouldBeFound("putLeverage.equals=" + DEFAULT_PUT_LEVERAGE);
+
+        // Get all the optionList where putLeverage equals to UPDATED_PUT_LEVERAGE
+        defaultOptionShouldNotBeFound("putLeverage.equals=" + UPDATED_PUT_LEVERAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutLeverageIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putLeverage not equals to DEFAULT_PUT_LEVERAGE
+        defaultOptionShouldNotBeFound("putLeverage.notEquals=" + DEFAULT_PUT_LEVERAGE);
+
+        // Get all the optionList where putLeverage not equals to UPDATED_PUT_LEVERAGE
+        defaultOptionShouldBeFound("putLeverage.notEquals=" + UPDATED_PUT_LEVERAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutLeverageIsInShouldWork() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putLeverage in DEFAULT_PUT_LEVERAGE or UPDATED_PUT_LEVERAGE
+        defaultOptionShouldBeFound("putLeverage.in=" + DEFAULT_PUT_LEVERAGE + "," + UPDATED_PUT_LEVERAGE);
+
+        // Get all the optionList where putLeverage equals to UPDATED_PUT_LEVERAGE
+        defaultOptionShouldNotBeFound("putLeverage.in=" + UPDATED_PUT_LEVERAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutLeverageIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putLeverage is not null
+        defaultOptionShouldBeFound("putLeverage.specified=true");
+
+        // Get all the optionList where putLeverage is null
+        defaultOptionShouldNotBeFound("putLeverage.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutLeverageIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putLeverage is greater than or equal to DEFAULT_PUT_LEVERAGE
+        defaultOptionShouldBeFound("putLeverage.greaterThanOrEqual=" + DEFAULT_PUT_LEVERAGE);
+
+        // Get all the optionList where putLeverage is greater than or equal to UPDATED_PUT_LEVERAGE
+        defaultOptionShouldNotBeFound("putLeverage.greaterThanOrEqual=" + UPDATED_PUT_LEVERAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutLeverageIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putLeverage is less than or equal to DEFAULT_PUT_LEVERAGE
+        defaultOptionShouldBeFound("putLeverage.lessThanOrEqual=" + DEFAULT_PUT_LEVERAGE);
+
+        // Get all the optionList where putLeverage is less than or equal to SMALLER_PUT_LEVERAGE
+        defaultOptionShouldNotBeFound("putLeverage.lessThanOrEqual=" + SMALLER_PUT_LEVERAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutLeverageIsLessThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putLeverage is less than DEFAULT_PUT_LEVERAGE
+        defaultOptionShouldNotBeFound("putLeverage.lessThan=" + DEFAULT_PUT_LEVERAGE);
+
+        // Get all the optionList where putLeverage is less than UPDATED_PUT_LEVERAGE
+        defaultOptionShouldBeFound("putLeverage.lessThan=" + UPDATED_PUT_LEVERAGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutLeverageIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putLeverage is greater than DEFAULT_PUT_LEVERAGE
+        defaultOptionShouldNotBeFound("putLeverage.greaterThan=" + DEFAULT_PUT_LEVERAGE);
+
+        // Get all the optionList where putLeverage is greater than SMALLER_PUT_LEVERAGE
+        defaultOptionShouldBeFound("putLeverage.greaterThan=" + SMALLER_PUT_LEVERAGE);
+    }
+
+
+    @Test
+    @Transactional
     public void getAllOptionsByInstrumentIsEqualToSomething() throws Exception {
         // Get already existing entity
         Instrument instrument = option.getInstrument();
@@ -1510,7 +1774,9 @@ public class OptionResourceIT {
             .andExpect(jsonPath("$.[*].callBreakEven").value(hasItem(DEFAULT_CALL_BREAK_EVEN.doubleValue())))
             .andExpect(jsonPath("$.[*].putBreakEven").value(hasItem(DEFAULT_PUT_BREAK_EVEN.doubleValue())))
             .andExpect(jsonPath("$.[*].callAskToBS").value(hasItem(DEFAULT_CALL_ASK_TO_BS.doubleValue())))
-            .andExpect(jsonPath("$.[*].putAskToBS").value(hasItem(DEFAULT_PUT_ASK_TO_BS.doubleValue())));
+            .andExpect(jsonPath("$.[*].putAskToBS").value(hasItem(DEFAULT_PUT_ASK_TO_BS.doubleValue())))
+            .andExpect(jsonPath("$.[*].callLeverage").value(hasItem(DEFAULT_CALL_LEVERAGE.doubleValue())))
+            .andExpect(jsonPath("$.[*].putLeverage").value(hasItem(DEFAULT_PUT_LEVERAGE.doubleValue())));
 
         // Check, that the count call also returns 1
         restOptionMockMvc.perform(get("/api/options/count?sort=id,desc&" + filter))
@@ -1568,7 +1834,9 @@ public class OptionResourceIT {
             .callBreakEven(UPDATED_CALL_BREAK_EVEN)
             .putBreakEven(UPDATED_PUT_BREAK_EVEN)
             .callAskToBS(UPDATED_CALL_ASK_TO_BS)
-            .putAskToBS(UPDATED_PUT_ASK_TO_BS);
+            .putAskToBS(UPDATED_PUT_ASK_TO_BS)
+            .callLeverage(UPDATED_CALL_LEVERAGE)
+            .putLeverage(UPDATED_PUT_LEVERAGE);
 
         restOptionMockMvc.perform(put("/api/options")
             .contentType(MediaType.APPLICATION_JSON)
@@ -1590,6 +1858,8 @@ public class OptionResourceIT {
         assertThat(testOption.getPutBreakEven()).isEqualTo(UPDATED_PUT_BREAK_EVEN);
         assertThat(testOption.getCallAskToBS()).isEqualTo(UPDATED_CALL_ASK_TO_BS);
         assertThat(testOption.getPutAskToBS()).isEqualTo(UPDATED_PUT_ASK_TO_BS);
+        assertThat(testOption.getCallLeverage()).isEqualTo(UPDATED_CALL_LEVERAGE);
+        assertThat(testOption.getPutLeverage()).isEqualTo(UPDATED_PUT_LEVERAGE);
     }
 
     @Test

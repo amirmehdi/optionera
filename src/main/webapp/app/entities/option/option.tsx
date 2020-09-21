@@ -125,6 +125,12 @@ export const Option = (props: IOptionProps) => {
                   <th className="hand" onClick={sort('putAskToBS')}>
                     <Translate contentKey="eTradeApp.option.putAskToBS">Put Ask To BS</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
+                  <th className="hand" onClick={sort('callLeverage')}>
+                    <Translate contentKey="eTradeApp.option.callLeverage">Call Leverage</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('putLeverage')}>
+                    <Translate contentKey="eTradeApp.option.putLeverage">Put Leverage</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
                   <th>
                     <Translate contentKey="eTradeApp.option.instrument">Instrument</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
@@ -152,6 +158,8 @@ export const Option = (props: IOptionProps) => {
                     <td>{option.putBreakEven}</td>
                     <td>{option.callAskToBS}</td>
                     <td>{option.putAskToBS}</td>
+                    <td>{option.callLeverage}</td>
+                    <td>{option.putLeverage}</td>
                     <td>{option.instrument ? <Link to={`instrument/${option.instrument.isin}`}>{option.instrument.name}</Link> : ''}</td>
                     <td className="text-right">
                       <div className="btn-group flex-btn-group-container">

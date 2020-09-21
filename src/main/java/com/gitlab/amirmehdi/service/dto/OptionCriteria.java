@@ -43,6 +43,10 @@ public class OptionCriteria implements Serializable, Criteria {
 
     private FloatFilter putAskToBS;
 
+    private FloatFilter callLeverage;
+
+    private FloatFilter putLeverage;
+
     private StringFilter instrumentId;
 
     public OptionCriteria() {
@@ -61,6 +65,8 @@ public class OptionCriteria implements Serializable, Criteria {
         this.putBreakEven = other.putBreakEven == null ? null : other.putBreakEven.copy();
         this.callAskToBS = other.callAskToBS == null ? null : other.callAskToBS.copy();
         this.putAskToBS = other.putAskToBS == null ? null : other.putAskToBS.copy();
+        this.callLeverage = other.callLeverage == null ? null : other.callLeverage.copy();
+        this.putLeverage = other.putLeverage == null ? null : other.putLeverage.copy();
         this.instrumentId = other.instrumentId == null ? null : other.instrumentId.copy();
     }
 
@@ -165,6 +171,22 @@ public class OptionCriteria implements Serializable, Criteria {
         this.putAskToBS = putAskToBS;
     }
 
+    public FloatFilter getCallLeverage() {
+        return callLeverage;
+    }
+
+    public void setCallLeverage(FloatFilter callLeverage) {
+        this.callLeverage = callLeverage;
+    }
+
+    public FloatFilter getPutLeverage() {
+        return putLeverage;
+    }
+
+    public void setPutLeverage(FloatFilter putLeverage) {
+        this.putLeverage = putLeverage;
+    }
+
     public StringFilter getInstrumentId() {
         return instrumentId;
     }
@@ -196,6 +218,8 @@ public class OptionCriteria implements Serializable, Criteria {
             Objects.equals(putBreakEven, that.putBreakEven) &&
             Objects.equals(callAskToBS, that.callAskToBS) &&
             Objects.equals(putAskToBS, that.putAskToBS) &&
+            Objects.equals(callLeverage, that.callLeverage) &&
+            Objects.equals(putLeverage, that.putLeverage) &&
             Objects.equals(instrumentId, that.instrumentId);
     }
 
@@ -214,6 +238,8 @@ public class OptionCriteria implements Serializable, Criteria {
         putBreakEven,
         callAskToBS,
         putAskToBS,
+        callLeverage,
+        putLeverage,
         instrumentId
         );
     }
@@ -233,6 +259,8 @@ public class OptionCriteria implements Serializable, Criteria {
                 (putBreakEven != null ? "putBreakEven=" + putBreakEven + ", " : "") +
                 (callAskToBS != null ? "callAskToBS=" + callAskToBS + ", " : "") +
                 (putAskToBS != null ? "putAskToBS=" + putAskToBS + ", " : "") +
+                (callLeverage != null ? "callLeverage=" + callLeverage + ", " : "") +
+                (putLeverage != null ? "putLeverage=" + putLeverage + ", " : "") +
                 (instrumentId != null ? "instrumentId=" + instrumentId + ", " : "") +
             "}";
     }

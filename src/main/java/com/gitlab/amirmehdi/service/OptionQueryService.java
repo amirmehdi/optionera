@@ -1,9 +1,11 @@
 package com.gitlab.amirmehdi.service;
 
-import java.util.List;
-
-import javax.persistence.criteria.JoinType;
-
+import com.gitlab.amirmehdi.domain.Instrument_;
+import com.gitlab.amirmehdi.domain.Option;
+import com.gitlab.amirmehdi.domain.Option_;
+import com.gitlab.amirmehdi.repository.OptionRepository;
+import com.gitlab.amirmehdi.service.dto.OptionCriteria;
+import io.github.jhipster.service.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -12,12 +14,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
-import com.gitlab.amirmehdi.domain.Option;
-import com.gitlab.amirmehdi.domain.*; // for static metamodels
-import com.gitlab.amirmehdi.repository.OptionRepository;
-import com.gitlab.amirmehdi.service.dto.OptionCriteria;
+import javax.persistence.criteria.JoinType;
+import java.util.List;
 
 /**
  * Service for executing complex queries for {@link Option} entities in the database.
@@ -117,6 +115,12 @@ public class OptionQueryService extends QueryService<Option> {
             }
             if (criteria.getPutAskToBS() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getPutAskToBS(), Option_.putAskToBS));
+            }
+            if (criteria.getCallLeverage() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCallLeverage(), Option_.callLeverage));
+            }
+            if (criteria.getPutLeverage() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getPutLeverage(), Option_.putLeverage));
             }
             if (criteria.getInstrumentId() != null) {
                 specification = specification.and(buildSpecification(criteria.getInstrumentId(),

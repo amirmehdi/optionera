@@ -219,6 +219,36 @@ export const OptionUpdate = (props: IOptionUpdateProps) => {
                 />
               </AvGroup>
               <AvGroup>
+                <Label id="callLeverageLabel" for="option-callLeverage">
+                  <Translate contentKey="eTradeApp.option.callLeverage">Call Leverage</Translate>
+                </Label>
+                <AvField
+                  id="option-callLeverage"
+                  type="string"
+                  className="form-control"
+                  name="callLeverage"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
+                <Label id="putLeverageLabel" for="option-putLeverage">
+                  <Translate contentKey="eTradeApp.option.putLeverage">Put Leverage</Translate>
+                </Label>
+                <AvField
+                  id="option-putLeverage"
+                  type="string"
+                  className="form-control"
+                  name="putLeverage"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
                 <Label for="option-instrument">
                   <Translate contentKey="eTradeApp.option.instrument">Instrument</Translate>
                 </Label>

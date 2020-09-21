@@ -14,6 +14,8 @@ export interface IOption {
   putBreakEven?: number;
   callAskToBS?: number;
   putAskToBS?: number;
+  callLeverage?: number;
+  putLeverage?: number;
   instrument?: IInstrument;
 }
 
