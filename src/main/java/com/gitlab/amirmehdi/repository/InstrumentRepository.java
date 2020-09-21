@@ -1,9 +1,10 @@
 package com.gitlab.amirmehdi.repository;
 
 import com.gitlab.amirmehdi.domain.Instrument;
-
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 /**
  * Spring Data  repository for the Instrument entity.
@@ -11,5 +12,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface InstrumentRepository extends JpaRepository<Instrument, String> {
-    Instrument findOneByName(String name);
+    Optional<Instrument> findOneByName(String name);
 }

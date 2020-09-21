@@ -3,14 +3,13 @@ package com.gitlab.amirmehdi.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Objects;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A Instrument.
@@ -43,10 +42,6 @@ public class Instrument implements Serializable {
 
     @Column(name = "updated_at")
     private LocalDate updatedAt;
-
-    @OneToMany(mappedBy = "instrument")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-    private Set<Option> options = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getIsin() {
@@ -139,32 +134,6 @@ public class Instrument implements Serializable {
     public void setUpdatedAt(LocalDate updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-    public Set<Option> getOptions() {
-        return options;
-    }
-
-    public Instrument options(Set<Option> options) {
-        this.options = options;
-        return this;
-    }
-
-    public Instrument addOption(Option option) {
-        this.options.add(option);
-        option.setInstrument(this);
-        return this;
-    }
-
-    public Instrument removeOption(Option option) {
-        this.options.remove(option);
-        option.setInstrument(null);
-        return this;
-    }
-
-    public void setOptions(Set<Option> options) {
-        this.options = options;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {

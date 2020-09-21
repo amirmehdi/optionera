@@ -110,6 +110,21 @@ export const Option = (props: IOptionProps) => {
                   <th className="hand" onClick={sort('contractSize')}>
                     <Translate contentKey="eTradeApp.option.contractSize">Contract Size</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
+                  <th className="hand" onClick={sort('callInTheMoney')}>
+                    <Translate contentKey="eTradeApp.option.callInTheMoney">Call In The Money</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('callBreakEven')}>
+                    <Translate contentKey="eTradeApp.option.callBreakEven">Call Break Even</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('putBreakEven')}>
+                    <Translate contentKey="eTradeApp.option.putBreakEven">Put Break Even</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('callAskToBS')}>
+                    <Translate contentKey="eTradeApp.option.callAskToBS">Call Ask To BS</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('putAskToBS')}>
+                    <Translate contentKey="eTradeApp.option.putAskToBS">Put Ask To BS</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
                   <th>
                     <Translate contentKey="eTradeApp.option.instrument">Instrument</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
@@ -132,6 +147,11 @@ export const Option = (props: IOptionProps) => {
                     </td>
                     <td>{option.strikePrice}</td>
                     <td>{option.contractSize}</td>
+                    <td>{option.callInTheMoney ? 'true' : 'false'}</td>
+                    <td>{option.callBreakEven}</td>
+                    <td>{option.putBreakEven}</td>
+                    <td>{option.callAskToBS}</td>
+                    <td>{option.putAskToBS}</td>
                     <td>{option.instrument ? <Link to={`instrument/${option.instrument.isin}`}>{option.instrument.name}</Link> : ''}</td>
                     <td className="text-right">
                       <div className="btn-group flex-btn-group-container">

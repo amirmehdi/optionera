@@ -133,4 +133,4 @@ jhipster:
 application:
   market-time-check: true
   market-updater-fixed-rate: 60000
-  open-interest-updater-fixed-rate: 300000
+  open-interest-updater-fixed-rate: 60000

@@ -9,7 +9,14 @@ export interface IOption {
   expDate?: Moment;
   strikePrice?: number;
   contractSize?: number;
+  callInTheMoney?: boolean;
+  callBreakEven?: number;
+  putBreakEven?: number;
+  callAskToBS?: number;
+  putAskToBS?: number;
   instrument?: IInstrument;
 }
 
-export const defaultValue: Readonly<IOption> = {};
+export const defaultValue: Readonly<IOption> = {
+  callInTheMoney: false
+};

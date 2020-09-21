@@ -36,14 +36,7 @@
             "fieldType": "LocalDate"
         }
     ],
-    "relationships": [
-        {
-            "relationshipType": "one-to-many",
-            "otherEntityName": "option",
-            "otherEntityRelationshipName": "instrument",
-            "relationshipName": "option"
-        }
-    ],
+    "relationships": [],
     "changelogDate": "20200908140900",
     "entityTableName": "instrument",
     "dto": "no",

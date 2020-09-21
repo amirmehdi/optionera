@@ -39,19 +39,65 @@
         {
             "fieldName": "contractSize",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callInTheMoney",
+            "fieldType": "Boolean",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "callBreakEven",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "putBreakEven",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "callAskToBS",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "putAskToBS",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "instrument",
+            "otherEntityRelationshipName": "option",
+            "relationshipValidateRules": "required",
+            "relationshipName": "instrument",
+            "otherEntityField": "id"
+        }
+    ],
     "changelogDate": "20200908141000",
     "entityTableName": "option",
     "dto": "no",
     "pagination": "infinite-scroll",
-    "service": "no",
-    "jpaMetamodelFiltering": false,
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": true,
     "fluentMethods": true,
     "readOnly": false,
     "embedded": false,
     "clientRootFolder": "",
     "applications": "*",
-    "skipServer": true
+    "skipServer": true,
+    "searchEngine": false,
+    "databaseType": "sql"
 }

@@ -111,6 +111,6 @@ public class OptionStats {
     }
 
     private boolean checkForNull() {
-        return option == null || putBidAsk == null || baseStockWatch == null || baseBidAsk == null || callBidAsk == null || callStockWatch == null || putStockWatch == null;
+        return option == null || putBidAsk == null || baseStockWatch == null || callBidAsk == null || callStockWatch == null || putStockWatch == null;
     }
 }

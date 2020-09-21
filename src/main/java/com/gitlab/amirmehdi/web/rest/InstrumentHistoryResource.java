@@ -1,6 +1,7 @@
 package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.InstrumentHistory;
+import com.gitlab.amirmehdi.domain.InstrumentHistoryCompositeKey;
 import com.gitlab.amirmehdi.service.InstrumentHistoryService;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -55,7 +56,7 @@ public class InstrumentHistoryResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the instrumentHistory, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/instrument-histories/{id}")
-    public ResponseEntity<InstrumentHistory> getInstrumentHistory(@PathVariable Long id) {
+    public ResponseEntity<InstrumentHistory> getInstrumentHistory(@PathVariable InstrumentHistoryCompositeKey id) {
         log.debug("REST request to get InstrumentHistory : {}", id);
         Optional<InstrumentHistory> instrumentHistory = instrumentHistoryService.findOne(id);
         return ResponseUtil.wrapOrNotFound(instrumentHistory);

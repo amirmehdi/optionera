@@ -5,10 +5,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Objects;
 import java.time.LocalDate;
 
 /**
@@ -48,6 +46,26 @@ public class Option implements Serializable {
 
     @Column(name = "contract_size")
     private Integer contractSize;
+
+    @NotNull
+    @Column(name = "call_in_the_money", nullable = false)
+    private Boolean callInTheMoney;
+
+    @NotNull
+    @Column(name = "call_break_even", nullable = false)
+    private Float callBreakEven;
+
+    @NotNull
+    @Column(name = "put_break_even", nullable = false)
+    private Float putBreakEven;
+
+    @NotNull
+    @Column(name = "call_ask_to_bs", nullable = false)
+    private Float callAskToBS;
+
+    @NotNull
+    @Column(name = "put_ask_to_bs", nullable = false)
+    private Float putAskToBS;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "instrument_id")
@@ -142,6 +160,71 @@ public class Option implements Serializable {
         this.contractSize = contractSize;
     }
 
+    public Boolean isCallInTheMoney() {
+        return callInTheMoney;
+    }
+
+    public Option callInTheMoney(Boolean callInTheMoney) {
+        this.callInTheMoney = callInTheMoney;
+        return this;
+    }
+
+    public void setCallInTheMoney(Boolean callInTheMoney) {
+        this.callInTheMoney = callInTheMoney;
+    }
+
+    public Float getCallBreakEven() {
+        return callBreakEven;
+    }
+
+    public Option callBreakEven(Float callBreakEven) {
+        this.callBreakEven = callBreakEven;
+        return this;
+    }
+
+    public void setCallBreakEven(Float callBreakEven) {
+        this.callBreakEven = callBreakEven;
+    }
+
+    public Float getPutBreakEven() {
+        return putBreakEven;
+    }
+
+    public Option putBreakEven(Float putBreakEven) {
+        this.putBreakEven = putBreakEven;
+        return this;
+    }
+
+    public void setPutBreakEven(Float putBreakEven) {
+        this.putBreakEven = putBreakEven;
+    }
+
+    public Float getCallAskToBS() {
+        return callAskToBS;
+    }
+
+    public Option callAskToBS(Float callAskToBS) {
+        this.callAskToBS = callAskToBS;
+        return this;
+    }
+
+    public void setCallAskToBS(Float callAskToBS) {
+        this.callAskToBS = callAskToBS;
+    }
+
+    public Float getPutAskToBS() {
+        return putAskToBS;
+    }
+
+    public Option putAskToBS(Float putAskToBS) {
+        this.putAskToBS = putAskToBS;
+        return this;
+    }
+
+    public void setPutAskToBS(Float putAskToBS) {
+        this.putAskToBS = putAskToBS;
+    }
+
     public Instrument getInstrument() {
         return instrument;
     }
@@ -182,6 +265,11 @@ public class Option implements Serializable {
             ", expDate='" + getExpDate() + "'" +
             ", strikePrice=" + getStrikePrice() +
             ", contractSize=" + getContractSize() +
+            ", callInTheMoney='" + isCallInTheMoney() + "'" +
+            ", callBreakEven=" + getCallBreakEven() +
+            ", putBreakEven=" + getPutBreakEven() +
+            ", callAskToBS=" + getCallAskToBS() +
+            ", putAskToBS=" + getPutAskToBS() +
             "}";
     }
 }

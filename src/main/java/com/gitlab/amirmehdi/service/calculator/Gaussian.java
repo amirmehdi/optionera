@@ -43,31 +43,26 @@ public class Gaussian {
 
 
     // return phi(x) = standard Gaussian pdf
-    @Deprecated
     public static double phi(double x) {
         return pdf(x);
     }
 
     // return phi(x, mu, signma) = Gaussian pdf with mean mu and stddev sigma
-    @Deprecated
     public static double phi(double x, double mu, double sigma) {
         return pdf(x, mu, sigma);
     }
 
     // return Phi(z) = standard Gaussian cdf using Taylor approximation
-    @Deprecated
     public static double Phi(double z) {
         return cdf(z);
     }
 
     // return Phi(z, mu, sigma) = Gaussian cdf with mean mu and stddev sigma
-    @Deprecated
     public static double Phi(double z, double mu, double sigma) {
         return cdf(z, mu, sigma);
     }
 
     // Compute z such that Phi(z) = y via bisection search
-    @Deprecated
     public static double PhiInverse(double y) {
         return inverseCDF(y);
     }

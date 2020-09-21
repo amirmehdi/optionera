@@ -18,11 +18,12 @@ entity Option {
 }
 
 
-relationship OneToMany {
-	Instrument to Option{instrument required},
+relationship ManyToOne {
+	Option{instrument required} to Instrument ,
 }
 
-paginate Option, Instrument with pagination
+paginate Instrument with pagination
 paginate Option with infinite-scroll
 
 service Option with serviceClass
+filter Option
