@@ -18,7 +18,7 @@ public class Instrument {
     private long baseVolume;//BaseVol
     private long minOrderCount;//QtitMinSaiOmProd
     private long maxOrderCount;//QtitMaxSaiOmProd
-    private long tseId;
+    private String tseId;
     private Sector sector;
     private SubSector subSector;
     private Board board;
@@ -82,11 +82,11 @@ public class Instrument {
         return this;
     }
 
-    public long getTseId() {
+    public String getTseId() {
         return tseId;
     }
 
-    public Instrument setTseId(long tseId) {
+    public Instrument setTseId(String tseId) {
         this.tseId = tseId;
         return this;
     }

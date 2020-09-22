@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.domain.OptionStats;
-import com.gitlab.amirmehdi.repository.OptionRepository;
 import com.gitlab.amirmehdi.service.dto.BestBidAsk;
 import com.gitlab.amirmehdi.service.dto.OptionStockWatch;
 import com.gitlab.amirmehdi.service.dto.core.BidAsk;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -30,19 +28,19 @@ public class OptionStatsService {
     //key : instrument.id + strike + date
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
-    private final OptionRepository optionRepository;
+    private final OptionService optionService;
     private final String key = "OPTION_STAT";
     public static final double RISK_FREE = 0.35;
 
-    public OptionStatsService(RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper, OptionRepository optionRepository) {
+    public OptionStatsService(RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper, OptionService optionService) {
         this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
-        this.optionRepository = optionRepository;
+        this.optionService = optionService;
     }
 
-    public OptionStats findById(String isin, int strike, LocalDate localDate) {
+    public OptionStats findById(String callIsin, String putIsin) {
         try {
-            return objectMapper.readValue((String) redisTemplate.opsForHash().get(key, getId(isin, strike, localDate)), OptionStats.class);
+            return objectMapper.readValue((String) redisTemplate.opsForHash().get(key, getId(callIsin, putIsin)), OptionStats.class);
         } catch (Exception e) {
             return null;
         }
@@ -60,12 +58,25 @@ public class OptionStatsService {
 
     public void save(OptionStats optionStats) {
         try {
+            Option option = optionStats.getOption();
+
+            option.setCallInTheMoney(optionStats.getCallInTheMoney());
+
+            option.setCallBreakEven(optionStats.getCallBreakEven());
+            option.setCallAskToBS(optionStats.getCallAskPriceToBS());
+            option.setCallLeverage(optionStats.getCallLeverage());
+
+            option.setPutBreakEven(optionStats.getPutBreakEven());
+            option.setPutAskToBS(optionStats.getPutAskPriceToBS());
+            option.setPutLeverage(optionStats.getPutLeverage());
+
+            optionService.save(option);
+
             redisTemplate.opsForHash()
                 .put(key,
                     getId(
-                        optionStats.getOption().getInstrument().getIsin()
-                        , optionStats.getOption().getStrikePrice()
-                        , optionStats.getOption().getExpDate())
+                        optionStats.getOption().getCallIsin(),
+                        optionStats.getOption().getPutIsin())
                     , objectMapper.writeValueAsString(optionStats)
                 );
         } catch (JsonProcessingException e) {
@@ -79,23 +90,21 @@ public class OptionStatsService {
         }
     }
 
-    private String getId(String isin, int strike, LocalDate localDate) {
-        return isin +
+    private String getId(String callIsin, String putIsin) {
+        return (callIsin == null ? "" : callIsin) +
             "-" +
-            strike +
-            "-" +
-            localDate.toString();
+            (putIsin == null ? "" : putIsin);
     }
 
     public void saveAllBidAsk(List<BidAsk> bidAsks) {
         for (BidAsk bidAsk : bidAsks) {
-            Optional<Option> optional = optionRepository.findByCallIsinOrPutIsin(bidAsk.getIsin());
+            Optional<Option> optional = optionService.findByCallIsinOrPutIsin(bidAsk.getIsin());
             if (!optional.isPresent()) {
                 log.error("option:{} not exist in db", bidAsk.getIsin());
                 return;
             }
             Option option = optional.get();
-            OptionStats optionStats = findById(option.getInstrument().getIsin(), option.getStrikePrice(), option.getExpDate());
+            OptionStats optionStats = findById(option.getCallIsin(), option.getPutIsin());
             if (bidAsk.getIsin().equals(option.getCallIsin())) {
                 optionStats.setCallBidAsk(getBestBidAsk(bidAsk));
             } else {
@@ -107,13 +116,13 @@ public class OptionStatsService {
 
     public void saveAllStockWatch(List<StockWatch> stockWatches) {
         for (StockWatch stockWatch : stockWatches) {
-            Optional<Option> optional = optionRepository.findByCallIsinOrPutIsin(stockWatch.getIsin());
+            Optional<Option> optional = optionService.findByCallIsinOrPutIsin(stockWatch.getIsin());
             if (!optional.isPresent()) {
                 log.error("option:{} not exist in db", stockWatch.getIsin());
                 return;
             }
             Option option = optional.get();
-            OptionStats optionStats = findById(option.getInstrument().getIsin(), option.getStrikePrice(), option.getExpDate());
+            OptionStats optionStats = findById(option.getCallIsin(), option.getPutIsin());
             if (stockWatch.getIsin().equals(option.getCallIsin())) {
                 optionStats.setCallStockWatch(getOptionStockWatch(optionStats.getCallStockWatch(), stockWatch));
             } else {
@@ -144,12 +153,12 @@ public class OptionStatsService {
     }
 
     public Page<OptionStats> findAll(Pageable pageable) {
-        Page<Option> options = optionRepository.findAll(pageable);
+        Page<Option> options = optionService.findAll(pageable);
         List<Object> objects = redisTemplate
             .opsForHash()
             .multiGet(key
                 , options.get()
-                    .map(option -> getId(option.getInstrument().getIsin(), option.getStrikePrice(), option.getExpDate()))
+                    .map(option -> getId(option.getCallIsin(), option.getPutIsin()))
                     .collect(Collectors.toList()));
         List<OptionStats> optionStats;
         try {

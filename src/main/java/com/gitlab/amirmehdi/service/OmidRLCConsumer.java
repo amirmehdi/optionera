@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.service.dto.core.BidAsk;
+import com.gitlab.amirmehdi.service.dto.core.Instrument;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -29,6 +30,15 @@ public class OmidRLCConsumer {
         this.objectMapper = objectMapper;
         this.restTemplate = restTemplate;
         this.applicationProperties = applicationProperties;
+    }
+
+    public List<Instrument> searchInstrument(String name) {
+        return restTemplate.exchange(
+            applicationProperties.getOaBaseUrl() + "/core/search/" + name,
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<Instrument>>() {
+            }).getBody();
     }
 
     @Async

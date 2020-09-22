@@ -21,4 +21,6 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
         " o.callIsin=?1 or " +
         " o.putIsin=?1 ")
     Optional<Option> findByCallIsinOrPutIsin(String isin);
+
+    Optional<Option> findByCallIsinAndPutIsin(String callIsin,String putIsin);
 }

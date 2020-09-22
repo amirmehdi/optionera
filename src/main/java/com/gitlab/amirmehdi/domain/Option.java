@@ -49,31 +49,31 @@ public class Option implements Serializable {
 
     @NotNull
     @Column(name = "call_in_the_money", nullable = false)
-    private Boolean callInTheMoney;
+    private boolean callInTheMoney;
 
     @NotNull
     @Column(name = "call_break_even", nullable = false)
-    private Float callBreakEven;
+    private float callBreakEven;
 
     @NotNull
     @Column(name = "put_break_even", nullable = false)
-    private Float putBreakEven;
+    private float putBreakEven;
 
     @NotNull
     @Column(name = "call_ask_to_bs", nullable = false)
-    private Float callAskToBS;
+    private float callAskToBS;
 
     @NotNull
     @Column(name = "put_ask_to_bs", nullable = false)
-    private Float putAskToBS;
+    private float putAskToBS;
 
     @NotNull
     @Column(name = "call_leverage", nullable = false)
-    private Float callLeverage;
+    private float callLeverage;
 
     @NotNull
     @Column(name = "put_leverage", nullable = false)
-    private Float putLeverage;
+    private float putLeverage;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "instrument_id")
@@ -168,11 +168,11 @@ public class Option implements Serializable {
         this.contractSize = contractSize;
     }
 
-    public Boolean isCallInTheMoney() {
+    public boolean isCallInTheMoney() {
         return callInTheMoney;
     }
 
-    public Option callInTheMoney(Boolean callInTheMoney) {
+    public Option callInTheMoney(boolean callInTheMoney) {
         this.callInTheMoney = callInTheMoney;
         return this;
     }
@@ -181,81 +181,81 @@ public class Option implements Serializable {
         this.callInTheMoney = callInTheMoney;
     }
 
-    public Float getCallBreakEven() {
+    public float getCallBreakEven() {
         return callBreakEven;
     }
 
-    public Option callBreakEven(Float callBreakEven) {
+    public Option callBreakEven(float callBreakEven) {
         this.callBreakEven = callBreakEven;
         return this;
     }
 
-    public void setCallBreakEven(Float callBreakEven) {
+    public void setCallBreakEven(float callBreakEven) {
         this.callBreakEven = callBreakEven;
     }
 
-    public Float getPutBreakEven() {
+    public float getPutBreakEven() {
         return putBreakEven;
     }
 
-    public Option putBreakEven(Float putBreakEven) {
+    public Option putBreakEven(float putBreakEven) {
         this.putBreakEven = putBreakEven;
         return this;
     }
 
-    public void setPutBreakEven(Float putBreakEven) {
+    public void setPutBreakEven(float putBreakEven) {
         this.putBreakEven = putBreakEven;
     }
 
-    public Float getCallAskToBS() {
+    public float getCallAskToBS() {
         return callAskToBS;
     }
 
-    public Option callAskToBS(Float callAskToBS) {
+    public Option callAskToBS(float callAskToBS) {
         this.callAskToBS = callAskToBS;
         return this;
     }
 
-    public void setCallAskToBS(Float callAskToBS) {
+    public void setCallAskToBS(float callAskToBS) {
         this.callAskToBS = callAskToBS;
     }
 
-    public Float getPutAskToBS() {
+    public float getPutAskToBS() {
         return putAskToBS;
     }
 
-    public Option putAskToBS(Float putAskToBS) {
+    public Option putAskToBS(float putAskToBS) {
         this.putAskToBS = putAskToBS;
         return this;
     }
 
-    public void setPutAskToBS(Float putAskToBS) {
+    public void setPutAskToBS(float putAskToBS) {
         this.putAskToBS = putAskToBS;
     }
 
-    public Float getCallLeverage() {
+    public float getCallLeverage() {
         return callLeverage;
     }
 
-    public Option callLeverage(Float callLeverage) {
+    public Option callLeverage(float callLeverage) {
         this.callLeverage = callLeverage;
         return this;
     }
 
-    public void setCallLeverage(Float callLeverage) {
+    public void setCallLeverage(float callLeverage) {
         this.callLeverage = callLeverage;
     }
 
-    public Float getPutLeverage() {
+    public float getPutLeverage() {
         return putLeverage;
     }
 
-    public Option putLeverage(Float putLeverage) {
+    public Option putLeverage(float putLeverage) {
         this.putLeverage = putLeverage;
         return this;
     }
 
-    public void setPutLeverage(Float putLeverage) {
+    public void setPutLeverage(float putLeverage) {
         this.putLeverage = putLeverage;
     }
 

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.domain.OptionStats;
-import com.gitlab.amirmehdi.repository.InstrumentRepository;
 import com.gitlab.amirmehdi.repository.OptionRepository;
 import com.gitlab.amirmehdi.service.dto.BestBidAsk;
 import com.gitlab.amirmehdi.service.dto.OptionStockWatch;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,13 +27,13 @@ import java.util.stream.Collectors;
 public class CrawlerJobs implements CommandLineRunner {
     private final RestTemplate restTemplate;
     private final OptionRepository optionRepository;
-    private final InstrumentRepository instrumentRepository;
+    private final InstrumentService instrumentRepository;
     private final OptionStatsService optionStatsService;
     private final OmidRLCConsumer omidRLCConsumer;
     private final Market market;
 
 
-    public CrawlerJobs(RestTemplate restTemplate, OptionRepository optionRepository, InstrumentRepository instrumentRepository, OptionStatsService optionStatsService, OmidRLCConsumer omidRLCConsumer, Market market) {
+    public CrawlerJobs(RestTemplate restTemplate, OptionRepository optionRepository, InstrumentService instrumentRepository, OptionStatsService optionStatsService, OmidRLCConsumer omidRLCConsumer, Market market) {
         this.restTemplate = restTemplate;
         this.optionRepository = optionRepository;
         this.instrumentRepository = instrumentRepository;
@@ -124,6 +122,10 @@ public class CrawlerJobs implements CommandLineRunner {
         });
     }
 
+
+    /**
+     * redis initialization or update openInterest and settlementPrice fields
+     */
     public void openInterestUpdater() {
         OptionResponse optionResponse = restTemplate.getForEntity("https://tse.ir/json/MarketWatch/data_7.json?1599569952420?1599569952420", OptionResponse.class).getBody();
         optionResponse.getBData()
@@ -139,20 +141,15 @@ public class CrawlerJobs implements CommandLineRunner {
                 List<OptionStats> optionStats = bData
                     .stream()
                     .map(bDatum -> {
-                        String[] dateInfo = bDatum.getVal().get(1).getV().split("-")[2].split("/");
-                        LocalDate expDate = DateUtil.convertToLocalDateViaInstant(DateUtil.jalaliToGregorian(Integer.parseInt(yearNormalizer(dateInfo[0])), Integer.parseInt(dateInfo[1]), Integer.parseInt(dateInfo[2])));
-                        int strike = Integer.parseInt(bDatum.getVal().get(1).getV().split("-")[1]);
-                        OptionStats optionStat = optionStatsService.findById(instrument.getIsin(), strike, expDate);
+                        OptionStats optionStat = optionStatsService.findById(bDatum.getI(), bDatum.getI2());
                         if (optionStat == null) {
+                            Optional<Option> optionalOption = optionRepository.findByCallIsinAndPutIsin(bDatum.getI(), bDatum.getI2());
+                            if (!optionalOption.isPresent()) {
+                                log.warn("findByCallIsinAndPutIsin does not exist for {} ,{} {} ", bDatum.getVal().get(0).getV(), bDatum.getI(), bDatum.getI());
+                                return null;
+                            }
                             optionStat = OptionStats.builder()
-                                .option(new Option()
-                                    .instrument(instrument)
-                                    .name(bDatum.getVal().get(0).getV().substring(1))
-                                    .callIsin(bDatum.getI())
-                                    .putIsin(bDatum.getI2())
-                                    .expDate(expDate)
-                                    .strikePrice(strike)
-                                    .contractSize(Integer.valueOf(bDatum.getVal().get(12).getV().replace(",", ""))))
+                                .option(optionalOption.get())
                                 .callStockWatch(OptionStockWatch.builder()
                                     .settlementPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(2).getV())))
                                     .openInterest(Integer.parseInt(numberNormalizer(bDatum.getVal().get(3).getV())))
@@ -192,6 +189,7 @@ public class CrawlerJobs implements CommandLineRunner {
                         }
                         return optionStat;
                     })
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toList());
                 optionStatsService.saveAll(optionStats);
             });
@@ -209,11 +207,24 @@ public class CrawlerJobs implements CommandLineRunner {
                     log.warn("instrument {} not found", bDatum.getDarayi());
                     return null;
                 }
+                String callIsin = bDatum.getI() == null ? "" : bDatum.getI();
+                String putIsin = bDatum.getI2() == null ? "" : bDatum.getI2();
+                Optional<Option> option = optionRepository.findByCallIsinAndPutIsin(callIsin, putIsin);
+                if (option.isPresent()){
+                    return option.get()
+                        .instrument(instrument.get())
+                        .name(bDatum.getVal().get(0).getV().substring(1))
+                        .callIsin(callIsin)
+                        .putIsin(putIsin)
+                        .expDate(DateUtil.convertToLocalDateViaInstant(DateUtil.jalaliToGregorian(Integer.parseInt(yearNormalizer(dateInfo[0])), Integer.parseInt(dateInfo[1]), Integer.parseInt(dateInfo[2]))))
+                        .strikePrice(Integer.valueOf(bDatum.getVal().get(1).getV().split("-")[1]))
+                        .contractSize(Integer.valueOf(bDatum.getVal().get(12).getV().replace(",", "")));
+                }
                 return new Option()
                     .instrument(instrument.get())
                     .name(bDatum.getVal().get(0).getV().substring(1))
-                    .callIsin(bDatum.getI() == null ? "" : bDatum.getI())
-                    .putIsin(bDatum.getI2() == null ? "" : bDatum.getI2())
+                    .callIsin(callIsin)
+                    .putIsin(putIsin)
                     .expDate(DateUtil.convertToLocalDateViaInstant(DateUtil.jalaliToGregorian(Integer.parseInt(yearNormalizer(dateInfo[0])), Integer.parseInt(dateInfo[1]), Integer.parseInt(dateInfo[2]))))
                     .strikePrice(Integer.valueOf(bDatum.getVal().get(1).getV().split("-")[1]))
                     .contractSize(Integer.valueOf(bDatum.getVal().get(12).getV().replace(",", "")));
@@ -221,9 +232,6 @@ public class CrawlerJobs implements CommandLineRunner {
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
 
-        options.forEach(option ->
-            optionRepository.findByInstrumentIsinAndStrikePriceAndExpDate(option.getInstrument().getIsin(), option.getStrikePrice(), option.getExpDate())
-                .ifPresent(option1 -> option.setId(option1.getId())));
         optionRepository.saveAll(options);
     }
 

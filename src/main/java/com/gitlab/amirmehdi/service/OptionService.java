@@ -71,4 +71,9 @@ public class OptionService {
         log.debug("Request to delete Option : {}", id);
         optionRepository.deleteById(id);
     }
+
+    public Optional<Option> findByCallIsinOrPutIsin(String isin) {
+        log.debug("Request to get Option by call or put isin : {}",isin );
+        return optionRepository.findByCallIsinOrPutIsin(isin);
+    }
 }

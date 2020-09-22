@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.gitlab.amirmehdi.service.calculator.BlackScholes;
 import com.gitlab.amirmehdi.service.dto.BestBidAsk;
@@ -56,26 +57,6 @@ public class OptionStats {
         return (int) BlackScholes.callPrice(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility90(), ChronoUnit.DAYS.between(option.getExpDate(), LocalDate.now()));
     }
 
-    public float getPutAskPriceToBS() {
-        if (checkForNull()) {
-            return 0;
-        }
-        if (putBidAsk.getAskPrice() == 0) {
-            return Integer.MAX_VALUE;
-        }
-        return (float) (Math.round((putBidAsk.getAskPrice() * 1.0 / getBlackScholes30() - 1) * 100.0) / 100.0);
-    }
-
-    public float getCallAskPriceToBS() {
-        if (checkForNull()) {
-            return 0;
-        }
-        if (callBidAsk.getAskPrice() == 0) {
-            return Integer.MAX_VALUE;
-        }
-        return (float) (Math.round((callBidAsk.getAskPrice() * 1.0 / getBlackScholes30() - 1) * 100.0) / 100.0);
-    }
-
     public Integer getCallEffectivePrice() {
         if (checkForNull()) {
             return 0;
@@ -96,18 +77,72 @@ public class OptionStats {
         return option.getStrikePrice() - putBidAsk.getAskPrice();
     }
 
+    @JsonIgnore
+    public float getCallAskPriceToBS() {
+        if (checkForNull()) {
+            return 0;
+        }
+        if (callBidAsk.getAskPrice() == 0) {
+            return Integer.MAX_VALUE;
+        }
+        return (float) (Math.round((callBidAsk.getAskPrice() * 1.0 / getBlackScholes30() - 1) * 1000.0) / 100.0);
+    }
+
+    @JsonIgnore
+    public float getPutAskPriceToBS() {
+        if (checkForNull()) {
+            return 0;
+        }
+        if (putBidAsk.getAskPrice() == 0) {
+            return Integer.MAX_VALUE;
+        }
+        return (float) (Math.round((putBidAsk.getAskPrice() * 1.0 / getBlackScholes30() - 1) * 1000.0) / 100.0);
+    }
+
+    @JsonIgnore
     public float getCallBreakEven() {
         if (checkForNull()) {
             return 0;
         }
-        return (float) (Math.round((getCallEffectivePrice() * 1.0 / baseStockWatch.getLast() - 1) * 100.0) / 100.0);
+        return (float) (Math.round((getCallEffectivePrice() * 1.0 / baseStockWatch.getLast() - 1) * 1000.0) / 100.0);
     }
 
+    @JsonIgnore
     public float getPutBreakEven() {
         if (checkForNull()) {
             return 0;
         }
-        return (float) (Math.round((getPutEffectivePrice() * 1.0 / baseStockWatch.getLast() - 1) * 100.0) / 100.0);
+        return (float) (Math.round((getPutEffectivePrice() * 1.0 / baseStockWatch.getLast() - 1) * 1000.0) / 100.0);
+    }
+
+    @JsonIgnore
+    public float getCallLeverage() {
+        if (checkForNull()) {
+            return 0;
+        }
+        if (callBidAsk.getAskPrice() == 0) {
+            return 0;
+        }
+        return (float) (Math.round((baseStockWatch.getLast() * 1.0 / callBidAsk.getAskPrice()) * 1000.0) / 100.0);
+    }
+
+    @JsonIgnore
+    public float getPutLeverage() {
+        if (checkForNull()) {
+            return 0;
+        }
+        if (putBidAsk.getAskPrice() == 0) {
+            return 0;
+        }
+        return (float) (Math.round((baseStockWatch.getLast() * 1.0 / putBidAsk.getAskPrice()) * 1000.0) / 100.0);
+    }
+
+    @JsonIgnore
+    public Boolean getCallInTheMoney() {
+        if (checkForNull()) {
+            return null;
+        }
+        return option.getStrikePrice() < baseStockWatch.getLast();
     }
 
     private boolean checkForNull() {

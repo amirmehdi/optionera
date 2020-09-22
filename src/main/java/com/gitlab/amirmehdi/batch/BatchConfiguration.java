@@ -22,7 +22,6 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.data.RepositoryItemReader;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -41,7 +40,7 @@ import static java.lang.Math.sqrt;
 @Configuration
 @EnableBatchProcessing
 @Log4j2
-public class BatchConfiguration implements CommandLineRunner {
+public class BatchConfiguration {
     private final JobRegistry jobRegistry;
     private final JobLauncher jobLauncher;
     private final JobBuilderFactory jobBuilderFactory;
@@ -152,11 +151,6 @@ public class BatchConfiguration implements CommandLineRunner {
             - pow(logReturn.stream().limit(n).mapToDouble(Double::doubleValue).sum(), 2) / (n * (n - 1));
         double volatility = sqrt(var) * sqrt(240);
         return volatility > 1 ? 0.6 : volatility;
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        runJobs();
     }
 
     public enum JOBS {
