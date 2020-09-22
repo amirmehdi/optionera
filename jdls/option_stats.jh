@@ -61,4 +61,4 @@ paginate Option, OptionStats with pagination
 paginate Option,OptionStats with infinite-scroll
 
 
-skipServer OptionStats,Option
+skipServer OptionStats

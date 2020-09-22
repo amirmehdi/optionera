@@ -111,7 +111,6 @@
     "embedded": false,
     "clientRootFolder": "",
     "applications": "*",
-    "skipServer": true,
     "searchEngine": false,
     "databaseType": "sql"
 }
