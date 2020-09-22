@@ -28,22 +28,29 @@ public class InstrumentService {
     public Optional<Instrument> findOneByName(String darayi) {
         Optional<Instrument> optionalInstrument = instrumentRepository.findOneByName(darayi);
         if (!optionalInstrument.isPresent()) {
-            List<com.gitlab.amirmehdi.service.dto.core.Instrument> instruments = omidRLCConsumer.searchInstrument(darayi).stream().filter(instrument -> instrument.getName().equals(darayi)).collect(Collectors.toList());
-            if (!instruments.isEmpty()) {
-                Instrument instrument = new Instrument()
-                    .isin(instruments.get(0).getId())
-                    .name(darayi)
-                    .tseId(instruments.get(0).getTseId())
-                    .updatedAt(LocalDate.now());
-                save(instrument);
-                return Optional.of(instrument);
+            List<com.gitlab.amirmehdi.service.dto.core.Instrument> instruments = omidRLCConsumer.searchInstrument(darayi);
+            if (instruments.isEmpty()) {
+                return optionalInstrument;
             }
+            com.gitlab.amirmehdi.service.dto.core.Instrument apiInstrument;
+            if (instruments.stream().anyMatch(instrument -> instrument.getName().equals(darayi))) {
+                apiInstrument = instruments.stream().filter(instrument -> instrument.getName().equals(darayi)).collect(Collectors.toList()).get(0);
+            } else {
+                apiInstrument = instruments.get(0);
+            }
+            Instrument instrument = new Instrument()
+                .isin(apiInstrument.getId())
+                .name(darayi)
+                .tseId(apiInstrument.getTseId())
+                .updatedAt(LocalDate.now());
+            save(instrument);
+            return Optional.of(instrument);
         }
         return optionalInstrument;
     }
 
     private void save(Instrument instrument) {
-        log.info("instrument save name: {}",instrument.getName());
+        log.info("instrument save name: {}", instrument.getName());
         instrumentRepository.save(instrument);
     }
 }

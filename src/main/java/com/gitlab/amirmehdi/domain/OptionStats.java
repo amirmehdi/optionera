@@ -140,7 +140,7 @@ public class OptionStats {
     @JsonIgnore
     public Boolean getCallInTheMoney() {
         if (checkForNull()) {
-            return null;
+            return false;
         }
         return option.getStrikePrice() < baseStockWatch.getLast();
     }

@@ -25,7 +25,7 @@ public class StockWatch {
     private int max;
     private String state;
     private long tradeValue;
-    private int tradeVolume;
+    private long tradeVolume;
     private int tradesCount;
     private int referencePrice;
     @JsonFormat(shape = JsonFormat.Shape.STRING)

@@ -32,13 +32,13 @@ public class Instrument implements Serializable {
     private String tseId;
 
     @Column(name = "volatility_30")
-    private Double volatility30;
+    private double volatility30;
 
     @Column(name = "volatility_60")
-    private Double volatility60;
+    private double volatility60;
 
     @Column(name = "volatility_90")
-    private Double volatility90;
+    private double volatility90;
 
     @Column(name = "updated_at")
     private LocalDate updatedAt;
@@ -83,42 +83,42 @@ public class Instrument implements Serializable {
         this.tseId = tseId;
     }
 
-    public Double getVolatility30() {
+    public double getVolatility30() {
         return volatility30;
     }
 
-    public Instrument volatility30(Double volatility30) {
+    public Instrument volatility30(double volatility30) {
         this.volatility30 = volatility30;
         return this;
     }
 
-    public void setVolatility30(Double volatility30) {
+    public void setVolatility30(double volatility30) {
         this.volatility30 = volatility30;
     }
 
-    public Double getVolatility60() {
+    public double getVolatility60() {
         return volatility60;
     }
 
-    public Instrument volatility60(Double volatility60) {
+    public Instrument volatility60(double volatility60) {
         this.volatility60 = volatility60;
         return this;
     }
 
-    public void setVolatility60(Double volatility60) {
+    public void setVolatility60(double volatility60) {
         this.volatility60 = volatility60;
     }
 
-    public Double getVolatility90() {
+    public double getVolatility90() {
         return volatility90;
     }
 
-    public Instrument volatility90(Double volatility90) {
+    public Instrument volatility90(double volatility90) {
         this.volatility90 = volatility90;
         return this;
     }
 
-    public void setVolatility90(Double volatility90) {
+    public void setVolatility90(double volatility90) {
         this.volatility90 = volatility90;
     }
 

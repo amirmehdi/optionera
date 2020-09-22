@@ -22,7 +22,7 @@ public class OptionStockWatch {
     @JsonProperty("BSPrice")
     private int bsPrice;
     @JsonProperty("TradeVolume")
-    private int tradeVolume;
+    private long tradeVolume;
     @JsonProperty("TradeCount")
     private int tradeCount;
     @JsonProperty("TradeValue")
