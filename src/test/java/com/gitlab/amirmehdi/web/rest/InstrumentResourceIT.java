@@ -134,7 +134,7 @@ public class InstrumentResourceIT {
         int databaseSizeBeforeCreate = instrumentRepository.findAll().size();
 
         // Create the Instrument with an existing ID
-        instrument.setIsin("1");
+        instrument.setIsin(DEFAULT_ISIN);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restInstrumentMockMvc.perform(post("/api/instruments")
@@ -191,7 +191,7 @@ public class InstrumentResourceIT {
         instrumentRepository.saveAndFlush(instrument);
 
         // Get all the instrumentList
-        restInstrumentMockMvc.perform(get("/api/instruments?sort=id,desc"))
+        restInstrumentMockMvc.perform(get("/api/instruments?sort=isin,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(instrument.getIsin())))

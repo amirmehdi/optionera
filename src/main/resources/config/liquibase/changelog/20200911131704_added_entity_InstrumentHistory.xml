@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <!--
+        Added the entity InstrumentHistory.
+    -->
+    <changeSet id="20200911131704-1" author="jhipster">
+        <createTable tableName="instrument_history">
+            <column name="isin" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="date" type="date">
+                <constraints nullable="false" />
+            </column>
+            <column name="last" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="close" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="first" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="reference_price" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="low" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="high" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="trade_volume" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="trade_count" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="trade_value" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+
+    </changeSet>
+    <changeSet author="amirmehdi" id="20200911131704-2">
+        <addPrimaryKey
+            columnNames="isin, date"
+            constraintName="pk_instrument_history"
+            schemaName="public"
+            tableName="instrument_history"/>
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+
+
+</databaseChangeLog>

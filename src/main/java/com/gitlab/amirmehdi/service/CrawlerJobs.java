@@ -8,50 +8,44 @@ import com.gitlab.amirmehdi.repository.InstrumentRepository;
 import com.gitlab.amirmehdi.repository.OptionRepository;
 import com.gitlab.amirmehdi.service.dto.BestBidAsk;
 import com.gitlab.amirmehdi.service.dto.OptionStockWatch;
+import com.gitlab.amirmehdi.service.dto.core.BidAsk;
+import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import com.gitlab.amirmehdi.service.dto.tsemodels.BDatum;
 import com.gitlab.amirmehdi.service.dto.tsemodels.OptionResponse;
 import com.gitlab.amirmehdi.util.DateUtil;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
 @Service
 @Log4j2
-public class CrawlerJobs {
+public class CrawlerJobs implements CommandLineRunner {
     private final RestTemplate restTemplate;
     private final OptionRepository optionRepository;
     private final InstrumentRepository instrumentRepository;
-    private final OptionStatService optionStatService;
+    private final OptionStatsService optionStatsService;
     private final OmidRLCConsumer omidRLCConsumer;
     private final Market market;
 
 
-    public CrawlerJobs(RestTemplate restTemplate, OptionRepository optionRepository, InstrumentRepository instrumentRepository, OptionStatService optionStatService, OmidRLCConsumer omidRLCConsumer, Market market) {
+    public CrawlerJobs(RestTemplate restTemplate, OptionRepository optionRepository, InstrumentRepository instrumentRepository, OptionStatsService optionStatsService, OmidRLCConsumer omidRLCConsumer, Market market) {
         this.restTemplate = restTemplate;
         this.optionRepository = optionRepository;
         this.instrumentRepository = instrumentRepository;
-        this.optionStatService = optionStatService;
+        this.optionStatsService = optionStatsService;
         this.omidRLCConsumer = omidRLCConsumer;
         this.market = market;
     }
 
-    //    @Retryable(
-//        value = {Exception.class},
-//        maxAttempts = 5,
-//        backoff = @Backoff(delay = 5 * 1000))
-    @Scheduled(fixedRate = 5000)
-    public void listener() throws Exception {
-//        if (!MarketTimeUtil.isMarketOpen(new Date()))
-//            return;
+
+    public void marketUpdater() throws Exception {
 
         StopWatch stopWatch = new StopWatch("market listener");
         stopWatch.start("updateInstrumentMarket");
@@ -66,10 +60,14 @@ public class CrawlerJobs {
     }
 
     private void updateOptionStats() {
-        optionStatService.findAll()
+        optionStatsService.findAll()
             .stream()
             .collect(Collectors.groupingBy(optionStats -> optionStats.getOption().getInstrument().getIsin()))
             .forEach((s, optionStats) -> {
+                StockWatch stockWatch = market.getStockWatch(s);
+                if (stockWatch == null || stockWatch.getState() == null || !stockWatch.getIsin().equals("A")) {
+                    return;
+                }
                 List<String> optionsIsin = new ArrayList<>();
                 for (OptionStats optionStat : optionStats) {
                     optionsIsin.add(optionStat.getOption().getCallIsin());
@@ -80,14 +78,14 @@ public class CrawlerJobs {
                         if (throwable != null) {
                             throwable.printStackTrace();
                         } else {
-                            optionStatService.saveAllBidAsk(bidAsks);
+                            optionStatsService.saveAllBidAsk(bidAsks);
                         }
                     });
                     omidRLCConsumer.getBulkStockWatch(optionsIsin).whenCompleteAsync((stockWatches, throwable) -> {
                         if (throwable != null) {
                             throwable.printStackTrace();
                         } else {
-                            optionStatService.saveAllStockWatch(stockWatches);
+                            optionStatsService.saveAllStockWatch(stockWatches);
                         }
                     });
                 } catch (JsonProcessingException e) {
@@ -103,6 +101,12 @@ public class CrawlerJobs {
                 throwable.printStackTrace();
             } else {
                 market.saveAllStockWatch(stockWatches);
+                Map<String, StockWatch> map = stockWatches.stream()
+                    .collect(Collectors.toMap(StockWatch::getIsin, stockWatch -> stockWatch));
+                optionStatsService.findAll().parallelStream().forEach(optionStats -> {
+                    optionStats.setBaseStockWatch(map.get(optionStats.getOption().getInstrument().getIsin()));
+                    optionStatsService.save(optionStats);
+                });
             }
         });
         omidRLCConsumer.getBulkBidAsk(instruments).whenCompleteAsync((bidAsks, throwable) -> {
@@ -110,25 +114,35 @@ public class CrawlerJobs {
                 throwable.printStackTrace();
             } else {
                 market.saveAllBidAsk(bidAsks);
+                Map<String, BidAsk> map = bidAsks.stream()
+                    .collect(Collectors.toMap(BidAsk::getIsin, bidAsk -> bidAsk));
+                optionStatsService.findAll().parallelStream().forEach(optionStats -> {
+                    optionStats.setBaseBidAsk(map.get(optionStats.getOption().getInstrument().getIsin()));
+                    optionStatsService.save(optionStats);
+                });
             }
         });
     }
 
-    @Scheduled(fixedRate = 60000*5)
-    public void realTimeDataUpdater() {
+    public void openInterestUpdater() {
         OptionResponse optionResponse = restTemplate.getForEntity("https://tse.ir/json/MarketWatch/data_7.json?1599569952420?1599569952420", OptionResponse.class).getBody();
         optionResponse.getBData()
             .stream()
             .collect(Collectors.groupingBy(BDatum::getDarayi))
             .forEach((darayi, bData) -> {
-                Instrument instrument = instrumentRepository.findOneByName(darayi);
+                Optional<Instrument> optionalInstrument = instrumentRepository.findOneByName(darayi);
+                if (!optionalInstrument.isPresent()) {
+                    log.warn("instrument {} not found", darayi);
+                    return;
+                }
+                Instrument instrument = optionalInstrument.get();
                 List<OptionStats> optionStats = bData
                     .stream()
                     .map(bDatum -> {
                         String[] dateInfo = bDatum.getVal().get(1).getV().split("-")[2].split("/");
                         LocalDate expDate = DateUtil.convertToLocalDateViaInstant(DateUtil.jalaliToGregorian(Integer.parseInt(yearNormalizer(dateInfo[0])), Integer.parseInt(dateInfo[1]), Integer.parseInt(dateInfo[2])));
                         int strike = Integer.parseInt(bDatum.getVal().get(1).getV().split("-")[1]);
-                        OptionStats optionStat = optionStatService.findById(instrument.getIsin(), strike, expDate);
+                        OptionStats optionStat = optionStatsService.findById(instrument.getIsin(), strike, expDate);
                         if (optionStat == null) {
                             optionStat = OptionStats.builder()
                                 .option(new Option()
@@ -169,6 +183,7 @@ public class CrawlerJobs {
                                     .build())
                                 .build();
                         } else {
+                            optionStat.getOption().setInstrument(instrument);
                             optionStat.getCallStockWatch().setSettlementPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(2).getV())));
                             optionStat.getCallStockWatch().setOpenInterest(Integer.parseInt(numberNormalizer(bDatum.getVal().get(3).getV())));
 
@@ -178,12 +193,10 @@ public class CrawlerJobs {
                         return optionStat;
                     })
                     .collect(Collectors.toList());
-                optionStatService.saveAll(optionStats);
+                optionStatsService.saveAll(optionStats);
             });
     }
 
-    @Scheduled(cron = "0 0 8 * * *")
-    @PostConstruct
     public void optionCrawler() {
         OptionResponse optionResponse = restTemplate.getForEntity("https://tse.ir/json/MarketWatch/data_7.json?1599569952420?1599569952420", OptionResponse.class).getBody();
         List<Option> options = optionResponse.getBData()
@@ -191,15 +204,21 @@ public class CrawlerJobs {
             .map(bDatum -> {
                 String[] dateInfo = bDatum.getVal().get(1).getV().split("-")[2].split("/");
 
+                Optional<Instrument> instrument = instrumentRepository.findOneByName(bDatum.getDarayi());
+                if (!instrument.isPresent()) {
+                    log.warn("instrument {} not found", bDatum.getDarayi());
+                    return null;
+                }
                 return new Option()
-                    .instrument(instrumentRepository.findOneByName(bDatum.getDarayi()))
+                    .instrument(instrument.get())
                     .name(bDatum.getVal().get(0).getV().substring(1))
-                    .callIsin(bDatum.getI())
-                    .putIsin(bDatum.getI2())
+                    .callIsin(bDatum.getI() == null ? "" : bDatum.getI())
+                    .putIsin(bDatum.getI2() == null ? "" : bDatum.getI2())
                     .expDate(DateUtil.convertToLocalDateViaInstant(DateUtil.jalaliToGregorian(Integer.parseInt(yearNormalizer(dateInfo[0])), Integer.parseInt(dateInfo[1]), Integer.parseInt(dateInfo[2]))))
                     .strikePrice(Integer.valueOf(bDatum.getVal().get(1).getV().split("-")[1]))
                     .contractSize(Integer.valueOf(bDatum.getVal().get(12).getV().replace(",", "")));
             })
+            .filter(Objects::nonNull)
             .collect(Collectors.toList());
 
         options.forEach(option ->
@@ -215,21 +234,23 @@ public class CrawlerJobs {
         int zeroNum = 0;
         if (number.contains("K")) {
             zeroNum += 3;
-            number = number.replace("K","");
+            number = number.replace("K", "");
         } else if (number.contains("M")) {
             zeroNum += 6;
-            number = number.replace("M","");
+            number = number.replace("M", "");
         } else if (number.contains("B")) {
             zeroNum += 9;
-            number = number.replace("B","");
+            number = number.replace("B", "");
         }
         if (number.contains(".")) {
             zeroNum--;
             number = number.replace(".", "");
         }
+        StringBuilder numberBuilder = new StringBuilder(number);
         for (int i = 0; i < zeroNum; i++) {
-            number += "0";
+            numberBuilder.append("0");
         }
+        number = numberBuilder.toString();
         return number;
     }
 
@@ -237,11 +258,22 @@ public class CrawlerJobs {
         if (year.length() == 4)
             return year;
         if (year.length() == 2) {
-            if (Integer.valueOf(year) > 10) {
+            if (Integer.parseInt(year) > 10) {
                 return "13" + year;
             } else
                 return "14" + year;
         }
         throw new IllegalArgumentException(year + " undefined");
+    }
+
+    @Override
+    public void run(String... args) {
+        try {
+            optionCrawler();
+            openInterestUpdater();
+            marketUpdater();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

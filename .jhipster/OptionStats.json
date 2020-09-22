@@ -1,0 +1,167 @@
+{
+    "name": "OptionStats",
+    "fields": [
+        {
+            "fieldName": "callLast",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callClose",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callReferencePrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callSettlementPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callBsPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callTradeVolume",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callTradeCount",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callTradeValue",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "callOpenInterest",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callBidPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callAskPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callBidVolume",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callAskVolume",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "putLast",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "putClose",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "putReferencePrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "putSettlementPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "putBsPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "putTradeVolume",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "putTradeCount",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "putTradeValue",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "putOpenInterest",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "putBidPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "putAskPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "putBidVolume",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "putAskVolume",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "blackScholes30",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "blackScholes60",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "blackScholes90",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callAskPriceToBS",
+            "fieldType": "Float"
+        },
+        {
+            "fieldName": "callEffectivePrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "callBreakEven",
+            "fieldType": "Float"
+        },
+        {
+            "fieldName": "putAskPriceToBS",
+            "fieldType": "Float"
+        },
+        {
+            "fieldName": "putEffectivePrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "putBreakEven",
+            "fieldType": "Float"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "option",
+            "otherEntityRelationshipName": "optionStats",
+            "relationshipValidateRules": "required",
+            "relationshipName": "option",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20200912142900",
+    "entityTableName": "option_stats",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*",
+    "skipServer": true
+}

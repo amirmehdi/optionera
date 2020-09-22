@@ -1,0 +1,64 @@
+entity Option {
+	name String required,
+    callIsin String required,
+	putIsin String required,
+    expDate LocalDate required,
+    strikePrice Integer required,
+	contractSize Integer
+}
+
+entity OptionStats {
+
+callLast Integer,
+callClose Integer,
+callReferencePrice Integer,
+callSettlementPrice Integer,
+callBsPrice Integer,
+callTradeVolume Integer,
+callTradeCount Integer,
+callTradeValue Long,
+callOpenInterest Integer,
+
+callBidPrice Integer,
+callAskPrice Integer,
+callBidVolume Integer,
+callAskVolume Integer,
+
+putLast Integer,
+putClose Integer,
+putReferencePrice Integer,
+putSettlementPrice Integer,
+putBsPrice Integer,
+putTradeVolume Integer,
+putTradeCount Integer,
+putTradeValue Long,
+putOpenInterest Integer,
+
+putBidPrice Integer,
+putAskPrice Integer,
+putBidVolume Integer,
+putAskVolume Integer,
+
+blackScholes30 Integer
+blackScholes60 Integer
+blackScholes90 Integer
+
+callAskPriceToBS Float
+callEffectivePrice Integer,
+callBreakEven Float,
+
+putAskPriceToBS Float
+putEffectivePrice Integer,
+putBreakEven Float,
+}
+
+relationship ManyToOne {
+	OptionStats{option required} to Option,
+}
+
+
+paginate Option, OptionStats with pagination
+paginate Option,OptionStats with infinite-scroll
+
+
+skipServer OptionStats

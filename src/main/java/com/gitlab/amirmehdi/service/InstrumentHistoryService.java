@@ -1,10 +1,10 @@
 package com.gitlab.amirmehdi.service;
 
 import com.gitlab.amirmehdi.domain.InstrumentHistory;
+import com.gitlab.amirmehdi.domain.InstrumentHistoryCompositeKey;
 import com.gitlab.amirmehdi.repository.InstrumentHistoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -57,7 +57,7 @@ public class InstrumentHistoryService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<InstrumentHistory> findOne(Long id) {
+    public Optional<InstrumentHistory> findOne(InstrumentHistoryCompositeKey id) {
         log.debug("Request to get InstrumentHistory : {}", id);
         return instrumentHistoryRepository.findById(id);
     }
@@ -67,7 +67,7 @@ public class InstrumentHistoryService {
      *
      * @param id the id of the entity.
      */
-    public void delete(Long id) {
+    public void delete(InstrumentHistoryCompositeKey id) {
         log.debug("Request to delete InstrumentHistory : {}", id);
         instrumentHistoryRepository.deleteById(id);
     }

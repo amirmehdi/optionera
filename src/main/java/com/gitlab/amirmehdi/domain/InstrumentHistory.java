@@ -1,112 +1,74 @@
 package com.gitlab.amirmehdi.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Objects;
 import java.time.LocalDate;
 
 /**
  * A InstrumentHistory.
  */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "instrument_history")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@IdClass(InstrumentHistoryCompositeKey.class)
 public class InstrumentHistory implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
-
     @NotNull
     @Column(name = "isin", nullable = false)
     private String isin;
 
-    @Column(name = "closing")
-    private Integer closing;
+    @Id
+    @NotNull
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
 
-    @Column(name = "updated_at")
-    private LocalDate updatedAt;
+    @NotNull
+    @Column(name = "last", nullable = false)
+    private Integer last;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
-        return id;
-    }
+    @NotNull
+    @Column(name = "close", nullable = false)
+    private Integer close;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @NotNull
+    @Column(name = "first", nullable = false)
+    private Integer first;
 
-    public String getIsin() {
-        return isin;
-    }
+    @NotNull
+    @Column(name = "reference_price", nullable = false)
+    private Integer referencePrice;
 
-    public InstrumentHistory isin(String isin) {
-        this.isin = isin;
-        return this;
-    }
+    @NotNull
+    @Column(name = "low", nullable = false)
+    private Integer low;
 
-    public void setIsin(String isin) {
-        this.isin = isin;
-    }
+    @NotNull
+    @Column(name = "high", nullable = false)
+    private Integer high;
 
-    public Integer getClosing() {
-        return closing;
-    }
+    @NotNull
+    @Column(name = "trade_count", nullable = false)
+    private Integer tradeCount;
 
-    public InstrumentHistory closing(Integer closing) {
-        this.closing = closing;
-        return this;
-    }
+    @NotNull
+    @Column(name = "trade_volume", nullable = false)
+    private Long tradeVolume;
 
-    public void setClosing(Integer closing) {
-        this.closing = closing;
-    }
+    @NotNull
+    @Column(name = "trade_value", nullable = false)
+    private Long tradeValue;
 
-    public LocalDate getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public InstrumentHistory updatedAt(LocalDate updatedAt) {
-        this.updatedAt = updatedAt;
-        return this;
-    }
-
-    public void setUpdatedAt(LocalDate updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof InstrumentHistory)) {
-            return false;
-        }
-        return id != null && id.equals(((InstrumentHistory) o).id);
-    }
-
-    @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    @Override
-    public String toString() {
-        return "InstrumentHistory{" +
-            "id=" + getId() +
-            ", isin='" + getIsin() + "'" +
-            ", closing=" + getClosing() +
-            ", updatedAt='" + getUpdatedAt() + "'" +
-            "}";
-    }
 }

@@ -114,4 +114,9 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  oa-base-url: https://api.algo.ir
+  oa-rate-limit: 40
+  market-time-check: true
+  market-updater-fixed-rate: 60000
+  open-interest-updater-fixed-rate: 60000

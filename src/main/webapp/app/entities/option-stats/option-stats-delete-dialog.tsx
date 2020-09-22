@@ -5,19 +5,19 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IInstrumentHistory } from 'app/shared/model/instrument-history.model';
+import { IOptionStats } from 'app/shared/model/option-stats.model';
 import { IRootState } from 'app/shared/reducers';
-import { getEntity, deleteEntity } from './instrument-history.reducer';
+import { getEntity, deleteEntity } from './option-stats.reducer';
 
-export interface IInstrumentHistoryDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface IOptionStatsDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
-export const InstrumentHistoryDeleteDialog = (props: IInstrumentHistoryDeleteDialogProps) => {
+export const OptionStatsDeleteDialog = (props: IOptionStatsDeleteDialogProps) => {
   useEffect(() => {
     props.getEntity(props.match.params.id);
   }, []);
 
   const handleClose = () => {
-    props.history.push('/instrument-history' + props.location.search);
+    props.history.push('/option-stats');
   };
 
   useEffect(() => {
@@ -27,18 +27,18 @@ export const InstrumentHistoryDeleteDialog = (props: IInstrumentHistoryDeleteDia
   }, [props.updateSuccess]);
 
   const confirmDelete = () => {
-    props.deleteEntity(props.instrumentHistoryEntity.id);
+    props.deleteEntity(props.optionStatsEntity.id);
   };
 
-  const { instrumentHistoryEntity } = props;
+  const { optionStatsEntity } = props;
   return (
     <Modal isOpen toggle={handleClose}>
       <ModalHeader toggle={handleClose}>
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
-      <ModalBody id="eTradeApp.instrumentHistory.delete.question">
-        <Translate contentKey="eTradeApp.instrumentHistory.delete.question" interpolate={{ id: instrumentHistoryEntity.id }}>
-          Are you sure you want to delete this InstrumentHistory?
+      <ModalBody id="eTradeApp.optionStats.delete.question">
+        <Translate contentKey="eTradeApp.optionStats.delete.question" interpolate={{ id: optionStatsEntity.id }}>
+          Are you sure you want to delete this OptionStats?
         </Translate>
       </ModalBody>
       <ModalFooter>
@@ -47,7 +47,7 @@ export const InstrumentHistoryDeleteDialog = (props: IInstrumentHistoryDeleteDia
           &nbsp;
           <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
-        <Button id="jhi-confirm-delete-instrumentHistory" color="danger" onClick={confirmDelete}>
+        <Button id="jhi-confirm-delete-optionStats" color="danger" onClick={confirmDelete}>
           <FontAwesomeIcon icon="trash" />
           &nbsp;
           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -57,9 +57,9 @@ export const InstrumentHistoryDeleteDialog = (props: IInstrumentHistoryDeleteDia
   );
 };
 
-const mapStateToProps = ({ instrumentHistory }: IRootState) => ({
-  instrumentHistoryEntity: instrumentHistory.entity,
-  updateSuccess: instrumentHistory.updateSuccess
+const mapStateToProps = ({ optionStats }: IRootState) => ({
+  optionStatsEntity: optionStats.entity,
+  updateSuccess: optionStats.updateSuccess
 });
 
 const mapDispatchToProps = { getEntity, deleteEntity };
@@ -67,4 +67,4 @@ const mapDispatchToProps = { getEntity, deleteEntity };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(InstrumentHistoryDeleteDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(OptionStatsDeleteDialog);

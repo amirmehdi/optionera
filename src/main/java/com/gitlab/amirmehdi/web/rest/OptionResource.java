@@ -1,9 +1,10 @@
 package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.Option;
+import com.gitlab.amirmehdi.service.OptionQueryService;
 import com.gitlab.amirmehdi.service.OptionService;
+import com.gitlab.amirmehdi.service.dto.OptionCriteria;
 import com.gitlab.amirmehdi.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -13,10 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -40,8 +40,11 @@ public class OptionResource {
 
     private final OptionService optionService;
 
-    public OptionResource(OptionService optionService) {
+    private final OptionQueryService optionQueryService;
+
+    public OptionResource(OptionService optionService, OptionQueryService optionQueryService) {
         this.optionService = optionService;
+        this.optionQueryService = optionQueryService;
     }
 
     /**
@@ -88,14 +91,27 @@ public class OptionResource {
      * {@code GET  /options} : get all the options.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of options in body.
      */
     @GetMapping("/options")
-    public ResponseEntity<List<Option>> getAllOptions(Pageable pageable) {
-        log.debug("REST request to get a page of Options");
-        Page<Option> page = optionService.findAll(pageable);
+    public ResponseEntity<List<Option>> getAllOptions(OptionCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get Options by criteria: {}", criteria);
+        Page<Option> page = optionQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /options/count} : count all the options.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/options/count")
+    public ResponseEntity<Long> countOptions(OptionCriteria criteria) {
+        log.debug("REST request to count Options by criteria: {}", criteria);
+        return ResponseEntity.ok().body(optionQueryService.countByCriteria(criteria));
     }
 
     /**

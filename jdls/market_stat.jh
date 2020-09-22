@@ -1,0 +1,20 @@
+entity StockWatch {
+
+ isin String,
+ last Integer,
+ closing Integer,
+ first Integer,
+ high Integer,
+ low Integer,
+ min Integer,
+ max Long,
+ String Integer,
+ tradeValue Long,
+ tradeVolume Integer,
+ tradesCount Integer,
+ referencePrice Integer,
+ dateTime Instant
+
+}
+
+skipServer StockWatch

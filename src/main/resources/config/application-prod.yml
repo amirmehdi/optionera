@@ -137,4 +137,7 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  market-time-check: true
+  market-updater-fixed-rate: 6000
+  open-interest-updater-fixed-rate: 30000

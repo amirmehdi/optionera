@@ -64,6 +64,48 @@ export const OptionDetail = (props: IOptionDetailProps) => {
           </dt>
           <dd>{optionEntity.contractSize}</dd>
           <dt>
+            <span id="callInTheMoney">
+              <Translate contentKey="eTradeApp.option.callInTheMoney">Call In The Money</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.callInTheMoney ? 'true' : 'false'}</dd>
+          <dt>
+            <span id="callBreakEven">
+              <Translate contentKey="eTradeApp.option.callBreakEven">Call Break Even</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.callBreakEven}</dd>
+          <dt>
+            <span id="putBreakEven">
+              <Translate contentKey="eTradeApp.option.putBreakEven">Put Break Even</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.putBreakEven}</dd>
+          <dt>
+            <span id="callAskToBS">
+              <Translate contentKey="eTradeApp.option.callAskToBS">Call Ask To BS</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.callAskToBS}</dd>
+          <dt>
+            <span id="putAskToBS">
+              <Translate contentKey="eTradeApp.option.putAskToBS">Put Ask To BS</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.putAskToBS}</dd>
+          <dt>
+            <span id="callLeverage">
+              <Translate contentKey="eTradeApp.option.callLeverage">Call Leverage</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.callLeverage}</dd>
+          <dt>
+            <span id="putLeverage">
+              <Translate contentKey="eTradeApp.option.putLeverage">Put Leverage</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.putLeverage}</dd>
+          <dt>
             <Translate contentKey="eTradeApp.option.instrument">Instrument</Translate>
           </dt>
           <dd>{optionEntity.instrument ? optionEntity.instrument.isin : ''}</dd>

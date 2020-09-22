@@ -152,6 +152,102 @@ export const OptionUpdate = (props: IOptionUpdateProps) => {
                 </Label>
                 <AvField id="option-contractSize" type="string" className="form-control" name="contractSize" />
               </AvGroup>
+              <AvGroup check>
+                <Label id="callInTheMoneyLabel">
+                  <AvInput id="option-callInTheMoney" type="checkbox" className="form-check-input" name="callInTheMoney" />
+                  <Translate contentKey="eTradeApp.option.callInTheMoney">Call In The Money</Translate>
+                </Label>
+              </AvGroup>
+              <AvGroup>
+                <Label id="callBreakEvenLabel" for="option-callBreakEven">
+                  <Translate contentKey="eTradeApp.option.callBreakEven">Call Break Even</Translate>
+                </Label>
+                <AvField
+                  id="option-callBreakEven"
+                  type="string"
+                  className="form-control"
+                  name="callBreakEven"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
+                <Label id="putBreakEvenLabel" for="option-putBreakEven">
+                  <Translate contentKey="eTradeApp.option.putBreakEven">Put Break Even</Translate>
+                </Label>
+                <AvField
+                  id="option-putBreakEven"
+                  type="string"
+                  className="form-control"
+                  name="putBreakEven"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
+                <Label id="callAskToBSLabel" for="option-callAskToBS">
+                  <Translate contentKey="eTradeApp.option.callAskToBS">Call Ask To BS</Translate>
+                </Label>
+                <AvField
+                  id="option-callAskToBS"
+                  type="string"
+                  className="form-control"
+                  name="callAskToBS"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
+                <Label id="putAskToBSLabel" for="option-putAskToBS">
+                  <Translate contentKey="eTradeApp.option.putAskToBS">Put Ask To BS</Translate>
+                </Label>
+                <AvField
+                  id="option-putAskToBS"
+                  type="string"
+                  className="form-control"
+                  name="putAskToBS"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
+                <Label id="callLeverageLabel" for="option-callLeverage">
+                  <Translate contentKey="eTradeApp.option.callLeverage">Call Leverage</Translate>
+                </Label>
+                <AvField
+                  id="option-callLeverage"
+                  type="string"
+                  className="form-control"
+                  name="callLeverage"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
+                <Label id="putLeverageLabel" for="option-putLeverage">
+                  <Translate contentKey="eTradeApp.option.putLeverage">Put Leverage</Translate>
+                </Label>
+                <AvField
+                  id="option-putLeverage"
+                  type="string"
+                  className="form-control"
+                  name="putLeverage"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
               <AvGroup>
                 <Label for="option-instrument">
                   <Translate contentKey="eTradeApp.option.instrument">Instrument</Translate>
