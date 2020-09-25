@@ -4,7 +4,7 @@ services:
     image: etrade
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
-      - SPRING_PROFILES_ACTIVE=prod,swagger
+      - SPRING_PROFILES_ACTIVE=prod,swagger,faker
       - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
       - SPRING_DATASOURCE_URL=jdbc:postgresql://etrade-postgresql:5432/eTrade
       - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
@@ -14,3 +14,7 @@ services:
     extends:
       file: postgresql.yml
       service: etrade-postgresql
+  etrade-redis:
+    extends:
+      file: redis.yml
+      service: etrade-redis

@@ -2,8 +2,8 @@ version: '2'
 services:
   etrade-postgresql:
     image: postgres:12.1
-    # volumes:
-    #     - ~/volumes/jhipster/eTrade/postgresql/:/var/lib/postgresql/data/
+    volumes:
+      - ~/volumes/jhipster/eTrade/postgresql/:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=eTrade
       - POSTGRES_PASSWORD=

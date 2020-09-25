@@ -1,13 +1,10 @@
 version: '2'
 services:
-  redis:
+  etrade-redis:
     image: redis:alpine
     restart: always
     command: ['redis-server', '--appendonly', 'yes']
     ports:
       - 6379:6379
     volumes:
-      - /mnt/nfs/corebox/redis:/data
-
-volumes:
-  redis-data:
+      - ~/volumes/jhipster/eTrade/redis/:/data
