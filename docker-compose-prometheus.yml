@@ -33,7 +33,7 @@ services:
   prometheus:
     image: prom/prometheus:v2.16.0
     volumes:
-      - ./prometheus-conf/:/etc/prometheus/
+      - /etc/prometheus/:/etc/prometheus/
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -45,7 +45,7 @@ services:
     ports:
       - 9093:9093
     volumes:
-      - ./alertmanager-conf/:/etc/alertmanager/
+      - /etc/alertmanager/:/etc/alertmanager/
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
