@@ -148,7 +148,7 @@ public class CrawlerJobs implements CommandLineRunner {
                                 log.warn("findByCallIsinAndPutIsin does not exist for {} ,{} {} ", bDatum.getVal().get(0).getV(), bDatum.getI(), bDatum.getI());
                                 return null;
                             }
-                            optionStat = OptionStats.builder()
+                            optionStat = new OptionStats()
                                 .option(optionalOption.get())
                                 .callStockWatch(OptionStockWatch.builder()
                                     .settlementPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(2).getV())))
@@ -177,8 +177,7 @@ public class CrawlerJobs implements CommandLineRunner {
                                     .askPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(17).getV())))
                                     .bidPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(18).getV())))
                                     .bidVolume(Integer.parseInt(numberNormalizer(bDatum.getVal().get(19).getV())))
-                                    .build())
-                                .build();
+                                    .build());
                         } else {
                             optionStat.getOption().setInstrument(instrument);
                             optionStat.getCallStockWatch().setSettlementPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(2).getV())));

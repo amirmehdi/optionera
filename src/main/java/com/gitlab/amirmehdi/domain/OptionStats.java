@@ -7,20 +7,16 @@ import com.gitlab.amirmehdi.service.dto.BestBidAsk;
 import com.gitlab.amirmehdi.service.dto.OptionStockWatch;
 import com.gitlab.amirmehdi.service.dto.core.BidAsk;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import static com.gitlab.amirmehdi.service.OptionStatsService.RISK_FREE;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 public class OptionStats {
     private Option option;
     @JsonUnwrapped(prefix = "put")
@@ -31,10 +27,43 @@ public class OptionStats {
     private OptionStockWatch callStockWatch;
     @JsonUnwrapped(prefix = "call")
     private BestBidAsk callBidAsk;
-
-
     private StockWatch baseStockWatch;
     private BidAsk baseBidAsk;
+
+    public OptionStats option(Option option) {
+        this.option = option;
+        return this;
+    }
+
+    public OptionStats putStockWatch(OptionStockWatch putStockWatch) {
+        this.putStockWatch = putStockWatch;
+        return this;
+    }
+
+    public OptionStats putBidAsk(BestBidAsk putBidAsk) {
+        this.putBidAsk = putBidAsk;
+        return this;
+    }
+
+    public OptionStats callStockWatch(OptionStockWatch callStockWatch) {
+        this.callStockWatch = callStockWatch;
+        return this;
+    }
+
+    public OptionStats callBidAsk(BestBidAsk callBidAsk) {
+        this.callBidAsk = callBidAsk;
+        return this;
+    }
+
+    public OptionStats baseStockWatch(StockWatch baseStockWatch) {
+        this.baseStockWatch = baseStockWatch;
+        return this;
+    }
+
+    public OptionStats baseBidAsk(BidAsk baseBidAsk) {
+        this.baseBidAsk = baseBidAsk;
+        return this;
+    }
 
     public int getBlackScholes30() {
         if (checkForNull()) {

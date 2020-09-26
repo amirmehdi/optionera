@@ -9,7 +9,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://etrade-postgresql:5432/eTrade
       - SPRING_DATASOURCE_USERNAME=eTrade
       - SPRING_DATASOURCE_PASSWORD=eTrade2020
-      - JHIPSTER_SLEEP=30
+      - SPRING_REDIS_HOST=etrade-redis
+      - JHIPSTER_SLEEP=0
     ports:
       - '8080:8080'
   etrade-postgresql:
