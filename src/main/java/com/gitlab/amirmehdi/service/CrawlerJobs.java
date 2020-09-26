@@ -210,7 +210,7 @@ public class CrawlerJobs implements CommandLineRunner {
                 String callIsin = bDatum.getI() == null ? "" : bDatum.getI();
                 String putIsin = bDatum.getI2() == null ? "" : bDatum.getI2();
                 Optional<Option> option = optionRepository.findByCallIsinAndPutIsin(callIsin, putIsin);
-                if (option.isPresent()){
+                if (option.isPresent()) {
                     return option.get()
                         .instrument(instrument.get())
                         .name(bDatum.getVal().get(0).getV().substring(1))
@@ -236,6 +236,9 @@ public class CrawlerJobs implements CommandLineRunner {
     }
 
     private String numberNormalizer(String number) {
+        if (number == null) {
+            return "0";
+        }
         if (number.isEmpty())
             return "0";
         number = number.replace(" ", "").replace(",", "").replace(".0", "");

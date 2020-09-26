@@ -9,6 +9,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://etrade-postgresql:5432/eTrade
       - SPRING_DATASOURCE_USERNAME=eTrade
       - SPRING_DATASOURCE_PASSWORD=eTrade2020
+      - SPRING_REDIS_HOST=etrade-redis
       - JHIPSTER_SLEEP=30
       - JHIPSTER_LOGGING_LOGSTASH_ENABLED=true
       - JHIPSTER_LOGGING_LOGSTASH_HOST=jhipster-logstash
