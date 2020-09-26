@@ -863,7 +863,7 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <mainClass>${start-class}</mainClass>
+                        <mainClass>com.gitlab.amirmehdi.ETradeApp</mainClass>
                         <fork>true</fork>
                         <!--
                         Enable the line below to have remote debugging of your application on port 5005
