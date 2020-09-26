@@ -1,0 +1,65 @@
+version: '2'
+services:
+  etrade:
+    image: etrade
+    environment:
+      - _JAVA_OPTIONS=-Xmx256m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,swagger,faker
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://etrade-postgresql:5432/eTrade
+      - SPRING_DATASOURCE_USERNAME=eTrade
+      - SPRING_DATASOURCE_PASSWORD=eTrade2020
+      - JHIPSTER_SLEEP=30
+    ports:
+      - '8080:8080'
+  etrade-postgresql:
+    image: postgres:12.1
+    volumes:
+      - ~/volumes/jhipster/eTrade/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=eTrade
+      - POSTGRES_PASSWORD=eTrade2020
+    ports:
+      - 5432:5432
+  etrade-redis:
+    image: redis:alpine
+    restart: always
+    command: ['redis-server', '--appendonly', 'yes']
+    ports:
+      - 6379:6379
+    volumes:
+      - ~/volumes/jhipster/eTrade/redis/:/data
+
+  prometheus:
+    image: prom/prometheus:v2.16.0
+    volumes:
+      - ./prometheus-conf/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+
+  alertmanager:
+    image: prom/alertmanager:v0.20.0
+    ports:
+      - 9093:9093
+    volumes:
+      - ./alertmanager-conf/:/etc/alertmanager/
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+
+  grafana:
+    image: grafana/grafana:6.6.2
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+
+volumes:
+  prometheus_data: {}
+  grafana_data: {}

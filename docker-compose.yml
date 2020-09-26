@@ -3,7 +3,7 @@ services:
   etrade:
     image: etrade
     environment:
-      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - _JAVA_OPTIONS=-Xmx256m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,swagger,faker
       - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
       - SPRING_DATASOURCE_URL=jdbc:postgresql://etrade-postgresql:5432/eTrade
@@ -18,7 +18,7 @@ services:
     ports:
       - '8080:8080'
   etrade-postgresql:
-    image: 'postgres:12.1'
+    image: postgres:12.1
     volumes:
       - ~/volumes/jhipster/eTrade/postgresql/:/var/lib/postgresql/data/
     environment:

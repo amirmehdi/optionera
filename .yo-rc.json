@@ -46,7 +46,7 @@
     "blueprints": [],
     "appsFolders": ["etrade"],
     "directoryPath": "../",
-    "monitoring": "elk",
+    "monitoring": "prometheus",
     "consoleOptions": []
   }
 }
