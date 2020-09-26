@@ -135,6 +135,10 @@ public class BatchConfiguration {
     @Scheduled(cron = "0 0 7 * * *")
     public void runJobs() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, NoSuchJobException {
         runJobs(new String[]{JOBS.DAY_CANDLE.toString()});
+        updateVolatility();
+    }
+
+    public void updateVolatility() {
         List<Instrument> instruments = instrumentRepository.findAll().parallelStream().peek(instrument -> {
             List<InstrumentHistory> history = instrumentHistoryRepository.findAllByIsin(instrument.getIsin(), PageRequest.of(0, 128, Sort.by(Sort.Order.desc("date"))));
             List<Double> logReturn = history.stream().mapToDouble(value -> 1.0 * value.getClose() / value.getReferencePrice()).boxed().collect(Collectors.toList());
