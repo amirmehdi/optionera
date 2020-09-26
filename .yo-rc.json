@@ -43,6 +43,10 @@
     "enableTranslation": true,
     "nativeLanguage": "fa",
     "languages": ["fa", "en"],
-    "blueprints": []
+    "blueprints": [],
+    "appsFolders": ["etrade"],
+    "directoryPath": "../",
+    "monitoring": "elk",
+    "consoleOptions": []
   }
 }
