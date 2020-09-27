@@ -13,7 +13,7 @@ stages:
   - release
   - deploy
 before_script:
-  - chmod +x mvnw
+  - git update-index --chmod = + x mvnw
   - export MAVEN_USER_HOME=`pwd`/.maven
   - ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v12.16.1 -DnpmVersion=6.14.2 -Dmaven.repo.local=$MAVEN_USER_HOME
   - ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dmaven.repo.local=$MAVEN_USER_HOME
