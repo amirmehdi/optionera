@@ -6,12 +6,13 @@ cache:
     - .m2/repository
 
 stages:
-  - build
+  - release
 
-docker-build:
-  stage: build
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+docker-push:
+  stage: release
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHA
+  dependencies:
+    - maven-package
   script:
-    - mvn clean package -Pprod -DskipTests verify jib:dockerBuild
-    - docker push "$CI_REGISTRY_IMAGE"
+    - mvn -ntp clean package jib:build -Pprod -DskipTests -Djib.to.image=$IMAGE_TAG -Djib.to.auth.username=$CI_REGISTRY_USER  -Djib.to.auth.password=$CI_REGISTRY_PASSWORD -Dmaven.repo.local=$MAVEN_USER_HOME
