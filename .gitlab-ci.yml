@@ -12,7 +12,5 @@ docker-push:
   stage: release
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHA
-  dependencies:
-    - maven-package
   script:
-    - mvn -ntp clean package jib:build -Pprod -DskipTests -Djib.to.image=$IMAGE_TAG -Djib.to.auth.username=$CI_REGISTRY_USER  -Djib.to.auth.password=$CI_REGISTRY_PASSWORD -Dmaven.repo.local=$MAVEN_USER_HOME
+    - mvn -ntp clean verify jib:build -Pprod -DskipTests -Djib.to.image=$IMAGE_TAG -Djib.to.auth.username=$CI_REGISTRY_USER  -Djib.to.auth.password=$CI_REGISTRY_PASSWORD -Dmaven.repo.local=$MAVEN_USER_HOME
