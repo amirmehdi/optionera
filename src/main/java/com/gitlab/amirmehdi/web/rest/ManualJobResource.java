@@ -36,5 +36,11 @@ public class ManualJobResource {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping(value = "option-crawler")
+    public ResponseEntity<Object> optionCrawler(){
+        crawlerJobs.optionCrawler();
+        return ResponseEntity.ok().build();
+    }
+
 
 }

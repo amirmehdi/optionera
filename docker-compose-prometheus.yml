@@ -1,16 +1,16 @@
 version: '2'
 services:
   etrade:
-    image: etrade
+    image: registry.gitlab.com/amirmehdi/etrade:master
     environment:
       - _JAVA_OPTIONS=-Xmx256m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,swagger,faker
-      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
       - SPRING_DATASOURCE_URL=jdbc:postgresql://etrade-postgresql:5432/eTrade
       - SPRING_DATASOURCE_USERNAME=eTrade
       - SPRING_DATASOURCE_PASSWORD=eTrade2020
       - SPRING_REDIS_HOST=etrade-redis
       - JHIPSTER_SLEEP=0
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
     ports:
       - '8080:8080'
   etrade-postgresql:

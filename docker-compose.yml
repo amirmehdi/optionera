@@ -1,7 +1,7 @@
 version: '2'
 services:
   etrade:
-    image: etrade
+    image: registry.gitlab.com/amirmehdi/etrade:master
     environment:
       - _JAVA_OPTIONS=-Xmx256m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,swagger,faker
