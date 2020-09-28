@@ -63,7 +63,7 @@ public class CrawlerJobs implements CommandLineRunner {
             .collect(Collectors.groupingBy(optionStats -> optionStats.getOption().getInstrument().getIsin()))
             .forEach((s, optionStats) -> {
                 StockWatch stockWatch = market.getStockWatch(s);
-                if (stockWatch == null || stockWatch.getState() == null || !stockWatch.getIsin().equals("A")) {
+                if (stockWatch == null || stockWatch.getState() == null || !stockWatch.getState().equals("A")) {
                     return;
                 }
                 List<String> optionsIsin = new ArrayList<>();
