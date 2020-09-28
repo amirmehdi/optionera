@@ -141,11 +141,15 @@ public class CrawlerJobs implements CommandLineRunner {
                 List<OptionStats> optionStats = bData
                     .stream()
                     .map(bDatum -> {
-                        OptionStats optionStat = optionStatsService.findById(bDatum.getI(), bDatum.getI2());
+
+                        String callIsin = bDatum.getI() == null ? "" : bDatum.getI();
+                        String putIsin = bDatum.getI2() == null ? "" : bDatum.getI2();
+
+                        OptionStats optionStat = optionStatsService.findById(callIsin, putIsin);
                         if (optionStat == null) {
-                            Optional<Option> optionalOption = optionRepository.findByCallIsinAndPutIsin(bDatum.getI(), bDatum.getI2());
+                            Optional<Option> optionalOption = optionRepository.findByCallIsinAndPutIsin(callIsin, putIsin);
                             if (!optionalOption.isPresent()) {
-                                log.warn("findByCallIsinAndPutIsin does not exist for {} ,{} {} ", bDatum.getVal().get(0).getV(), bDatum.getI(), bDatum.getI());
+                                log.warn("findByCallIsinAndPutIsin does not exist for {} ,{} {} ", bDatum.getVal().get(0).getV(), callIsin, putIsin);
                                 return null;
                             }
                             optionStat = new OptionStats()
