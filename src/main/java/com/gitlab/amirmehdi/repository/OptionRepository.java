@@ -3,10 +3,8 @@ package com.gitlab.amirmehdi.repository;
 import com.gitlab.amirmehdi.domain.Option;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -26,6 +24,8 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
 
     Optional<Option> findByCallIsinAndPutIsin(String callIsin,String putIsin);
 
+    /*
+    have a bug
     @Transactional
     @Modifying
     @Query(value = "update Option o " +
@@ -37,5 +37,5 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
         "o.putLeverage= :#{#option.putLeverage}, " +
         "o.callInTheMoney= :#{#option.callInTheMoney} " +
         "where o.id= :#{#option.id}")
-    void updateParam(Option option);
+    void updateParam(Option option);*/
 }

@@ -113,7 +113,7 @@ public class OptionService {
                     option, map.get(option.getInstrument().getIsin())
                     , market.getBidAsk(option.getCallIsin())
                     , market.getBidAsk(option.getPutIsin()));
-                optionRepository.updateParam(option);
+                optionRepository.save(option);
             });
     }
 
