@@ -55,7 +55,7 @@ public class CrawlerJobs implements CommandLineRunner {
                     optionsIsin.add(option.getPutIsin());
                 }
                 try {
-                    omidRLCConsumer.getBulkBidAsk(optionsIsin).whenComplete((bidAsks, throwable) -> {
+                    omidRLCConsumer.getBulkBidAsk(optionsIsin).whenCompleteAsync((bidAsks, throwable) -> {
                         if (throwable != null) {
                             throwable.printStackTrace();
                         } else {
@@ -63,7 +63,7 @@ public class CrawlerJobs implements CommandLineRunner {
                             market.saveAllBidAsk(bidAsks);
                         }
                     });
-                    omidRLCConsumer.getBulkStockWatch(optionsIsin).whenComplete((stockWatches, throwable) -> {
+                    omidRLCConsumer.getBulkStockWatch(optionsIsin).whenCompleteAsync((stockWatches, throwable) -> {
                         if (throwable != null) {
                             throwable.printStackTrace();
                         } else {
