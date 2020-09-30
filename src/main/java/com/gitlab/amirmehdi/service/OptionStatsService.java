@@ -23,7 +23,7 @@ public class OptionStatsService {
         this.optionService = optionService;
     }
 
-    public Optional<OptionStats> findOne(long id){
+    public Optional<OptionStats> findOne(long id) {
         Optional<Option> option = optionService.findOne(id);
         return option.map(this::toOptionStats);
     }
@@ -33,7 +33,7 @@ public class OptionStatsService {
         List<OptionStats> optionStats = options.get()
             .map(this::toOptionStats)
             .collect(Collectors.toList());
-        return new PageImpl<>(optionStats);
+        return new PageImpl<>(optionStats, pageable, options.getTotalElements());
     }
 
     private OptionStats toOptionStats(Option option) {
