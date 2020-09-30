@@ -1,0 +1,10 @@
+sudo apt-get install postgresql-client
+psql -h localhost -p 5432 -U eTrade  -d eTrade -c 'delete  FROM patent p WHERE p.id <> (SELECT min(pa.id) FROM   patent pa where pa.ref_id =p.ref_id and pa.patent_id = p.patent_id);'
+
+ps -ef|grep java
+kill -9 id
+
+nohup java -jar ../patent-0.0.1.jar 0 1000 &
+
+mvn clean package -Pprod -DskipTests verify jib:dockerBuild
+docker run -d --restart always -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer

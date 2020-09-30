@@ -1,6 +1,7 @@
 package com.gitlab.amirmehdi.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gitlab.amirmehdi.service.calculator.BlackScholes;
 import com.gitlab.amirmehdi.service.dto.core.BidAskItem;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
@@ -65,25 +66,52 @@ public class OptionStats {
         return option.getId();
     }
 
-    public int getBlackScholes30() {
+    @JsonProperty("callBS30")
+    public int getCallBlackScholes30() {
         if (checkForNull()) {
             return 0;
         }
-        return (int) BlackScholes.callPrice(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility30(), ChronoUnit.DAYS.between(LocalDate.now(),option.getExpDate()));
+        return (int) BlackScholes.getBSCall(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility30(), ChronoUnit.DAYS.between(LocalDate.now(), option.getExpDate()) / 365.0);
     }
 
-    public int getBlackScholes60() {
+    @JsonProperty("callBS60")
+    public int getCallBlackScholes60() {
         if (checkForNull()) {
             return 0;
         }
-        return (int) BlackScholes.callPrice(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility60(), ChronoUnit.DAYS.between(LocalDate.now(),option.getExpDate()));
+        return (int) BlackScholes.getBSCall(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility60(), ChronoUnit.DAYS.between(LocalDate.now(), option.getExpDate()) / 365.0);
     }
 
-    public int getBlackScholes90() {
+    @JsonProperty("callBS90")
+    public int getCallBlackScholes90() {
         if (checkForNull()) {
             return 0;
         }
-        return (int) BlackScholes.callPrice(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility90(), ChronoUnit.DAYS.between(LocalDate.now(),option.getExpDate()));
+        return (int) BlackScholes.getBSCall(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility90(), ChronoUnit.DAYS.between(LocalDate.now(), option.getExpDate()) / 365.0);
+    }
+
+    @JsonProperty("putBS30")
+    public int getPutBlackScholes30() {
+        if (checkForNull()) {
+            return 0;
+        }
+        return (int) BlackScholes.getBSPut(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility30(), ChronoUnit.DAYS.between(LocalDate.now(), option.getExpDate()) / 365.0);
+    }
+
+    @JsonProperty("putBS60")
+    public int getPutBlackScholes60() {
+        if (checkForNull()) {
+            return 0;
+        }
+        return (int) BlackScholes.getBSPut(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility60(), ChronoUnit.DAYS.between(LocalDate.now(), option.getExpDate()) / 365.0);
+    }
+
+    @JsonProperty("putBS90")
+    public int getPutBlackScholes90() {
+        if (checkForNull()) {
+            return 0;
+        }
+        return (int) BlackScholes.getBSPut(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility90(), ChronoUnit.DAYS.between(LocalDate.now(), option.getExpDate()) / 365.0);
     }
 
     public Integer getCallEffectivePrice() {
@@ -114,7 +142,7 @@ public class OptionStats {
         if (callBidAsk.getAskPrice() == 0) {
             return Integer.MAX_VALUE;
         }
-        return (float) (Math.round((callBidAsk.getAskPrice() * 1.0 / getBlackScholes30() - 1) * 1000.0) / 100.0);
+        return (float) (Math.round((callBidAsk.getAskPrice() * 1.0 / getCallBlackScholes30() - 1) * 10000.0) / 100.0);
     }
 
     @JsonIgnore
@@ -125,7 +153,7 @@ public class OptionStats {
         if (putBidAsk.getAskPrice() == 0) {
             return Integer.MAX_VALUE;
         }
-        return (float) (Math.round((putBidAsk.getAskPrice() * 1.0 / getBlackScholes30() - 1) * 1000.0) / 100.0);
+        return (float) (Math.round((putBidAsk.getAskPrice() * 1.0 / getPutBlackScholes30() - 1) * 10000.0) / 100.0);
     }
 
     @JsonIgnore
@@ -133,7 +161,7 @@ public class OptionStats {
         if (checkForNull()) {
             return 0;
         }
-        return (float) (Math.round((getCallEffectivePrice() * 1.0 / baseStockWatch.getLast() - 1) * 1000.0) / 100.0);
+        return (float) (Math.round((getCallEffectivePrice() * 1.0 / baseStockWatch.getLast() - 1) * 10000.0) / 100.0);
     }
 
     @JsonIgnore
@@ -141,7 +169,7 @@ public class OptionStats {
         if (checkForNull()) {
             return 0;
         }
-        return (float) (Math.round((getPutEffectivePrice() * 1.0 / baseStockWatch.getLast() - 1) * 1000.0) / 100.0);
+        return (float) (Math.round((getPutEffectivePrice() * 1.0 / baseStockWatch.getLast() - 1) * 10000.0) / 100.0);
     }
 
     @JsonIgnore
@@ -152,7 +180,7 @@ public class OptionStats {
         if (callBidAsk.getAskPrice() == 0) {
             return 0;
         }
-        return (float) (Math.round((baseStockWatch.getLast() * 1.0 / callBidAsk.getAskPrice()) * 1000.0) / 100.0);
+        return (float) (Math.round((baseStockWatch.getLast() * 1.0 / callBidAsk.getAskPrice()) * 10000.0) / 100.0);
     }
 
     @JsonIgnore
@@ -163,7 +191,7 @@ public class OptionStats {
         if (putBidAsk.getAskPrice() == 0) {
             return 0;
         }
-        return (float) (Math.round((baseStockWatch.getLast() * 1.0 / putBidAsk.getAskPrice()) * 1000.0) / 100.0);
+        return (float) (Math.round((baseStockWatch.getLast() * 1.0 / putBidAsk.getAskPrice()) * 10000.0) / 100.0);
     }
 
     @JsonIgnore

@@ -129,10 +129,11 @@ public class CrawlerJobs implements CommandLineRunner {
             });
     }
 
-    private void updateOpenInterest(BDatum bDatum, String callIsin2, int i, int i2, int i3, int i4, int i5, int i6) {
-        StockWatch callStockWatch = market.getStockWatch(callIsin2);
+    private void updateOpenInterest(BDatum bDatum, String isin, int i, int i2, int i3, int i4, int i5, int i6) {
+        StockWatch callStockWatch = market.getStockWatch(isin);
         if (callStockWatch == null) {
             callStockWatch = StockWatch.builder()
+                .isin(isin)
                 .settlementPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(i).getV())))
                 .openInterest(Integer.parseInt(numberNormalizer(bDatum.getVal().get(i2).getV())))
                 .tradeVolume(Integer.parseInt(numberNormalizer(bDatum.getVal().get(i3).getV())))

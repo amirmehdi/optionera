@@ -171,22 +171,22 @@ export const OptionStatsDetail = (props: IOptionStatsDetailProps) => {
           <dd>{optionStatsEntity.putBidAsk.askQuantity}</dd>
           <dt>
             <span id="blackScholes30">
-              <Translate contentKey="eTradeApp.optionStats.blackScholes30">Black Scholes 30</Translate>
+              <Translate contentKey="eTradeApp.optionStats.blackScholes30">call Black Scholes 30</Translate>
             </span>
           </dt>
-          <dd>{optionStatsEntity.blackScholes30}</dd>
+          <dd>{optionStatsEntity.callBS30}</dd>
           <dt>
             <span id="blackScholes60">
-              <Translate contentKey="eTradeApp.optionStats.blackScholes60">Black Scholes 60</Translate>
+              <Translate contentKey="eTradeApp.optionStats.blackScholes60">call Black Scholes 60</Translate>
             </span>
           </dt>
-          <dd>{optionStatsEntity.blackScholes60}</dd>
+          <dd>{optionStatsEntity.callBS60}</dd>
           <dt>
             <span id="blackScholes90">
-              <Translate contentKey="eTradeApp.optionStats.blackScholes90">Black Scholes 90</Translate>
+              <Translate contentKey="eTradeApp.optionStats.blackScholes90">call Black Scholes 90</Translate>
             </span>
           </dt>
-          <dd>{optionStatsEntity.blackScholes90}</dd>
+          <dd>{optionStatsEntity.callBS90}</dd>
           <dt>
             <span id="callAskPriceToBS">
               <Translate contentKey="eTradeApp.optionStats.callAskPriceToBS">Call Ask Price To BS</Translate>
@@ -210,6 +210,24 @@ export const OptionStatsDetail = (props: IOptionStatsDetailProps) => {
               <Translate contentKey="eTradeApp.optionStats.putAskPriceToBS">Put Ask Price To BS</Translate>
             </span>
           </dt>
+          <dt>
+            <span id="blackScholes30">
+              <Translate contentKey="eTradeApp.optionStats.blackScholes30">put Black Scholes 30</Translate>
+            </span>
+          </dt>
+          <dd>{optionStatsEntity.putBS30}</dd>
+          <dt>
+            <span id="blackScholes60">
+              <Translate contentKey="eTradeApp.optionStats.blackScholes60">put Black Scholes 60</Translate>
+            </span>
+          </dt>
+          <dd>{optionStatsEntity.putBS60}</dd>
+          <dt>
+            <span id="blackScholes90">
+              <Translate contentKey="eTradeApp.optionStats.blackScholes90">put Black Scholes 90</Translate>
+            </span>
+          </dt>
+          <dd>{optionStatsEntity.putBS90}</dd>
           <dd>{optionStatsEntity.option.putAskToBS}</dd>
           <dt>
             <span id="putEffectivePrice">

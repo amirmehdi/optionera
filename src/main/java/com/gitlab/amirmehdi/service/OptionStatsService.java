@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,17 +23,27 @@ public class OptionStatsService {
         this.optionService = optionService;
     }
 
+    public Optional<OptionStats> findOne(long id){
+        Optional<Option> option = optionService.findOne(id);
+        return option.map(this::toOptionStats);
+    }
+
     public Page<OptionStats> findAll(Pageable pageable) {
         Page<Option> options = optionService.findAll(pageable);
         List<OptionStats> optionStats = options.get()
-            .map(option -> new OptionStats()
+            .map(this::toOptionStats)
+            .collect(Collectors.toList());
+        return new PageImpl<>(optionStats);
+    }
+
+    private OptionStats toOptionStats(Option option) {
+        return new OptionStats()
             .option(option)
             .callStockWatch(market.getStockWatch(option.getCallIsin()))
             .callBidAsk(market.getBidAsk(option.getCallIsin()).getBestBidAsk())
             .putStockWatch(market.getStockWatch(option.getPutIsin()))
             .putBidAsk(market.getBidAsk(option.getPutIsin()).getBestBidAsk())
             .baseStockWatch(market.getStockWatch(option.getInstrument().getIsin()))
-            .baseBidAsk(market.getBidAsk(option.getInstrument().getIsin()).getBestBidAsk())).collect(Collectors.toList());
-        return new PageImpl<>(optionStats);
+            .baseBidAsk(market.getBidAsk(option.getInstrument().getIsin()).getBestBidAsk());
     }
 }

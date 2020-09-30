@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,7 +55,7 @@ public class OptionService {
     @Transactional(readOnly = true)
     public List<Option> findAll() {
         log.debug("Request to get all Options");
-        return optionRepository.findAll();
+        return optionRepository.findAllByExpDateGreaterThanEqual(LocalDate.now());
     }
 
     /**
@@ -66,7 +67,7 @@ public class OptionService {
     @Transactional(readOnly = true)
     public Page<Option> findAll(Pageable pageable) {
         log.debug("Request to get all Options");
-        return optionRepository.findAll(pageable);
+        return optionRepository.findAllByExpDateGreaterThanEqual(LocalDate.now(), pageable);
     }
 
     /**
