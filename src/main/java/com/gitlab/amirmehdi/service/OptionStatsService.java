@@ -24,7 +24,8 @@ public class OptionStatsService {
 
     public Page<OptionStats> findAll(Pageable pageable) {
         Page<Option> options = optionService.findAll(pageable);
-        List<OptionStats> optionStats = options.get().map(option -> new OptionStats()
+        List<OptionStats> optionStats = options.get()
+            .map(option -> new OptionStats()
             .option(option)
             .callStockWatch(market.getStockWatch(option.getCallIsin()))
             .callBidAsk(market.getBidAsk(option.getCallIsin()).getBestBidAsk())

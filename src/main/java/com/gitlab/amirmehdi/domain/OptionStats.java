@@ -69,21 +69,21 @@ public class OptionStats {
         if (checkForNull()) {
             return 0;
         }
-        return (int) BlackScholes.callPrice(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility30(), ChronoUnit.DAYS.between(option.getExpDate(), LocalDate.now()));
+        return (int) BlackScholes.callPrice(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility30(), ChronoUnit.DAYS.between(LocalDate.now(),option.getExpDate()));
     }
 
     public int getBlackScholes60() {
         if (checkForNull()) {
             return 0;
         }
-        return (int) BlackScholes.callPrice(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility60(), ChronoUnit.DAYS.between(option.getExpDate(), LocalDate.now()));
+        return (int) BlackScholes.callPrice(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility60(), ChronoUnit.DAYS.between(LocalDate.now(),option.getExpDate()));
     }
 
     public int getBlackScholes90() {
         if (checkForNull()) {
             return 0;
         }
-        return (int) BlackScholes.callPrice(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility90(), ChronoUnit.DAYS.between(option.getExpDate(), LocalDate.now()));
+        return (int) BlackScholes.callPrice(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility90(), ChronoUnit.DAYS.between(LocalDate.now(),option.getExpDate()));
     }
 
     public Integer getCallEffectivePrice() {
@@ -175,6 +175,6 @@ public class OptionStats {
     }
 
     private boolean checkForNull() {
-        return option == null || putBidAsk == null || baseStockWatch == null || callBidAsk == null;
+        return option == null || putBidAsk == null || baseStockWatch == null || callBidAsk == null || LocalDate.now().isAfter(option.getExpDate());
     }
 }
