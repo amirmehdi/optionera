@@ -110,9 +110,6 @@ export const OptionStats = (props: IOptionStatsProps) => {
                     <Translate contentKey="eTradeApp.optionStats.callSettlementPrice">Call Settlement Price</Translate>{' '}
                     <FontAwesomeIcon icon="sort" />
                   </th>
-                  <th className="hand" onClick={sort('callBsPrice')}>
-                    <Translate contentKey="eTradeApp.optionStats.callBsPrice">Call Bs Price</Translate> <FontAwesomeIcon icon="sort" />
-                  </th>
                   <th className="hand" onClick={sort('callTradeVolume')}>
                     <Translate contentKey="eTradeApp.optionStats.callTradeVolume">Call Trade Volume</Translate>{' '}
                     <FontAwesomeIcon icon="sort" />
@@ -154,9 +151,6 @@ export const OptionStats = (props: IOptionStatsProps) => {
                   <th className="hand" onClick={sort('putSettlementPrice')}>
                     <Translate contentKey="eTradeApp.optionStats.putSettlementPrice">Put Settlement Price</Translate>{' '}
                     <FontAwesomeIcon icon="sort" />
-                  </th>
-                  <th className="hand" onClick={sort('putBsPrice')}>
-                    <Translate contentKey="eTradeApp.optionStats.putBsPrice">Put Bs Price</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
                   <th className="hand" onClick={sort('putTradeVolume')}>
                     <Translate contentKey="eTradeApp.optionStats.putTradeVolume">Put Trade Volume</Translate>{' '}
@@ -228,41 +222,39 @@ export const OptionStats = (props: IOptionStatsProps) => {
                     <td>{optionStats.option.strikePrice}</td>
                     <td>{optionStats.option.expDate}</td>
                     <td>{optionStats.option.instrument ? <Link to={`instrument/${optionStats.option.instrument.isin}`}>{optionStats.option.instrument.name}</Link> : ''}</td>
-                    <td>{optionStats.callLast}</td>
-                    <td>{optionStats.callClose}</td>
-                    <td>{optionStats.callReferencePrice}</td>
-                    <td>{optionStats.callSettlementPrice}</td>
-                    <td>{optionStats.callBsPrice}</td>
-                    <td>{optionStats.callTradeVolume}</td>
-                    <td>{optionStats.callTradeCount}</td>
-                    <td>{optionStats.callTradeValue}</td>
-                    <td>{optionStats.callOpenInterest}</td>
-                    <td>{optionStats.callBidPrice}</td>
-                    <td>{optionStats.callAskPrice}</td>
-                    <td>{optionStats.callBidVolume}</td>
-                    <td>{optionStats.callAskVolume}</td>
-                    <td>{optionStats.putLast}</td>
-                    <td>{optionStats.putClose}</td>
-                    <td>{optionStats.putReferencePrice}</td>
-                    <td>{optionStats.putSettlementPrice}</td>
-                    <td>{optionStats.putBsPrice}</td>
-                    <td>{optionStats.putTradeVolume}</td>
-                    <td>{optionStats.putTradeCount}</td>
-                    <td>{optionStats.putTradeValue}</td>
-                    <td>{optionStats.putOpenInterest}</td>
-                    <td>{optionStats.putBidPrice}</td>
-                    <td>{optionStats.putAskPrice}</td>
-                    <td>{optionStats.putBidVolume}</td>
-                    <td>{optionStats.putAskVolume}</td>
+                    <td>{optionStats.callStockWatch.last}</td>
+                    <td>{optionStats.callStockWatch.closing}</td>
+                    <td>{optionStats.callStockWatch.referencePrice}</td>
+                    <td>{optionStats.callStockWatch.settlementPrice}</td>
+                    <td>{optionStats.callStockWatch.tradeVolume}</td>
+                    <td>{optionStats.callStockWatch.tradesCount}</td>
+                    <td>{optionStats.callStockWatch.tradeValue}</td>
+                    <td>{optionStats.callStockWatch.openInterest}</td>
+                    <td>{optionStats.callBidAsk.bidPrice}</td>
+                    <td>{optionStats.callBidAsk.askPrice}</td>
+                    <td>{optionStats.callBidAsk.bidQuantity}</td>
+                    <td>{optionStats.callBidAsk.askQuantity}</td>
+                    <td>{optionStats.putStockWatch.last}</td>
+                    <td>{optionStats.putStockWatch.closing}</td>
+                    <td>{optionStats.putStockWatch.referencePrice}</td>
+                    <td>{optionStats.putStockWatch.settlementPrice}</td>
+                    <td>{optionStats.putStockWatch.tradeVolume}</td>
+                    <td>{optionStats.putStockWatch.tradesCount}</td>
+                    <td>{optionStats.putStockWatch.tradeValue}</td>
+                    <td>{optionStats.putStockWatch.openInterest}</td>
+                    <td>{optionStats.putBidAsk.bidPrice}</td>
+                    <td>{optionStats.putBidAsk.askPrice}</td>
+                    <td>{optionStats.putBidAsk.bidQuantity}</td>
+                    <td>{optionStats.putBidAsk.askQuantity}</td>
                     <td>{optionStats.blackScholes30}</td>
                     <td>{optionStats.blackScholes60}</td>
                     <td>{optionStats.blackScholes90}</td>
-                    <td>{optionStats.callAskPriceToBS}</td>
+                    <td>{optionStats.option.callAskToBS}</td>
                     <td>{optionStats.callEffectivePrice}</td>
-                    <td>{optionStats.callBreakEven}</td>
-                    <td>{optionStats.putAskPriceToBS}</td>
+                    <td>{optionStats.option.callBreakEven}</td>
+                    <td>{optionStats.option.putAskToBS}</td>
                     <td>{optionStats.putEffectivePrice}</td>
-                    <td>{optionStats.putBreakEven}</td>
+                    <td>{optionStats.option.putBreakEven}</td>
                   </tr>
                 ))}
               </tbody>

@@ -2,7 +2,10 @@ package com.gitlab.amirmehdi.service.dto.core;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -11,6 +14,9 @@ import java.util.Date;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StockWatch {
 
     private String isin;
@@ -30,4 +36,8 @@ public class StockWatch {
     private int referencePrice;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Date dateTime;
+
+    private int openInterest;
+    private int settlementPrice;
+
 }

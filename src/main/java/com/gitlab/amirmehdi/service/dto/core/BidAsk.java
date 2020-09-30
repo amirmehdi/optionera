@@ -2,6 +2,7 @@ package com.gitlab.amirmehdi.service.dto.core;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,4 +22,8 @@ public class BidAsk {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Date dateTime;
 
+    @JsonIgnore
+    public BidAskItem getBestBidAsk() {
+        return items.get(0);
+    }
 }

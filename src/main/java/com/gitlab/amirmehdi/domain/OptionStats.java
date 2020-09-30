@@ -1,11 +1,8 @@
 package com.gitlab.amirmehdi.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.gitlab.amirmehdi.service.calculator.BlackScholes;
-import com.gitlab.amirmehdi.service.dto.BestBidAsk;
-import com.gitlab.amirmehdi.service.dto.OptionStockWatch;
-import com.gitlab.amirmehdi.service.dto.core.BidAsk;
+import com.gitlab.amirmehdi.service.dto.core.BidAskItem;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,44 +10,43 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-import static com.gitlab.amirmehdi.service.OptionStatsService.RISK_FREE;
+import static com.gitlab.amirmehdi.service.OptionService.RISK_FREE;
 
 @Getter
 @Setter
 public class OptionStats {
     private Option option;
-    @JsonUnwrapped(prefix = "put")
-    private OptionStockWatch putStockWatch;
-    @JsonUnwrapped(prefix = "put")
-    private BestBidAsk putBidAsk;
-    @JsonUnwrapped(prefix = "call")
-    private OptionStockWatch callStockWatch;
-    @JsonUnwrapped(prefix = "call")
-    private BestBidAsk callBidAsk;
+
+    private StockWatch putStockWatch;
+    private BidAskItem putBidAsk;
+
+    private StockWatch callStockWatch;
+    private BidAskItem callBidAsk;
+
     private StockWatch baseStockWatch;
-    private BidAsk baseBidAsk;
+    private BidAskItem baseBidAsk;
 
     public OptionStats option(Option option) {
         this.option = option;
         return this;
     }
 
-    public OptionStats putStockWatch(OptionStockWatch putStockWatch) {
+    public OptionStats putStockWatch(StockWatch putStockWatch) {
         this.putStockWatch = putStockWatch;
         return this;
     }
 
-    public OptionStats putBidAsk(BestBidAsk putBidAsk) {
+    public OptionStats putBidAsk(BidAskItem putBidAsk) {
         this.putBidAsk = putBidAsk;
         return this;
     }
 
-    public OptionStats callStockWatch(OptionStockWatch callStockWatch) {
+    public OptionStats callStockWatch(StockWatch callStockWatch) {
         this.callStockWatch = callStockWatch;
         return this;
     }
 
-    public OptionStats callBidAsk(BestBidAsk callBidAsk) {
+    public OptionStats callBidAsk(BidAskItem callBidAsk) {
         this.callBidAsk = callBidAsk;
         return this;
     }
@@ -60,9 +56,13 @@ public class OptionStats {
         return this;
     }
 
-    public OptionStats baseBidAsk(BidAsk baseBidAsk) {
+    public OptionStats baseBidAsk(BidAskItem baseBidAsk) {
         this.baseBidAsk = baseBidAsk;
         return this;
+    }
+
+    public long getId() {
+        return option.getId();
     }
 
     public int getBlackScholes30() {
@@ -175,6 +175,6 @@ public class OptionStats {
     }
 
     private boolean checkForNull() {
-        return option == null || putBidAsk == null || baseStockWatch == null || callBidAsk == null || callStockWatch == null || putStockWatch == null;
+        return option == null || putBidAsk == null || baseStockWatch == null || callBidAsk == null;
     }
 }
