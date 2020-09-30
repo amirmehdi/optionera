@@ -51,6 +51,7 @@
       "putAskPriceToBS": "Put Ask Price To BS",
       "putEffectivePrice": "Put Effective Price",
       "putBreakEven": "Put Break Even",
+      "underlyingAssetLast": "underlying asset last",
       "option": "Option"
     }
   }
