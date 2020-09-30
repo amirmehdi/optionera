@@ -1,13 +1,7 @@
 package com.gitlab.amirmehdi.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.domain.Option;
-import com.gitlab.amirmehdi.domain.OptionStats;
-import com.gitlab.amirmehdi.repository.OptionRepository;
-import com.gitlab.amirmehdi.service.dto.BestBidAsk;
-import com.gitlab.amirmehdi.service.dto.OptionStockWatch;
-import com.gitlab.amirmehdi.service.dto.core.BidAsk;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import com.gitlab.amirmehdi.service.dto.tsemodels.BDatum;
 import com.gitlab.amirmehdi.service.dto.tsemodels.OptionResponse;
@@ -26,100 +20,84 @@ import java.util.stream.Collectors;
 @Log4j2
 public class CrawlerJobs implements CommandLineRunner {
     private final RestTemplate restTemplate;
-    private final OptionRepository optionRepository;
+    private final OptionService optionService;
     private final InstrumentService instrumentRepository;
-    private final OptionStatsService optionStatsService;
     private final OmidRLCConsumer omidRLCConsumer;
     private final Market market;
 
 
-    public CrawlerJobs(RestTemplate restTemplate, OptionRepository optionRepository, InstrumentService instrumentRepository, OptionStatsService optionStatsService, OmidRLCConsumer omidRLCConsumer, Market market) {
+    public CrawlerJobs(RestTemplate restTemplate, OptionService optionService, InstrumentService instrumentRepository, OmidRLCConsumer omidRLCConsumer, Market market) {
         this.restTemplate = restTemplate;
-        this.optionRepository = optionRepository;
+        this.optionService = optionService;
         this.instrumentRepository = instrumentRepository;
-        this.optionStatsService = optionStatsService;
         this.omidRLCConsumer = omidRLCConsumer;
         this.market = market;
     }
 
 
     public void marketUpdater() throws Exception {
-
-        StopWatch stopWatch = new StopWatch("market listener");
-        stopWatch.start("updateInstrumentMarket");
-        updateInstrumentMarket();
-        stopWatch.stop();
-
-        stopWatch.start("updateOptionStats");
-        updateOptionStats();
-        stopWatch.stop();
-
-        log.info(stopWatch.prettyPrint());
+        updateOptionsMarket();
+        updateInstrumentsMarket();
     }
 
-    private void updateOptionStats() {
-        optionStatsService.findAll()
+    private void updateOptionsMarket() {
+        optionService.findAll()
             .stream()
-            .collect(Collectors.groupingBy(optionStats -> optionStats.getOption().getInstrument().getIsin()))
+            .collect(Collectors.groupingBy(option -> option.getInstrument().getIsin()))
             .forEach((s, optionStats) -> {
                 StockWatch stockWatch = market.getStockWatch(s);
                 if (stockWatch == null || stockWatch.getState() == null || !stockWatch.getState().equals("A")) {
                     return;
                 }
                 List<String> optionsIsin = new ArrayList<>();
-                for (OptionStats optionStat : optionStats) {
-                    optionsIsin.add(optionStat.getOption().getCallIsin());
-                    optionsIsin.add(optionStat.getOption().getPutIsin());
+                for (Option option : optionStats) {
+                    optionsIsin.add(option.getCallIsin());
+                    optionsIsin.add(option.getPutIsin());
                 }
                 try {
-                    omidRLCConsumer.getBulkBidAsk(optionsIsin).whenCompleteAsync((bidAsks, throwable) -> {
+                    omidRLCConsumer.getBulkBidAsk(optionsIsin).whenComplete((bidAsks, throwable) -> {
                         if (throwable != null) {
                             throwable.printStackTrace();
                         } else {
-                            optionStatsService.saveAllBidAsk(bidAsks);
+                            log.info("update bidask option stat {}", s);
+                            market.saveAllBidAsk(bidAsks);
                         }
                     });
-                    omidRLCConsumer.getBulkStockWatch(optionsIsin).whenCompleteAsync((stockWatches, throwable) -> {
+                    omidRLCConsumer.getBulkStockWatch(optionsIsin).whenComplete((stockWatches, throwable) -> {
                         if (throwable != null) {
                             throwable.printStackTrace();
                         } else {
-                            optionStatsService.saveAllStockWatch(stockWatches);
+                            log.info("update stockwatch option stat {}", s);
+                            market.saveAllStockWatch(stockWatches);
                         }
                     });
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    log.error(e);
                 }
             });
     }
 
-    private void updateInstrumentMarket() throws JsonProcessingException {
+    private void updateInstrumentsMarket() {
         List<String> instruments = instrumentRepository.findAll().stream().map(Instrument::getIsin).collect(Collectors.toList());
-        omidRLCConsumer.getBulkStockWatch(instruments).whenCompleteAsync((stockWatches, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-            } else {
-                market.saveAllStockWatch(stockWatches);
-                Map<String, StockWatch> map = stockWatches.stream()
-                    .collect(Collectors.toMap(StockWatch::getIsin, stockWatch -> stockWatch));
-                optionStatsService.findAll().parallelStream().forEach(optionStats -> {
-                    optionStats.setBaseStockWatch(map.get(optionStats.getOption().getInstrument().getIsin()));
-                    optionStatsService.save(optionStats);
-                });
-            }
-        });
-        omidRLCConsumer.getBulkBidAsk(instruments).whenCompleteAsync((bidAsks, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-            } else {
-                market.saveAllBidAsk(bidAsks);
-                Map<String, BidAsk> map = bidAsks.stream()
-                    .collect(Collectors.toMap(BidAsk::getIsin, bidAsk -> bidAsk));
-                optionStatsService.findAll().parallelStream().forEach(optionStats -> {
-                    optionStats.setBaseBidAsk(map.get(optionStats.getOption().getInstrument().getIsin()));
-                    optionStatsService.save(optionStats);
-                });
-            }
-        });
+        try {
+            omidRLCConsumer.getBulkStockWatch(instruments).whenCompleteAsync((stockWatches, throwable) -> {
+                if (throwable != null) {
+                    throwable.printStackTrace();
+                } else {
+                    market.saveAllStockWatch(stockWatches);
+                    optionService.updateParams(stockWatches);
+                }
+            });
+            omidRLCConsumer.getBulkBidAsk(instruments).whenCompleteAsync((bidAsks, throwable) -> {
+                if (throwable != null) {
+                    throwable.printStackTrace();
+                } else {
+                    market.saveAllBidAsk(bidAsks);
+                }
+            });
+        } catch (Exception e) {
+            log.error(e);
+        }
     }
 
 
@@ -127,79 +105,63 @@ public class CrawlerJobs implements CommandLineRunner {
      * redis initialization or update openInterest and settlementPrice fields
      */
     public void openInterestUpdater() {
-        OptionResponse optionResponse = restTemplate.getForEntity("https://tse.ir/json/MarketWatch/data_7.json?1599569952420?1599569952420", OptionResponse.class).getBody();
+        OptionResponse optionResponse = null;
+        try {
+            optionResponse = restTemplate.getForEntity("https://tse.ir/json/MarketWatch/data_7.json?1599569952420?1599569952420", OptionResponse.class).getBody();
+        } catch (Exception e) {
+            log.error("req to tse.ir got error, ", e);
+            return;
+        }
+
         optionResponse.getBData()
-            .stream()
-            .collect(Collectors.groupingBy(BDatum::getDarayi))
-            .forEach((darayi, bData) -> {
-                Optional<Instrument> optionalInstrument = instrumentRepository.findOneByName(darayi);
-                if (!optionalInstrument.isPresent()) {
-                    log.warn("instrument {} not found", darayi);
+            .forEach(bDatum -> {
+                String callIsin = bDatum.getI() == null ? "" : bDatum.getI();
+                String putIsin = bDatum.getI2() == null ? "" : bDatum.getI2();
+
+                Optional<Option> optionalOption = optionService.findByCallIsinAndPutIsin(callIsin, putIsin);
+                if (!optionalOption.isPresent()) {
+                    log.warn("findByCallIsinAndPutIsin does not exist for {} ,{} {} ", bDatum.getVal().get(0).getV(), callIsin, putIsin);
                     return;
                 }
-                Instrument instrument = optionalInstrument.get();
-                List<OptionStats> optionStats = bData
-                    .stream()
-                    .map(bDatum -> {
-
-                        String callIsin = bDatum.getI() == null ? "" : bDatum.getI();
-                        String putIsin = bDatum.getI2() == null ? "" : bDatum.getI2();
-
-                        OptionStats optionStat = optionStatsService.findById(callIsin, putIsin);
-                        if (optionStat == null) {
-                            Optional<Option> optionalOption = optionRepository.findByCallIsinAndPutIsin(callIsin, putIsin);
-                            if (!optionalOption.isPresent()) {
-                                log.warn("findByCallIsinAndPutIsin does not exist for {} ,{} {} ", bDatum.getVal().get(0).getV(), callIsin, putIsin);
-                                return null;
-                            }
-                            optionStat = new OptionStats()
-                                .option(optionalOption.get())
-                                .callStockWatch(OptionStockWatch.builder()
-                                    .settlementPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(2).getV())))
-                                    .openInterest(Integer.parseInt(numberNormalizer(bDatum.getVal().get(3).getV())))
-                                    .tradeVolume(Integer.parseInt(numberNormalizer(bDatum.getVal().get(4).getV())))
-                                    .tradeValue(Long.parseLong(numberNormalizer(bDatum.getVal().get(5).getV())))
-                                    .tradeCount(Integer.parseInt(numberNormalizer(bDatum.getVal().get(6).getV())))
-                                    .last(Integer.parseInt(numberNormalizer(bDatum.getVal().get(7).getV())))
-                                    .build())
-                                .callBidAsk(BestBidAsk.builder()
-                                    .askVolume(Integer.parseInt(numberNormalizer(bDatum.getVal().get(8).getV())))
-                                    .askPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(9).getV())))
-                                    .bidPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(10).getV())))
-                                    .bidVolume(Integer.parseInt(numberNormalizer(bDatum.getVal().get(11).getV())))
-                                    .build())
-                                .putStockWatch(OptionStockWatch.builder()
-                                    .settlementPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(25).getV())))
-                                    .openInterest(Integer.parseInt(numberNormalizer(bDatum.getVal().get(24).getV())))
-                                    .tradeVolume(Integer.parseInt(numberNormalizer(bDatum.getVal().get(23).getV())))
-                                    .tradeValue(Long.parseLong(numberNormalizer(bDatum.getVal().get(22).getV())))
-                                    .tradeCount(Integer.parseInt(numberNormalizer(bDatum.getVal().get(21).getV())))
-                                    .last(Integer.parseInt(numberNormalizer(bDatum.getVal().get(20).getV())))
-                                    .build())
-                                .putBidAsk(BestBidAsk.builder()
-                                    .askVolume(Integer.parseInt(numberNormalizer(bDatum.getVal().get(16).getV())))
-                                    .askPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(17).getV())))
-                                    .bidPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(18).getV())))
-                                    .bidVolume(Integer.parseInt(numberNormalizer(bDatum.getVal().get(19).getV())))
-                                    .build());
-                        } else {
-                            optionStat.getOption().setInstrument(instrument);
-                            optionStat.getCallStockWatch().setSettlementPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(2).getV())));
-                            optionStat.getCallStockWatch().setOpenInterest(Integer.parseInt(numberNormalizer(bDatum.getVal().get(3).getV())));
-
-                            optionStat.getPutStockWatch().setSettlementPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(25).getV())));
-                            optionStat.getPutStockWatch().setOpenInterest(Integer.parseInt(numberNormalizer(bDatum.getVal().get(24).getV())));
-                        }
-                        return optionStat;
-                    })
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-                optionStatsService.saveAll(optionStats);
+                Option option = optionalOption.get();
+                updateOpenInterest(bDatum, option.getCallIsin(), 2, 3, 4, 5, 6, 7);
+                updateOpenInterest(bDatum, option.getPutIsin(), 25, 24, 23, 22, 21, 20);
             });
     }
 
+    private void updateOpenInterest(BDatum bDatum, String callIsin2, int i, int i2, int i3, int i4, int i5, int i6) {
+        StockWatch callStockWatch = market.getStockWatch(callIsin2);
+        if (callStockWatch == null) {
+            callStockWatch = StockWatch.builder()
+                .settlementPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(i).getV())))
+                .openInterest(Integer.parseInt(numberNormalizer(bDatum.getVal().get(i2).getV())))
+                .tradeVolume(Integer.parseInt(numberNormalizer(bDatum.getVal().get(i3).getV())))
+                .tradeValue(Long.parseLong(numberNormalizer(bDatum.getVal().get(i4).getV())))
+                .tradesCount(Integer.parseInt(numberNormalizer(bDatum.getVal().get(i5).getV())))
+                .last(Integer.parseInt(numberNormalizer(bDatum.getVal().get(i6).getV())))
+                .build();
+        } else {
+            callStockWatch.setSettlementPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(i).getV())));
+            callStockWatch.setOpenInterest(Integer.parseInt(numberNormalizer(bDatum.getVal().get(i2).getV())));
+        }
+        callStockWatch.setDateTime(new Date());
+        market.saveStockWatch(callStockWatch);
+    }
+
     public void optionCrawler() {
-        OptionResponse optionResponse = restTemplate.getForEntity("https://tse.ir/json/MarketWatch/data_7.json?1599569952420?1599569952420", OptionResponse.class).getBody();
+        StopWatch stopWatch = new StopWatch("option crawler");
+
+        stopWatch.start("tse request");
+        OptionResponse optionResponse = null;
+        try {
+            optionResponse = restTemplate.getForEntity("https://tse.ir/json/MarketWatch/data_7.json?1599569952420?1599569952420", OptionResponse.class).getBody();
+        } catch (Exception e) {
+            log.error("req to tse.ir got error, ", e);
+            return;
+        }
+        stopWatch.stop();
+
+        stopWatch.start("mapping");
         List<Option> options = optionResponse.getBData()
             .stream()
             .map(bDatum -> {
@@ -212,7 +174,7 @@ public class CrawlerJobs implements CommandLineRunner {
                 }
                 String callIsin = bDatum.getI() == null ? "" : bDatum.getI();
                 String putIsin = bDatum.getI2() == null ? "" : bDatum.getI2();
-                Optional<Option> option = optionRepository.findByCallIsinAndPutIsin(callIsin, putIsin);
+                Optional<Option> option = optionService.findByCallIsinAndPutIsin(callIsin, putIsin);
                 if (option.isPresent()) {
                     return option.get()
                         .instrument(instrument.get())
@@ -234,8 +196,13 @@ public class CrawlerJobs implements CommandLineRunner {
             })
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
+        stopWatch.stop();
 
-        optionRepository.saveAll(options);
+        stopWatch.start("saving");
+        optionService.saveAll(options);
+        stopWatch.stop();
+
+        log.info(stopWatch.prettyPrint());
     }
 
     private String numberNormalizer(String number) {

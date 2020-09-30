@@ -6,6 +6,7 @@ import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.service.dto.core.BidAsk;
 import com.gitlab.amirmehdi.service.dto.core.Instrument;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
+@Log4j2
 public class OmidRLCConsumer {
 
     private final ObjectMapper objectMapper;
@@ -33,6 +35,7 @@ public class OmidRLCConsumer {
     }
 
     public List<Instrument> searchInstrument(String name) {
+        log.debug("searchInstrument for name :{}", name);
         return restTemplate.exchange(
             applicationProperties.getOaBaseUrl() + "/core/search/" + name,
             HttpMethod.GET,
@@ -43,6 +46,7 @@ public class OmidRLCConsumer {
 
     @Async
     public CompletableFuture<List<BidAsk>> getBulkBidAsk(List<String> isins) throws JsonProcessingException {
+        log.debug("getBulkBidAsk for isins :{}", isins);
         ResponseEntity<List<BidAsk>> response = restTemplate.exchange(
             applicationProperties.getOaBaseUrl() + "/core/bidask-bulk",
             HttpMethod.POST,
@@ -54,6 +58,7 @@ public class OmidRLCConsumer {
 
     @Async
     public CompletableFuture<List<StockWatch>> getBulkStockWatch(List<String> isins) throws JsonProcessingException {
+        log.debug("getBulkStockWatch for isins :{}", isins);
         ResponseEntity<List<StockWatch>> response = restTemplate.exchange(
             applicationProperties.getOaBaseUrl() + "/core/stockwatch-bulk",
             HttpMethod.POST,

@@ -13,13 +13,9 @@ public class BidAskItem {
     private int bidNumber;
     private int bidPrice;
     private int bidQuantity;
-    private int buyEffectiveBidYtm;
-    private int sellEffectiveBidYtm;
 
     private int askNumber;
     private int askPrice;
     private int askQuantity;
-    private int buyEffectiveAskYtm;
-    private int sellEffectiveAskYtm;
 
 }

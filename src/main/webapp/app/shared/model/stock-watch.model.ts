@@ -16,6 +16,8 @@ export interface IStockWatch {
   tradesCount?: number;
   referencePrice?: number;
   dateTime?: Moment;
+  openInterest?: number;
+  settlementPrice?: number;
 }
 
 export const defaultValue: Readonly<IStockWatch> = {};
