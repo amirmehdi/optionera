@@ -5,12 +5,12 @@ services:
     environment:
       - _JAVA_OPTIONS=-Xmx256m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,swagger,faker
-      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
       - SPRING_DATASOURCE_URL=jdbc:postgresql://etrade-postgresql:5432/eTrade
       - SPRING_DATASOURCE_USERNAME=eTrade
       - SPRING_DATASOURCE_PASSWORD=eTrade2020
       - SPRING_REDIS_HOST=etrade-redis
       - JHIPSTER_SLEEP=0
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
       - JHIPSTER_LOGGING_LOGSTASH_ENABLED=true
       - JHIPSTER_LOGGING_LOGSTASH_HOST=jhipster-logstash
       - JHIPSTER_METRICS_LOGS_ENABLED=true
@@ -38,7 +38,7 @@ services:
   jhipster-elasticsearch:
     image: jhipster/jhipster-elasticsearch:v4.1.0
     environment:
-      - ES_JAVA_OPTS=-Xms128m -Xmx128m
+      - _JAVA_OPTIONS=-Xms128m -Xmx128m
       - http.host=0.0.0.0
       - transport.host=127.0.0.1
     volumes:
@@ -46,7 +46,7 @@ services:
   jhipster-logstash:
     image: jhipster/jhipster-logstash:v4.1.0
     environment:
-      - ES_JAVA_OPTS=-Xms128m -Xmx128m
+      - _JAVA_OPTIONS=-Xms128m -Xmx128m
       - INPUT_TCP_PORT=5000
       - INPUT_UDP_PORT=5000
       - ELASTICSEARCH_HOST=jhipster-elasticsearch

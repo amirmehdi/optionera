@@ -7,7 +7,6 @@ import com.gitlab.amirmehdi.service.dto.tsemodels.BDatum;
 import com.gitlab.amirmehdi.service.dto.tsemodels.OptionResponse;
 import com.gitlab.amirmehdi.util.DateUtil;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 import org.springframework.web.client.RestTemplate;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Log4j2
-public class CrawlerJobs implements CommandLineRunner {
+public class CrawlerJobs {
     private final RestTemplate restTemplate;
     private final OptionService optionService;
     private final InstrumentService instrumentRepository;
@@ -35,7 +34,7 @@ public class CrawlerJobs implements CommandLineRunner {
     }
 
 
-    public void marketUpdater() throws Exception {
+    public void marketUpdater() {
         updateOptionsMarket();
         updateInstrumentsMarket();
     }
@@ -246,16 +245,5 @@ public class CrawlerJobs implements CommandLineRunner {
                 return "14" + year;
         }
         throw new IllegalArgumentException(year + " undefined");
-    }
-
-    @Override
-    public void run(String... args) {
-        try {
-            optionCrawler();
-            openInterestUpdater();
-            marketUpdater();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
