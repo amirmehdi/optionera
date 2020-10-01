@@ -26,8 +26,8 @@ public class StrategyService {
 
     @Scheduled(fixedDelay = 30 * 60 * 1000)
     public void getArbitrageBetweenAssetAndOption() {
-        Option option = optionRepository.findAllByExpDateGreaterThanEqual(LocalDate.now(), PageRequest.of(0, 1, Sort.by(Sort.Order.asc("callAskToBS")))).getContent().get(0);
-        if (option.getCallAskToBS() > 0) {
+        Option option = optionRepository.findAllByExpDateGreaterThanEqual(LocalDate.now(), PageRequest.of(0, 1, Sort.by(Sort.Order.asc("callBreakEven")))).getContent().get(0);
+        if (option.getCallBreakEven() > 0) {
             return;
         }
         String text = getMessageTemplate(option, "آربیتراژ روی سهم و اختیار خرید به قصد اعمال اختیار", "کم");
@@ -36,8 +36,8 @@ public class StrategyService {
 
     @Scheduled(fixedDelay = 20 * 60 * 1000)
     public void getOptionWithPriceLowerThanBS() {
-        Option option = optionRepository.findAllByExpDateGreaterThanEqual(LocalDate.now(), PageRequest.of(0, 1, Sort.by(Sort.Order.asc("callBreakEven")))).getContent().get(0);
-        if (option.getCallBreakEven() > 0) {
+        Option option = optionRepository.findAllByExpDateGreaterThanEqual(LocalDate.now(), PageRequest.of(0, 1, Sort.by(Sort.Order.asc("callAskToBS")))).getContent().get(0);
+        if (option.getCallAskToBS() > 0) {
             return;
         }
         String text = getMessageTemplate(option, "اختیار با قیمتی کمتر از قیمت تئوری قابل خرید است", "متوسط");
