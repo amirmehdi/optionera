@@ -2,10 +2,10 @@
   "eTradeApp": {
     "optionStats": {
       "home": {
-        "title": "Option Stats",
+        "title": "اطلاعات اختیارها",
         "createLabel": "Create a new Option Stats",
         "createOrEditLabel": "Create or edit a Option Stats",
-        "notFound": "No Option Stats found"
+        "notFound": "اطلاعاتی یافت نشد"
       },
       "created": "A new Option Stats is created with identifier {{ param }}",
       "updated": "A Option Stats is updated with identifier {{ param }}",
@@ -14,45 +14,27 @@
         "question": "Are you sure you want to delete Option Stats {{ id }}?"
       },
       "detail": {
-        "title": "Option Stats"
+        "title": "اطلاعات اختیار"
       },
-      "callLast": "Call Last",
-      "callClose": "Call Close",
-      "callReferencePrice": "Call Reference Price",
-      "callSettlementPrice": "Call Settlement Price",
-      "callBsPrice": "Call Bs Price",
-      "callTradeVolume": "Call Trade Volume",
-      "callTradeCount": "Call Trade Count",
-      "callTradeValue": "Call Trade Value",
-      "callOpenInterest": "Call Open Interest",
-      "callBidPrice": "Call Bid Price",
-      "callAskPrice": "Call Ask Price",
-      "callBidVolume": "Call Bid Volume",
-      "callAskVolume": "Call Ask Volume",
-      "putLast": "Put Last",
-      "putClose": "Put Close",
-      "putReferencePrice": "Put Reference Price",
-      "putSettlementPrice": "Put Settlement Price",
-      "putBsPrice": "Put Bs Price",
-      "putTradeVolume": "Put Trade Volume",
-      "putTradeCount": "Put Trade Count",
-      "putTradeValue": "Put Trade Value",
-      "putOpenInterest": "Put Open Interest",
-      "putBidPrice": "Put Bid Price",
-      "putAskPrice": "Put Ask Price",
-      "putBidVolume": "Put Bid Volume",
-      "putAskVolume": "Put Ask Volume",
-      "blackScholes30": "Black Scholes 30",
-      "blackScholes60": "Black Scholes 60",
-      "blackScholes90": "Black Scholes 90",
-      "callAskPriceToBS": "Call Ask Price To BS",
-      "callEffectivePrice": "Call Effective Price",
-      "callBreakEven": "Call Break Even",
-      "putAskPriceToBS": "Put Ask Price To BS",
-      "putEffectivePrice": "Put Effective Price",
-      "putBreakEven": "Put Break Even",
-      "underlyingAssetLast": "underlying asset last",
-      "option": "Option"
+      "Last": "اخرین ",
+      "Close": "پایانی",
+      "ReferencePrice": "دیروز",
+      "SettlementPrice": "تسویه",
+      "TradeVolume": "حجم",
+      "TradeCount": "تعداد",
+      "TradeValue": "ارزش",
+      "OpenInterest": "موقعیت باز",
+      "BidPrice": "قیمت خرید",
+      "AskPrice": "قیمت فروش",
+      "BidVolume": "حجم خرید",
+      "AskVolume": "حجم فروش",
+      "BlackScholes30": "بلک شولز",
+      "AskPriceToBS": "% قیمت فروش به بلک شولز",
+      "EffectivePrice": "قیمت موثر",
+      "BreakEven": "% سربه سری",
+      "Leverage": "اهرم",
+      "underlyingAssetLast": "قیمت دارایی پایه",
+      "option": "اختیار"
     }
   }
 }

@@ -1,9 +1,11 @@
 package com.gitlab.amirmehdi.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@Log4j2
 public class TelegramMessageSender {
     private final RestTemplate restTemplate;
     private final String urlString = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s";
@@ -15,6 +17,10 @@ public class TelegramMessageSender {
 
     public void sendMessage(String chatId, String text) {
         String url = String.format(urlString, apiToken, chatId, text);
-        restTemplate.getForEntity(url,String.class);
+        try {
+            restTemplate.getForEntity(url, String.class);
+        } catch (Exception e) {
+            log.error("can't request to telegram");
+        }
     }
 }

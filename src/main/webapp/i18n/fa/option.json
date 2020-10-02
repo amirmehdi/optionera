@@ -19,9 +19,9 @@
       "name": "Name",
       "callIsin": "Call Isin",
       "putIsin": "Put Isin",
-      "expDate": "Exp Date",
-      "strikePrice": "Strike Price",
-      "contractSize": "Contract Size",
+      "expDate": "سررسید",
+      "strikePrice": "قیمت اعمال",
+      "contractSize": "اندازه قرارداد",
       "callInTheMoney": "Call In The Money",
       "callBreakEven": "Call Break Even",
       "putBreakEven": "Put Break Even",
@@ -29,7 +29,7 @@
       "putAskToBS": "Put Ask To BS",
       "callLeverage": "Call Leverage",
       "putLeverage": "Put Leverage",
-      "instrument": "Instrument"
+      "instrument": "دارایی پایه"
     }
   }
 }

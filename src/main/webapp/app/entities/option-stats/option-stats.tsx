@@ -88,48 +88,45 @@ export const OptionStats = (props: IOptionStatsProps) => {
                 </th>
 
                 <th>
-                  <Translate contentKey="eTradeApp.optionStats.blackScholes30">call Black Scholes 30</Translate>{' '}
+                  <Translate contentKey="eTradeApp.optionStats.BlackScholes30"> Black Scholes 30</Translate>{' '}
                 </th>
                 <th>
-                  <Translate contentKey="eTradeApp.optionStats.blackScholes60">call Black Scholes 60</Translate>{' '}
-                </th>
-                <th>
-                  <Translate contentKey="eTradeApp.optionStats.blackScholes90">call Black Scholes 90</Translate>{' '}
-                </th>
-                <th>
-                  <Translate contentKey="eTradeApp.optionStats.callEffectivePrice">Call Effective Price</Translate>{' '}
+                  <Translate contentKey="eTradeApp.optionStats.EffectivePrice"> Effective Price</Translate>{' '}
                 </th>
                 <th className="hand" onClick={sort('callAskToBS')}>
-                  <Translate contentKey="eTradeApp.optionStats.callAskPriceToBS">Call Ask Price To BS</Translate>{' '}
+                  <Translate contentKey="eTradeApp.optionStats.AskPriceToBS"> Ask Price To BS</Translate>{' '}
                   <FontAwesomeIcon icon="sort"/>
                 </th>
                 <th className="hand" onClick={sort('callBreakEven')}>
-                  <Translate contentKey="eTradeApp.optionStats.callBreakEven">Call Break Even</Translate>
+                  <Translate contentKey="eTradeApp.optionStats.BreakEven"> Break Even</Translate>
+                  <FontAwesomeIcon icon="sort"/>
+                </th>
+                <th className="hand" onClick={sort('callLeverage')}>
+                  <Translate contentKey="eTradeApp.optionStats.Leverage"> Leverage</Translate>
                   <FontAwesomeIcon icon="sort"/>
                 </th>
 
+                <th>
+                  <Translate contentKey="eTradeApp.optionStats.TradeVolume"> Trade Volume</Translate>{' '}
+                </th>
+                <th>
+                  <Translate contentKey="eTradeApp.optionStats.Last"> Last</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="eTradeApp.optionStats.OpenInterest"> Open Interest</Translate>{' '}
+                </th>
 
                 <th>
-                  <Translate contentKey="eTradeApp.optionStats.callTradeVolume">Call Trade Volume</Translate>{' '}
+                  <Translate contentKey="eTradeApp.optionStats.BidVolume"> Bid Volume</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="eTradeApp.optionStats.callLast">Call Last</Translate>
+                  <Translate contentKey="eTradeApp.optionStats.BidPrice"> Bid Price</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="eTradeApp.optionStats.callOpenInterest">Call Open Interest</Translate>{' '}
-                </th>
-
-                <th>
-                  <Translate contentKey="eTradeApp.optionStats.callBidVolume">Call Bid Volume</Translate>
+                  <Translate contentKey="eTradeApp.optionStats.AskPrice"> Ask Price</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="eTradeApp.optionStats.callBidPrice">Call Bid Price</Translate>
-                </th>
-                <th>
-                  <Translate contentKey="eTradeApp.optionStats.callAskPrice">Call Ask Price</Translate>
-                </th>
-                <th>
-                  <Translate contentKey="eTradeApp.optionStats.callAskVolume">Call Ask Volume</Translate>
+                  <Translate contentKey="eTradeApp.optionStats.AskVolume"> Ask Volume</Translate>
                 </th>
 
                 <th className="hand" onClick={sort('strikePrice')}>
@@ -143,55 +140,48 @@ export const OptionStats = (props: IOptionStatsProps) => {
                 <th>
                   <Translate contentKey="eTradeApp.option.instrument">underlying asset</Translate>
                 </th>
+
                 <th>
-                  <Translate contentKey="eTradeApp.optionStats.underlyingAssetLast">underlying asset last</Translate>
+                  <Translate contentKey="eTradeApp.optionStats.BidVolume"> Bid Volume</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="eTradeApp.optionStats.BidPrice"> Bid Price</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="eTradeApp.optionStats.AskPrice"> Ask Price</Translate>
+                </th>
+                <th>
+                  <Translate contentKey="eTradeApp.optionStats.AskVolume"> Ask Volume</Translate>
                 </th>
 
 
                 <th>
-                  <Translate contentKey="eTradeApp.optionStats.putBidVolume">Put Bid Volume</Translate>
+                  <Translate contentKey="eTradeApp.optionStats.OpenInterest"> Open Interest</Translate>{' '}
                 </th>
                 <th>
-                  <Translate contentKey="eTradeApp.optionStats.putBidPrice">Put Bid Price</Translate>
+                  <Translate contentKey="eTradeApp.optionStats.Last"> Last</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="eTradeApp.optionStats.putAskPrice">Put Ask Price</Translate>
-                </th>
-                <th>
-                  <Translate contentKey="eTradeApp.optionStats.putAskVolume">Put Ask Volume</Translate>
+                  <Translate contentKey="eTradeApp.optionStats.TradeVolume"> Trade Volume</Translate>{' '}
                 </th>
 
-
-                <th>
-                  <Translate contentKey="eTradeApp.optionStats.putOpenInterest">Put Open Interest</Translate>{' '}
+                <th className="hand" onClick={sort('putLeverage')}>
+                  <Translate contentKey="eTradeApp.optionStats.Leverage"> Leverage</Translate>
+                  <FontAwesomeIcon icon="sort"/>
                 </th>
-                <th>
-                  <Translate contentKey="eTradeApp.optionStats.putLast">Put Last</Translate>
-                </th>
-                <th>
-                  <Translate contentKey="eTradeApp.optionStats.putTradeVolume">Put Trade Volume</Translate>{' '}
-                </th>
-
-
                 <th className="hand" onClick={sort('putBreakEven')}>
-                  <Translate contentKey="eTradeApp.optionStats.putBreakEven">Put Break Even</Translate>
+                  <Translate contentKey="eTradeApp.optionStats.BreakEven"> Break Even</Translate>
                   <FontAwesomeIcon icon="sort"/>
                 </th>
                 <th className="hand" onClick={sort('putAskToBS')}>
-                  <Translate contentKey="eTradeApp.optionStats.putAskPriceToBS">Put Ask Price To BS</Translate>{' '}
+                  <Translate contentKey="eTradeApp.optionStats.AskPriceToBS"> Ask Price To BS</Translate>{' '}
                   <FontAwesomeIcon icon="sort"/>
                 </th>
                 <th>
-                  <Translate contentKey="eTradeApp.optionStats.putEffectivePrice">Put Effective Price</Translate>{' '}
+                  <Translate contentKey="eTradeApp.optionStats.EffectivePrice"> Effective Price</Translate>{' '}
                 </th>
                 <th>
-                  <Translate contentKey="eTradeApp.optionStats.blackScholes90">put Black Scholes 90</Translate>{' '}
-                </th>
-                <th>
-                  <Translate contentKey="eTradeApp.optionStats.blackScholes60">put Black Scholes 60</Translate>{' '}
-                </th>
-                <th>
-                  <Translate contentKey="eTradeApp.optionStats.blackScholes30">put Black Scholes 30</Translate>{' '}
+                  <Translate contentKey="eTradeApp.optionStats.BlackScholes30"> Black Scholes 30</Translate>{' '}
                 </th>
                 <th>
                   <Translate contentKey="eTradeApp.optionStats.option">Option</Translate>
@@ -206,11 +196,10 @@ export const OptionStats = (props: IOptionStatsProps) => {
                     <Link to={`option/${optionStats.option.id}`}>{'ض'+optionStats.option.name}</Link> : ''}</td>
 
                   <td>{optionStats.callBS30}</td>
-                  <td>{optionStats.callBS60}</td>
-                  <td>{optionStats.callBS90}</td>
                   <td>{optionStats.callEffectivePrice}</td>
                   <td>{optionStats.option.callAskToBS}</td>
                   <td>{optionStats.option.callBreakEven}</td>
+                  <td>{optionStats.option.callLeverage}</td>
 
                   <td>{optionStats.callStockWatch?.tradeVolume}</td>
                   <td>{optionStats.callStockWatch?.last}</td>
@@ -223,9 +212,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
 
                   <td>{optionStats.option.strikePrice}</td>
                   <td>{optionStats.option.expDate}</td>
-                  <td>{optionStats.option.instrument ? <Link
-                    to={`instrument/${optionStats.option.instrument.isin}`}>{optionStats.option.instrument.name}</Link> : ''}</td>
-                  <td>{optionStats.baseStockWatch?.last}</td>
+                  <td>{optionStats.option.instrument ? <a href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${optionStats.option.instrument.tseId}`}>{optionStats.option.instrument.name} {optionStats.baseStockWatch?.last}</a> : ''}</td>
 
                   <td>{optionStats.putBidAsk.bidQuantity}</td>
                   <td>{optionStats.putBidAsk.bidPrice}</td>
@@ -236,11 +223,10 @@ export const OptionStats = (props: IOptionStatsProps) => {
                   <td>{optionStats.putStockWatch?.last}</td>
                   <td>{optionStats.putStockWatch?.tradeVolume}</td>
 
+                  <td>{optionStats.option.putLeverage}</td>
                   <td>{optionStats.option.putBreakEven}</td>
                   <td>{optionStats.option.putAskToBS}</td>
                   <td>{optionStats.putEffectivePrice}</td>
-                  <td>{optionStats.putBS90}</td>
-                  <td>{optionStats.putBS60}</td>
                   <td>{optionStats.putBS30}</td>
                   <td>{optionStats.option ?
                     <Link to={`option/${optionStats.option.id}`}>{'ط'+optionStats.option.name}</Link> : ''}</td>

@@ -29,7 +29,7 @@
       "putAskToBS": "Put Ask To BS",
       "callLeverage": "Call Leverage",
       "putLeverage": "Put Leverage",
-      "instrument": "Instrument"
+      "instrument": "Underlying Asset"
     }
   }
 }

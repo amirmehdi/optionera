@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 @Service
 public class ScheduledJobs {
     private final CrawlerJobs crawlerJobs;
@@ -19,15 +17,15 @@ public class ScheduledJobs {
     }
 
     @Scheduled(fixedRateString = "${application.market-updater-fixed-rate}")
-    public void marketUpdater() throws Exception {
-        if (marketTimeCheck && !MarketTimeUtil.isMarketOpen(new Date()))
+    public void marketUpdater() {
+        if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
             return;
         crawlerJobs.marketUpdater();
     }
 
     @Scheduled(fixedRateString = "${application.open-interest-updater-fixed-rate}")
     public void openInterestUpdater() {
-        if (marketTimeCheck && !MarketTimeUtil.isMarketOpen(new Date()))
+        if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
             return;
         crawlerJobs.openInterestUpdater();
     }

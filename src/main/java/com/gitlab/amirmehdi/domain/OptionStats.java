@@ -163,6 +163,9 @@ public class OptionStats {
         if (checkForNull()) {
             return 0;
         }
+        if (callBidAsk.getAskPrice() == 0) {
+            return Integer.MAX_VALUE;
+        }
         return (float) (Math.round((getCallEffectivePrice() * 1.0 / baseStockWatch.getLast() - 1) * 10000.0) / 100.0);
     }
 
@@ -170,6 +173,9 @@ public class OptionStats {
     public float getPutBreakEven() {
         if (checkForNull()) {
             return 0;
+        }
+        if (putBidAsk.getAskPrice() == 0) {
+            return Integer.MAX_VALUE;
         }
         return (float) (Math.round((getPutEffectivePrice() * 1.0 / baseStockWatch.getLast() - 1) * 10000.0) / 100.0);
     }
@@ -182,7 +188,7 @@ public class OptionStats {
         if (callBidAsk.getAskPrice() == 0) {
             return 0;
         }
-        return (float) (Math.round((baseStockWatch.getLast() * 1.0 / callBidAsk.getAskPrice()) * 10000.0) / 100.0);
+        return (float) (Math.round((baseStockWatch.getLast() * 1.0 / callBidAsk.getAskPrice()) * 100.0) / 100.0);
     }
 
     @JsonIgnore
@@ -193,7 +199,7 @@ public class OptionStats {
         if (putBidAsk.getAskPrice() == 0) {
             return 0;
         }
-        return (float) (Math.round((baseStockWatch.getLast() * 1.0 / putBidAsk.getAskPrice()) * 10000.0) / 100.0);
+        return (float) (Math.round((baseStockWatch.getLast() * 1.0 / putBidAsk.getAskPrice()) * 100.0) / 100.0);
     }
 
     @JsonIgnore
