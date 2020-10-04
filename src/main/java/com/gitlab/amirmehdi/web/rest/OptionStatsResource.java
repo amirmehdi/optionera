@@ -2,6 +2,7 @@ package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.OptionStats;
 import com.gitlab.amirmehdi.service.OptionStatsService;
+import com.gitlab.amirmehdi.service.dto.OptionCriteria;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import lombok.extern.log4j.Log4j2;
@@ -36,9 +37,9 @@ public class OptionStatsResource {
     }
 
     @GetMapping("/option-stats")
-    public ResponseEntity<List<OptionStats>> getAllOptions(Pageable pageable) {
+    public ResponseEntity<List<OptionStats>> getAllOptions(OptionCriteria criteria,Pageable pageable) {
         log.debug("REST request to get a page of OptionStats");
-        Page<OptionStats> page = optionStatsService.findAll(pageable);
+        Page<OptionStats> page = optionStatsService.findAll(criteria,pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
