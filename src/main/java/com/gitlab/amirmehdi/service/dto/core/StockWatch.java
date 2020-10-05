@@ -1,6 +1,7 @@
 package com.gitlab.amirmehdi.service.dto.core;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,4 +41,8 @@ public class StockWatch {
     private int openInterest;
     private int settlementPrice;
 
+    @JsonIgnore
+    public boolean isBuyQueue() {
+        return last == max;
+    }
 }

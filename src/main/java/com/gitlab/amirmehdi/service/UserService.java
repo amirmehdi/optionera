@@ -9,6 +9,9 @@ import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.security.SecurityUtils;
 import com.gitlab.amirmehdi.service.dto.UserDTO;
 
+import com.gitlab.amirmehdi.service.errors.EmailAlreadyUsedException;
+import com.gitlab.amirmehdi.service.errors.InvalidPasswordException;
+import com.gitlab.amirmehdi.service.errors.UsernameAlreadyUsedException;
 import io.github.jhipster.security.RandomUtil;
 
 import org.slf4j.Logger;

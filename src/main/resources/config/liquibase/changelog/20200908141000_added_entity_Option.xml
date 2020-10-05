@@ -61,6 +61,13 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="20200908141000-1-dates" author="amirmehdi">
+        <addColumn tableName="option">
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </addColumn>
+    </changeSet>
+
     <changeSet id="20200908141000-1-relations" author="jhipster">
 
     </changeSet>

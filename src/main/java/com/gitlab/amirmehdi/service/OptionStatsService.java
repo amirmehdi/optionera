@@ -31,6 +31,10 @@ public class OptionStatsService {
         return option.map(this::toOptionStats);
     }
 
+    public OptionStats findOne(Option option) {
+        return toOptionStats(option);
+    }
+
     public Page<OptionStats> findAll(OptionCriteria criteria, Pageable pageable) {
         Page<Option> options = optionQueryService.findByCriteria(criteria,pageable);
         List<OptionStats> optionStats = options.get()

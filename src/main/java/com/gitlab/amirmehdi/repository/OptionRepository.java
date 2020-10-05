@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,8 @@ import java.util.Optional;
 public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecificationExecutor<Option> {
     Optional<Option> findByInstrumentIsinAndStrikePriceAndExpDate(String isin, Integer strikePrice, LocalDate expDate);
 
+    List<Option> findAllByInstrumentIsinIsIn(List<String> isins);
+
     @Query(value = "select o from Option o where" +
         " o.callIsin=?1 or " +
         " o.putIsin=?1 ")
@@ -30,6 +33,8 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
     List<Option> findAllByExpDateGreaterThanEqual(LocalDate date);
 
     Page<Option> findAllByExpDateGreaterThanEqual(LocalDate date, Pageable pageable);
+
+    List<Option> findAllByUpdatedAtGreaterThanEqual(Date date);
 
     /*
     have a bug
