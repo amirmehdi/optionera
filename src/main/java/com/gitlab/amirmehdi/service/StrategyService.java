@@ -3,6 +3,8 @@ package com.gitlab.amirmehdi.service;
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.domain.OptionStats;
 import com.gitlab.amirmehdi.repository.OptionRepository;
+import com.gitlab.amirmehdi.util.MarketTimeUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,13 +20,15 @@ public class StrategyService {
     private final OptionStatsService optionStatsService;
     private String chatId = "-1001318208609";
 
+    @Value("${application.market-time-check}")
+    private boolean marketTimeCheck;
+
     public StrategyService(TelegramMessageSender telegramMessageSender, OptionRepository optionRepository, OptionStatsService optionStatsService) {
         this.telegramMessageSender = telegramMessageSender;
         this.optionRepository = optionRepository;
         this.optionStatsService = optionStatsService;
     }
 
-    @Scheduled(fixedDelay = 30 * 60 * 1000)
     public void getArbitrageBetweenAssetAndOption() {
         Option option = optionRepository.findAllByExpDateGreaterThanEqual(LocalDate.now(), PageRequest.of(0, 1, Sort.by(Sort.Order.asc("callBreakEven")))).getContent().get(0);
         if (option.getCallBreakEven() > 0) {
@@ -34,7 +38,6 @@ public class StrategyService {
         telegramMessageSender.sendMessage(chatId, text);
     }
 
-    @Scheduled(fixedDelay = 20 * 60 * 1000)
     public void getOptionWithPriceLowerThanBS() {
         Option option = optionRepository.findAllByExpDateGreaterThanEqual(LocalDate.now(), PageRequest.of(0, 1, Sort.by(Sort.Order.asc("callAskToBS")))).getContent().get(0);
         if (option.getCallAskToBS() > 0) {
@@ -69,5 +72,17 @@ public class StrategyService {
             , risk);
         text = text.replace("\n", "%0A");
         return text;
+    }
+
+    @Scheduled(cron = "0 0,20,40 9-12 * * *")
+    public void runStrategies() {
+        if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
+            return;
+        run();
+    }
+
+    public void run() {
+        getArbitrageBetweenAssetAndOption();
+        getOptionWithPriceLowerThanBS();
     }
 }
