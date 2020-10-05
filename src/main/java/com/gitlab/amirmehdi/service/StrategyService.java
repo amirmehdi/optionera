@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -29,6 +30,7 @@ public class StrategyService {
         this.optionStatsService = optionStatsService;
     }
 
+    @PostConstruct
     public void getArbitrageBetweenAssetAndOption() {
         Option option = optionRepository.findAllByExpDateGreaterThanEqual(LocalDate.now(), PageRequest.of(0, 1, Sort.by(Sort.Order.asc("callBreakEven")))).getContent().get(0);
         if (option.getCallBreakEven() > 0) {
@@ -70,7 +72,6 @@ public class StrategyService {
             , optionStats.getCallBreakEven()
             , strategy
             , risk);
-        text = text.replace("\n", "%0A");
         return text;
     }
 
