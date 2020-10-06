@@ -45,7 +45,7 @@ public abstract class Strategy {
 
         return String.format(s, "ض" + optionStats.getOption().getName()
             , optionStats.getOption().getInstrument().getName()
-            , new JalaliCalendar(new Date()).toString()
+            , new JalaliCalendar(new Date()).toStringRTL()
             , LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_TIME)
             , optionStats.getCallBidAsk().getAskPrice()
             , optionStats.getCallBidAsk().getAskQuantity()

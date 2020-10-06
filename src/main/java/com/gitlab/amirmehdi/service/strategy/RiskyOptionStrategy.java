@@ -46,6 +46,6 @@ public class RiskyOptionStrategy extends Strategy {
 
     @Override
     public String getCron() {
-        return "0 */15 9-12 * * *";
+        return "0 0,15,28,45 9-12 * * *";
     }
 }

@@ -36,6 +36,9 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
 
     List<Option> findAllByUpdatedAtGreaterThanEqual(Date date);
 
+    List<Option> findAllByCallBreakEvenIsLessThanEqual(double maxThreshold);
+
+    List<Option> findAllByCallAskToBSLessThanEqual(double maxThreshold);
     /*
     have a bug
     @Transactional

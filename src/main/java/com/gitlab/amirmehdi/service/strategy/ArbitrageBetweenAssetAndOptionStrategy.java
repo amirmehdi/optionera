@@ -31,6 +31,6 @@ public class ArbitrageBetweenAssetAndOptionStrategy extends Strategy {
 
     @Override
     public String getCron() {
-        return "0 0,30 9-12 * * *";
+        return "0 0,29 9-12 * * *";
     }
 }

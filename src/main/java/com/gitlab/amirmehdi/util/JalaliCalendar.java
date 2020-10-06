@@ -416,6 +416,9 @@ public class JalaliCalendar {
     public String toString() {
         return String.format("%04d-%02d-%02d", getYear(), getMonth(), getDay());
     }
+    public String toStringRTL() {
+        return String.format("%02d-%02d-%04d", getDay(), getMonth(), getYear());
+    }
 
     private class JulianCalendar {
         int year;
