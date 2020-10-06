@@ -4,9 +4,12 @@ import com.gitlab.amirmehdi.domain.OptionStats;
 import com.gitlab.amirmehdi.repository.OptionRepository;
 import com.gitlab.amirmehdi.service.OptionStatsService;
 import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
+import com.gitlab.amirmehdi.util.JalaliCalendar;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 
 public abstract class Strategy {
@@ -42,8 +45,8 @@ public abstract class Strategy {
 
         return String.format(s, "ض" + optionStats.getOption().getName()
             , optionStats.getOption().getInstrument().getName()
-            , LocalDate.now().toString()
-            , LocalTime.now()
+            , new JalaliCalendar(new Date()).toString()
+            , LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_DATE_TIME)
             , optionStats.getCallBidAsk().getAskPrice()
             , optionStats.getCallBidAsk().getAskQuantity()
             , optionStats.getCallBlackScholes30()
