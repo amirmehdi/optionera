@@ -58,7 +58,7 @@ public class CrawlerJobs {
                         if (throwable != null) {
                             throwable.printStackTrace();
                         } else {
-                            log.info("update bidask option stat {}", s);
+                            log.debug("update bidask option stat {}", s);
                             market.saveAllBidAsk(bidAsks);
                         }
                     });
@@ -66,7 +66,7 @@ public class CrawlerJobs {
                         if (throwable != null) {
                             throwable.printStackTrace();
                         } else {
-                            log.info("update stockwatch option stat {}", s);
+                            log.debug("update stockwatch option stat {}", s);
                             market.saveAllStockWatch(stockWatches);
                         }
                     });
