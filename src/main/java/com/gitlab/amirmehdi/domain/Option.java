@@ -202,4 +202,17 @@ public class Option implements Serializable {
             ", putLeverage=" + getPutLeverage() +
             "}";
     }
+
+    @PrePersist
+    public void beforeSave() {
+        if (createdAt == null) {
+            createdAt = new Date();
+        }
+    }
+
+    @PreUpdate
+    public void beforeUpdate() {
+        beforeSave();
+        updatedAt = new Date();
+    }
 }
