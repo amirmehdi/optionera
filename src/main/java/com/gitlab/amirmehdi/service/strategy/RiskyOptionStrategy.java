@@ -7,6 +7,7 @@ import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
 import com.gitlab.amirmehdi.service.errors.OptionStatsNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class RiskyOptionStrategy extends Strategy {
         return values
             .entrySet()
             .stream()
-            .sorted(Map.Entry.comparingByValue())
+            .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
             .limit(3)
             .map(longDoubleEntry -> getTelegramMessageDto(
                 getMessageTemplate(
