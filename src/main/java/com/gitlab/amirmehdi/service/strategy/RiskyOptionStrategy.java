@@ -7,6 +7,7 @@ import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
 import com.gitlab.amirmehdi.service.errors.OptionStatsNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,7 @@ public class RiskyOptionStrategy extends Strategy {
     @Override
     public List<TelegramMessageDto> getSignals() {
         Date date = new Date(System.currentTimeMillis() - (15 * 60 * 1000));
-        List<Option> options = optionRepository.findAllByUpdatedAtGreaterThanEqual(date);
+        List<Option> options = optionRepository.findAllByUpdatedAtGreaterThanEqualAndExpDateGreaterThanEqual(date,LocalDate.now().minusDays(30));
         Map<Long, Double> values = options.stream()
             .collect(Collectors.toMap(Option::getId, option -> getRiskyParam(option.getCallLeverage(), option.getCallAskToBS(), option.getCallBreakEven())));
 

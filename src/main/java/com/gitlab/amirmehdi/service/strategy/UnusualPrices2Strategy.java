@@ -6,6 +6,7 @@ import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
 import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -24,7 +25,7 @@ public class UnusualPrices2Strategy extends Strategy {
 
     @Override
     public List<TelegramMessageDto> getSignals() {
-        return optionRepository.findAllByCallAskToBSLessThanEqual(-15)
+        return optionRepository.findAllByCallAskToBSLessThanEqualAndExpDateGreaterThanEqual(-15, LocalDate.now().minusDays(30))
             .stream()
             .filter(option -> !cachedIsin.containsKey(option.getId()) || cachedIsin.get(option.getId()) > option.getCallAskToBS())
             .peek(option -> cachedIsin.put(option.getId(), option.getCallAskToBS()))

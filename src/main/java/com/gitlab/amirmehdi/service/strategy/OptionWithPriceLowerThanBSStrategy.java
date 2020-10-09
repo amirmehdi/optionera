@@ -30,6 +30,6 @@ public class OptionWithPriceLowerThanBSStrategy extends Strategy {
 
     @Override
     public String getCron() {
-        return "0 0,20,40 9-12 * * *";
+        return "0 0,29 9-12 * * *";
     }
 }
