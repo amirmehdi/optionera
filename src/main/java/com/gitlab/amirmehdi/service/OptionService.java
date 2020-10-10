@@ -145,4 +145,8 @@ public class OptionService {
             optionRepository.updatePutTseId(isin, name.substring(1), tseId);
         }
     }
+
+    public void deleteAllExpiredOption() {
+        optionRepository.deleteAllByExpDateBefore(LocalDate.now());
+    }
 }

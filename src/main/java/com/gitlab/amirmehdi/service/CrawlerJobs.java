@@ -152,6 +152,7 @@ public class CrawlerJobs {
     }
 
     public void optionCrawler() {
+        optionService.deleteAllExpiredOption();
         StopWatch stopWatch = new StopWatch("option crawler");
 
         stopWatch.start("tse request");

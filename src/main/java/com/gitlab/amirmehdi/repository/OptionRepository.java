@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,8 +36,6 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
     Page<Option> findAllByExpDateGreaterThanEqual(LocalDate date, Pageable pageable);
 
     Page<Option> findAllByCallTseIdIsNullOrPutTseIdIsNull(Pageable pageable);
-
-    List<Option> findAllByUpdatedAtGreaterThanEqualAndExpDateLessThanEqual(Date date, LocalDate localDate);
 
     List<Option> findAllByCallBreakEvenIsLessThanEqual(float maxThreshold);
 
@@ -72,4 +69,6 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
         "o.callInTheMoney= :#{#option.callInTheMoney} " +
         "where o.id= :#{#option.id}")
     void updateParam(Option option);*/
+
+    void deleteAllByExpDateBefore(LocalDate localDate);
 }

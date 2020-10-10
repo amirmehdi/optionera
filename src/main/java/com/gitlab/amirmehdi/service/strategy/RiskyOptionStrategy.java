@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,8 +21,7 @@ public class RiskyOptionStrategy extends Strategy {
 
     @Override
     public List<TelegramMessageDto> getSignals() {
-        Date date = new Date(System.currentTimeMillis() - (15 * 60 * 1000));
-        List<Option> options = optionRepository.findAllByUpdatedAtGreaterThanEqualAndExpDateLessThanEqual(date,LocalDate.now().minusDays(30));
+        List<Option> options = optionRepository.findAllByExpDateGreaterThanEqual(LocalDate.now().plusDays(30));
         Map<Long, Double> values = options.stream()
             .collect(Collectors.toMap(Option::getId, option -> getRiskyParam(option.getCallLeverage(), option.getCallAskToBS(), option.getCallBreakEven())));
 
@@ -42,7 +40,6 @@ public class RiskyOptionStrategy extends Strategy {
 
     private Double getRiskyParam(double callLeverage, double callAskToBS, double callBreakEven) {
         return callLeverage / Math.pow((1 + callAskToBS / 100), 3) / Math.pow((1 + callBreakEven / 100), 2);
-
     }
 
     @Override
