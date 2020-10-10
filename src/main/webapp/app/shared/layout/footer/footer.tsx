@@ -1,15 +1,19 @@
 import './footer.scss';
+import './../../../../content/css/styles-merged.css';
+import './../../../../content/css/style.min.css';
 
 import React from 'react';
 import { Translate } from 'react-jhipster';
 import { Col, Row } from 'reactstrap';
 
 const Footer = props => (
-  <div className="footer page-content">
+  <div className="">
     <Row>
-      <Col md="12">
+      <Col md="12" >
         <p>
-          <Translate contentKey="footer">Your footer</Translate>
+          <small>
+            © 2020 <a href="#">OptionEra</a>. All Rights Reserved. <br />
+          </small>
         </p>
       </Col>
     </Row>
