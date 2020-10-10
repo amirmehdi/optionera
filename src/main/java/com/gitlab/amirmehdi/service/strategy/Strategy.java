@@ -40,6 +40,7 @@ public abstract class Strategy {
             "\uD83D\uDD06تعداد عرضه: %s\n" +
             "\uD83D\uDCB2بلک شولز: %s\n" +
             "〽️سر به سری: %s\n" +
+            "⬆️اهرم:%s\n" +
             "\uD83D\uDCB5استراتژی: %s\n" +
             " \uD83D\uDEA8ریسک:%s";
 
@@ -51,6 +52,7 @@ public abstract class Strategy {
             , optionStats.getCallBidAsk().getAskQuantity()
             , optionStats.getCallBlackScholes30()
             , optionStats.getCallBreakEven()
+            , optionStats.getCallLeverage()
             , strategy
             , risk);
     }

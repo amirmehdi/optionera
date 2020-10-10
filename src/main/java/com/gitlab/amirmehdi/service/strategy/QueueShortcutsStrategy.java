@@ -18,16 +18,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
-public class QueueShortcutsService extends Strategy {
+public class QueueShortcutsStrategy extends Strategy {
 
     private final InstrumentRepository instrumentRepository;
     private final Market market;
-    private final Map<String, Option> cachedIsin = ExpiringMap.builder()
+    private final Map<String, Float> cachedIsin = ExpiringMap.builder()
         .expirationPolicy(ExpiringMap.ExpirationPolicy.CREATED)
-        .expiration(20, TimeUnit.MINUTES)
+        .expiration(60, TimeUnit.MINUTES)
         .build();
 
-    protected QueueShortcutsService(OptionRepository optionRepository, OptionStatsService optionStatsService, InstrumentRepository instrumentRepository, Market market) {
+    protected QueueShortcutsStrategy(OptionRepository optionRepository, OptionStatsService optionStatsService, InstrumentRepository instrumentRepository, Market market) {
         super(optionRepository, optionStatsService);
         this.instrumentRepository = instrumentRepository;
         this.market = market;
@@ -35,14 +35,13 @@ public class QueueShortcutsService extends Strategy {
 
     @Override
     public List<TelegramMessageDto> getSignals() {
-        List<String> isins= instrumentRepository
+        List<String> isins = instrumentRepository
             .findAll().stream()
             .filter(instrument -> market.getStockWatch(instrument.getIsin()).isBuyQueue())
             .map(Instrument::getIsin)
             .collect(Collectors.toList());
 
         List<Option> optionList = new ArrayList<>();
-        isins.removeAll(cachedIsin.keySet());
 
         optionRepository
             .findAllByInstrumentIsinIsIn(isins)
@@ -55,7 +54,8 @@ public class QueueShortcutsService extends Strategy {
 
         return optionList
             .stream()
-            .peek(option -> cachedIsin.put(option.getInstrument().getIsin(), option))
+            .filter(option -> option.getCallBreakEven() < cachedIsin.get(option.getInstrument().getIsin()) - 2)
+            .peek(option -> cachedIsin.put(option.getInstrument().getIsin(), option.getCallBreakEven()))
             .map(option -> getTelegramMessageDto(getMessageTemplate(optionStatsService.findOne(option), "میان بر صف(دارایی پایه صف خرید است ولی اختیار داده شده قابل خرید است)", "متوسط")))
             .collect(Collectors.toList());
 

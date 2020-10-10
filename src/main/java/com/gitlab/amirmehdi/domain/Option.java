@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -83,11 +83,13 @@ public class Option implements Serializable {
     private float putLeverage;
 
 
-    @CreatedDate
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private Date createdAt;
 
-    @LastModifiedDate
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
 
@@ -201,18 +203,5 @@ public class Option implements Serializable {
             ", callLeverage=" + getCallLeverage() +
             ", putLeverage=" + getPutLeverage() +
             "}";
-    }
-
-    @PrePersist
-    public void beforeSave() {
-        if (createdAt == null) {
-            createdAt = new Date();
-        }
-    }
-
-    @PreUpdate
-    public void beforeUpdate() {
-        beforeSave();
-        updatedAt = new Date();
     }
 }
