@@ -23,7 +23,7 @@ public class RiskyOptionStrategy extends Strategy {
     @Override
     public List<TelegramMessageDto> getSignals() {
         Date date = new Date(System.currentTimeMillis() - (15 * 60 * 1000));
-        List<Option> options = optionRepository.findAllByUpdatedAtGreaterThanEqualAndExpDateGreaterThanEqual(date,LocalDate.now().minusDays(30));
+        List<Option> options = optionRepository.findAllByUpdatedAtGreaterThanEqualAndExpDateLessThanEqual(date,LocalDate.now().minusDays(30));
         Map<Long, Double> values = options.stream()
             .collect(Collectors.toMap(Option::getId, option -> getRiskyParam(option.getCallLeverage(), option.getCallAskToBS(), option.getCallBreakEven())));
 

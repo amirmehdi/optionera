@@ -34,11 +34,11 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
 
     Page<Option> findAllByExpDateGreaterThanEqual(LocalDate date, Pageable pageable);
 
-    List<Option> findAllByUpdatedAtGreaterThanEqualAndExpDateGreaterThanEqual(Date date, LocalDate localDate);
+    List<Option> findAllByUpdatedAtGreaterThanEqualAndExpDateLessThanEqual(Date date, LocalDate localDate);
 
     List<Option> findAllByCallBreakEvenIsLessThanEqual(float maxThreshold);
 
-    List<Option> findAllByCallAskToBSLessThanEqualAndExpDateGreaterThanEqual(float maxThreshold,LocalDate localDate);
+    List<Option> findAllByCallAskToBSLessThanEqualAndExpDateLessThanEqual(float maxThreshold, LocalDate localDate);
     /*
     have a bug
     @Transactional

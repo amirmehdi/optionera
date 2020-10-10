@@ -25,7 +25,7 @@ public class UnusualPrices2Strategy extends Strategy {
 
     @Override
     public List<TelegramMessageDto> getSignals() {
-        return optionRepository.findAllByCallAskToBSLessThanEqualAndExpDateGreaterThanEqual(-15, LocalDate.now().minusDays(30))
+        return optionRepository.findAllByCallAskToBSLessThanEqualAndExpDateLessThanEqual(-15, LocalDate.now().minusDays(30))
             .stream()
             .filter(option -> !cachedIsin.containsKey(option.getId()) || cachedIsin.get(option.getId()) > option.getCallAskToBS())
             .peek(option -> cachedIsin.put(option.getId(), option.getCallAskToBS()))
