@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
@@ -7,6 +8,8 @@ import com.gitlab.amirmehdi.service.dto.tsemodels.BDatum;
 import com.gitlab.amirmehdi.service.dto.tsemodels.OptionResponse;
 import com.gitlab.amirmehdi.util.DateUtil;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 import org.springframework.web.client.RestTemplate;
@@ -201,8 +204,34 @@ public class CrawlerJobs {
         stopWatch.start("saving");
         optionService.saveAll(options);
         stopWatch.stop();
-
         log.info(stopWatch.prettyPrint());
+        updateTseIds();
+    }
+
+    public void updateTseIds() {
+        StopWatch stopwatch = new StopWatch("update tseIds");
+        stopwatch.start();
+        while (true) {
+            Page<Option> optionPage = optionService.findAllOptionsWithoutTseIds(PageRequest.of(0, 20));
+            List<String> isins = new ArrayList<>();
+            for (Option option : optionPage.getContent()) {
+                isins.add(option.getCallIsin());
+                isins.add(option.getPutIsin());
+            }
+            try {
+                for (com.gitlab.amirmehdi.service.dto.core.Instrument instrument : omidRLCConsumer.getInstruments(isins)) {
+                    optionService.updateTseId(instrument.getId(), instrument.getName(), instrument.getTseId());
+                }
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            if (optionPage.getContent().size() < 20) {
+                break;
+            }
+        }
+        stopwatch.stop();
+        log.info(stopwatch.prettyPrint());
+
     }
 
     private String numberNormalizer(String number) {

@@ -46,6 +46,12 @@ public class ManualJobResource {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping(value = "tse-ids")
+    public ResponseEntity<Object> tseIdUpdater() {
+        crawlerJobs.updateTseIds();
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping(value = "strategy-runner")
     public ResponseEntity<Object> strategyRunner() {
         strategyService.run();

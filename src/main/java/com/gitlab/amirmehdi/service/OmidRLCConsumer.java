@@ -44,6 +44,17 @@ public class OmidRLCConsumer {
             }).getBody();
     }
 
+    public List<Instrument> getInstruments(List<String> isins) throws JsonProcessingException {
+        log.debug("getInstruments for isins :{}", isins);
+        ResponseEntity<List<Instrument>> response = restTemplate.exchange(
+            applicationProperties.getOaBaseUrl() + "/core/instrument-bulk",
+            HttpMethod.POST,
+            getRequestBodyForBulkRequest(isins),
+            new ParameterizedTypeReference<List<Instrument>>() {
+            });
+        return response.getBody();
+    }
+
     @Async
     public CompletableFuture<List<BidAsk>> getBulkBidAsk(List<String> isins) throws JsonProcessingException {
         log.debug("getBulkBidAsk for isins :{}", isins);

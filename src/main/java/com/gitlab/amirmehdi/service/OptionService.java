@@ -133,4 +133,16 @@ public class OptionService {
             .putLeverage(optionStats.getPutLeverage())
             .callInTheMoney(optionStats.getCallInTheMoney());
     }
+
+    public Page<Option> findAllOptionsWithoutTseIds(Pageable pageable) {
+        return optionRepository.findAllByCallTseIdIsNullOrPutTseIdIsNull(pageable);
+    }
+
+    public void updateTseId(String isin, String name, String tseId) {
+        if (isin.startsWith("IRO9")) {
+            optionRepository.updateCallTseId(isin, name.substring(1), tseId);
+        } else {
+            optionRepository.updatePutTseId(isin, name.substring(1), tseId);
+        }
+    }
 }

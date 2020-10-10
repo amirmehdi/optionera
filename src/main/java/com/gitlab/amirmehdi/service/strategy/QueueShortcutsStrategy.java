@@ -54,7 +54,7 @@ public class QueueShortcutsStrategy extends Strategy {
 
         return optionList
             .stream()
-            .filter(option -> option.getCallBreakEven() < cachedIsin.get(option.getInstrument().getIsin()) - 2)
+            .filter(option -> !cachedIsin.containsKey(option.getInstrument().getIsin()) || option.getCallBreakEven() < cachedIsin.get(option.getInstrument().getIsin()) - 2)
             .peek(option -> cachedIsin.put(option.getInstrument().getIsin(), option.getCallBreakEven()))
             .map(option -> getTelegramMessageDto(getMessageTemplate(optionStatsService.findOne(option), "میان بر صف(دارایی پایه صف خرید است ولی اختیار داده شده قابل خرید است)", "متوسط")))
             .collect(Collectors.toList());

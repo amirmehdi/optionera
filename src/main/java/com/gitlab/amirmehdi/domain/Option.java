@@ -44,6 +44,14 @@ public class Option implements Serializable {
     private String putIsin;
 
     @NotNull
+    @Column(name = "call_tse_id")
+    private String callTseId;
+
+    @NotNull
+    @Column(name = "put_tse_id")
+    private String putTseId;
+
+    @NotNull
     @Column(name = "exp_date", nullable = false)
     private LocalDate expDate;
 
@@ -111,6 +119,16 @@ public class Option implements Serializable {
 
     public Option putIsin(String putIsin) {
         this.putIsin = putIsin;
+        return this;
+    }
+
+    public Option callTseId(String callTseId) {
+        this.callTseId = callTseId;
+        return this;
+    }
+
+    public Option putTseId(String putTseId) {
+        this.putTseId = putTseId;
         return this;
     }
 

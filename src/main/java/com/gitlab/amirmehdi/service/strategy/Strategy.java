@@ -32,20 +32,25 @@ public abstract class Strategy {
     }
 
     protected String getMessageTemplate(OptionStats optionStats, String strategy, String risk) {
-        String s = "\uD83C\uDF10نماد: %s\n" +
-            "\uD83D\uDCDDدارایی پایه: %s\n" +
-            "\uD83D\uDDD3تاریخ: %s\n" +
-            "⏰ساعت:%s\n" +
+        String s = "\uD83C\uDF10نماد: %s " +
+            "<a href='%s'>TSETMC</a> \n" +
+            "\uD83D\uDCDDدارایی پایه: %s " +
+            "<a href='%s'>TSETMC</a> \n" +
+            "\uD83D\uDDD3تاریخ: %s \n" +
+            "⏰ساعت: %s\n" +
             "\uD83D\uDCB0قیمت بهترین عرضه: %s\n" +
             "\uD83D\uDD06تعداد عرضه: %s\n" +
             "\uD83D\uDCB2بلک شولز: %s\n" +
             "〽️سر به سری: %s\n" +
-            "⬆️اهرم:%s\n" +
+            "⬆️اهرم: %s\n" +
             "\uD83D\uDCB5استراتژی: %s\n" +
-            " \uD83D\uDEA8ریسک:%s";
-
-        return String.format(s, "ض" + optionStats.getOption().getName()
+            "\uD83D\uDEA8ریسک: %s\n" +
+            "@optionera";
+        return String.format(s
+            , "ض" + optionStats.getOption().getName()
+            , getTseLink(optionStats.getOption().getCallTseId())
             , optionStats.getOption().getInstrument().getName()
+            , getTseLink(optionStats.getOption().getInstrument().getTseId())
             , new JalaliCalendar(new Date()).toStringRTL()
             , LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_TIME)
             , optionStats.getCallBidAsk().getAskPrice()
@@ -55,6 +60,10 @@ public abstract class Strategy {
             , optionStats.getCallLeverage()
             , strategy
             , risk);
+    }
+
+    private String getTseLink(String callTseId) {
+        return "http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=" + callTseId;
     }
 
 
