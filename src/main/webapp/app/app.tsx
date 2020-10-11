@@ -7,7 +7,7 @@ import { Card } from 'reactstrap';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { hot } from 'react-hot-loader';
-
+import "antd/dist/antd.css";
 import { IRootState } from 'app/shared/reducers';
 import { getSession } from 'app/shared/reducers/authentication';
 import { getProfile } from 'app/shared/reducers/application-profile';
@@ -48,12 +48,10 @@ export const App = (props: IAppProps) => {
             isSwaggerEnabled={props.isSwaggerEnabled}
           />
         </ErrorBoundary>
-        <div className="container-fluid view-container" id="app-view-container">
-          <Card className="jh-card">
+        <div className="container-fluid" id="app-view-container">
             <ErrorBoundary>
               <AppRoutes />
             </ErrorBoundary>
-          </Card>
           <Footer />
         </div>
       </div>
