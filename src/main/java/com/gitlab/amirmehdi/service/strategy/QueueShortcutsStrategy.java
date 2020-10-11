@@ -49,7 +49,9 @@ public class QueueShortcutsStrategy extends Strategy {
             .collect(Collectors.groupingBy(option -> option.getInstrument().getIsin()))
             .forEach((s, options) -> {
                 options.sort(Comparator.comparing(Option::getCallBreakEven));
-                optionList.add(options.get(0));
+                if (options.get(0).getCallBreakEven() < 10) {
+                    optionList.add(options.get(0));
+                }
             });
 
         return optionList
