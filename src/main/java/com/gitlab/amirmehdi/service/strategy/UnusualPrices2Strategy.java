@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class UnusualPrices2Strategy extends Strategy {
     private final Map<Long, Float> cachedIsin = ExpiringMap.builder()
         .expirationPolicy(ExpiringMap.ExpirationPolicy.CREATED)
-        .expiration(5, TimeUnit.MINUTES)
+        .expiration(30, TimeUnit.MINUTES)
         .build();
 
     protected UnusualPrices2Strategy(OptionRepository optionRepository, OptionStatsService optionStatsService) {
@@ -27,7 +27,7 @@ public class UnusualPrices2Strategy extends Strategy {
     public List<TelegramMessageDto> getSignals() {
         return optionRepository.findAllByCallAskToBSLessThanEqualAndExpDateGreaterThanEqual(-15, LocalDate.now().plusDays(30))
             .stream()
-            .filter(option -> !cachedIsin.containsKey(option.getId()) || cachedIsin.get(option.getId()) > option.getCallAskToBS())
+            .filter(option -> !cachedIsin.containsKey(option.getId()) || cachedIsin.get(option.getId()) - 2 > option.getCallAskToBS())
             .peek(option -> cachedIsin.put(option.getId(), option.getCallAskToBS()))
             .map(option -> getTelegramMessageDto(getMessageTemplate(optionStatsService.findOne(option), "قیمت های غیرمعمول۲", "متوسط")))
             .collect(Collectors.toList());

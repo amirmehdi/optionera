@@ -1,6 +1,5 @@
 package com.gitlab.amirmehdi.service;
 
-import com.gitlab.amirmehdi.repository.OptionRepository;
 import com.gitlab.amirmehdi.service.strategy.Strategy;
 import com.gitlab.amirmehdi.util.MarketTimeUtil;
 import lombok.extern.log4j.Log4j2;
@@ -28,7 +27,7 @@ public class StrategyService {
     private HashMap<String, Strategy> strategies = new HashMap<>();
 
 
-    public StrategyService(TelegramMessageSender telegramMessageSender, OptionRepository optionRepository, OptionStatsService optionStatsService, TaskScheduler executor) {
+    public StrategyService(TelegramMessageSender telegramMessageSender, TaskScheduler executor) {
         this.telegramMessageSender = telegramMessageSender;
         this.executor = executor;
     }

@@ -33,7 +33,7 @@ public class RiskyOptionStrategy extends Strategy {
             .map(longDoubleEntry -> getTelegramMessageDto(
                 getMessageTemplate(
                     optionStatsService.findOne(longDoubleEntry.getKey()).orElseThrow(OptionStatsNotFoundException::new)
-                    , " درصورتی که دارایی پایه ارزنده است، اختیار بالا می تواند مورد بررسی قرار بگیرد"
+                    , "درصورتی که دارایی پایه ارزنده است، اختیار بالا می تواند مورد بررسی قرار بگیرد"
                     , "زیاد")))
             .collect(Collectors.toList());
     }

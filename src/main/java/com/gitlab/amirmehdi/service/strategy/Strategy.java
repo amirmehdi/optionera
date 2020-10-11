@@ -5,6 +5,8 @@ import com.gitlab.amirmehdi.repository.OptionRepository;
 import com.gitlab.amirmehdi.service.OptionStatsService;
 import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
 import com.gitlab.amirmehdi.util.JalaliCalendar;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -12,11 +14,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
+@Service
 public abstract class Strategy {
     protected final OptionRepository optionRepository;
     protected final OptionStatsService optionStatsService;
 
-    protected final String optionEraChatId = "-1001318208609";
+    @Value("${application.channel-id}")
+    protected String optionEraChatId;
     private final String apiToken = "1154072624:AAG1HWOZDAU4FxgP0aek84zt7Ap4mfe4wJo";
 
 
@@ -43,8 +47,8 @@ public abstract class Strategy {
             "\uD83D\uDCB2بلک شولز: %s\n" +
             "〽️سر به سری: %s\n" +
             "⬆️اهرم: %s\n" +
-            "\uD83D\uDCB5استراتژی: %s\n" +
-            "\uD83D\uDEA8ریسک: %s\n" +
+            "\uD83D\uDCB5استراتژی: #%s\n" +
+            "\uD83D\uDEA8ریسک: #%s\n" +
             "@optionera";
         return String.format(s
             , "ض" + optionStats.getOption().getName()
