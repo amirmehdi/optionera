@@ -53,167 +53,216 @@ export const OptionStats = (props: IOptionStatsProps) => {
     }
   }, [sorting]);
 
-  const sort = p => () => {
-    props.reset();
-    setPaginationState({
-      ...paginationState,
-      activePage: 1,
-      order: paginationState.order === 'asc' ? 'desc' : 'asc',
-      sort: p
-    });
-    setSorting(true);
+  const handleChange = (pagination, filters, sorter) => {
+    if (sorter.column && sorter.column.sorter) {
+      props.reset();
+      setPaginationState({
+        ...paginationState,
+        activePage: 1,
+        order: paginationState.order === 'asc' ? 'desc' : 'asc',
+        sort: sorter.columnKey
+      });
+      setSorting(true);
+    } else if (sorter.column === undefined) {
+      setPaginationState({
+        ...paginationState,
+        activePage: 1,
+        order: paginationState.order === 'asc' ? 'desc' : 'asc',
+        sort: sorter.columnKey
+      });
+      setSorting(true);
+      props.reset();
+    }
   };
 
   const { optionStatsList, loading } = props;
   return (
-        <InfiniteScroll
-          pageStart={paginationState.activePage}
-          loadMore={handleLoadMore}
-          hasMore={paginationState.activePage - 1 < props.links.next}
-          loader={<div className="loader">Loading ...</div>}
-          threshold={0}
-          initialLoad={false}
-        >
-          {optionStatsList && optionStatsList.length > 0 ? (
+    <InfiniteScroll
+      pageStart={paginationState.activePage}
+      loadMore={handleLoadMore}
+      hasMore={paginationState.activePage - 1 < props.links.next}
+      loader={<div className="loader">Loading ...</div>}
+      threshold={0}
+      initialLoad={false}
+    >
+      {optionStatsList && optionStatsList.length > 0 ? (
 
-              <Table sticky pagination={false} loading={loading} dataSource={optionStatsList as any}
-                     scroll={{ x: 4000 }}>
-                <Column fixed={'left'}   title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
-                         dataIndex="option" key="optionStats.name" render={(optionStats) =>
-                  optionStats ? <Link to={`option/${optionStats.id}`}>{'ض' + optionStats.name}</Link> : ''
-                }/>
-                <ColumnGroup title="call">
+        <Table sticky pagination={false} onChange={handleChange} loading={loading} dataSource={optionStatsList as any}
+               scroll={{ x: 4000 }}>
+          <Column fixed={'left'} title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
+                  dataIndex="option" key="optionStats.name" render={(optionStats) =>
+            optionStats ? <Link to={`option/${optionStats.id}`}>{'ض' + optionStats.name}</Link> : ''
+          }/>
+          <ColumnGroup title="call">
 
-                  <Column
-                    title={<Translate contentKey="eTradeApp.optionStats.BlackScholes30"> Black Scholes 30</Translate>}
-                    dataIndex="callBS30" key="callBS30" render={(callBS30) =>
-                    callBS30
-                  }/>
-                  <Column
-                    title={<Translate contentKey="eTradeApp.optionStats.EffectivePrice"> Effective Price</Translate>}
-                    dataIndex="callEffectivePrice" key="callEffectivePrice"/>
-                  <Column
-                    title={<Translate contentKey="eTradeApp.optionStats.AskPriceToBS"> Ask Price To BS</Translate>}
-                    dataIndex="option" key=" optionCallAskToBS" render={(option) =>
-                    option.callAskToBS
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.BreakEven"> Break Even</Translate>}
-                          dataIndex="option" key="optionCallBreakEven" render={(option) =>
-                    option.callBreakEven
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.Leverage"> Leverage</Translate>}
-                          dataIndex="option" key="optionCallLeverage" render={(option) =>
-                    option.callLeverage
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.TradeVolume"> Trade Volume</Translate>}
-                          dataIndex="callStockWatch" key="callStockWatchTradeVolume" render={(callStockWatch) =>
-                    callStockWatch?.tradeVolume
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.Last"> Last</Translate>}
-                          dataIndex="callStockWatch" key="callStockWatchLast" render={(callStockWatch) =>
-                    callStockWatch?.last
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.OpenInterest"> Open Interest</Translate>}
-                          dataIndex="callStockWatch" key="callStockWatchOpenInterest" render={(callStockWatch) =>
-                    callStockWatch?.openInterest
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.BidVolume"> Bid Volume</Translate>}
-                          dataIndex="callBidAsk" key="callBidAskBidQuantity" render={(callBidAsk) =>
-                    callBidAsk.bidQuantity
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.BidPrice"> Bid Price</Translate>}
-                          dataIndex="callBidAsk" key="callBidAskBidPrice" render={(callBidAsk) =>
-                    callBidAsk.bidPrice
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.AskPrice"> Ask Price</Translate>}
-                          dataIndex="callBidAsk" key="callBidAskAskPrice" render={(callBidAsk) =>
-                    callBidAsk.askPrice
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.AskVolume"> Ask Volume</Translate>}
-                          dataIndex="callBidAsk" key="callBidAskAskQuantity" render={(callBidAsk) =>
-                    callBidAsk.askQuantity
-                  }/>
+            <Column
+              title={<Translate contentKey="eTradeApp.optionStats.BlackScholes30"> Black Scholes 30</Translate>}
+              dataIndex="callBS30" key="callBS30" render={(callBS30) =>
+              callBS30
+            }/>
+            <Column
+              title={<Translate contentKey="eTradeApp.optionStats.EffectivePrice"> Effective Price</Translate>}
+              dataIndex="callEffectivePrice" key="callEffectivePrice"/>
+            <Column
+              sorter={true}
+              sortDirections={['ascend', 'descend']}
+              sortOrder={paginationState.sort === 'callAskToBS' ?
+                paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+              showSorterTooltip={false}
+              title={<Translate contentKey="eTradeApp.optionStats.AskPriceToBS"> Ask Price To BS</Translate>}
+              dataIndex="option" key="callAskToBS" render={(option) =>
+              option.callAskToBS
+            }/>
+            <Column
+              sorter={true}
+              sortDirections={['ascend', 'descend']}
+              sortOrder={paginationState.sort === 'callBreakEven' ?
+                paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+              showSorterTooltip={false}
+              title={<Translate contentKey="eTradeApp.optionStats.BreakEven"> Break Even</Translate>}
+              dataIndex="option" key="callBreakEven" render={(option) =>
+              option.callBreakEven
+            }/>
+            <Column
+              sorter={true}
+              sortDirections={['ascend', 'descend']}
+              sortOrder={paginationState.sort === 'callLeverage' ?
+                paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+              showSorterTooltip={false}
+              title={<Translate contentKey="eTradeApp.optionStats.Leverage"> Leverage</Translate>}
+              dataIndex="option" key="callLeverage" render={(option) =>
+              option.callLeverage
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.TradeVolume"> Trade Volume</Translate>}
+                    dataIndex="callStockWatch" key="callStockWatchTradeVolume" render={(callStockWatch) =>
+              callStockWatch?.tradeVolume
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.Last"> Last</Translate>}
+                    dataIndex="callStockWatch" key="callStockWatchLast" render={(callStockWatch) =>
+              callStockWatch?.last
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.OpenInterest"> Open Interest</Translate>}
+                    dataIndex="callStockWatch" key="callStockWatchOpenInterest" render={(callStockWatch) =>
+              callStockWatch?.openInterest
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.BidVolume"> Bid Volume</Translate>}
+                    dataIndex="callBidAsk" key="callBidAskBidQuantity" render={(callBidAsk) =>
+              callBidAsk.bidQuantity
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.BidPrice"> Bid Price</Translate>}
+                    dataIndex="callBidAsk" key="callBidAskBidPrice" render={(callBidAsk) =>
+              callBidAsk.bidPrice
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.AskPrice"> Ask Price</Translate>}
+                    dataIndex="callBidAsk" key="callBidAskAskPrice" render={(callBidAsk) =>
+              callBidAsk.askPrice
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.AskVolume"> Ask Volume</Translate>}
+                    dataIndex="callBidAsk" key="callBidAskAskQuantity" render={(callBidAsk) =>
+              callBidAsk.askQuantity
+            }/>
 
-                </ColumnGroup>
-                <Column  title={<Translate contentKey="eTradeApp.option.strikePrice">Strike Price</Translate>}
-                        dataIndex="option" key="optionStrikePrice" render={(option) =>
-                  option.strikePrice
-                }/>
-                <Column  title={<Translate contentKey="eTradeApp.option.expDate">Exp Date</Translate>}
-                        dataIndex="option" key="optionExpDate" render={(option) =>
-                  option.expDate
-                }/>
-                <Column title={<Translate contentKey="eTradeApp.option.instrument">underlying asset</Translate>}
-                        dataIndex="option" key="optionInstrument" render={(option , record:any) =>
-                  option.instrument ? <a href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${option.instrument.tseId}`}>{option.instrument.name} {record.baseStockWatch?.last}</a> : ''
+          </ColumnGroup>
+          <Column sorter={true}
+                  sortDirections={['ascend', 'descend']}
+                  sortOrder={paginationState.sort === 'strikePrice' ?
+                    paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                  showSorterTooltip={false}
+                  title={<Translate contentKey="eTradeApp.option.strikePrice">Strike Price</Translate>}
+                  dataIndex="option" key="strikePrice" render={(option) =>
+            option.strikePrice
+          }/>
+          <Column sorter={true}
+                  sortDirections={['ascend', 'descend']}
+                  sortOrder={paginationState.sort === 'expDate' ?
+                    paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                  showSorterTooltip={false} title={<Translate contentKey="eTradeApp.option.expDate">Exp Date</Translate>}
+                  dataIndex="option" key="expDate" render={(option) =>
+            option.expDate
+          }/>
+          <Column title={<Translate contentKey="eTradeApp.option.instrument">underlying asset</Translate>}
+                  dataIndex="option" key="optionInstrument" render={(option, record: any) =>
+            option.instrument ? <a
+              href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${option.instrument.tseId}`}>{option.instrument.name} {record.baseStockWatch?.last}</a> : ''
 
-                }/>
-                <ColumnGroup title="Put">
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.BidVolume"> Bid Volume</Translate>}
-                          dataIndex="putBidAsk" key="putBidAskBidQuantity" render={(putBidAsk) =>
-                    putBidAsk.bidQuantity
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.BidPrice"> Bid Price</Translate>}
-                          dataIndex="putBidAsk" key="putBidAskBidPrice" render={(putBidAsk) =>
-                    putBidAsk.bidPrice
-                  }/>
-                  <Column title={ <Translate contentKey="eTradeApp.optionStats.AskPrice"> Ask Price</Translate>}
-                          dataIndex="putBidAsk" key="putBidAskAskPrice" render={(putBidAsk) =>
-                    putBidAsk.askPrice
-                  }/>
-                  <Column title={  <Translate contentKey="eTradeApp.optionStats.AskVolume"> Ask Volume</Translate>}
-                          dataIndex="putBidAsk" key="putBidAskAskQuantity" render={(putBidAsk) =>
-                    putBidAsk.askQuantity
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.OpenInterest"> Open Interest</Translate>}
-                          dataIndex="putStockWatch" key="putStockWatchOpenInterest" render={(putStockWatch) =>
-                    putStockWatch?.openInterest
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.Last"> Last</Translate>}
-                          dataIndex="putStockWatch" key="putStockWatchLast" render={(putStockWatch) =>
-                    putStockWatch?.last
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.TradeVolume"> Trade Volume</Translate>}
-                          dataIndex="putStockWatch" key="putStockWatchTradeVolume" render={(putStockWatch) =>
-                    putStockWatch?.tradeVolume
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.Leverage"> Leverage</Translate>}
-                          dataIndex="option" key="optionPutLeverage" render={(option) =>
-                    option.putLeverage
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.BreakEven"> Break Even</Translate>}
-                          dataIndex="option" key="optionPutBreakEven" render={(option) =>
-                    option.putBreakEven
-                  }/>
-                  <Column title={ <Translate contentKey="eTradeApp.optionStats.AskPriceToBS"> Ask Price To BS</Translate>}
-                          dataIndex="option" key="optionPutAskToBS" render={(option) =>
-                    option.putAskToBS
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.EffectivePrice"> Effective Price</Translate>}
-                          dataIndex="option" key="optionPutEffectivePrice" render={(option) =>
-                    option.putEffectivePrice
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.BlackScholes30"> Black Scholes 30</Translate>}
-                          dataIndex="option" key="optionPutBS30" render={(option) =>
-                    option.putBS30
-                  }/>
-                  <Column title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
-                           dataIndex="option" key="option" render={(option) =>
-                    option ?  <Link to={`option/${option.id}`}>{'ض'+ option.name}</Link> : ''
-                  }/>
-                </ColumnGroup>
-              </Table>
+          }/>
+          <ColumnGroup title="Put">
+            <Column title={<Translate contentKey="eTradeApp.optionStats.BidVolume"> Bid Volume</Translate>}
+                    dataIndex="putBidAsk" key="putBidAskBidQuantity" render={(putBidAsk) =>
+              putBidAsk.bidQuantity
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.BidPrice"> Bid Price</Translate>}
+                    dataIndex="putBidAsk" key="putBidAskBidPrice" render={(putBidAsk) =>
+              putBidAsk.bidPrice
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.AskPrice"> Ask Price</Translate>}
+                    dataIndex="putBidAsk" key="putBidAskAskPrice" render={(putBidAsk) =>
+              putBidAsk.askPrice
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.AskVolume"> Ask Volume</Translate>}
+                    dataIndex="putBidAsk" key="putBidAskAskQuantity" render={(putBidAsk) =>
+              putBidAsk.askQuantity
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.OpenInterest"> Open Interest</Translate>}
+                    dataIndex="putStockWatch" key="putStockWatchOpenInterest" render={(putStockWatch) =>
+              putStockWatch?.openInterest
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.Last"> Last</Translate>}
+                    dataIndex="putStockWatch" key="putStockWatchLast" render={(putStockWatch) =>
+              putStockWatch?.last
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.TradeVolume"> Trade Volume</Translate>}
+                    dataIndex="putStockWatch" key="putStockWatchTradeVolume" render={(putStockWatch) =>
+              putStockWatch?.tradeVolume
+            }/>
+            <Column sorter={true}
+                    sortDirections={['ascend', 'descend']}
+                    sortOrder={paginationState.sort === 'putLeverage' ?
+                      paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                    showSorterTooltip={false} title={<Translate contentKey="eTradeApp.optionStats.Leverage"> Leverage</Translate>}
+                    dataIndex="option" key="putLeverage" render={(option) =>
+              option.putLeverage
+            }/>
+            <Column sorter={true}
+                    sortDirections={['ascend', 'descend']}
+                    sortOrder={paginationState.sort === 'putBreakEven' ?
+                      paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                    showSorterTooltip={false} title={<Translate contentKey="eTradeApp.optionStats.BreakEven"> Break Even</Translate>}
+                    dataIndex="option" key="putBreakEven" render={(option) =>
+              option.putBreakEven
+            }/>
+            <Column sorter={true}
+                    sortDirections={['ascend', 'descend']}
+                    sortOrder={paginationState.sort === 'putAskToBS' ?
+                      paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                    showSorterTooltip={false} title={<Translate contentKey="eTradeApp.optionStats.AskPriceToBS"> Ask Price To BS</Translate>}
+                    dataIndex="option" key="putAskToBS" render={(option) =>
+              option.putAskToBS
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.EffectivePrice"> Effective Price</Translate>}
+                    dataIndex="option" key="optionPutEffectivePrice" render={(option) =>
+              option.putEffectivePrice
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.BlackScholes30"> Black Scholes 30</Translate>}
+                    dataIndex="option" key="optionPutBS30" render={(option) =>
+              option.putBS30
+            }/>
+            <Column title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
+                    dataIndex="option" key="option" render={(option) =>
+              option ? <Link to={`option/${option.id}`}>{'ض' + option.name}</Link> : ''
+            }/>
+          </ColumnGroup>
+        </Table>
 
 
-
-          ) : (
-            !loading && (
-              <div className="alert alert-warning">
-                <Translate contentKey="eTradeApp.optionStats.home.notFound">No Option Stats found</Translate>
-              </div>
-            )
-          )}
-        </InfiniteScroll>
+      ) : (
+        !loading && (
+          <div className="alert alert-warning">
+            <Translate contentKey="eTradeApp.optionStats.home.notFound">No Option Stats found</Translate>
+          </div>
+        )
+      )}
+    </InfiniteScroll>
   );
 };
 
