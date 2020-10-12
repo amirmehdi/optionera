@@ -1,0 +1,70 @@
+{
+  "name": "Signal",
+  "fields": [
+    {
+      "fieldName": "type",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "isin",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "last",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "tradeVolume",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "bidVolume",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "bidPrice",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "askPrice",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "askVolume",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "baseInstrumentLast",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "createdAt",
+      "fieldType": "Instant"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "order",
+      "otherEntityRelationshipName": "signal",
+      "relationshipName": "order"
+    }
+  ],
+  "changelogDate": "20201012151000",
+  "entityTableName": "signal",
+  "dto": "no",
+  "pagination": "infinite-scroll",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

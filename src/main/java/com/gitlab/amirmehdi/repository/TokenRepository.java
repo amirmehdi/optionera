@@ -1,0 +1,13 @@
+package com.gitlab.amirmehdi.repository;
+
+import com.gitlab.amirmehdi.domain.Token;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+/**
+ * Spring Data  repository for the Token entity.
+ */
+@SuppressWarnings("unused")
+@Repository
+public interface TokenRepository extends JpaRepository<Token, Long> {
+}
