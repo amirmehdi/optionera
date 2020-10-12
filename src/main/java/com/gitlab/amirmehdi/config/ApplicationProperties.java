@@ -16,6 +16,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ApplicationProperties {
     private String oaBaseUrl;
     private int oaRateLimit;
+    private String apiToken;
 
 //    private boolean marketTimeCheck;
 //    private String marketUpdaterFixedRate;

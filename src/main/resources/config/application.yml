@@ -169,5 +169,6 @@ jhipster:
 # ===================================================================
 
 application:
+  api-token: 1154072624:AAE9byP-2eXRfxZPHeZ92ffjd0LaO4Ys1iA
   oa-base-url: https://api.algo.ir
   oa-rate-limit: 40
