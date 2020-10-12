@@ -7,6 +7,7 @@ import { getSortState, Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
 import { getEntities, reset } from './option-stats.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+import "./style.scss"
 
 const { Column, ColumnGroup } = Table;
 
@@ -163,7 +164,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
             }/>
 
           </ColumnGroup>
-          <Column sorter={true}
+          <Column className="bg-color-gray" sorter={true}
                   sortDirections={['ascend', 'descend']}
                   sortOrder={paginationState.sort === 'strikePrice' ?
                     paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
@@ -172,7 +173,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                   dataIndex="option" key="strikePrice" render={(option) =>
             option.strikePrice
           }/>
-          <Column sorter={true}
+          <Column className="bg-color-gray" sorter={true}
                   sortDirections={['ascend', 'descend']}
                   sortOrder={paginationState.sort === 'expDate' ?
                     paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
@@ -180,7 +181,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                   dataIndex="option" key="expDate" render={(option) =>
             option.expDate
           }/>
-          <Column title={<Translate contentKey="eTradeApp.option.instrument">underlying asset</Translate>}
+          <Column className="bg-color-gray" title={<Translate contentKey="eTradeApp.option.instrument">underlying asset</Translate>}
                   dataIndex="option" key="optionInstrument" render={(option, record: any) =>
             option.instrument ? <a
               href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${option.instrument.tseId}`}>{option.instrument.name} {record.baseStockWatch?.last}</a> : ''
