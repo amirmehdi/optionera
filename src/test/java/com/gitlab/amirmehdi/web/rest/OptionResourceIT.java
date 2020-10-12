@@ -312,24 +312,6 @@ public class OptionResourceIT {
         assertThat(optionList).hasSize(databaseSizeBeforeTest);
     }
 
-    @Test
-    @Transactional
-    public void checkCallInTheMoneyIsRequired() throws Exception {
-        int databaseSizeBeforeTest = optionRepository.findAll().size();
-        // set the field null
-        option.setCallInTheMoney(null);
-
-        // Create the Option, which fails.
-
-        restOptionMockMvc.perform(post("/api/options")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(option)))
-            .andExpect(status().isBadRequest());
-
-        List<Option> optionList = optionRepository.findAll();
-        assertThat(optionList).hasSize(databaseSizeBeforeTest);
-    }
-
 
     @Test
     @Transactional

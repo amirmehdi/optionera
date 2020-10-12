@@ -1,13 +1,18 @@
 package com.gitlab.amirmehdi.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * A Option.
@@ -15,6 +20,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "option")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Getter
+@Setter
 public class Option implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,6 +42,14 @@ public class Option implements Serializable {
     @NotNull
     @Column(name = "put_isin", nullable = false)
     private String putIsin;
+
+    @NotNull
+    @Column(name = "call_tse_id")
+    private String callTseId;
+
+    @NotNull
+    @Column(name = "put_tse_id")
+    private String putTseId;
 
     @NotNull
     @Column(name = "exp_date", nullable = false)
@@ -75,36 +90,26 @@ public class Option implements Serializable {
     @Column(name = "put_leverage", nullable = false)
     private float putLeverage;
 
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at")
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at")
+    private Date updatedAt;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "instrument_id")
     @NotNull
     @JsonIgnoreProperties("options")
     private Instrument instrument;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public Option name(String name) {
         this.name = name;
         return this;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCallIsin() {
-        return callIsin;
     }
 
     public Option callIsin(String callIsin) {
@@ -112,25 +117,19 @@ public class Option implements Serializable {
         return this;
     }
 
-    public void setCallIsin(String callIsin) {
-        this.callIsin = callIsin;
-    }
-
-    public String getPutIsin() {
-        return putIsin;
-    }
-
     public Option putIsin(String putIsin) {
         this.putIsin = putIsin;
         return this;
     }
 
-    public void setPutIsin(String putIsin) {
-        this.putIsin = putIsin;
+    public Option callTseId(String callTseId) {
+        this.callTseId = callTseId;
+        return this;
     }
 
-    public LocalDate getExpDate() {
-        return expDate;
+    public Option putTseId(String putTseId) {
+        this.putTseId = putTseId;
+        return this;
     }
 
     public Option expDate(LocalDate expDate) {
@@ -138,25 +137,9 @@ public class Option implements Serializable {
         return this;
     }
 
-    public void setExpDate(LocalDate expDate) {
-        this.expDate = expDate;
-    }
-
-    public Integer getStrikePrice() {
-        return strikePrice;
-    }
-
     public Option strikePrice(Integer strikePrice) {
         this.strikePrice = strikePrice;
         return this;
-    }
-
-    public void setStrikePrice(Integer strikePrice) {
-        this.strikePrice = strikePrice;
-    }
-
-    public Integer getContractSize() {
-        return contractSize;
     }
 
     public Option contractSize(Integer contractSize) {
@@ -164,25 +147,9 @@ public class Option implements Serializable {
         return this;
     }
 
-    public void setContractSize(Integer contractSize) {
-        this.contractSize = contractSize;
-    }
-
-    public boolean isCallInTheMoney() {
-        return callInTheMoney;
-    }
-
     public Option callInTheMoney(boolean callInTheMoney) {
         this.callInTheMoney = callInTheMoney;
         return this;
-    }
-
-    public void setCallInTheMoney(Boolean callInTheMoney) {
-        this.callInTheMoney = callInTheMoney;
-    }
-
-    public float getCallBreakEven() {
-        return callBreakEven;
     }
 
     public Option callBreakEven(float callBreakEven) {
@@ -190,25 +157,9 @@ public class Option implements Serializable {
         return this;
     }
 
-    public void setCallBreakEven(float callBreakEven) {
-        this.callBreakEven = callBreakEven;
-    }
-
-    public float getPutBreakEven() {
-        return putBreakEven;
-    }
-
     public Option putBreakEven(float putBreakEven) {
         this.putBreakEven = putBreakEven;
         return this;
-    }
-
-    public void setPutBreakEven(float putBreakEven) {
-        this.putBreakEven = putBreakEven;
-    }
-
-    public float getCallAskToBS() {
-        return callAskToBS;
     }
 
     public Option callAskToBS(float callAskToBS) {
@@ -216,25 +167,9 @@ public class Option implements Serializable {
         return this;
     }
 
-    public void setCallAskToBS(float callAskToBS) {
-        this.callAskToBS = callAskToBS;
-    }
-
-    public float getPutAskToBS() {
-        return putAskToBS;
-    }
-
     public Option putAskToBS(float putAskToBS) {
         this.putAskToBS = putAskToBS;
         return this;
-    }
-
-    public void setPutAskToBS(float putAskToBS) {
-        this.putAskToBS = putAskToBS;
-    }
-
-    public float getCallLeverage() {
-        return callLeverage;
     }
 
     public Option callLeverage(float callLeverage) {
@@ -242,36 +177,15 @@ public class Option implements Serializable {
         return this;
     }
 
-    public void setCallLeverage(float callLeverage) {
-        this.callLeverage = callLeverage;
-    }
-
-    public float getPutLeverage() {
-        return putLeverage;
-    }
-
     public Option putLeverage(float putLeverage) {
         this.putLeverage = putLeverage;
         return this;
-    }
-
-    public void setPutLeverage(float putLeverage) {
-        this.putLeverage = putLeverage;
-    }
-
-    public Instrument getInstrument() {
-        return instrument;
     }
 
     public Option instrument(Instrument instrument) {
         this.instrument = instrument;
         return this;
     }
-
-    public void setInstrument(Instrument instrument) {
-        this.instrument = instrument;
-    }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {

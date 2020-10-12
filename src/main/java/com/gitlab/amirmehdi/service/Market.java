@@ -39,7 +39,7 @@ public class Market {
             if (redisTemplate.opsForHash().hasKey(isin, MessageEventEnum.BIDASK.toString()).equals(true)) {
                 return objectMapper.readValue((String) (redisTemplate.opsForHash().get(isin, MessageEventEnum.BIDASK.toString())), BidAsk.class);
             }else {
-                log.warn("BidAsk for ISIN: " + isin + " is not available. Returning default BidAsk...");
+                log.debug("BidAsk for ISIN: " + isin + " is not available. Returning default BidAsk...");
                 return defaultBidAsk(isin);
             }
         } catch (Exception e) {

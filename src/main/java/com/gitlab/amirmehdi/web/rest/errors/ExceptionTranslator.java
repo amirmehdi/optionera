@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.web.rest.errors;
 
+import com.gitlab.amirmehdi.service.errors.UsernameAlreadyUsedException;
 import io.github.jhipster.web.util.HeaderUtil;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -92,19 +93,19 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
     }
 
     @ExceptionHandler
-    public ResponseEntity<Problem> handleEmailAlreadyUsedException(com.gitlab.amirmehdi.service.EmailAlreadyUsedException ex, NativeWebRequest request) {
+    public ResponseEntity<Problem> handleEmailAlreadyUsedException(com.gitlab.amirmehdi.service.errors.EmailAlreadyUsedException ex, NativeWebRequest request) {
         EmailAlreadyUsedException problem = new EmailAlreadyUsedException();
         return create(problem, request, HeaderUtil.createFailureAlert(applicationName,  true, problem.getEntityName(), problem.getErrorKey(), problem.getMessage()));
     }
 
     @ExceptionHandler
-    public ResponseEntity<Problem> handleUsernameAlreadyUsedException(com.gitlab.amirmehdi.service.UsernameAlreadyUsedException ex, NativeWebRequest request) {
+    public ResponseEntity<Problem> handleUsernameAlreadyUsedException(UsernameAlreadyUsedException ex, NativeWebRequest request) {
         LoginAlreadyUsedException problem = new LoginAlreadyUsedException();
         return create(problem, request, HeaderUtil.createFailureAlert(applicationName,  true, problem.getEntityName(), problem.getErrorKey(), problem.getMessage()));
     }
 
     @ExceptionHandler
-    public ResponseEntity<Problem> handleInvalidPasswordException(com.gitlab.amirmehdi.service.InvalidPasswordException ex, NativeWebRequest request) {
+    public ResponseEntity<Problem> handleInvalidPasswordException(com.gitlab.amirmehdi.service.errors.InvalidPasswordException ex, NativeWebRequest request) {
         return create(new InvalidPasswordException(), request);
     }
 

@@ -7,9 +7,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
-/**
- * @author H.Motallebpour
- */
 public class DateUtil {
 
     public static Date jalaliToGregorian(int year, int month, int day) {

@@ -1,4 +1,4 @@
-package com.gitlab.amirmehdi.service;
+package com.gitlab.amirmehdi.service.errors;
 
 public class InvalidPasswordException extends RuntimeException {
 

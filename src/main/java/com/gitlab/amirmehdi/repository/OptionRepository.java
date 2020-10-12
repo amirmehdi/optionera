@@ -5,8 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.Optional;
 public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecificationExecutor<Option> {
     Optional<Option> findByInstrumentIsinAndStrikePriceAndExpDate(String isin, Integer strikePrice, LocalDate expDate);
 
+    List<Option> findAllByInstrumentIsinIsIn(List<String> isins);
+
     @Query(value = "select o from Option o where" +
         " o.callIsin=?1 or " +
         " o.putIsin=?1 ")
@@ -31,6 +35,26 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
 
     Page<Option> findAllByExpDateGreaterThanEqual(LocalDate date, Pageable pageable);
 
+    Page<Option> findAllByCallTseIdIsNullOrPutTseIdIsNull(Pageable pageable);
+
+    List<Option> findAllByCallBreakEvenIsLessThanEqual(float maxThreshold);
+
+    List<Option> findAllByCallAskToBSLessThanEqualAndExpDateGreaterThanEqual(float maxThreshold, LocalDate localDate);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update Option  o set o.name = ?2," +
+        " o.callTseId = ?3 " +
+        " where o.callIsin =?1")
+    void updateCallTseId(String isin, String name, String tseId);
+
+
+    @Transactional
+    @Modifying
+    @Query(value = "update Option  o set o.name = ?2," +
+        " o.putTseId = ?3 " +
+        " where o.putIsin =?1")
+    void updatePutTseId(String isin, String name, String tseId);
     /*
     have a bug
     @Transactional
@@ -45,4 +69,6 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
         "o.callInTheMoney= :#{#option.callInTheMoney} " +
         "where o.id= :#{#option.id}")
     void updateParam(Option option);*/
+
+    void deleteAllByExpDateBefore(LocalDate localDate);
 }

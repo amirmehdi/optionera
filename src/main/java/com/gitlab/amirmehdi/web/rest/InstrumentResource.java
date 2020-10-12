@@ -2,6 +2,7 @@ package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.repository.InstrumentRepository;
+import com.gitlab.amirmehdi.service.dto.InstrumentSearchDTO;
 import com.gitlab.amirmehdi.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -10,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing {@link com.gitlab.amirmehdi.domain.Instrument}.
@@ -119,5 +123,17 @@ public class InstrumentResource {
         log.debug("REST request to delete Instrument : {}", id);
         instrumentRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+
+    @GetMapping("/instruments/search/{name}")
+    public ResponseEntity<List<InstrumentSearchDTO>> searchByName(@PathVariable String name) {
+        List<InstrumentSearchDTO> list = instrumentRepository.findAllByNameLike(name, PageRequest.of(0, 10))
+            .stream()
+            .map(instrument -> new InstrumentSearchDTO(instrument.getIsin(), instrument.getName()))
+            .collect(Collectors.toList());
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), new PageImpl<>(list));
+        return ResponseEntity.ok()
+            .headers(headers)
+            .body(list);
     }
 }

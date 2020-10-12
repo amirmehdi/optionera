@@ -1,0 +1,23 @@
+version: '2'
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - 80:80
+    restart: always
+    environment:
+      - TZ=Asia/Tehran
+    volumes:
+      - /etc/nginx/conf.d/:/etc/nginx/conf.d/
+    logging:
+      driver: json-file
+      options:
+        max-file: '1'
+        max-size: 50m
+    networks:
+      - nginx_network
+
+networks:
+  nginx_network:
+    external:
+      name: nginx_network
