@@ -114,9 +114,9 @@ public class SignalQueryService extends QueryService<Signal> {
             if (criteria.getBaseInstrumentLast() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getBaseInstrumentLast(), Signal_.baseInstrumentLast));
             }
-            if (criteria.getCreatedAt() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getCreatedAt(), Signal_.createdAt));
-            }
+//            if (criteria.getCreatedAt() != null) {
+//                specification = specification.and(buildRangeSpecification(criteria.getCreatedAt(), Signal_.createdAt));
+//            }
             if (criteria.getOrderId() != null) {
                 specification = specification.and(buildSpecification(criteria.getOrderId(),
                     root -> root.join(Signal_.orders, JoinType.LEFT).get(Order_.id)));
