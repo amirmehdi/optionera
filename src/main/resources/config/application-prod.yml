@@ -138,8 +138,6 @@ jhipster:
 # ===================================================================
 
 application:
-  #  channel-id: -1001468700748
-  channel-id: -1001318208609
   market-time-check: true
   market-updater-fixed-rate: 6000
   open-interest-updater-fixed-rate: 30000

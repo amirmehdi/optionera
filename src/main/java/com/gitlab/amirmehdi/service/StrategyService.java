@@ -1,5 +1,10 @@
 package com.gitlab.amirmehdi.service;
 
+import com.gitlab.amirmehdi.domain.Order;
+import com.gitlab.amirmehdi.domain.Signal;
+import com.gitlab.amirmehdi.repository.SignalRepository;
+import com.gitlab.amirmehdi.service.dto.StrategyResponse;
+import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
 import com.gitlab.amirmehdi.service.strategy.Strategy;
 import com.gitlab.amirmehdi.util.MarketTimeUtil;
 import lombok.extern.log4j.Log4j2;
@@ -9,26 +14,31 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @Log4j2
 public class StrategyService {
     private final TelegramMessageSender telegramMessageSender;
+    private final SignalRepository signalRepository;
+    private final OrderService orderService;
 
     private final TaskScheduler executor;
-
+    private final HashMap<String, Strategy> strategies = new HashMap<>();
     @Value("${application.market-time-check}")
     private boolean marketTimeCheck;
+    @Value("${application.api-token}")
+    private String apiToken;
+    @Value("${application.private-channel-id}")
+    private String privateChannelId;
 
-    private HashMap<String, Strategy> strategies = new HashMap<>();
-
-
-    public StrategyService(TelegramMessageSender telegramMessageSender, TaskScheduler executor) {
+    public StrategyService(TelegramMessageSender telegramMessageSender, SignalRepository signalRepository, OrderService orderService, TaskScheduler executor) {
         this.telegramMessageSender = telegramMessageSender;
+        this.signalRepository = signalRepository;
+        this.orderService = orderService;
         this.executor = executor;
     }
 
@@ -57,9 +67,42 @@ public class StrategyService {
         if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
             return;
         Optional
-            .of(strategy.getSignals())
-            .ifPresent(s -> s.stream()
-                .filter(Objects::nonNull)
-                .forEach(telegramMessageSender::sendMessage));
+            .ofNullable(strategy.getSignals())
+            .ifPresent(s -> {
+                s.getCallSignals().forEach(signalRepository::save);
+                String privateChatId = s.getPrivateChatId() == null ? privateChannelId : s.getPrivateChatId();
+
+                if (s.getPublicChatId() != null && !s.getPublicChatId().isEmpty()) {
+                    s.getCallSignals()
+                        .stream()
+                        .map(signal -> new TelegramMessageDto(apiToken
+                            , s.getPublicChatId()
+                            , strategy.getMessageTemplate(signal.getIsin())))
+                        .forEach(telegramMessageSender::sendMessage);
+                }
+
+                if (StrategyResponse.SendOrderType.NEED_ALLOW.equals(s.getSendOrderType())) {
+                    s.getCallSignals()
+                        .stream()
+                        .map(signal -> {
+                            return new TelegramMessageDto(apiToken
+                                , privateChatId
+                                , strategy.getMessageTemplateWithOrderLink(signal));
+                        })
+                        .forEach(telegramMessageSender::sendMessage);
+                }
+            });
+    }
+
+    public List<Order> sendOrder(Signal signal) {
+        if (strategies.containsKey(signal.getType())) {
+            List<Order> orders = strategies.get(signal.getType()).getOrder(signal);
+            if (orders == null) {
+                return Collections.emptyList();
+            }
+            orders.forEach(orderService::send);
+            return orders;
+        }
+        throw new RuntimeException("Strategy not active");
     }
 }

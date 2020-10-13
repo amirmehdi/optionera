@@ -1,14 +1,18 @@
 package com.gitlab.amirmehdi.service;
 
+import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Signal;
 import com.gitlab.amirmehdi.repository.SignalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -21,9 +25,11 @@ public class SignalService {
     private final Logger log = LoggerFactory.getLogger(SignalService.class);
 
     private final SignalRepository signalRepository;
+    private final StrategyService strategyService;
 
-    public SignalService(SignalRepository signalRepository) {
+    public SignalService(SignalRepository signalRepository, StrategyService strategyService) {
         this.signalRepository = signalRepository;
+        this.strategyService = strategyService;
     }
 
     /**
@@ -69,5 +75,10 @@ public class SignalService {
     public void delete(Long id) {
         log.debug("Request to delete Signal : {}", id);
         signalRepository.deleteById(id);
+    }
+
+    public List<Order> sendOrder(Long signalId) {
+        Signal signal = findOne(signalId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return strategyService.sendOrder(signal);
     }
 }

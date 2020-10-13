@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.web.rest;
 
+import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Signal;
 import com.gitlab.amirmehdi.service.SignalQueryService;
 import com.gitlab.amirmehdi.service.SignalService;
@@ -31,16 +32,12 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class SignalResource {
 
-    private final Logger log = LoggerFactory.getLogger(SignalResource.class);
-
     private static final String ENTITY_NAME = "signal";
-
+    private final Logger log = LoggerFactory.getLogger(SignalResource.class);
+    private final SignalService signalService;
+    private final SignalQueryService signalQueryService;
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
-
-    private final SignalService signalService;
-
-    private final SignalQueryService signalQueryService;
 
     public SignalResource(SignalService signalService, SignalQueryService signalQueryService) {
         this.signalService = signalService;
@@ -138,5 +135,12 @@ public class SignalResource {
         log.debug("REST request to delete Signal : {}", id);
         signalService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+
+    @GetMapping("/tg-order/{signalId}")
+    public ResponseEntity<List<Order>> sendOrderForStrategy(@PathVariable Long signalId) {
+        log.debug("REST request to sendOrderForStrategy : {}", signalId);
+        return ResponseEntity.ok().body(signalService.sendOrder(signalId));
+
     }
 }

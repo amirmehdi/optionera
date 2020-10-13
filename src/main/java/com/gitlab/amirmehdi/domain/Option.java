@@ -43,11 +43,9 @@ public class Option implements Serializable {
     @Column(name = "put_isin", nullable = false)
     private String putIsin;
 
-    @NotNull
     @Column(name = "call_tse_id")
     private String callTseId;
 
-    @NotNull
     @Column(name = "put_tse_id")
     private String putTseId;
 

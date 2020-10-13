@@ -6,7 +6,7 @@ import com.gitlab.amirmehdi.repository.InstrumentRepository;
 import com.gitlab.amirmehdi.repository.OptionRepository;
 import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OptionStatsService;
-import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
+import com.gitlab.amirmehdi.service.dto.StrategyResponse;
 import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.stereotype.Service;
 
@@ -28,13 +28,13 @@ public class QueueShortcutsStrategy extends Strategy {
         .build();
 
     protected QueueShortcutsStrategy(OptionRepository optionRepository, OptionStatsService optionStatsService, InstrumentRepository instrumentRepository, Market market) {
-        super(optionRepository, optionStatsService);
+        super(optionRepository, optionStatsService, market);
         this.instrumentRepository = instrumentRepository;
         this.market = market;
     }
 
     @Override
-    public List<TelegramMessageDto> getSignals() {
+    public StrategyResponse getSignals() {
         List<String> isins = instrumentRepository
             .findAll().stream()
             .filter(instrument -> market.getStockWatch(instrument.getIsin()).isBuyQueue())
@@ -54,17 +54,30 @@ public class QueueShortcutsStrategy extends Strategy {
                 }
             });
 
-        return optionList
-            .stream()
-            .filter(option -> !cachedIsin.containsKey(option.getInstrument().getIsin()) || option.getCallBreakEven() < cachedIsin.get(option.getInstrument().getIsin()) - 2)
-            .peek(option -> cachedIsin.put(option.getInstrument().getIsin(), option.getCallBreakEven()))
-            .map(option -> getTelegramMessageDto(getMessageTemplate(optionStatsService.findOne(option), "میان بر صف(دارایی پایه صف خرید است ولی اختیار داده شده قابل خرید است)", "متوسط")))
-            .collect(Collectors.toList());
-
+        return StrategyResponse.builder()
+            .callSignals(optionList
+                .stream()
+                .filter(option -> !cachedIsin.containsKey(option.getInstrument().getIsin()) || option.getCallBreakEven() < cachedIsin.get(option.getInstrument().getIsin()) - 2)
+                .peek(option -> cachedIsin.put(option.getInstrument().getIsin(), option.getCallBreakEven()))
+                .map(option -> getSignal(option.getCallIsin()))
+                .collect(Collectors.toList()))
+            .publicChatId(optionEraChatId)
+            .sendOrderType(StrategyResponse.SendOrderType.NONE)
+            .build();
     }
 
     @Override
     public String getCron() {
         return "*/10 * 9-12 * * *";
+    }
+
+    @Override
+    protected String getStrategyDesc() {
+        return "میانبر_صف دارایی پایه صف خرید است اما اختیار بالا قابل خرید است.";
+    }
+
+    @Override
+    protected String getStrategyRisk() {
+        return "متوسط";
     }
 }
