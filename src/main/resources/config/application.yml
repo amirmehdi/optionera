@@ -169,8 +169,5 @@ jhipster:
 # ===================================================================
 
 application:
-  api-token: 1154072624:AAE9byP-2eXRfxZPHeZ92ffjd0LaO4Ys1iA
-  channel-id: -1001468700748
-  private-channel-id: -1001468700748
   oa-base-url: https://api.algo.ir
   oa-rate-limit: 40
