@@ -1,0 +1,48 @@
+entity Signal {
+	type String required,
+    isin String required,
+    last Integer,
+    tradeVolume Long,
+    bidVolume Long,
+    bidPrice Integer,
+    askPrice Integer,
+    askVolume Long,
+    baseInstrumentLast Integer,
+    createdAt Instant,
+}
+
+entity Order {
+	isin String required,
+    price Integer required,
+    quantity Integer required,
+    validity Validity required,
+    side Side required,
+    broker Broker required,
+    omsId String,
+
+}
+
+entity Token {
+	token String required,
+    broker Broker required,
+    createdAt Instant
+}
+
+enum Broker {
+    REFAH, FIROOZE_ASIA
+}
+enum Side {
+	BUY, SELL
+}
+
+enum Validity {
+    DAY, FILL_AND_KILL
+}
+relationship OneToMany {
+	Signal to Order{signal}
+}
+
+paginate Signal, Order with infinite-scroll
+paginate Token with pagination
+
+filter Signal, Order

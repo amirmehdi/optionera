@@ -1,0 +1,9 @@
+{
+  "eTradeApp": {
+    "Side": {
+      "null": "",
+      "BUY": "BUY",
+      "SELL": "SELL"
+    }
+  }
+}

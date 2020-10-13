@@ -21,7 +21,8 @@ public abstract class Strategy {
 
     @Value("${application.channel-id}")
     protected String optionEraChatId;
-    private final String apiToken = "1154072624:AAG1HWOZDAU4FxgP0aek84zt7Ap4mfe4wJo";
+    @Value("${application.api-token}")
+    private String apiToken;
 
 
     protected Strategy(OptionRepository optionRepository, OptionStatsService optionStatsService) {

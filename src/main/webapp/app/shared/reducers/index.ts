@@ -13,18 +13,19 @@ import password, { PasswordState } from 'app/modules/account/password/password.r
 import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
 // prettier-ignore
-import instrument, {
-  InstrumentState
-} from 'app/entities/instrument/instrument.reducer';
+import instrument, {InstrumentState} from 'app/entities/instrument/instrument.reducer';
 // prettier-ignore
-import option, {
-  OptionState
-} from 'app/entities/option/option.reducer';
+import option, {OptionState} from 'app/entities/option/option.reducer';
 // prettier-ignore
 // prettier-ignore
-import optionStats, {
-  OptionStatsState
-} from 'app/entities/option-stats/option-stats.reducer';
+import optionStats, {OptionStatsState} from 'app/entities/option-stats/option-stats.reducer';
+// prettier-ignore
+import signal, {SignalState} from 'app/entities/signal/signal.reducer';
+// prettier-ignore
+import order, {OrderState} from 'app/entities/order/order.reducer';
+// prettier-ignore
+import token, {TokenState} from 'app/entities/token/token.reducer';
+
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -41,6 +42,9 @@ export interface IRootState {
   readonly instrument: InstrumentState;
   readonly option: OptionState;
   readonly optionStats: OptionStatsState;
+  readonly signal: SignalState;
+  readonly order: OrderState;
+  readonly token: TokenState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -59,6 +63,9 @@ const rootReducer = combineReducers<IRootState>({
   instrument,
   option,
   optionStats,
+  signal,
+  order,
+  token,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

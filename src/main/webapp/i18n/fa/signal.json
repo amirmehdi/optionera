@@ -1,0 +1,32 @@
+{
+  "eTradeApp": {
+    "signal": {
+      "home": {
+        "title": "Signals",
+        "createLabel": "Create a new Signal",
+        "createOrEditLabel": "Create or edit a Signal",
+        "notFound": "No Signals found"
+      },
+      "created": "A new Signal is created with identifier {{ param }}",
+      "updated": "A Signal is updated with identifier {{ param }}",
+      "deleted": "A Signal is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Signal {{ id }}?"
+      },
+      "detail": {
+        "title": "Signal"
+      },
+      "type": "Type",
+      "isin": "Isin",
+      "last": "Last",
+      "tradeVolume": "Trade Volume",
+      "bidVolume": "Bid Volume",
+      "bidPrice": "Bid Price",
+      "askPrice": "Ask Price",
+      "askVolume": "Ask Volume",
+      "baseInstrumentLast": "Base Instrument Last",
+      "createdAt": "Created At",
+      "order": "Order"
+    }
+  }
+}
