@@ -53,4 +53,8 @@ public class OptionStatsService {
             .baseStockWatch(market.getStockWatch(option.getInstrument().getIsin()))
             .baseBidAsk(market.getBidAsk(option.getInstrument().getIsin()).getBestBidAsk());
     }
+
+    public OptionStats findByCallOrPutIsin(String isin) {
+        return toOptionStats(optionService.findByCallIsinOrPutIsin(isin).orElseThrow(RuntimeException::new));
+    }
 }

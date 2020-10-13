@@ -2,9 +2,9 @@ package com.gitlab.amirmehdi.service.strategy;
 
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.repository.OptionRepository;
+import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OptionStatsService;
-import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
-import com.gitlab.amirmehdi.service.errors.OptionStatsNotFoundException;
+import com.gitlab.amirmehdi.service.dto.StrategyResponse;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,27 +15,27 @@ import java.util.stream.Collectors;
 
 @Service
 public class RiskyOptionStrategy extends Strategy {
-    protected RiskyOptionStrategy(OptionRepository optionRepository, OptionStatsService optionStatsService) {
-        super(optionRepository, optionStatsService);
+    protected RiskyOptionStrategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market) {
+        super(optionRepository, optionStatsService, market);
     }
 
     @Override
-    public List<TelegramMessageDto> getSignals() {
+    public StrategyResponse getSignals() {
         List<Option> options = optionRepository.findAllByExpDateGreaterThanEqual(LocalDate.now().plusDays(30));
-        Map<Long, Double> values = options.stream()
-            .collect(Collectors.toMap(Option::getId, option -> getRiskyParam(option.getCallLeverage(), option.getCallAskToBS(), option.getCallBreakEven())));
+        Map<String, Double> values = options.stream()
+            .collect(Collectors.toMap(Option::getCallIsin, option -> getRiskyParam(option.getCallLeverage(), option.getCallAskToBS(), option.getCallBreakEven())));
 
-        return values
-            .entrySet()
-            .stream()
-            .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-            .limit(3)
-            .map(longDoubleEntry -> getTelegramMessageDto(
-                getMessageTemplate(
-                    optionStatsService.findOne(longDoubleEntry.getKey()).orElseThrow(OptionStatsNotFoundException::new)
-                    , "درصورتی که دارایی پایه ارزنده است، اختیار بالا می تواند مورد بررسی قرار بگیرد"
-                    , "زیاد")))
-            .collect(Collectors.toList());
+        return StrategyResponse.builder()
+            .callSignals(values
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .limit(3)
+                .map(callIsin -> getSignal(callIsin.getKey()))
+                .collect(Collectors.toList()))
+            .publicChatId(optionEraChatId)
+            .sendOrderType(StrategyResponse.SendOrderType.NONE)
+            .build();
     }
 
     private Double getRiskyParam(double callLeverage, double callAskToBS, double callBreakEven) {
@@ -45,5 +45,15 @@ public class RiskyOptionStrategy extends Strategy {
     @Override
     public String getCron() {
         return "0 0,15,28,45 9-12 * * *";
+    }
+
+    @Override
+    protected String getStrategyDesc() {
+        return "اهرم_خوب درصورتی که دارایی پایه ارزنده است، اختیار بالا می تواند مورد بررسی قرار بگیرد";
+    }
+
+    @Override
+    protected String getStrategyRisk() {
+        return "زیاد";
     }
 }

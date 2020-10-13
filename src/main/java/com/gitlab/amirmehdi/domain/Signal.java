@@ -41,7 +41,7 @@ public class Signal implements Serializable {
     private Long tradeVolume;
 
     @Column(name = "bid_volume")
-    private Long bidVolume;
+    private Integer bidVolume;
 
     @Column(name = "bid_price")
     private Integer bidPrice;
@@ -50,7 +50,7 @@ public class Signal implements Serializable {
     private Integer askPrice;
 
     @Column(name = "ask_volume")
-    private Long askVolume;
+    private Integer askVolume;
 
     @Column(name = "base_instrument_last")
     private Integer baseInstrumentLast;
@@ -125,16 +125,16 @@ public class Signal implements Serializable {
         this.tradeVolume = tradeVolume;
     }
 
-    public Long getBidVolume() {
+    public Integer getBidVolume() {
         return bidVolume;
     }
 
-    public Signal bidVolume(Long bidVolume) {
+    public Signal bidVolume(Integer bidVolume) {
         this.bidVolume = bidVolume;
         return this;
     }
 
-    public void setBidVolume(Long bidVolume) {
+    public void setBidVolume(Integer bidVolume) {
         this.bidVolume = bidVolume;
     }
 
@@ -164,16 +164,16 @@ public class Signal implements Serializable {
         this.askPrice = askPrice;
     }
 
-    public Long getAskVolume() {
+    public Integer getAskVolume() {
         return askVolume;
     }
 
-    public Signal askVolume(Long askVolume) {
+    public Signal askVolume(Integer askVolume) {
         this.askVolume = askVolume;
         return this;
     }
 
-    public void setAskVolume(Long askVolume) {
+    public void setAskVolume(Integer askVolume) {
         this.askVolume = askVolume;
     }
 

@@ -48,9 +48,9 @@ public class SignalResourceIT {
     private static final Long UPDATED_TRADE_VOLUME = 2L;
     private static final Long SMALLER_TRADE_VOLUME = 1L - 1L;
 
-    private static final Long DEFAULT_BID_VOLUME = 1L;
-    private static final Long UPDATED_BID_VOLUME = 2L;
-    private static final Long SMALLER_BID_VOLUME = 1L - 1L;
+    private static final Integer DEFAULT_BID_VOLUME = 1;
+    private static final Integer UPDATED_BID_VOLUME = 2;
+    private static final Integer SMALLER_BID_VOLUME = 0;
 
     private static final Integer DEFAULT_BID_PRICE = 1;
     private static final Integer UPDATED_BID_PRICE = 2;
@@ -58,11 +58,11 @@ public class SignalResourceIT {
 
     private static final Integer DEFAULT_ASK_PRICE = 1;
     private static final Integer UPDATED_ASK_PRICE = 2;
-    private static final Integer SMALLER_ASK_PRICE = 1 - 1;
+    private static final Integer SMALLER_ASK_PRICE = 0;
 
-    private static final Long DEFAULT_ASK_VOLUME = 1L;
-    private static final Long UPDATED_ASK_VOLUME = 2L;
-    private static final Long SMALLER_ASK_VOLUME = 1L - 1L;
+    private static final Integer DEFAULT_ASK_VOLUME = 1;
+    private static final Integer UPDATED_ASK_VOLUME = 2;
+    private static final Integer SMALLER_ASK_VOLUME = 0;
 
     private static final Integer DEFAULT_BASE_INSTRUMENT_LAST = 1;
     private static final Integer UPDATED_BASE_INSTRUMENT_LAST = 2;

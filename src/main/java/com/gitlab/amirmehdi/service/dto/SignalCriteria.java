@@ -29,13 +29,13 @@ public class SignalCriteria implements Serializable, Criteria {
 
     private LongFilter tradeVolume;
 
-    private LongFilter bidVolume;
+    private IntegerFilter bidVolume;
 
     private IntegerFilter bidPrice;
 
     private IntegerFilter askPrice;
 
-    private LongFilter askVolume;
+    private IntegerFilter askVolume;
 
     private IntegerFilter baseInstrumentLast;
 
@@ -106,11 +106,11 @@ public class SignalCriteria implements Serializable, Criteria {
         this.tradeVolume = tradeVolume;
     }
 
-    public LongFilter getBidVolume() {
+    public IntegerFilter getBidVolume() {
         return bidVolume;
     }
 
-    public void setBidVolume(LongFilter bidVolume) {
+    public void setBidVolume(IntegerFilter bidVolume) {
         this.bidVolume = bidVolume;
     }
 
@@ -130,11 +130,11 @@ public class SignalCriteria implements Serializable, Criteria {
         this.askPrice = askPrice;
     }
 
-    public LongFilter getAskVolume() {
+    public IntegerFilter getAskVolume() {
         return askVolume;
     }
 
-    public void setAskVolume(LongFilter askVolume) {
+    public void setAskVolume(IntegerFilter askVolume) {
         this.askVolume = askVolume;
     }
 

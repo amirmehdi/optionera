@@ -21,9 +21,11 @@ public class OrderService {
     private final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderRepository orderRepository;
+    private final TadbirService tadbirService;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, TadbirService tadbirService) {
         this.orderRepository = orderRepository;
+        this.tadbirService = tadbirService;
     }
 
     /**
@@ -69,5 +71,12 @@ public class OrderService {
     public void delete(Long id) {
         log.debug("Request to delete Order : {}", id);
         orderRepository.deleteById(id);
+    }
+
+    public void send(Order order) {
+        if (order.getId() == null || order.getId() == 0) {
+            save(order);
+        }
+        tadbirService.sendOrder(order);
     }
 }

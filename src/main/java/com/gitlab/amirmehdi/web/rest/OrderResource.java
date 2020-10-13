@@ -90,7 +90,7 @@ public class OrderResource {
     /**
      * {@code GET  /orders} : get all the orders.
      *
-     * @param pageable the pagination information.
+     * @param pageable the optionpagination information.
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orders in body.
      */
