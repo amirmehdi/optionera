@@ -1,6 +1,7 @@
 package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.Option;
+import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.service.OptionQueryService;
 import com.gitlab.amirmehdi.service.OptionService;
 import com.gitlab.amirmehdi.service.dto.OptionCriteria;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -55,6 +57,7 @@ public class OptionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/options")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Option> createOption(@Valid @RequestBody Option option) throws URISyntaxException {
         log.debug("REST request to save Option : {}", option);
         if (option.getId() != null) {
@@ -76,6 +79,7 @@ public class OptionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/options")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Option> updateOption(@Valid @RequestBody Option option) throws URISyntaxException {
         log.debug("REST request to update Option : {}", option);
         if (option.getId() == null) {
@@ -134,6 +138,7 @@ public class OptionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/options/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteOption(@PathVariable Long id) {
         log.debug("REST request to delete Option : {}", id);
         optionService.delete(id);

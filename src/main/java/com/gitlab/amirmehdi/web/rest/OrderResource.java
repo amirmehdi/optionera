@@ -1,6 +1,7 @@
 package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.Order;
+import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.service.OrderQueryService;
 import com.gitlab.amirmehdi.service.OrderService;
 import com.gitlab.amirmehdi.service.dto.OrderCriteria;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -55,6 +57,7 @@ public class OrderResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/orders")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) throws URISyntaxException {
         log.debug("REST request to save Order : {}", order);
         if (order.getId() != null) {
@@ -76,6 +79,7 @@ public class OrderResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/orders")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Order> updateOrder(@Valid @RequestBody Order order) throws URISyntaxException {
         log.debug("REST request to update Order : {}", order);
         if (order.getId() == null) {
@@ -95,6 +99,7 @@ public class OrderResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orders in body.
      */
     @GetMapping("/orders")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<Order>> getAllOrders(OrderCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Orders by criteria: {}", criteria);
         Page<Order> page = orderQueryService.findByCriteria(criteria, pageable);
@@ -109,6 +114,7 @@ public class OrderResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/orders/count")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Long> countOrders(OrderCriteria criteria) {
         log.debug("REST request to count Orders by criteria: {}", criteria);
         return ResponseEntity.ok().body(orderQueryService.countByCriteria(criteria));
@@ -121,6 +127,7 @@ public class OrderResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the order, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/orders/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Order> getOrder(@PathVariable Long id) {
         log.debug("REST request to get Order : {}", id);
         Optional<Order> order = orderService.findOne(id);
@@ -134,6 +141,7 @@ public class OrderResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/orders/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         log.debug("REST request to delete Order : {}", id);
         orderService.delete(id);

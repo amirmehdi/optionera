@@ -2,6 +2,7 @@ package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Signal;
+import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.service.SignalQueryService;
 import com.gitlab.amirmehdi.service.SignalService;
 import com.gitlab.amirmehdi.service.dto.SignalCriteria;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -52,6 +54,7 @@ public class SignalResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/signals")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Signal> createSignal(@Valid @RequestBody Signal signal) throws URISyntaxException {
         log.debug("REST request to save Signal : {}", signal);
         if (signal.getId() != null) {
@@ -73,6 +76,7 @@ public class SignalResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/signals")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Signal> updateSignal(@Valid @RequestBody Signal signal) throws URISyntaxException {
         log.debug("REST request to update Signal : {}", signal);
         if (signal.getId() == null) {
@@ -131,6 +135,7 @@ public class SignalResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/signals/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteSignal(@PathVariable Long id) {
         log.debug("REST request to delete Signal : {}", id);
         signalService.delete(id);

@@ -2,6 +2,7 @@ package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.Token;
 import com.gitlab.amirmehdi.repository.TokenRepository;
+import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -52,6 +54,7 @@ public class TokenResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/tokens")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Token> createToken(@Valid @RequestBody Token token) throws URISyntaxException {
         log.debug("REST request to save Token : {}", token);
         if (token.getId() != null) {
@@ -73,6 +76,7 @@ public class TokenResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/tokens")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Token> updateToken(@Valid @RequestBody Token token) throws URISyntaxException {
         log.debug("REST request to update Token : {}", token);
         if (token.getId() == null) {
@@ -91,6 +95,7 @@ public class TokenResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tokens in body.
      */
     @GetMapping("/tokens")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<Token>> getAllTokens(Pageable pageable) {
         log.debug("REST request to get a page of Tokens");
         Page<Token> page = tokenRepository.findAll(pageable);
@@ -105,6 +110,7 @@ public class TokenResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the token, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/tokens/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Token> getToken(@PathVariable Long id) {
         log.debug("REST request to get Token : {}", id);
         Optional<Token> token = tokenRepository.findById(id);
@@ -118,6 +124,7 @@ public class TokenResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/tokens/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteToken(@PathVariable Long id) {
         log.debug("REST request to delete Token : {}", id);
         tokenRepository.deleteById(id);

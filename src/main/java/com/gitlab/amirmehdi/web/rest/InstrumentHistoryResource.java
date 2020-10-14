@@ -2,6 +2,7 @@ package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.InstrumentHistory;
 import com.gitlab.amirmehdi.domain.InstrumentHistoryCompositeKey;
+import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.service.InstrumentHistoryService;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +44,7 @@ public class InstrumentHistoryResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of instrumentHistories in body.
      */
     @GetMapping("/instrument-histories")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<InstrumentHistory>> getAllInstrumentHistories(Pageable pageable) {
         log.debug("REST request to get a page of InstrumentHistories");
         Page<InstrumentHistory> page = instrumentHistoryService.findAll(pageable);
@@ -56,6 +59,7 @@ public class InstrumentHistoryResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the instrumentHistory, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/instrument-histories/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<InstrumentHistory> getInstrumentHistory(@PathVariable InstrumentHistoryCompositeKey id) {
         log.debug("REST request to get InstrumentHistory : {}", id);
         Optional<InstrumentHistory> instrumentHistory = instrumentHistoryService.findOne(id);
