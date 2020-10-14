@@ -1,15 +1,16 @@
 import './footer.scss';
 
 import React from 'react';
-import { Translate } from 'react-jhipster';
-import { Col, Row } from 'reactstrap';
+import {Col, Row} from 'reactstrap';
 
 const Footer = props => (
   <div className="footer page-content">
     <Row>
       <Col md="12">
         <p>
-          <Translate contentKey="footer">Your footer</Translate>
+          <small>
+            © 2020 <a href="#">OptionEra</a>. All Rights Reserved. <br/>
+          </small>
         </p>
       </Col>
     </Row>
