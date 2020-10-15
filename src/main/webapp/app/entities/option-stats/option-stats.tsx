@@ -88,7 +88,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
     >
       {optionStatsList && optionStatsList.length > 0 ? (
 
-        <Table sticky pagination={false} onChange={handleChange} loading={loading} dataSource={optionStatsList as any}
+        <Table pagination={false} onChange={handleChange} loading={loading} dataSource={optionStatsList as any}
                scroll={{x: 2300}}>
           <Column fixed={'left'} title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
                   dataIndex="option" key="optionStats.name" render={(optionStats) =>
