@@ -1,6 +1,6 @@
 import './footer.scss';
-import './../../../../content/css/styles-merged.css';
-import './../../../../content/css/style.min.css';
+// import './../../../../content/css/styles-merged.css';
+// import './../../../../content/css/style.min.css';
 
 import React from 'react';
 import {Col, Row} from 'reactstrap';

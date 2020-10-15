@@ -1,17 +1,9 @@
 import './home.scss';
 import './../../../content/css/styles-merged.css'
-import './../../../content/css/style.min.css'
-
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Translate } from 'react-jhipster';
 import { connect } from 'react-redux';
-import { Row, Col, Alert } from 'reactstrap';
-
-import { IRootState } from 'app/shared/reducers';
-
+import { Row, Col } from 'reactstrap';
 export type IHomeProp = StateProps;
-
 export const Home = (props: IHomeProp) => {
   const { account } = props;
 
@@ -93,8 +85,7 @@ export const Home = (props: IHomeProp) => {
           <div className="container">
             <div className="row">
               <div
-                className="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 text-center probootstrap-hero-text pb0 probootstrap-animate"
-                data-animate-effect="fadeIn"
+                className="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 text-center probootstrap-hero-text pb0 "
               >
                 <h1>Launch your awesome startup now!</h1>
                 <p>
@@ -117,7 +108,7 @@ export const Home = (props: IHomeProp) => {
               </div>
             </div>
             <div className="row probootstrap-feature-showcase">
-              <div className="col-md-4 col-md-push-8 probootstrap-showcase-nav probootstrap-animate">
+              <div className="col-md-4 col-md-push-8 probootstrap-showcase-nav ">
                 <ul>
                   <li className="active">
                     <a href="#">Responsive Design</a>
@@ -164,7 +155,7 @@ export const Home = (props: IHomeProp) => {
                 </ul>
               </div>
               <div
-                className="col-md-8 col-md-pull-4 probootstrap-animate"
+                className="col-md-8 col-md-pull-4 "
                 style={{ position: "relative" }}
               >
                 <div className="probootstrap-home-showcase-wrap">
@@ -232,8 +223,7 @@ export const Home = (props: IHomeProp) => {
           <div className="container">
             <div className="row">
               <div
-                className="col-md-6 col-md-offset-3 text-center section-heading probootstrap-animate"
-                data-animate-effect="fadeIn"
+                className="col-md-6 col-md-offset-3 text-center section-heading "
               >
                 <h2>Platform Features</h2>
                 <p className="lead">
@@ -245,7 +235,7 @@ export const Home = (props: IHomeProp) => {
             {/* END row */}
             <div className="row probootstrap-gutter60">
               <div
-                className="col-md-4 probootstrap-animate"
+                className="col-md-4 "
                 data-animate-effect="fadeInLeft"
               >
                 <div className="service text-center">
@@ -262,8 +252,7 @@ export const Home = (props: IHomeProp) => {
                 </div>
               </div>
               <div
-                className="col-md-4 probootstrap-animate"
-                data-animate-effect="fadeIn"
+                className="col-md-4 "
               >
                 <div className="service text-center">
                   <div className="icon">
@@ -279,7 +268,7 @@ export const Home = (props: IHomeProp) => {
                 </div>
               </div>
               <div
-                className="col-md-4 probootstrap-animate"
+                className="col-md-4 "
                 data-animate-effect="fadeInRight"
               >
                 <div className="service text-center">
@@ -296,7 +285,7 @@ export const Home = (props: IHomeProp) => {
                 </div>
               </div>
               <div
-                className="col-md-4 probootstrap-animate"
+                className="col-md-4 "
                 data-animate-effect="fadeInLeft"
               >
                 <div className="service text-center">
@@ -312,7 +301,7 @@ export const Home = (props: IHomeProp) => {
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 probootstrap-animate">
+              <div className="col-md-4 ">
                 <div className="service text-center">
                   <div className="icon">
                     <i className="icon-magnifying-glass2" />
@@ -327,7 +316,7 @@ export const Home = (props: IHomeProp) => {
                 </div>
               </div>
               <div
-                className="col-md-4 probootstrap-animate"
+                className="col-md-4 "
                 data-animate-effect="fadeInRight"
               >
                 <div className="service text-center">
@@ -348,7 +337,7 @@ export const Home = (props: IHomeProp) => {
         </section>
         <section className="probootstrap-section pb0">
           <div className="container">
-            <div className="row probootstrap-feature-showcase probootstrap-animate">
+            <div className="row probootstrap-feature-showcase ">
               <div className="col-md-4 probootstrap-showcase-nav">
                 <ul>
                   <li className="active">
@@ -396,7 +385,7 @@ export const Home = (props: IHomeProp) => {
                 </ul>
               </div>
               <div
-                className="col-md-8 probootstrap-animate"
+                className="col-md-8 "
                 style={{ position: "relative" }}
               >
                 <div className="probootstrap-home-showcase-wrap">
@@ -463,7 +452,7 @@ export const Home = (props: IHomeProp) => {
         <section className="probootstrap-section probootstrap-bg-white probootstrap-zindex-above-showcase">
           <div className="container">
             <div className="row">
-              <div className="col-md-6 col-md-offset-3 text-center section-heading probootstrap-animate">
+              <div className="col-md-6 col-md-offset-3 text-center section-heading ">
                 <h2>More Features</h2>
                 <p className="lead">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
@@ -474,39 +463,18 @@ export const Home = (props: IHomeProp) => {
             {/* END row */}
             <div className="row">
               <div
-                className="col-md-7 col-md-push-5 probootstrap-animate"
+                className="col-md-7 col-md-push-5 "
                 data-animate-effect="fadeInRight"
               >
-                <div className="owl-carousel owl-carousel-fullwidth border-rounded">
-                  <div className="item">
                     <img
-                      src="content/img/img_showcase_1.jpg"
-                      alt="Free HTML5 Bootstrap Template by GetTemplates.co"
-                    />
-                  </div>
-                  <div className="item">
-                    <img
+                      style={{width: "100%"}}
                       src="content/img/img_showcase_2.jpg"
                       alt="Free HTML5 Bootstrap Template by GetTemplates.co"
                     />
-                  </div>
-                  <div className="item">
-                    <img
-                      src="content/img/img_showcase_1.jpg"
-                      alt="Free HTML5 Bootstrap Template by GetTemplates.co"
-                    />
-                  </div>
-                  <div className="item">
-                    <img
-                      src="content/img/img_showcase_2.jpg"
-                      alt="Free HTML5 Bootstrap Template by GetTemplates.co"
-                    />
-                  </div>
-                </div>
               </div>
               <div className="col-md-5 col-md-pull-7">
                 <div
-                  className="service left-icon probootstrap-animate"
+                  className="service left-icon "
                   data-animate-effect="fadeInLeft"
                 >
                   <div className="icon">
@@ -521,7 +489,7 @@ export const Home = (props: IHomeProp) => {
                   </div>
                 </div>
                 <div
-                  className="service left-icon probootstrap-animate"
+                  className="service left-icon "
                   data-animate-effect="fadeInLeft"
                 >
                   <div className="icon">
@@ -536,7 +504,7 @@ export const Home = (props: IHomeProp) => {
                   </div>
                 </div>
                 <div
-                  className="service left-icon probootstrap-animate"
+                  className="service left-icon "
                   data-animate-effect="fadeInLeft"
                 >
                   <div className="icon">
@@ -557,7 +525,7 @@ export const Home = (props: IHomeProp) => {
         <section className="probootstrap-section probootstrap-border-top probootstrap-bg-white">
           <div className="container">
             <div className="row">
-              <div className="col-md-6 col-md-offset-3 text-center section-heading probootstrap-animate">
+              <div className="col-md-6 col-md-offset-3 text-center section-heading ">
                 <h2>What People Says</h2>
                 <p className="lead">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
@@ -567,8 +535,7 @@ export const Home = (props: IHomeProp) => {
             </div>
             <div className="row">
               <div
-                className="col-md-4 probootstrap-animate"
-                data-animate-effect="fadeIn"
+                className="col-md-4 "
               >
                 <div className="probootstrap-testimony-wrap text-center">
                   <figure>
@@ -588,8 +555,7 @@ export const Home = (props: IHomeProp) => {
                 </div>
               </div>
               <div
-                className="col-md-4 probootstrap-animate"
-                data-animate-effect="fadeIn"
+                className="col-md-4 "
               >
                 <div className="probootstrap-testimony-wrap text-center">
                   <figure>
@@ -610,8 +576,7 @@ export const Home = (props: IHomeProp) => {
                 </div>
               </div>
               <div
-                className="col-md-4 probootstrap-animate"
-                data-animate-effect="fadeIn"
+                className="col-md-4 "
               >
                 <div className="probootstrap-testimony-wrap text-center">
                   <figure>
@@ -637,7 +602,7 @@ export const Home = (props: IHomeProp) => {
         <section className="probootstrap-section proboostrap-clients probootstrap-bg-white probootstrap-border-top">
           <div className="container">
             <div className="row">
-              <div className="col-md-6 section-heading probootstrap-animate">
+              <div className="col-md-6 section-heading ">
                 <h2>Our Clients</h2>
                 <p className="lead">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
@@ -652,8 +617,7 @@ export const Home = (props: IHomeProp) => {
             {/* END row */}
             <div className="row">
               <div
-                className="col-md-3 col-sm-6 col-xs-6 text-center client-logo probootstrap-animate"
-                data-animate-effect="fadeIn"
+                className="col-md-3 col-sm-6 col-xs-6 text-center client-logo "
               >
                 <img
                   src="content/img/client_1.png"
@@ -662,8 +626,7 @@ export const Home = (props: IHomeProp) => {
                 />
               </div>
               <div
-                className="col-md-3 col-sm-6 col-xs-6 text-center client-logo probootstrap-animate"
-                data-animate-effect="fadeIn"
+                className="col-md-3 col-sm-6 col-xs-6 text-center client-logo "
               >
                 <img
                   src="content/img/client_2.png"
@@ -673,8 +636,7 @@ export const Home = (props: IHomeProp) => {
               </div>
               <div className="clearfix visible-sm-block visible-xs-block" />
               <div
-                className="col-md-3 col-sm-6 col-xs-6 text-center client-logo probootstrap-animate"
-                data-animate-effect="fadeIn"
+                className="col-md-3 col-sm-6 col-xs-6 text-center client-logo "
               >
                 <img
                   src="content/img/client_3.png"
@@ -683,8 +645,7 @@ export const Home = (props: IHomeProp) => {
                 />
               </div>
               <div
-                className="col-md-3 col-sm-6 col-xs-6 text-center client-logo probootstrap-animate"
-                data-animate-effect="fadeIn"
+                className="col-md-3 col-sm-6 col-xs-6 text-center client-logo "
               >
                 <img
                   src="content/img/client_4.png"
@@ -700,7 +661,6 @@ export const Home = (props: IHomeProp) => {
             <div className="row">
               <div className="col-md-12">
                 <h2
-                  className="probootstrap-animate"
                   data-animate-effect="fadeInRight"
                 >
                   We had like to help and talk with you
@@ -708,7 +668,7 @@ export const Home = (props: IHomeProp) => {
                 <a
                   href="#"
                   role="button"
-                  className="btn btn-primary btn-lg btn-ghost probootstrap-animate"
+                  className="btn btn-primary btn-lg btn-ghost "
                   data-animate-effect="fadeInLeft"
                 >
                   Contact Us
@@ -724,7 +684,7 @@ export const Home = (props: IHomeProp) => {
           <Row>
             <Col md="6">
               <Row>
-                <Col md="4" className="probootstrap-animate">
+                <Col md="4">
                   <div className="probootstrap-footer-widget">
                     <h3>Links</h3>
                     <ul>
@@ -746,7 +706,7 @@ export const Home = (props: IHomeProp) => {
                     </ul>
                   </div>
                 </Col>
-                <Col md="4" className="probootstrap-animate">
+                <Col md="4">
                   <div className="probootstrap-footer-widget">
                     <h3>Links</h3>
                     <ul>
@@ -768,7 +728,7 @@ export const Home = (props: IHomeProp) => {
                     </ul>
                   </div>
                 </Col>
-                <Col md="4" className="probootstrap-animate">
+                <Col md="4">
                   <div className="probootstrap-footer-widget">
                     <h3>Links</h3>
                     <ul>
@@ -792,7 +752,7 @@ export const Home = (props: IHomeProp) => {
                 </Col>
               </Row>
             </Col>
-            <Col md="6" className="probootstrap-animate">
+            <Col md="6">
               <div className="probootstrap-footer-widget">
                 <h3>Paragraph</h3>
                 <p>
