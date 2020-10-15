@@ -138,8 +138,9 @@ jhipster:
 # ===================================================================
 
 application:
-  #  channel-id: -1001468700748
+  api-token: 1154072624:AAE9byP-2eXRfxZPHeZ92ffjd0LaO4Ys1iA
   channel-id: -1001318208609
+  private-channel-id: -1001427342656
   market-time-check: true
   market-updater-fixed-rate: 6000
   open-interest-updater-fixed-rate: 30000

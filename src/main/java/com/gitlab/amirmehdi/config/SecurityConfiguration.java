@@ -1,8 +1,8 @@
 package com.gitlab.amirmehdi.config;
 
-import com.gitlab.amirmehdi.security.*;
-import com.gitlab.amirmehdi.security.jwt.*;
-
+import com.gitlab.amirmehdi.security.AuthoritiesConstants;
+import com.gitlab.amirmehdi.security.jwt.JWTConfigurer;
+import com.gitlab.amirmehdi.security.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
@@ -72,16 +72,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
             .frameOptions()
             .deny()
-        .and()
+            .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
+            .and()
             .authorizeRequests()
             .antMatchers("/api/authenticate").permitAll()
             .antMatchers("/api/register").permitAll()
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/account/reset-password/init").permitAll()
             .antMatchers("/api/account/reset-password/finish").permitAll()
+            .antMatchers("/api/tg-order/**").permitAll()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/info").permitAll()

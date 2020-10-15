@@ -10,6 +10,9 @@
         "instrument": "Instrument",
         "option": "Option",
         "optionStats": "Option Stats",
+        "signal": "Signal",
+        "order": "Order",
+        "token": "Token",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

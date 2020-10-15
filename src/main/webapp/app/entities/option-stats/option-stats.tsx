@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { Table } from 'antd';
-import { getSortState, Translate } from 'react-jhipster';
-import { IRootState } from 'app/shared/reducers';
-import { getEntities, reset } from './option-stats.reducer';
-import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+import {connect} from 'react-redux';
+import {Link, RouteComponentProps} from 'react-router-dom';
+import {Table} from 'antd';
+import {getSortState, Translate} from 'react-jhipster';
+import {IRootState} from 'app/shared/reducers';
+import {getEntities, reset} from './option-stats.reducer';
+import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
 import "./style.scss"
 
-const { Column, ColumnGroup } = Table;
+const {Column, ColumnGroup} = Table;
 
 export interface IOptionStatsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {
 }
@@ -89,7 +89,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
       {optionStatsList && optionStatsList.length > 0 ? (
 
         <Table sticky pagination={false} onChange={handleChange} loading={loading} dataSource={optionStatsList as any}
-               scroll={{ x: 4000 }}>
+               scroll={{x: 2300}}>
           <Column fixed={'left'} title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
                   dataIndex="option" key="optionStats.name" render={(optionStats) =>
             optionStats ? <Link to={`option/${optionStats.id}`}>{'ض' + optionStats.name}</Link> : ''

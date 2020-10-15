@@ -1,11 +1,21 @@
 package com.gitlab.amirmehdi.service.strategy;
 
+import com.gitlab.amirmehdi.domain.Option;
+import com.gitlab.amirmehdi.domain.Order;
+import com.gitlab.amirmehdi.domain.Signal;
+import com.gitlab.amirmehdi.domain.enumeration.Broker;
+import com.gitlab.amirmehdi.domain.enumeration.Side;
+import com.gitlab.amirmehdi.domain.enumeration.Validity;
 import com.gitlab.amirmehdi.repository.OptionRepository;
+import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OptionStatsService;
-import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
+import com.gitlab.amirmehdi.service.dto.StrategyResponse;
+import com.gitlab.amirmehdi.service.dto.core.BidAsk;
+import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -18,22 +28,52 @@ public class UnusualPrices1Strategy extends Strategy {
         .expiration(5, TimeUnit.MINUTES)
         .build();
 
-    protected UnusualPrices1Strategy(OptionRepository optionRepository, OptionStatsService optionStatsService) {
-        super(optionRepository, optionStatsService);
+    protected UnusualPrices1Strategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market) {
+        super(optionRepository, optionStatsService, market);
     }
 
     @Override
-    public List<TelegramMessageDto> getSignals() {
-        return optionRepository.findAllByCallBreakEvenIsLessThanEqual(-10)
-            .stream()
-            .filter(option -> !cachedIsin.containsKey(option.getId()) || cachedIsin.get(option.getId()) > option.getCallBreakEven())
-            .peek(option -> cachedIsin.put(option.getId(), option.getCallBreakEven()))
-            .map(option -> getTelegramMessageDto(getMessageTemplate(optionStatsService.findOne(option), "قیمت های غیرمعمول۱", "متوسط")))
-            .collect(Collectors.toList());
+    public StrategyResponse getSignals() {
+        return StrategyResponse.builder()
+            .callSignals(optionRepository.findAllByCallBreakEvenIsLessThanEqual(-6)
+                .stream()
+                .filter(option -> !cachedIsin.containsKey(option.getId()) || cachedIsin.get(option.getId()) > option.getCallBreakEven())
+                .peek(option -> cachedIsin.put(option.getId(), option.getCallBreakEven()))
+                .map(option -> getSignal(option.getCallIsin()))
+                .collect(Collectors.toList()))
+            .publicChatId(optionEraChatId)
+            .sendOrderType(StrategyResponse.SendOrderType.NEED_ALLOW)
+            .build();
     }
 
     @Override
     public String getCron() {
         return "*/10 * 9-12 * * *";
+    }
+
+    @Override
+    protected String getStrategyDesc() {
+        return "آربیتراژ قیمت موثر اختیار برای اعمال کمتر از قیمت سهم است";
+    }
+
+    @Override
+    protected String getStrategyRisk() {
+        return "کم";
+    }
+
+    @Override
+    public List<Order> getOrder(Signal signal) {
+        BidAsk bidAsk = market.getBidAsk(signal.getIsin());
+        Option option = optionRepository.findByCallIsinOrPutIsin(signal.getIsin()).get();
+        StockWatch baseStockwatch = market.getStockWatch(option.getInstrument().getIsin());
+        int quantity = (int) Math.min(1.5 * bidAsk.getBestBidAsk().getAskQuantity(), 40_000_000.0 / (option.getContractSize() * baseStockwatch.getLast()));
+        return Collections.singletonList(new Order()
+            .isin(signal.getIsin())
+            .side(Side.BUY)
+            .validity(Validity.DAY)
+            .price(bidAsk.getBestBidAsk().getAskPrice())
+            .quantity(quantity)
+            .broker(Broker.REFAH)
+            .signal(signal));
     }
 }
