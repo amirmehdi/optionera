@@ -1,11 +1,14 @@
 import './home.scss';
 import './../../../content/css/styles-merged.css'
 import React from 'react';
-import { connect } from 'react-redux';
-import { Row, Col } from 'reactstrap';
+import {connect} from 'react-redux';
+import {Alert, Col, Row} from 'reactstrap';
+import {Link} from "react-router-dom";
+import {Translate} from "react-jhipster";
+
 export type IHomeProp = StateProps;
 export const Home = (props: IHomeProp) => {
-  const { account } = props;
+  const {account} = props;
 
   return (
     /*    <Row>
@@ -16,25 +19,6 @@ export const Home = (props: IHomeProp) => {
             <p className="lead">
               <Translate contentKey="home.subtitle">This is your homepage</Translate>
             </p>
-            {account && account.login ? (
-              <div>
-                <Alert color="success">
-                  <Translate contentKey="home.logged.message" interpolate={{ username: account.login }}>
-                    You are logged in as user {account.login}.
-                  </Translate>
-                </Alert>
-              </div>
-            ) : (
-              <div>
-
-                <Alert color="warning">
-                  <Translate contentKey="global.messages.info.register.noaccount">You do not have an account yet?</Translate>&nbsp;
-                  <Link to="/account/register" className="alert-link">
-                    <Translate contentKey="global.messages.info.register.link">Register a new account</Translate>
-                  </Link>
-                </Alert>
-              </div>
-            )}
             <p>
               <Translate contentKey="home.question">If you have any question on JHipster:</Translate>
             </p>
@@ -81,33 +65,51 @@ export const Home = (props: IHomeProp) => {
         </Row>*/
     <div>
       <div>
+        {account && account.login ? (
+          <div>
+            <Alert color="success">
+              <Translate contentKey="home.logged.message" interpolate={{username: account.login}}>
+                You are logged in as user {account.login}.
+              </Translate>
+            </Alert>
+          </div>
+        ) : (
+          <div>
+
+            <Alert color="warning">
+              <Translate contentKey="global.messages.info.register.noaccount">You do not have an account
+                yet?</Translate>&nbsp;
+              <Link to="/account/register" className="alert-link">
+                <Translate contentKey="global.messages.info.register.link">Register a new account</Translate>
+              </Link>
+            </Alert>
+          </div>
+        )}
         <section className="probootstrap-hero">
           <div className="container">
             <div className="row">
               <div
                 className="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 text-center probootstrap-hero-text pb0 "
               >
-                <h1>Launch your awesome startup now!</h1>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                  provident qui tempore natus quos quibusdam soluta at.
+                <h1><Translate contentKey="home.title">Trading Options using a realtime data dashboard</Translate></h1>
+                <p><Translate contentKey="home.subtitle">Instant review of the entire option market and find the best
+                  option to trade</Translate>
                 </p>
                 <p>
-                  <a href="#" className="btn btn-primary btn-lg" role="button">
-                    Get This App
+                  <a href="#pricing" className="btn btn-primary btn-lg" role="button">
+                    <Translate contentKey="home.getApp">Get This App</Translate>
                   </a>
-                  <a
-                    href="#"
+                  <Link
+                    to="/account/register"
                     className="btn btn-primary btn-ghost btn-lg"
-                    role="button"
-                  >
-                    Try it for free
-                  </a>
+                    role="button">
+                    <Translate contentKey="home.tryForFree">Try it for free</Translate>
+                  </Link>
                 </p>
                 {/* <p><a href="#"><i class="icon-play2"></i> Watch the video</a></p> */}
               </div>
             </div>
-            <div className="row probootstrap-feature-showcase">
+            <div dir="ltr" className="row probootstrap-feature-showcase">
               <div className="col-md-4 col-md-push-8 probootstrap-showcase-nav ">
                 <ul>
                   <li className="active">
@@ -225,7 +227,7 @@ export const Home = (props: IHomeProp) => {
               <div
                 className="col-md-6 col-md-offset-3 text-center section-heading "
               >
-                <h2>Platform Features</h2>
+                <h2><Translate contentKey="home.features.title">Platform Features</Translate></h2>
                 <p className="lead">
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
                   provident qui tempore natus quos quibusdam soluta at.
@@ -243,10 +245,9 @@ export const Home = (props: IHomeProp) => {
                     <i className="icon-mobile3" />
                   </div>
                   <div className="text">
-                    <h3>Responsive Design</h3>
+                    <h3><Translate contentKey="home.features.f1title"></Translate></h3>
                     <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
+                      <Translate contentKey="home.features.f1subtitle"></Translate>
                     </p>
                   </div>
                 </div>
@@ -259,10 +260,9 @@ export const Home = (props: IHomeProp) => {
                     <i className="icon-presentation" />
                   </div>
                   <div className="text">
-                    <h3>Business Solutions</h3>
+                    <h3><Translate contentKey="home.features.f2title"></Translate></h3>
                     <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
+                      <Translate contentKey="home.features.f2subtitle"></Translate>
                     </p>
                   </div>
                 </div>
@@ -276,10 +276,9 @@ export const Home = (props: IHomeProp) => {
                     <i className="icon-circle-compass" />
                   </div>
                   <div className="text">
-                    <h3>Brand Identity</h3>
+                    <h3><Translate contentKey="home.features.f3title"></Translate></h3>
                     <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
+                      <Translate contentKey="home.features.f3subtitle"></Translate>
                     </p>
                   </div>
                 </div>
@@ -293,10 +292,9 @@ export const Home = (props: IHomeProp) => {
                     <i className="icon-lightbulb" />
                   </div>
                   <div className="text">
-                    <h3>Creative Ideas</h3>
+                    <h3><Translate contentKey="home.features.f4title"></Translate></h3>
                     <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
+                      <Translate contentKey="home.features.f4subtitle"></Translate>
                     </p>
                   </div>
                 </div>
@@ -307,10 +305,9 @@ export const Home = (props: IHomeProp) => {
                     <i className="icon-magnifying-glass2" />
                   </div>
                   <div className="text">
-                    <h3>Search Engine Friendly</h3>
+                    <h3><Translate contentKey="home.features.f5title"></Translate></h3>
                     <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
+                      <Translate contentKey="home.features.f5subtitle"></Translate>
                     </p>
                   </div>
                 </div>
@@ -324,355 +321,12 @@ export const Home = (props: IHomeProp) => {
                     <i className="icon-browser2" />
                   </div>
                   <div className="text">
-                    <h3>Easy Customization</h3>
+                    <h3><Translate contentKey="home.features.f6title"></Translate></h3>
                     <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
+                      <Translate contentKey="home.features.f6subtitle"></Translate>
                     </p>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="probootstrap-section pb0">
-          <div className="container">
-            <div className="row probootstrap-feature-showcase ">
-              <div className="col-md-4 probootstrap-showcase-nav">
-                <ul>
-                  <li className="active">
-                    <a href="#">Responsive Design</a>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
-                    </p>
-                  </li>
-                  <li>
-                    <a href="#">Business Solution</a>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
-                    </p>
-                  </li>
-                  <li>
-                    <a href="#">Brand Identity</a>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
-                    </p>
-                  </li>
-                  <li>
-                    <a href="#">Creative Ideas</a>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
-                    </p>
-                  </li>
-                  <li>
-                    <a href="#">Search Engine Friendly</a>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
-                    </p>
-                  </li>
-                  <li>
-                    <a href="#">Easy Customization</a>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
-                    </p>
-                  </li>
-                </ul>
-              </div>
-              <div
-                className="col-md-8 "
-                style={{ position: "relative" }}
-              >
-                <div className="probootstrap-home-showcase-wrap">
-                  <div className="probootstrap-home-showcase-inner">
-                    <div className="probootstrap-chrome">
-                      <div>
-                        <span />
-                        <span />
-                        <span />
-                      </div>
-                    </div>
-                    <div className="probootstrap-image-showcase">
-                      <ul className="probootstrap-images-list">
-                        <li className="active">
-                          <img
-                            src="content/img/img_showcase_2.jpg"
-                            alt="Image"
-                            className="img-responsive"
-                          />
-                        </li>
-                        <li>
-                          <img
-                            src="content/img/img_showcase_1.jpg"
-                            alt="Image"
-                            className="img-responsive"
-                          />
-                        </li>
-                        <li>
-                          <img
-                            src="content/img/img_showcase_2.jpg"
-                            alt="Image"
-                            className="img-responsive"
-                          />
-                        </li>
-                        <li>
-                          <img
-                            src="content/img/img_showcase_1.jpg"
-                            alt="Image"
-                            className="img-responsive"
-                          />
-                        </li>
-                        <li>
-                          <img
-                            src="content/img/img_showcase_2.jpg"
-                            alt="Image"
-                            className="img-responsive"
-                          />
-                        </li>
-                        <li>
-                          <img
-                            src="content/img/img_showcase_1.jpg"
-                            alt="Image"
-                            className="img-responsive"
-                          />
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="probootstrap-section probootstrap-bg-white probootstrap-zindex-above-showcase">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-6 col-md-offset-3 text-center section-heading ">
-                <h2>More Features</h2>
-                <p className="lead">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                  provident qui tempore natus quos quibusdam soluta at.
-                </p>
-              </div>
-            </div>
-            {/* END row */}
-            <div className="row">
-              <div
-                className="col-md-7 col-md-push-5 "
-                data-animate-effect="fadeInRight"
-              >
-                    <img
-                      style={{width: "100%"}}
-                      src="content/img/img_showcase_2.jpg"
-                      alt="Free HTML5 Bootstrap Template by GetTemplates.co"
-                    />
-              </div>
-              <div className="col-md-5 col-md-pull-7">
-                <div
-                  className="service left-icon "
-                  data-animate-effect="fadeInLeft"
-                >
-                  <div className="icon">
-                    <i className="icon-mobile3" />
-                  </div>
-                  <div className="text">
-                    <h3>Responsive Design</h3>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit iusto
-                      provident.
-                    </p>
-                  </div>
-                </div>
-                <div
-                  className="service left-icon "
-                  data-animate-effect="fadeInLeft"
-                >
-                  <div className="icon">
-                    <i className="icon-presentation" />
-                  </div>
-                  <div className="text">
-                    <h3>Business Solutions</h3>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit iusto
-                      provident.
-                    </p>
-                  </div>
-                </div>
-                <div
-                  className="service left-icon "
-                  data-animate-effect="fadeInLeft"
-                >
-                  <div className="icon">
-                    <i className="icon-circle-compass" />
-                  </div>
-                  <div className="text">
-                    <h3>Brand Identity</h3>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit iusto
-                      provident.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="probootstrap-section probootstrap-border-top probootstrap-bg-white">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-6 col-md-offset-3 text-center section-heading ">
-                <h2>What People Says</h2>
-                <p className="lead">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                  provident qui tempore natus quos quibusdam soluta at.
-                </p>
-              </div>
-            </div>
-            <div className="row">
-              <div
-                className="col-md-4 "
-              >
-                <div className="probootstrap-testimony-wrap text-center">
-                  <figure>
-                    <img
-                      src="content/img/person_1.jpg"
-                      alt="Free Bootstrap Template by uicookies.com"
-                    />
-                  </figure>
-                  <blockquote className="quote">
-                    “Design must be functional and functionality must be translated
-                    into visual aesthetics, without any reliance on gimmicks that have
-                    to be explained.”{" "}
-                    <cite className="author">
-                      — Ferdinand A. Porsche <br /> <span>Design Lead at AirBNB</span>
-                    </cite>
-                  </blockquote>
-                </div>
-              </div>
-              <div
-                className="col-md-4 "
-              >
-                <div className="probootstrap-testimony-wrap text-center">
-                  <figure>
-                    <img
-                      src="content/img/person_2.jpg"
-                      alt="Free Bootstrap Template by uicookies.com"
-                    />
-                  </figure>
-                  <blockquote className="quote">
-                    “Creativity is just connecting things. When you ask creative
-                    people how they did something, they feel a little guilty because
-                    they didn’t really do it, they just saw something. It seemed
-                    obvious to them after a while.”{" "}
-                    <cite className="author">
-                      — Steve Jobs <br /> <span>Co-Founder Square</span>
-                    </cite>
-                  </blockquote>
-                </div>
-              </div>
-              <div
-                className="col-md-4 "
-              >
-                <div className="probootstrap-testimony-wrap text-center">
-                  <figure>
-                    <img
-                      src="content/img/person_3.jpg"
-                      alt="Free Bootstrap Template by uicookies.com"
-                    />
-                  </figure>
-                  <blockquote className="quote">
-                    “I think design would be better if designers were much more
-                    skeptical about its applications. If you believe in the potency of
-                    your craft, where you choose to dole it out is not something to
-                    take lightly.”{" "}
-                    <cite className="author">
-                      — Frank Chimero <br /> <span>Creative Director at Twitter</span>
-                    </cite>
-                  </blockquote>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="probootstrap-section proboostrap-clients probootstrap-bg-white probootstrap-border-top">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-6 section-heading ">
-                <h2>Our Clients</h2>
-                <p className="lead">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                  provident qui tempore natus quos quibusdam soluta at.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                  provident qui tempore natus quos quibusdam soluta at.
-                </p>
-              </div>
-            </div>
-            {/* END row */}
-            <div className="row">
-              <div
-                className="col-md-3 col-sm-6 col-xs-6 text-center client-logo "
-              >
-                <img
-                  src="content/img/client_1.png"
-                  className="img-responsive"
-                  alt="Free Bootstrap Template by uicookies.com"
-                />
-              </div>
-              <div
-                className="col-md-3 col-sm-6 col-xs-6 text-center client-logo "
-              >
-                <img
-                  src="content/img/client_2.png"
-                  className="img-responsive"
-                  alt="Free Bootstrap Template by uicookies.com"
-                />
-              </div>
-              <div className="clearfix visible-sm-block visible-xs-block" />
-              <div
-                className="col-md-3 col-sm-6 col-xs-6 text-center client-logo "
-              >
-                <img
-                  src="content/img/client_3.png"
-                  className="img-responsive"
-                  alt="Free Bootstrap Template by uicookies.com"
-                />
-              </div>
-              <div
-                className="col-md-3 col-sm-6 col-xs-6 text-center client-logo "
-              >
-                <img
-                  src="content/img/client_4.png"
-                  className="img-responsive"
-                  alt="Free Bootstrap Template by uicookies.com"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="probootstrap-cta">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-12">
-                <h2
-                  data-animate-effect="fadeInRight"
-                >
-                  We had like to help and talk with you
-                </h2>
-                <a
-                  href="#"
-                  role="button"
-                  className="btn btn-primary btn-lg btn-ghost "
-                  data-animate-effect="fadeInLeft"
-                >
-                  Contact Us
-                </a>
               </div>
             </div>
           </div>
@@ -798,6 +452,7 @@ export const Home = (props: IHomeProp) => {
           {/* END row */}
         </div>
       </footer>
+
 
     </div>
   );

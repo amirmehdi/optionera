@@ -170,4 +170,3 @@ jhipster:
 
 application:
   oa-base-url: https://api.algo.ir
-  oa-rate-limit: 40

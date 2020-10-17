@@ -1,7 +1,9 @@
 {
   "home": {
-    "title": "Welcome, Java Hipster!",
-    "subtitle": "This is your homepage",
+    "title": "Trading Options using a realtime data dashboard",
+    "subtitle": "Instant review of the entire option market and find the best option to trade",
+    "tryForFree": "Try it for free",
+    "getApp": "Get This App",
     "logged": {
       "message": "You are logged in as user \"{{username}}\"."
     },
@@ -13,7 +15,22 @@
       "chat": "JHipster public chat room",
       "follow": "follow @jhipster on Twitter"
     },
-    "like": "If you like JHipster, don't forget to give us a star on",
+    "features": {
+      "title": "Platform Features",
+      "subtitle": "",
+      "f1title": "",
+      "f1subtitle": "",
+      "f2title": "",
+      "f2subtitle": "",
+      "f3title": "",
+      "f3subtitle": "",
+      "f4title": "",
+      "f4subtitle": "",
+      "f5title": "",
+      "f5subtitle": "",
+      "f6title": "",
+      "f6subtitle": ""
+    },
     "github": "GitHub"
   }
 }

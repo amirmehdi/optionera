@@ -15,13 +15,4 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 public class ApplicationProperties {
     private String oaBaseUrl;
-    private int oaRateLimit;
-
-    private String apiToken;
-    private String channelId;
-    private String privateChannelId;
-
-//    private boolean marketTimeCheck;
-//    private String marketUpdaterFixedRate;
-//    private String openInterestUpdaterFixedRate;
 }

@@ -116,7 +116,11 @@ jhipster:
 
 application:
   oa-base-url: https://api.algo.ir
-  oa-rate-limit: 40
-  market-time-check: true
-  market-updater-fixed-rate: 60000
-  open-interest-updater-fixed-rate: 60000
+  telegram:
+    token: 1154072624:AAE9byP-2eXRfxZPHeZ92ffjd0LaO4Ys1iA
+    publicchat: -1001468700748
+    privatechat: -1001468700748
+  schedules:
+    timechack: true
+    market: 60000
+    interest: 120000

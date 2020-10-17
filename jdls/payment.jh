@@ -1,0 +1,28 @@
+entity Payment {
+    amount Integer required,
+    status Integer,
+
+    trackId String,
+    transactionId String,
+    cardNo String,
+
+    transactionTime Instant,
+    createdAt Instant,
+
+}
+
+entity Plan {
+    name String,
+    amount Integer,
+    discounted Integer,
+    days Integer,
+}
+
+relationship ManyToOne {
+    Payment{user(login)} to User
+}
+
+paginate Payment with pagination
+service Payment with serviceClass
+filter Payment
+
