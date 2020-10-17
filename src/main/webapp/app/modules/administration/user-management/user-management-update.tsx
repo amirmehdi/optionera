@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Label, Row, Col } from 'reactstrap';
-import { AvForm, AvGroup, AvInput, AvField, AvFeedback } from 'availity-reactstrap-validation';
-import { Translate, translate } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, {useEffect, useState} from 'react';
+import {connect} from 'react-redux';
+import {Link, RouteComponentProps} from 'react-router-dom';
+import {Button, Col, Label, Row} from 'reactstrap';
+import {AvFeedback, AvField, AvForm, AvGroup, AvInput} from 'availity-reactstrap-validation';
+import {Translate, translate} from 'react-jhipster';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
-import { locales, languages } from 'app/config/translation';
-import { getUser, getRoles, updateUser, createUser, reset } from './user-management.reducer';
-import { IRootState } from 'app/shared/reducers';
+import {languages, locales} from 'app/config/translation';
+import {createUser, getRoles, getUser, reset, updateUser} from './user-management.reducer';
+import {IRootState} from 'app/shared/reducers';
 
-export interface IUserManagementUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ login: string }> {}
+export interface IUserManagementUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ login: string }> {
+}
 
 export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
   const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.login);
@@ -184,8 +185,14 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
                   ))}
                 </AvInput>
               </AvGroup>
+              <AvGroup>
+                <Label for="planExpDate">
+                  <Translate contentKey="userManagement.planExpDate">plan expDate</Translate>
+                </Label>
+                <AvInput type="date" className="form-control" name="planExpDate" value={user.planExpDate}/>
+              </AvGroup>
               <Button tag={Link} to="/admin/user-management" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
+                <FontAwesomeIcon icon="arrow-left"/>
                 &nbsp;
                 <span className="d-none d-md-inline">
                   <Translate contentKey="entity.action.back">Back</Translate>

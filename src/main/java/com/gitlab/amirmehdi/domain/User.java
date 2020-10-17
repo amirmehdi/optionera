@@ -1,8 +1,7 @@
 package com.gitlab.amirmehdi.domain;
 
-import com.gitlab.amirmehdi.config.Constants;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gitlab.amirmehdi.config.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
@@ -15,6 +14,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -94,6 +94,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
+
+    @Column(name = "plan_exp_date")
+    private LocalDate planExpDate = null;
 
     public Long getId() {
         return id;
@@ -198,6 +201,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
+    }
+
+    public LocalDate getPlanExpDate() {
+        return planExpDate;
+    }
+
+    public void setPlanExpDate(LocalDate planExpDate) {
+        this.planExpDate = planExpDate;
     }
 
     @Override

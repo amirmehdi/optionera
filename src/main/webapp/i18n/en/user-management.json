@@ -25,6 +25,7 @@
     "createdBy": "Created by",
     "createdDate": "Created date",
     "lastModifiedBy": "Modified by",
+    "planExpDate": "plan exp date",
     "lastModifiedDate": "Modified date"
   }
 }

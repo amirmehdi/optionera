@@ -1,12 +1,15 @@
 package com.gitlab.amirmehdi.service.dto;
 
 import com.gitlab.amirmehdi.config.Constants;
-
 import com.gitlab.amirmehdi.domain.Authority;
 import com.gitlab.amirmehdi.domain.User;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,6 +53,8 @@ public class UserDTO {
 
     private Set<String> authorities;
 
+    private LocalDate planExpDate;
+
     public UserDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -70,6 +75,7 @@ public class UserDTO {
         this.authorities = user.getAuthorities().stream()
             .map(Authority::getName)
             .collect(Collectors.toSet());
+        this.planExpDate = user.getPlanExpDate();
     }
 
     public Long getId() {
@@ -174,6 +180,14 @@ public class UserDTO {
 
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
+    }
+
+    public LocalDate getPlanExpDate() {
+        return planExpDate;
+    }
+
+    public void setPlanExpDate(LocalDate planExpDate) {
+        this.planExpDate = planExpDate;
     }
 
     @Override

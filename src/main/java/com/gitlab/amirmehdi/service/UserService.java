@@ -8,12 +8,10 @@ import com.gitlab.amirmehdi.repository.UserRepository;
 import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.security.SecurityUtils;
 import com.gitlab.amirmehdi.service.dto.UserDTO;
-
 import com.gitlab.amirmehdi.service.errors.EmailAlreadyUsedException;
 import com.gitlab.amirmehdi.service.errors.InvalidPasswordException;
 import com.gitlab.amirmehdi.service.errors.UsernameAlreadyUsedException;
 import io.github.jhipster.security.RandomUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -122,6 +120,7 @@ public class UserService {
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
+        newUser.setPlanExpDate(null);
         userRepository.save(newUser);
         this.clearUserCaches(newUser);
         log.debug("Created Information for User: {}", newUser);
@@ -165,6 +164,7 @@ public class UserService {
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
         }
+        user.setPlanExpDate(userDTO.getPlanExpDate());
         userRepository.save(user);
         this.clearUserCaches(user);
         log.debug("Created Information for User: {}", user);
@@ -225,6 +225,7 @@ public class UserService {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .forEach(managedAuthorities::add);
+                user.setPlanExpDate(userDTO.getPlanExpDate());
                 this.clearUserCaches(user);
                 log.debug("Changed Information for User: {}", user);
                 return user;

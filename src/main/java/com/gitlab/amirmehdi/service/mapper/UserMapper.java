@@ -3,10 +3,12 @@ package com.gitlab.amirmehdi.service.mapper;
 import com.gitlab.amirmehdi.domain.Authority;
 import com.gitlab.amirmehdi.domain.User;
 import com.gitlab.amirmehdi.service.dto.UserDTO;
-
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -51,6 +53,7 @@ public class UserMapper {
             user.setLangKey(userDTO.getLangKey());
             Set<Authority> authorities = this.authoritiesFromStrings(userDTO.getAuthorities());
             user.setAuthorities(authorities);
+            user.setPlanExpDate(userDTO.getPlanExpDate());
             return user;
         }
     }
