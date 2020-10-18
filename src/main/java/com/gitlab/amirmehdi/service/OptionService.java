@@ -114,17 +114,20 @@ public class OptionService {
                     option, map.get(option.getInstrument().getIsin())
                     , market.getBidAsk(option.getCallIsin())
                     , market.getBidAsk(option.getPutIsin()));
-                optionRepository.save(option);
             });
     }
 
     private void updateParams(Option option, StockWatch stockWatch, BidAsk callBidAsk, BidAsk putBidAsk) {
-        OptionStats optionStats = new OptionStats().option(option)
+        OptionStats optionStats = new OptionStats()
+            .option(option)
             .baseStockWatch(stockWatch)
             .callBidAsk(callBidAsk.getBestBidAsk())
             .putBidAsk(putBidAsk.getBestBidAsk());
+        updateOption(optionStats);
+    }
 
-        option
+    public void updateOption(OptionStats optionStats) {
+        optionStats.getOption()
             .callAskToBS(optionStats.getCallAskPriceToBS())
             .putAskToBS(optionStats.getPutAskPriceToBS())
             .callBreakEven(optionStats.getCallBreakEven())
@@ -132,6 +135,7 @@ public class OptionService {
             .callLeverage(optionStats.getCallLeverage())
             .putLeverage(optionStats.getPutLeverage())
             .callInTheMoney(optionStats.getCallInTheMoney());
+        optionRepository.save(optionStats.getOption());
     }
 
     public Page<Option> findAllOptionsWithoutTseIds(Pageable pageable) {
@@ -148,5 +152,9 @@ public class OptionService {
 
     public void deleteAllExpiredOption() {
         optionRepository.deleteAllByExpDateBefore(LocalDate.now());
+    }
+
+    public List<Option> findAllOptionsByLocalDateAndCallInTheMoney(LocalDate localdate, boolean callInTheMoney) {
+        return optionRepository.findAllByExpDateAndCallInTheMoney(localdate, callInTheMoney);
     }
 }

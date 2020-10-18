@@ -31,6 +31,13 @@ public class ManualJobResource {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping(value = "arbitrage")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<Object> importantOptionsUpdater() throws Exception {
+        crawlerJobs.arbitrageOptionsUpdater();
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping(value = "market")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Object> marketUpdater() throws Exception {

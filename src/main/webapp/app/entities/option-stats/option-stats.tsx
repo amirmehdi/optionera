@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { Spin, Table } from 'antd';
-import { getSortState, Translate } from 'react-jhipster';
-import { IRootState } from 'app/shared/reducers';
-import { getEntities, reset } from './option-stats.reducer';
-import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+import {connect} from 'react-redux';
+import {RouteComponentProps} from 'react-router-dom';
+import {Spin, Table} from 'antd';
+import {getSortState, Translate} from 'react-jhipster';
+import {IRootState} from 'app/shared/reducers';
+import {getEntities, reset} from './option-stats.reducer';
+import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
 import './style.scss';
-import { SyncOutlined } from '@ant-design/icons';
-import { SearchOptionStats } from 'app/entities/option-stats/Search-option-stats';
+import {SyncOutlined} from '@ant-design/icons';
+import {SearchOptionStats} from 'app/entities/option-stats/Search-option-stats';
 import DateTime from "./../../DateTime/DateTime"
 
-const { Column, ColumnGroup } = Table;
+const {Column, ColumnGroup} = Table;
 
 export interface IOptionStatsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {
 }
@@ -108,11 +108,15 @@ export const OptionStats = (props: IOptionStatsProps) => {
           <Table sticky pagination={false} onChange={handleChange} dataSource={optionStatsList as any}
                  scroll={{ x: 2400 }}>
             <Column fixed={'left'} title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
-                    dataIndex="option" key="optionStats.name" render={(optionStats , row:any) =>
-              <div className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>{optionStats ?
-                <Link to={`option/${optionStats.id}`}>{'ض' + optionStats.name}</Link> : ''}</div>
+                    dataIndex="option" key="optionStats.name" render={(optionStats, row: any) =>
+              <div className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                {/* {optionStats ? <Link to={`option/${optionStats.id}`}>{'ض' + optionStats.name}</Link> : ''}*/}
+                {row.option ? <a target="_blank" rel="noopener noreferrer"
+                                 href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${row.option.callTseId}`}>{'ض' + row.option.name}</a> : ''}
+
+              </div>
             }/>
-            <ColumnGroup title="call">
+            <ColumnGroup title={<Translate contentKey="eTradeApp.optionStats.callTitle">call</Translate>}>
 
               <Column
                 title={<Translate contentKey="eTradeApp.optionStats.BlackScholes30"> Black Scholes 30</Translate>}
@@ -218,19 +222,19 @@ export const OptionStats = (props: IOptionStatsProps) => {
                     title={<Translate contentKey="eTradeApp.option.instrument">underlying asset</Translate>}
                     dataIndex="option" key="optionInstrument" render={(option, record: any) =>
               <div className={`padding-col`}>
-                { option.instrument ? <a
-                href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${option.instrument.tseId}`}>{option.instrument.name} {record.baseStockWatch?.last}</a> : ''}
+                {option.instrument ? <a target="_blank" rel="noopener noreferrer"
+                                        href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${option.instrument.tseId}`}>{option.instrument.name} {record.baseStockWatch?.last}</a> : ''}
 
               </div>
             }/>
-            <ColumnGroup title="Put">
+            <ColumnGroup title={<Translate contentKey="eTradeApp.optionStats.putTitle">put</Translate>}>
               <Column title={<Translate contentKey="eTradeApp.optionStats.BidVolume"> Bid Volume</Translate>}
-                      dataIndex="putBidAsk" key="putBidAskBidQuantity" render={(putBidAsk , row:any) =>
+                      dataIndex="putBidAsk" key="putBidAskBidQuantity" render={(putBidAsk, row: any) =>
                 <div
                   className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>{putBidAsk.bidQuantity}</div>
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.BidPrice"> Bid Price</Translate>}
-                      dataIndex="putBidAsk" key="putBidAskBidPrice" render={(putBidAsk , row:any) =>
+                      dataIndex="putBidAsk" key="putBidAskBidPrice" render={(putBidAsk, row: any) =>
                 <div
                   className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>{putBidAsk.bidPrice}</div>
               }/>
@@ -306,9 +310,13 @@ export const OptionStats = (props: IOptionStatsProps) => {
                   className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>{option.putBS30}</div>
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
-                      dataIndex="option" key="option" render={(option , row:any) =>
-                <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>{option ? <Link to={`option/${option.id}`}>{'ض' + option.name}</Link> : ''}</div>
+                      dataIndex="option" key="option" render={(option, row: any) =>
+                <div className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  {/* {option ? <Link to={`option/${option.id}`}>{'ض' + option.name}</Link> : ''}*/}
+                  {option ? <a target="_blank" rel="noopener noreferrer"
+                               href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${option.putTseId}`}>{'ط' + option.name}</a> : ''}
+
+                </div>
 
               }/>
             </ColumnGroup>

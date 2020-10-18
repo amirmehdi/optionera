@@ -89,6 +89,7 @@ export default (state: SignalState = initialState, action): SignalState => {
       };
     case SUCCESS(ACTION_TYPES.CREATE_SIGNAL):
     case SUCCESS(ACTION_TYPES.UPDATE_SIGNAL):
+    case SUCCESS(ACTION_TYPES.FETCH_ORDER):
       return {
         ...state,
         updating: false,

@@ -63,6 +63,14 @@ public class StrategyService {
             });
     }
 
+    public void run(String strategy) {
+        try {
+            runSignalAndSendToTelegram(strategies.get(strategy), marketTimeCheck);
+        } catch (Exception e) {
+            log.error("strategy: {} got error ", strategy, e);
+        }
+    }
+
     private void runSignalAndSendToTelegram(Strategy strategy, boolean marketTimeCheck) {
         if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
             return;
@@ -84,11 +92,9 @@ public class StrategyService {
                 if (StrategyResponse.SendOrderType.NEED_ALLOW.equals(s.getSendOrderType())) {
                     s.getCallSignals()
                         .stream()
-                        .map(signal -> {
-                            return new TelegramMessageDto(apiToken
-                                , privateChatId
-                                , strategy.getMessageTemplateWithOrderLink(signal));
-                        })
+                        .map(signal -> new TelegramMessageDto(apiToken
+                            , privateChatId
+                            , strategy.getMessageTemplateWithOrderLink(signal)))
                         .forEach(telegramMessageSender::sendMessage);
                 }
             });

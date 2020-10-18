@@ -16,6 +16,13 @@ public class ScheduledJobs {
         this.crawlerJobs = crawlerJobs;
     }
 
+    @Scheduled(fixedDelayString = "${application.schedules.arbitrage}")
+    public void updateImportantOptions() {
+        if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
+            return;
+        crawlerJobs.arbitrageOptionsUpdater();
+    }
+
     @Scheduled(fixedRateString = "${application.schedules.market}")
     public void marketUpdater() {
         if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())

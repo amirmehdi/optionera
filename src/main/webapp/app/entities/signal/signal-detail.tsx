@@ -13,9 +13,21 @@ export interface ISignalDetailProps extends StateProps, DispatchProps, RouteComp
 }
 
 export const SignalDetail = (props: ISignalDetailProps) => {
+
+  const handleClose = () => {
+    props.history.push('/signal');
+  };
+
   useEffect(() => {
     props.getEntity(props.match.params.id);
   }, []);
+
+  useEffect(() => {
+    if (props.updateSuccess) {
+      handleClose();
+    }
+  }, [props.updateSuccess]);
+
 
   const {signalEntity} = props;
   const sendOrderOfSignal = (event, errors, values) => {
@@ -117,7 +129,9 @@ export const SignalDetail = (props: ISignalDetailProps) => {
 };
 
 const mapStateToProps = ({signal}: IRootState) => ({
-  signalEntity: signal.entity
+  signalEntity: signal.entity,
+  updateSuccess: signal.updateSuccess
+
 });
 
 const mapDispatchToProps = {

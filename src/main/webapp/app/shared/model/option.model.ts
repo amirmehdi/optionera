@@ -6,6 +6,8 @@ export interface IOption {
   name?: string;
   callIsin?: string;
   putIsin?: string;
+  callTseId?: string;
+  putTseId?: string;
   expDate?: Moment;
   strikePrice?: number;
   contractSize?: number;

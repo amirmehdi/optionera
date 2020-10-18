@@ -16,6 +16,8 @@
       "detail": {
         "title": "اطلاعات اختیار"
       },
+      "callTitle": "اختیار خرید",
+      "putTitle": "اختیار فروش",
       "Last": "اخرین ",
       "Close": "پایانی",
       "ReferencePrice": "دیروز",

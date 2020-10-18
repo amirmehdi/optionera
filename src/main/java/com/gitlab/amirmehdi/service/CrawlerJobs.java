@@ -3,10 +3,12 @@ package com.gitlab.amirmehdi.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.domain.Option;
+import com.gitlab.amirmehdi.service.dto.core.BidAsk;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import com.gitlab.amirmehdi.service.dto.tsemodels.BDatum;
 import com.gitlab.amirmehdi.service.dto.tsemodels.OptionResponse;
 import com.gitlab.amirmehdi.util.DateUtil;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,19 +26,44 @@ import java.util.stream.Collectors;
 public class CrawlerJobs {
     private final RestTemplate restTemplate;
     private final OptionService optionService;
+    private final OptionStatsService optionStatsService;
     private final InstrumentService instrumentRepository;
     private final OmidRLCConsumer omidRLCConsumer;
+    private final StrategyService strategyService;
     private final Market market;
 
 
-    public CrawlerJobs(RestTemplate restTemplate, OptionService optionService, InstrumentService instrumentRepository, OmidRLCConsumer omidRLCConsumer, Market market) {
+    public CrawlerJobs(RestTemplate restTemplate, OptionService optionService, OptionStatsService optionStatsService, InstrumentService instrumentRepository, OmidRLCConsumer omidRLCConsumer, StrategyService strategyService, Market market) {
         this.restTemplate = restTemplate;
         this.optionService = optionService;
+        this.optionStatsService = optionStatsService;
         this.instrumentRepository = instrumentRepository;
         this.omidRLCConsumer = omidRLCConsumer;
+        this.strategyService = strategyService;
         this.market = market;
     }
 
+
+    @SneakyThrows
+    public void arbitrageOptionsUpdater() {
+        Map<String, Long> callIsins = optionService.findAllOptionsByLocalDateAndCallInTheMoney(LocalDate.now(), true)
+            .stream()
+            .collect(Collectors.toMap(Option::getCallIsin, Option::getId));
+
+        omidRLCConsumer.getBulkBidAsk(new ArrayList<>(callIsins.keySet()))
+            .whenCompleteAsync((bidAsks, throwable) -> {
+                if (throwable != null) {
+                    throwable.printStackTrace();
+                } else {
+                    log.debug("update bidask in arbitrageOptionsUpdater");
+                    market.saveAllBidAsk(bidAsks);
+                    for (BidAsk bidAsk : bidAsks) {
+                        optionStatsService.findOne(callIsins.get(bidAsk.getIsin())).ifPresent(optionService::updateOption);
+                    }
+                    strategyService.run("UnusualPrices1Strategy");
+                }
+            });
+    }
 
     public void marketUpdater() {
         updateOptionsMarket();

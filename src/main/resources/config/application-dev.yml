@@ -137,5 +137,6 @@ application:
     privatechat: -1001468700748
   schedules:
     timecheck: true
+    arbitrage: -1
     market: 60000
     interest: 120000

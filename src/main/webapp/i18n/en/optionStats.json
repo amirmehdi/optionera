@@ -16,6 +16,8 @@
       "detail": {
         "title": "Option Stats"
       },
+      "callTitle": "call",
+      "putTitle": "put",
       "Last": "Last",
       "Close": "Close",
       "ReferencePrice": "Reference Price",
