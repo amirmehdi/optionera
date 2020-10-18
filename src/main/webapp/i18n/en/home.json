@@ -17,19 +17,19 @@
     },
     "features": {
       "title": "Platform Features",
-      "subtitle": "",
-      "f1title": "",
-      "f1subtitle": "",
-      "f2title": "",
-      "f2subtitle": "",
-      "f3title": "",
-      "f3subtitle": "",
-      "f4title": "",
-      "f4subtitle": "",
-      "f5title": "",
-      "f5subtitle": "",
-      "f6title": "",
-      "f6subtitle": ""
+      "subtitle": "Leading in the options market services",
+      "f1title": "Real time data",
+      "f1subtitle": "view instantaneous market information",
+      "f2title": "Fair price calculation",
+      "f2subtitle": "calculate the fair price of option through mathematical modes",
+      "f3title": "Offer to review the option",
+      "f3subtitle": "Offer to buy or sell valuable options to review",
+      "f4title": "Suggest simple and hybrid strategies",
+      "f4subtitle": "Offer multiple sales options at the same time to earn appropriate profits",
+      "f5title": "Arbitrage Opportunities",
+      "f5subtitle": "earn profit through existing arbitrage opportunities",
+      "f6title": "realTime API",
+      "f6subtitle": "provide the ability to write the desired strategy by yourself"
     },
     "github": "GitHub"
   }

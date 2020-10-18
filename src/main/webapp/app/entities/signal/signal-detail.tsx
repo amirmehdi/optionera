@@ -6,7 +6,7 @@ import {TextFormat, Translate} from 'react-jhipster';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import {IRootState} from 'app/shared/reducers';
-import {getEntity} from './signal.reducer';
+import {getEntity, sendOrder} from './signal.reducer';
 import {APP_DATE_FORMAT} from 'app/config/constants';
 
 export interface ISignalDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
@@ -18,6 +18,9 @@ export const SignalDetail = (props: ISignalDetailProps) => {
   }, []);
 
   const {signalEntity} = props;
+  const sendOrderOfSignal = (event, errors, values) => {
+    props.sendOrder(props.signalEntity.id);
+  };
   return (
     <Row>
       <Col md="8">
@@ -101,6 +104,13 @@ export const SignalDetail = (props: ISignalDetailProps) => {
             <Translate contentKey="entity.action.edit">Edit</Translate>
           </span>
         </Button>
+        &nbsp;
+        <Button onclick={sendOrderOfSignal} replace color="primary">
+          <FontAwesomeIcon icon="pencil-alt"/>{' '}
+          <span className="d-none d-md-inline">
+            <Translate contentKey="entity.action.sendOrder">send order</Translate>
+          </span>
+        </Button>
       </Col>
     </Row>
   );
@@ -110,7 +120,10 @@ const mapStateToProps = ({signal}: IRootState) => ({
   signalEntity: signal.entity
 });
 
-const mapDispatchToProps = {getEntity};
+const mapDispatchToProps = {
+  getEntity,
+  sendOrder
+};
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

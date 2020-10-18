@@ -26,7 +26,7 @@ public abstract class Strategy {
     protected final OptionStatsService optionStatsService;
     protected final Market market;
 
-    @Value("${application.channel-id}")
+    @Value("${application.telegram.publicchat}")
     protected String optionEraChatId;
 
 
@@ -103,7 +103,7 @@ public abstract class Strategy {
     public String getMessageTemplateWithOrderLink(Signal signal) {
         String template = getMessageTemplate(signal.getIsin());
         return String.format(template.substring(0, template.lastIndexOf("\n"))
-                + " \n<a href='http://optionera.ir/api/tg-order/%s'>BUY</a> "
+                + " \n<a href='http://optionera.ir/signal/%s'>BUY</a> "
             , signal.getId());
     }
 

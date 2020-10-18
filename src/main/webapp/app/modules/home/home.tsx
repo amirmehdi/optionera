@@ -229,8 +229,7 @@ export const Home = (props: IHomeProp) => {
               >
                 <h2><Translate contentKey="home.features.title">Platform Features</Translate></h2>
                 <p className="lead">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                  provident qui tempore natus quos quibusdam soluta at.
+                  <Translate contentKey="home.features.subtitle">Platform Features</Translate>
                 </p>
               </div>
             </div>

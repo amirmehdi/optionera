@@ -110,6 +110,7 @@ public class SignalResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/signals/count")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Long> countSignals(SignalCriteria criteria) {
         log.debug("REST request to count Signals by criteria: {}", criteria);
         return ResponseEntity.ok().body(signalQueryService.countByCriteria(criteria));
@@ -122,6 +123,7 @@ public class SignalResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the signal, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/signals/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Signal> getSignal(@PathVariable Long id) {
         log.debug("REST request to get Signal : {}", id);
         Optional<Signal> signal = signalService.findOne(id);
@@ -142,7 +144,8 @@ public class SignalResource {
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 
-    @GetMapping("/tg-order/{signalId}")
+    @PostMapping("/signals/tg-order/{signalId}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<Order>> sendOrderForStrategy(@PathVariable Long signalId) {
         log.debug("REST request to sendOrderForStrategy : {}", signalId);
         return ResponseEntity.ok().body(signalService.sendOrder(signalId));

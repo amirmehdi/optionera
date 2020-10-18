@@ -12,6 +12,7 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
 
 import { defaultValue, ISignal } from 'app/shared/model/signal.model';
+import { IOrder } from 'app/shared/model/order.model';
 
 export const ACTION_TYPES = {
   FETCH_SIGNAL_LIST: 'signal/FETCH_SIGNAL_LIST',
@@ -19,6 +20,7 @@ export const ACTION_TYPES = {
   CREATE_SIGNAL: 'signal/CREATE_SIGNAL',
   UPDATE_SIGNAL: 'signal/UPDATE_SIGNAL',
   DELETE_SIGNAL: 'signal/DELETE_SIGNAL',
+  FETCH_ORDER: 'order/FETCH_ORDER',
   RESET: 'signal/RESET'
 };
 
@@ -135,6 +137,14 @@ export const createEntity: ICrudPutAction<ISignal> = entity => async dispatch =>
     payload: axios.post(apiUrl, cleanEntity(entity))
   });
   return result;
+};
+
+export const sendOrder: ICrudGetAction<IOrder> = id => {
+  const requestUrl = `${apiUrl}/tg-order/${id}`;
+  return {
+    type: ACTION_TYPES.FETCH_ORDER,
+    payload: axios.post<IOrder>(requestUrl)
+  };
 };
 
 export const updateEntity: ICrudPutAction<ISignal> = entity => async dispatch => {
