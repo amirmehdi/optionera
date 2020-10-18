@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { IRootState } from 'app/shared/reducers';
-import {getEntities, reset } from './../instrument/instrument.reducer';
+import React, {useState} from 'react';
+import {connect} from 'react-redux';
+import {IRootState} from 'app/shared/reducers';
+import {getEntities, reset} from './../instrument/instrument.reducer';
 import './style.scss';
-import { Select , DatePicker , Radio } from 'antd';
+import {DatePicker, Radio, Select} from 'antd';
 import axios from 'axios';
-const { RangePicker } = DatePicker;
-const { Option } = Select;
+
+const {RangePicker} = DatePicker;
+const {Option} = Select;
 
 
 export const SearchOptionStats = (props) => {
@@ -22,7 +23,7 @@ export const SearchOptionStats = (props) => {
   }
 
   function onSearch(val) {
-    const apiUrlSearch = 'api/instruments/search'​
+    const apiUrlSearch = 'api/instruments/search'
     const requestUrl = `${apiUrlSearch}/${val}`;
     axios.get(requestUrl).then((res) => {
       setInstrument(res.data)

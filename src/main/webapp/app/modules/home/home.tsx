@@ -142,21 +142,21 @@ export const Home = (props: IHomeProp) => {
                       <ul className="probootstrap-images-list">
                         <li className="active">
                           <img
-                            src="content/img/img_showcase_2.jpg"
+                            src="content/img/1.jpg"
                             alt="Image"
                             className="img-responsive"
                           />
                         </li>
                         <li>
                           <img
-                            src="content/img/img_showcase_1.jpg"
+                            src="content/img/2.jpg"
                             alt="Image"
                             className="img-responsive"
                           />
                         </li>
                         <li>
                           <img
-                            src="content/img/img_showcase_2.jpg"
+                            src="content/img/3.jpg"
                             alt="Image"
                             className="img-responsive"
                           />
