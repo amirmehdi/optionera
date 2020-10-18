@@ -1,7 +1,7 @@
 {
-  "name": "e-trade",
+  "name": "Optionera",
   "version": "0.0.1-SNAPSHOT",
-  "description": "Description for eTrade",
+  "description": "داشبورد لحظه ای بازار اختیار",
   "private": true,
   "license": "UNLICENSED",
   "cacheDirectories": [
