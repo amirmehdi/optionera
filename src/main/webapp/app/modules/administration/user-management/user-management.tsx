@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Table, Row, Badge } from 'reactstrap';
-import { Translate, TextFormat, JhiPagination, JhiItemCount, getSortState } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, {useEffect, useState} from 'react';
+import {connect} from 'react-redux';
+import {Link, RouteComponentProps} from 'react-router-dom';
+import {Badge, Button, Row, Table} from 'reactstrap';
+import {getSortState, JhiItemCount, JhiPagination, TextFormat, Translate} from 'react-jhipster';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
-import { APP_DATE_FORMAT } from 'app/config/constants';
-import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
-import { getUsers, updateUser } from './user-management.reducer';
-import { IRootState } from 'app/shared/reducers';
+import {APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT} from 'app/config/constants';
+import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
+import {getUsers, updateUser} from './user-management.reducer';
+import {IRootState} from 'app/shared/reducers';
 
-export interface IUserManagementProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
+export interface IUserManagementProps extends StateProps, DispatchProps, RouteComponentProps<{}> {
+}
 
 export const UserManagement = (props: IUserManagementProps) => {
   const [pagination, setPagination] = useState(getSortState(props.location, ITEMS_PER_PAGE));
@@ -61,23 +62,26 @@ export const UserManagement = (props: IUserManagementProps) => {
             </th>
             <th className="hand" onClick={sort('email')}>
               <Translate contentKey="userManagement.email">Email</Translate>
-              <FontAwesomeIcon icon="sort" />
+              <FontAwesomeIcon icon="sort"/>
             </th>
-            <th />
+            <th/>
             <th className="hand" onClick={sort('langKey')}>
               <Translate contentKey="userManagement.langKey">Lang Key</Translate>
-              <FontAwesomeIcon icon="sort" />
+              <FontAwesomeIcon icon="sort"/>
             </th>
             <th>
               <Translate contentKey="userManagement.profiles">Profiles</Translate>
             </th>
+            <th>
+              <Translate contentKey="userManagement.planExpDate">plan exp date </Translate>
+            </th>
             <th className="hand" onClick={sort('createdDate')}>
               <Translate contentKey="userManagement.createdDate">Created Date</Translate>
-              <FontAwesomeIcon icon="sort" />
+              <FontAwesomeIcon icon="sort"/>
             </th>
             <th className="hand" onClick={sort('lastModifiedBy')}>
               <Translate contentKey="userManagement.lastModifiedBy">Last Modified By</Translate>
-              <FontAwesomeIcon icon="sort" />
+              <FontAwesomeIcon icon="sort"/>
             </th>
             <th id="modified-date-sort" className="hand" onClick={sort('lastModifiedDate')}>
               <Translate contentKey="userManagement.lastModifiedDate">Last Modified Date</Translate>
@@ -111,18 +115,21 @@ export const UserManagement = (props: IUserManagementProps) => {
               <td>
                 {user.authorities
                   ? user.authorities.map((authority, j) => (
-                      <div key={`user-auth-${i}-${j}`}>
-                        <Badge color="info">{authority}</Badge>
-                      </div>
-                    ))
+                    <div key={`user-auth-${i}-${j}`}>
+                      <Badge color="info">{authority}</Badge>
+                    </div>
+                  ))
                   : null}
               </td>
               <td>
-                <TextFormat value={user.createdDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
+                <TextFormat value={user.planExpDate} type="date" format={APP_LOCAL_DATE_FORMAT} blankOnInvalid/>
+              </td>
+              <td>
+                <TextFormat value={user.createdDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid/>
               </td>
               <td>{user.lastModifiedBy}</td>
               <td>
-                <TextFormat value={user.lastModifiedDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
+                <TextFormat value={user.lastModifiedDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid/>
               </td>
               <td className="text-right">
                 <div className="btn-group flex-btn-group-container">
