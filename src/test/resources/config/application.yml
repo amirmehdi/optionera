@@ -121,6 +121,6 @@ application:
     publicchat: -1001468700748
     privatechat: -1001468700748
   schedules:
-    timechack: true
+    timecheck: true
     market: 60000
     interest: 120000
