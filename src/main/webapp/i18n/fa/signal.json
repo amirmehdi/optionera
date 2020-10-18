@@ -2,7 +2,7 @@
   "eTradeApp": {
     "signal": {
       "home": {
-        "title": "Signals",
+        "title": "سیگنال ها",
         "createLabel": "Create a new Signal",
         "createOrEditLabel": "Create or edit a Signal",
         "notFound": "No Signals found"
@@ -14,18 +14,18 @@
         "question": "Are you sure you want to delete Signal {{ id }}?"
       },
       "detail": {
-        "title": "Signal"
+        "title": "سیگنال"
       },
-      "type": "Type",
-      "isin": "Isin",
-      "last": "Last",
-      "tradeVolume": "Trade Volume",
-      "bidVolume": "Bid Volume",
-      "bidPrice": "Bid Price",
-      "askPrice": "Ask Price",
-      "askVolume": "Ask Volume",
-      "baseInstrumentLast": "Base Instrument Last",
-      "createdAt": "Created At",
+      "type": "استراتژی",
+      "isin": "سهم",
+      "last": "اخرین",
+      "tradeVolume": "حجم معاملات",
+      "bidVolume": "حجم تقاضا",
+      "bidPrice": "قیمت تقاضا",
+      "askPrice": "قیمت عرضه",
+      "askVolume": "حجم عرضه",
+      "baseInstrumentLast": "اخرین دارایی پایه",
+      "createdAt": "زمان",
       "order": "Order"
     }
   }

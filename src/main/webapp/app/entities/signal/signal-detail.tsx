@@ -105,7 +105,7 @@ export const SignalDetail = (props: ISignalDetailProps) => {
           </span>
         </Button>
         &nbsp;
-        <Button onclick={sendOrderOfSignal} replace color="primary">
+        <Button onClick={sendOrderOfSignal} replace color="primary">
           <FontAwesomeIcon icon="pencil-alt"/>{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.sendOrder">send order</Translate>

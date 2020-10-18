@@ -31,6 +31,14 @@
       "f6title": "realTime API",
       "f6subtitle": "provide the ability to write the desired strategy by yourself"
     },
+    "slide": {
+      "title1": "All data in your screen",
+      "subtitle1": "All data you want include black scholes, break even, leverage, bidAsk and so on ",
+      "title2": "Best signals in your watchlist",
+      "subtitle2": "Benefit from our best signals with a wide variety of low-risk and high-risk strategies",
+      "title3": "Api for writing your own strategy",
+      "subtitle3": "Implement your strategy with our realtime api"
+    },
     "github": "GitHub"
   }
 }

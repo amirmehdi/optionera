@@ -113,60 +113,29 @@ export const Home = (props: IHomeProp) => {
               <div className="col-md-4 col-md-push-8 probootstrap-showcase-nav ">
                 <ul>
                   <li className="active">
-                    <a href="#">Responsive Design</a>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
-                    </p>
+                    <a href="#"><Translate contentKey="home.slide.title1">All data in your screen</Translate></a>
+                    <p><Translate contentKey="home.slide.subtitle2">All data in your screen</Translate></p>
                   </li>
                   <li>
-                    <a href="#">Business Solution</a>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
-                    </p>
+                    <a href="#"><Translate contentKey="home.slide.title2">best signals in your watchlist</Translate></a>
+                    <p><Translate contentKey="home.slide.subtitle2">best signals in your watchlist</Translate></p>
                   </li>
                   <li>
-                    <a href="#">Brand Identity</a>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
-                    </p>
-                  </li>
-                  <li>
-                    <a href="#">Creative Ideas</a>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
-                    </p>
-                  </li>
-                  <li>
-                    <a href="#">Search Engine Friendly</a>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
-                    </p>
-                  </li>
-                  <li>
-                    <a href="#">Easy Customization</a>
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                      provident qui tempore natus quos quibusdam soluta at.
-                    </p>
+                    <a href="#"><Translate contentKey="home.slide.title3">api for writing your own strategy</Translate></a>
+                    <p><Translate contentKey="home.slide.subtitle3">api for writing your own strategy</Translate></p>
                   </li>
                 </ul>
               </div>
               <div
                 className="col-md-8 col-md-pull-4 "
-                style={{ position: "relative" }}
-              >
+                style={{position: "relative"}}>
                 <div className="probootstrap-home-showcase-wrap">
                   <div className="probootstrap-home-showcase-inner">
                     <div className="probootstrap-chrome">
                       <div>
-                        <span />
-                        <span />
-                        <span />
+                        <span/>
+                        <span/>
+                        <span/>
                       </div>
                     </div>
                     <div className="probootstrap-image-showcase">
@@ -188,27 +157,6 @@ export const Home = (props: IHomeProp) => {
                         <li>
                           <img
                             src="content/img/img_showcase_2.jpg"
-                            alt="Image"
-                            className="img-responsive"
-                          />
-                        </li>
-                        <li>
-                          <img
-                            src="content/img/img_showcase_1.jpg"
-                            alt="Image"
-                            className="img-responsive"
-                          />
-                        </li>
-                        <li>
-                          <img
-                            src="content/img/img_showcase_2.jpg"
-                            alt="Image"
-                            className="img-responsive"
-                          />
-                        </li>
-                        <li>
-                          <img
-                            src="content/img/img_showcase_1.jpg"
                             alt="Image"
                             className="img-responsive"
                           />

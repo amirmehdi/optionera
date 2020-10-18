@@ -132,7 +132,7 @@ public class InstrumentResource {
 
     @GetMapping("/instruments/search/{name}")
     public ResponseEntity<List<InstrumentSearchDTO>> searchByName(@PathVariable String name) {
-        List<InstrumentSearchDTO> list = instrumentRepository.findAllByNameLike(name, PageRequest.of(0, 10))
+        List<InstrumentSearchDTO> list = instrumentRepository.findAllByNameLike("%" + name + "%", PageRequest.of(0, 10))
             .stream()
             .map(instrument -> new InstrumentSearchDTO(instrument.getIsin(), instrument.getName()))
             .collect(Collectors.toList());
