@@ -116,6 +116,13 @@ export const getEntity: ICrudGetAction<IInstrument> = id => {
     payload: axios.get<IInstrument>(requestUrl)
   };
 };
+export const getEntityName: ICrudGetAction<IInstrument> = name => {
+  const requestUrl = `${apiUrl}/${name}`;
+  return {
+    type: ACTION_TYPES.FETCH_INSTRUMENT,
+    payload: axios.get<IInstrument>(requestUrl)
+  };
+};
 
 export const createEntity: ICrudPutAction<IInstrument> = entity => async dispatch => {
   const result = await dispatch({

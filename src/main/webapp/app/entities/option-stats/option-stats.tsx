@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Table } from 'antd';
+import { Spin, Table } from 'antd';
 import { getSortState, Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
 import { getEntities, reset } from './option-stats.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import './style.scss';
 import { SyncOutlined } from '@ant-design/icons';
+import { SearchOptionStats } from 'app/entities/option-stats/Search-option-stats';
+import DateTime from "./../../DateTime/DateTime"
 
 const { Column, ColumnGroup } = Table;
 
@@ -47,6 +49,16 @@ export const OptionStats = (props: IOptionStatsProps) => {
       });
     }
   };
+  const _computeDateInJalaliFormat = (createdAt:any) => {
+    if (createdAt) {
+      const createAtDate = DateTime.stringToDate(createdAt);
+      const createAtJalaliDate = DateTime.gregorianToJalali(createAtDate.year, createAtDate.month, createAtDate.day);
+      const weekDayNumber = DateTime.getJalaliMonthFirstWeekDay(createAtJalaliDate.year, createAtJalaliDate.month, createAtJalaliDate.day);
+      return DateTime.weekNames[weekDayNumber] + ' ' + createAtJalaliDate.day + ' ' +
+        DateTime.monthNames[createAtJalaliDate.month - 1] + ' ' + createAtJalaliDate.year + ' - ' + createAtDate.hour + ':' + createAtDate.minute + ':' + createAtDate.second
+    }
+    return null
+  }
 
   useEffect(() => {
     if (sorting) {
@@ -91,9 +103,9 @@ export const OptionStats = (props: IOptionStatsProps) => {
         <div>
           <div className="content-search-box">
             <SyncOutlined onClick={() => getAllEntities()}/>
-
+            <SearchOptionStats instrumentId={(id:number) => id && props.getEntities(id)}/>
           </div>
-          <Table sticky pagination={false} onChange={handleChange} loading={loading} dataSource={optionStatsList as any}
+          <Table sticky pagination={false} onChange={handleChange} dataSource={optionStatsList as any}
                  scroll={{ x: 2400 }}>
             <Column fixed={'left'} title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
                     dataIndex="option" key="optionStats.name" render={(optionStats , row:any) =>
@@ -200,7 +212,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                     showSorterTooltip={false}
                     title={<Translate contentKey="eTradeApp.option.expDate">Exp Date</Translate>}
                     dataIndex="option" key="expDate" render={(option) =>
-              <div className={`padding-col`}>{option.expDate}</div>
+              <div className={`padding-col`}>{_computeDateInJalaliFormat(option.expDate)}</div>
             }/>
             <Column className="bg-color-gray"
                     title={<Translate contentKey="eTradeApp.option.instrument">underlying asset</Translate>}
@@ -301,6 +313,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
               }/>
             </ColumnGroup>
           </Table>
+          {loading ? <Spin/> : ""}
         </div>
 
 
