@@ -48,7 +48,7 @@ export const App = (props: IAppProps) => {
             isSwaggerEnabled={props.isSwaggerEnabled}
           />
         </ErrorBoundary>
-        <div className="container-fluid" id="app-view-container">
+        <div style={{padding: 0}} className="container-fluid" id="app-view-container">
             <ErrorBoundary>
               <AppRoutes />
             </ErrorBoundary>

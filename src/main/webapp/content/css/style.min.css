@@ -719,8 +719,9 @@ a:hover {
 }
 .probootstrap-footer {
   padding: 7em 0;
-  background: #303841;
-  color: rgba(255, 255, 255, 0.3);
+  background: #303133;
+  color: rgba(255, 255, 255, 0.6) !important;
+  padding-top: 6em;
 }
 .probootstrap-footer a {
   color: rgba(255, 255, 255, 0.2);

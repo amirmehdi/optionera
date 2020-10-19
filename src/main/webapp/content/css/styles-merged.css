@@ -1,3 +1,28 @@
+@font-face {
+  font-family: 'sans';
+  src: url('../fonts/IRANSans/IRANSansWeb_Light.woff') format('woff'), url('../fonts/IRANSans/IRANSansWeb_Light.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-variant: normal;
+}
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li,
+ul,
+span,
+div,
+a {
+  font-family: sans !important;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
 .container {
   padding-right: 15px;
   padding-left: 15px;
@@ -12372,8 +12397,9 @@ a:active {
 
 .probootstrap-footer {
   padding: 7em 0;
-  background: #303841;
-  color: rgba(255, 255, 255, 0.3);
+  background: #303133;
+  color: rgba(255, 255, 255, 0.6) !important;
+  padding-top: 6em;
 }
 
 .probootstrap-footer a {
