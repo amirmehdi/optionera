@@ -58,7 +58,7 @@ public class TadbirService {
         headers.add("Connection", "keep-alive");
         headers.add("sec-ch-ua", "\"\\Not;A\"Brand\";v=\"99\", \"Google Chrome\";v=\"85\", \"Chromium\";v=\"85\"");
         headers.add("sec-ch-ua-mobile", "?0");
-        headers.add("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36");
+        headers.add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.80 Safari/537.36");
         headers.add("Accept", "*/*");
         headers.add("Origin", "https://silver.refahbroker.ir");
         headers.add("Sec-Fetch-Site", "same-site");
