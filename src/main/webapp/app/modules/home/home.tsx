@@ -299,7 +299,9 @@ export const Home = (props: IHomeProp) => {
                   <span></span>
                 </div>
                 <p><Translate contentKey="home.pricing.cards.feature1"></Translate></p>
-                <p className="btn-price"><Translate contentKey="global.menu.account.register">register</Translate></p>
+                <Link to="/account/register" role="button">
+                  <p className="btn-price"><Translate contentKey="global.menu.account.register">register</Translate></p>
+                </Link>
               </div>
               <div className="card-price">
                 <h2><Translate contentKey="home.pricing.cards.title2"></Translate></h2>
