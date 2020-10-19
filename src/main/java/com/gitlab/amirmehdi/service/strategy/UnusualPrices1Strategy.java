@@ -10,7 +10,6 @@ import com.gitlab.amirmehdi.repository.OptionRepository;
 import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OptionStatsService;
 import com.gitlab.amirmehdi.service.dto.StrategyResponse;
-import com.gitlab.amirmehdi.service.dto.core.BidAsk;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.stereotype.Service;
@@ -63,15 +62,14 @@ public class UnusualPrices1Strategy extends Strategy {
 
     @Override
     public List<Order> getOrder(Signal signal) {
-        BidAsk bidAsk = market.getBidAsk(signal.getIsin());
         Option option = optionRepository.findByCallIsinOrPutIsin(signal.getIsin()).get();
         StockWatch baseStockwatch = market.getStockWatch(option.getInstrument().getIsin());
-        int quantity = (int) Math.min(1.5 * bidAsk.getBestBidAsk().getAskQuantity(), 40_000_000.0 / (option.getContractSize() * baseStockwatch.getLast()));
+        int quantity = (int) Math.min(1.5 * signal.getAskVolume(), 40_000_000.0 / (option.getContractSize() * baseStockwatch.getLast()));
         return Collections.singletonList(new Order()
             .isin(signal.getIsin())
             .side(Side.BUY)
             .validity(Validity.DAY)
-            .price(bidAsk.getBestBidAsk().getAskPrice())
+            .price(signal.getAskPrice())
             .quantity(quantity)
             .broker(Broker.REFAH)
             .signal(signal));
