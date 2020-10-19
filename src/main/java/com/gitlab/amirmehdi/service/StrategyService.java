@@ -80,21 +80,20 @@ public class StrategyService {
                 s.getCallSignals().forEach(signalRepository::save);
                 String privateChatId = s.getPrivateChatId() == null ? privateChannelId : s.getPrivateChatId();
 
-                if (s.getPublicChatId() != null && !s.getPublicChatId().isEmpty()) {
-                    s.getCallSignals()
-                        .stream()
-                        .map(signal -> new TelegramMessageDto(apiToken
-                            , s.getPublicChatId()
-                            , strategy.getMessageTemplate(signal.getIsin())))
-                        .forEach(telegramMessageSender::sendMessage);
-                }
-
                 if (StrategyResponse.SendOrderType.NEED_ALLOW.equals(s.getSendOrderType())) {
                     s.getCallSignals()
                         .stream()
                         .map(signal -> new TelegramMessageDto(apiToken
                             , privateChatId
                             , strategy.getMessageTemplateWithOrderLink(signal)))
+                        .forEach(telegramMessageSender::sendMessage);
+                }
+                if (s.getPublicChatId() != null && !s.getPublicChatId().isEmpty()) {
+                    s.getCallSignals()
+                        .stream()
+                        .map(signal -> new TelegramMessageDto(apiToken
+                            , s.getPublicChatId()
+                            , strategy.getMessageTemplate(signal.getIsin())))
                         .forEach(telegramMessageSender::sendMessage);
                 }
             });
