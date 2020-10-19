@@ -53,12 +53,19 @@ public class TadbirService {
             .build();
 
         LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Authorization", "BasicAuthentication " + tokenRepository.findTopByBrokerOrderByIdDesc(order.getBroker()).orElseThrow(RuntimeException::new).getToken());
+        String[] token = tokenRepository.findTopByBrokerOrderByIdDesc(order.getBroker())
+            .orElseThrow(RuntimeException::new)
+            .getToken().split(";");
+        headers.add("Authorization", "BasicAuthentication " + token[0]);
         headers.add("Content-Type", "application/json");
         headers.add("Connection", "keep-alive");
         headers.add("sec-ch-ua", "\"\\Not;A\"Brand\";v=\"99\", \"Google Chrome\";v=\"85\", \"Chromium\";v=\"85\"");
         headers.add("sec-ch-ua-mobile", "?0");
-        headers.add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.80 Safari/537.36");
+        if (token.length < 2 || token[1].isEmpty()) {
+            headers.add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.80 Safari/537.36");
+        } else {
+            headers.add("User-Agent", token[1]);
+        }
         headers.add("Accept", "*/*");
         headers.add("Origin", "https://silver.refahbroker.ir");
         headers.add("Sec-Fetch-Site", "same-site");
