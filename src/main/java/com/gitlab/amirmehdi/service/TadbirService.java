@@ -53,7 +53,7 @@ public class TadbirService {
             .build();
 
         LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Authorization", "BasicAuthentication " + tokenRepository.findTopByBrokerOrderByCreatedAtDesc(order.getBroker()).orElseThrow(RuntimeException::new).getToken());
+        headers.add("Authorization", "BasicAuthentication " + tokenRepository.findTopByBrokerOrderByIdDesc(order.getBroker()).orElseThrow(RuntimeException::new).getToken());
         headers.add("Content-Type", "application/json");
         headers.add("Connection", "keep-alive");
         headers.add("sec-ch-ua", "\"\\Not;A\"Brand\";v=\"99\", \"Google Chrome\";v=\"85\", \"Chromium\";v=\"85\"");

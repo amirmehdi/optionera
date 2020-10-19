@@ -34,6 +34,7 @@ public class Token implements Serializable {
     private Broker broker;
 
     @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Instant createdAt;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

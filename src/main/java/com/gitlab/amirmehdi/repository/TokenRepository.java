@@ -15,4 +15,6 @@ import java.util.Optional;
 public interface TokenRepository extends JpaRepository<Token, Long> {
 
     Optional<Token> findTopByBrokerOrderByCreatedAtDesc(Broker broker);
+
+    Optional<Token> findTopByBrokerOrderByIdDesc(Broker broker);
 }
