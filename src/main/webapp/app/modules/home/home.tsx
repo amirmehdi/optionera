@@ -281,55 +281,52 @@ export const Home = (props: IHomeProp) => {
 
 
 
-        <section className="probootstrap-section probootstrap-bg-white probootstrap-zindex-above-showcase">
+        <section id="pricing" className="probootstrap-section probootstrap-zindex-above-showcase">
           <div className="container">
             <div className="row">
               <div
-                className="col-md-6 col-md-offset-3 text-center section-heading "
-              >
-                <h2>Pricing</h2>
-                <p className="lead">
-                  Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name
-                </p>
+                className="col-md-6 col-md-offset-3 text-center section-heading ">
+                <h2><Translate contentKey="home.pricing.title">Pricing</Translate></h2>
+                <p className="lead"><Translate contentKey="home.pricing.subtitle">Subscribe to the site for instant access to the options market board and use the site features</Translate></p>
               </div>
             </div>
             {/* END row */}
             <div className="container-pricing">
               <div className="card-price">
-                <h2>Starter</h2>
+                <h2><Translate contentKey="home.pricing.cards.title1">Starter</Translate></h2>
                 <div className="price-green">
-                  <p>$9</p>
-                  <span>per month</span>
+                  <p><Translate contentKey="home.pricing.cards.price1">free</Translate></p>
+                  <span></span>
                 </div>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                <p className="btn-price">selected plan</p>
+                <p><Translate contentKey="home.pricing.cards.feature1"></Translate></p>
+                <p className="btn-price"><Translate contentKey="global.menu.account.register">register</Translate></p>
               </div>
               <div className="card-price">
-                <h2>Starter</h2>
+                <h2><Translate contentKey="home.pricing.cards.title2"></Translate></h2>
                 <div className="price-green">
-                  <p>$9</p>
-                  <span>per month</span>
+                  <p><Translate contentKey="home.pricing.cards.price2"></Translate></p>
+                  <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
                 </div>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                <p className="btn-price">selected plan</p>
+                <p><Translate contentKey="home.pricing.cards.feature2"></Translate></p>
+                <p className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
               </div>
               <div className="card-price">
-                <h2>Starter</h2>
+                <h2><Translate contentKey="home.pricing.cards.title3"></Translate></h2>
                 <div className="price-green">
-                  <p>$9</p>
-                  <span>per month</span>
+                  <p><Translate contentKey="home.pricing.cards.price3"></Translate></p>
+                  <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
                 </div>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                <p className="btn-price">selected plan</p>
+                <p><Translate contentKey="home.pricing.cards.feature3"></Translate></p>
+                <p className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
               </div>
               <div className="card-price">
-                <h2>Starter</h2>
+                <h2><Translate contentKey="home.pricing.cards.title4"></Translate></h2>
                 <div className="price-green">
-                  <p>$9</p>
-                  <span>per month</span>
+                  <p><Translate contentKey="home.pricing.cards.price4"></Translate></p>
+                  <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
                 </div>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                <p className="btn-price">selected plan</p>
+                <p><Translate contentKey="home.pricing.cards.feature4"></Translate></p>
+                <p className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
               </div>
             </div>
           </div>
