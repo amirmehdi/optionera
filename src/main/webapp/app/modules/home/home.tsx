@@ -278,6 +278,62 @@ export const Home = (props: IHomeProp) => {
             </div>
           </div>
         </section>
+
+
+
+        <section className="probootstrap-section probootstrap-bg-white probootstrap-zindex-above-showcase">
+          <div className="container">
+            <div className="row">
+              <div
+                className="col-md-6 col-md-offset-3 text-center section-heading "
+              >
+                <h2>Pricing</h2>
+                <p className="lead">
+                  Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name
+                </p>
+              </div>
+            </div>
+            {/* END row */}
+            <div className="container-pricing">
+              <div className="card-price">
+                <h2>Starter</h2>
+                <div className="price-green">
+                  <p>$9</p>
+                  <span>per month</span>
+                </div>
+                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                <p className="btn-price">selected plan</p>
+              </div>
+              <div className="card-price">
+                <h2>Starter</h2>
+                <div className="price-green">
+                  <p>$9</p>
+                  <span>per month</span>
+                </div>
+                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                <p className="btn-price">selected plan</p>
+              </div>
+              <div className="card-price">
+                <h2>Starter</h2>
+                <div className="price-green">
+                  <p>$9</p>
+                  <span>per month</span>
+                </div>
+                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                <p className="btn-price">selected plan</p>
+              </div>
+              <div className="card-price">
+                <h2>Starter</h2>
+                <div className="price-green">
+                  <p>$9</p>
+                  <span>per month</span>
+                </div>
+                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                <p className="btn-price">selected plan</p>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
       <footer className="probootstrap-footer">

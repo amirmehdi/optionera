@@ -11,8 +11,7 @@ export interface IOptionStatsProps extends StateProps, RouteComponentProps<{ url
 export const HomePage = (props: IOptionStatsProps) => {
   const { account } = props;
   return (
-    <Row>
-
+    <div style={{padding: 10}}>
       {account.authorities && account.authorities[0] === "ROLE_USER" ?
         account.authorities[1] !== "ROLE_ADMIN" ?
         <OptionStats  history={props.history}
@@ -20,7 +19,7 @@ export const HomePage = (props: IOptionStatsProps) => {
                       match={props.match} /> : "" : ""
       }
 
-    </Row>
+    </div>
   );
 };
 

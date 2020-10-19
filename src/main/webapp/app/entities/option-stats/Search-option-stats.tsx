@@ -17,12 +17,13 @@ export const SearchOptionStats = (props) => {
     props.instrumentId(value)
   }
 
-  function onChangeRadio(e) {
+  function onChangeRadio(e:any) {
 
   }
 
   function onSearch(val) {
-    const apiUrlSearch = 'api/instruments/search'​
+    // eslint-disable-next-line no-irregular-whitespace
+    const apiUrlSearch = "api/instruments/search";
     const requestUrl = `${apiUrlSearch}/${val}`;
     axios.get(requestUrl).then((res) => {
       setInstrument(res.data)
