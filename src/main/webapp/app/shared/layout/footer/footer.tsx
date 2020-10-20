@@ -9,7 +9,7 @@ const Footer = props => (
   <div className="">
     <Row>
       <Col md="12" >
-        <p className="copy">
+        <p style={{margin: 0}}>
           <small>
             © 2020 <a href="#">OptionEra</a>. All Rights Reserved. <br />
           </small>
