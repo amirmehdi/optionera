@@ -7,6 +7,7 @@ import com.gitlab.amirmehdi.service.dto.core.BidAsk;
 import com.gitlab.amirmehdi.service.dto.core.Instrument;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -28,7 +29,7 @@ public class OmidRLCConsumer {
     private final RestTemplate restTemplate;
     private final ApplicationProperties applicationProperties;
 
-    public OmidRLCConsumer(ObjectMapper objectMapper, RestTemplate restTemplate, ApplicationProperties applicationProperties) {
+    public OmidRLCConsumer(ObjectMapper objectMapper, @Qualifier("trustedRestTemplate") RestTemplate restTemplate, ApplicationProperties applicationProperties) {
         this.objectMapper = objectMapper;
         this.restTemplate = restTemplate;
         this.applicationProperties = applicationProperties;
