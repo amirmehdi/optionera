@@ -21,6 +21,8 @@ export interface IOptionStatsProps extends StateProps, DispatchProps, RouteCompo
 export const OptionStats = (props: IOptionStatsProps) => {
   const [paginationState, setPaginationState] = useState(getSortState(props.location, ITEMS_PER_PAGE));
   const [sorting, setSorting] = useState(false);
+  const [instrumentId, setInstrumentId] = useState(undefined);
+  const [switchId, setSwitchId] = useState(undefined);
 
   const getAllEntities = () => {
     props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
@@ -111,7 +113,15 @@ export const OptionStats = (props: IOptionStatsProps) => {
         <div>
           <div className="content-search-box">
             <SyncOutlined onClick={() => getAllEntities()}/>
-            <SearchOptionStats instrumentId={(id:number) => id && props.getEntities(id)}/>
+            <SearchOptionStats
+              instrumentId={(id:number) => {
+                setInstrumentId(id);
+                id && props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}` , id , switchId)}
+              }
+              switch={(id:number) => {
+                setSwitchId(id);
+                id && props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}` , instrumentId , id)
+              }}/>
           </div>
           <Table sticky pagination={false} onChange={handleChange} dataSource={optionStatsList as any}
                  scroll={{ x: 2400 }}>

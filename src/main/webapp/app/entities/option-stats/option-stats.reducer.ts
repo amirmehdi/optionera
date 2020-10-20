@@ -113,8 +113,13 @@ const apiUrl = 'api/option-stats';
 
 // Actions
 
-export const getEntities: ICrudGetAllAction<IOptionStats> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+export const getEntities: any = (page, size, sort, instrumentId?, callInTheMoney?) => {
+  const requestUrl = `${apiUrl}${
+    sort
+      ? `?page=${page}&size=${size}&sort=${sort}&${instrumentId && `instrumentId.equals=${instrumentId}`}&${callInTheMoney &&
+          `callInTheMoney.equals=${callInTheMoney}`}`
+      : ''
+  }`;
   return {
     type: ACTION_TYPES.FETCH_OPTIONSTATS_LIST,
     payload: axios.get<IOptionStats>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`)

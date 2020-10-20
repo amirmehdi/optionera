@@ -1,6 +1,6 @@
 import './home.scss';
 import './../../../content/css/styles-merged.css'
-import React from 'react';
+import React, { useState } from 'react';
 import {connect} from 'react-redux';
 import {Alert, Col, Row} from 'reactstrap';
 import {Link} from "react-router-dom";
@@ -9,6 +9,7 @@ import {Translate} from "react-jhipster";
 export type IHomeProp = StateProps;
 export const Home = (props: IHomeProp) => {
   const {account} = props;
+  const [active , setActive] = useState<number>(1);
 
   return (
     /*    <Row>
@@ -89,7 +90,7 @@ export const Home = (props: IHomeProp) => {
           <div className="container">
             <div className="row">
               <div
-                className="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 text-center probootstrap-hero-text pb0 "
+                className="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 text-center probootstrap-hero-text pb0 flex-center"
               >
                 <h1><Translate contentKey="home.title">Trading Options using a realtime data dashboard</Translate></h1>
                 <p><Translate contentKey="home.subtitle">Instant review of the entire option market and find the best
@@ -112,16 +113,16 @@ export const Home = (props: IHomeProp) => {
             <div dir="ltr" className="row probootstrap-feature-showcase">
               <div className="col-md-4 col-md-push-8 probootstrap-showcase-nav ">
                 <ul>
-                  <li className="active">
-                    <a href="#"><Translate contentKey="home.slide.title1">All data in your screen</Translate></a>
+                  <li onClick={() => setActive(1)} className={active === 1 ? "active" : ""}>
+                    <a><Translate contentKey="home.slide.title1">All data in your screen</Translate></a>
                     <p><Translate contentKey="home.slide.subtitle2">All data in your screen</Translate></p>
                   </li>
-                  <li>
-                    <a href="#"><Translate contentKey="home.slide.title2">best signals in your watchlist</Translate></a>
+                  <li onClick={() => setActive(2)} className={active === 2 ? "active" : ""}>
+                    <a><Translate contentKey="home.slide.title2">best signals in your watchlist</Translate></a>
                     <p><Translate contentKey="home.slide.subtitle2">best signals in your watchlist</Translate></p>
                   </li>
-                  <li>
-                    <a href="#"><Translate contentKey="home.slide.title3">api for writing your own strategy</Translate></a>
+                  <li onClick={() => setActive(3)} className={active === 3 ? "active" : ""}>
+                    <a><Translate contentKey="home.slide.title3">api for writing your own strategy</Translate></a>
                     <p><Translate contentKey="home.slide.subtitle3">api for writing your own strategy</Translate></p>
                   </li>
                 </ul>
@@ -140,21 +141,21 @@ export const Home = (props: IHomeProp) => {
                     </div>
                     <div className="probootstrap-image-showcase">
                       <ul className="probootstrap-images-list">
-                        <li className="active">
+                        <li className={active === 1 ? "active" : ""}>
                           <img
                             src="content/img/1.jpg"
                             alt="Image"
                             className="img-responsive"
                           />
                         </li>
-                        <li>
+                        <li className={active === 2 ? "active" : ""}>
                           <img
                             src="content/img/2.jpg"
                             alt="Image"
                             className="img-responsive"
                           />
                         </li>
-                        <li>
+                        <li className={active === 3 ? "active" : ""}>
                           <img
                             src="content/img/3.jpg"
                             alt="Image"
@@ -173,7 +174,7 @@ export const Home = (props: IHomeProp) => {
           <div className="container">
             <div className="row">
               <div
-                className="col-md-6 col-md-offset-3 text-center section-heading "
+                className="col-md-6 col-md-offset-3 text-center section-heading flex-center"
               >
                 <h2><Translate contentKey="home.features.title">Platform Features</Translate></h2>
                 <p className="lead">
@@ -278,14 +279,11 @@ export const Home = (props: IHomeProp) => {
             </div>
           </div>
         </section>
-
-
-
         <section id="pricing" className="probootstrap-section probootstrap-zindex-above-showcase">
           <div className="container">
             <div className="row">
               <div
-                className="col-md-6 col-md-offset-3 text-center section-heading ">
+                className="col-md-6 col-md-offset-3 text-center section-heading flex-center">
                 <h2><Translate contentKey="home.pricing.title">Pricing</Translate></h2>
                 <p className="lead"><Translate contentKey="home.pricing.subtitle">Subscribe to the site for instant access to the options market board and use the site features</Translate></p>
               </div>
@@ -296,9 +294,9 @@ export const Home = (props: IHomeProp) => {
                 <h2><Translate contentKey="home.pricing.cards.title1">Starter</Translate></h2>
                 <div className="price-green">
                   <p><Translate contentKey="home.pricing.cards.price1">free</Translate></p>
-                  <span></span>
+                  <span>.</span>
                 </div>
-                <p><Translate contentKey="home.pricing.cards.feature1"></Translate></p>
+                <p style={{height: "60%"}}><Translate contentKey="home.pricing.cards.feature1"></Translate></p>
                 <Link to="/account/register" role="button">
                   <p className="btn-price"><Translate contentKey="global.menu.account.register">register</Translate></p>
                 </Link>
@@ -309,7 +307,7 @@ export const Home = (props: IHomeProp) => {
                   <p><Translate contentKey="home.pricing.cards.price2"></Translate></p>
                   <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
                 </div>
-                <p><Translate contentKey="home.pricing.cards.feature2"></Translate></p>
+                <p style={{height: "60%"}}><Translate contentKey="home.pricing.cards.feature2"></Translate></p>
                 <p className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
               </div>
               <div className="card-price">
@@ -318,7 +316,7 @@ export const Home = (props: IHomeProp) => {
                   <p><Translate contentKey="home.pricing.cards.price3"></Translate></p>
                   <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
                 </div>
-                <p><Translate contentKey="home.pricing.cards.feature3"></Translate></p>
+                <p style={{height: "60%"}}><Translate contentKey="home.pricing.cards.feature3"></Translate></p>
                 <p className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
               </div>
               <div className="card-price">
@@ -327,7 +325,7 @@ export const Home = (props: IHomeProp) => {
                   <p><Translate contentKey="home.pricing.cards.price4"></Translate></p>
                   <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
                 </div>
-                <p><Translate contentKey="home.pricing.cards.feature4"></Translate></p>
+                <p style={{height: "60%"}}><Translate contentKey="home.pricing.cards.feature4"></Translate></p>
                 <p className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
               </div>
             </div>
@@ -338,117 +336,121 @@ export const Home = (props: IHomeProp) => {
       <footer className="probootstrap-footer">
         <div className="container">
           <Row>
-            <Col md="6">
+            <Col md="12">
               <Row>
-                <Col md="4">
+                <Col md="3">
                   <div className="probootstrap-footer-widget">
-                    <h3>Links</h3>
-                    <ul>
+                    <h3>ABOUT UNAPP</h3>
+                    <p style={{fontSize: 13}}>Far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics</p>
+                    <ul className="probootstrap-footer-social">
                       <li>
-                        <a href="#">Knowledge Base</a>
+                        <a href="#">
+                          <i className="icon-twitter"/>
+                        </a>
                       </li>
                       <li>
-                        <a href="#">Career</a>
+                        <a href="#">
+                          <i className="icon-facebook"/>
+                        </a>
                       </li>
                       <li>
-                        <a href="#">Press Releases</a>
+                        <a href="#">
+                          <i className="icon-github"/>
+                        </a>
                       </li>
                       <li>
-                        <a href="#">Terms of services</a>
+                        <a href="#">
+                          <i className="icon-linkedin"/>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </Col>
+                <Col md="3">
+                  <div className="probootstrap-footer-widget">
+                    <h3>INFORMATION</h3>
+                    <ul className="footer-information">
+                      <li>
+                        <a href="#"> <i className="icon-check"/> Home</a>
                       </li>
                       <li>
-                        <a href="#">Privacy Policy</a>
+                        <a href="#"> <i className="icon-check"/> Gallery</a>
+                      </li>
+                      <li>
+                        <a href="#"> <i className="icon-check"/> About</a>
+                      </li>
+                      <li>
+                        <a href="#"> <i className="icon-check"/>  Blog</a>
+                      </li>
+                      <li>
+                        <a href="#"> <i className="icon-check"/>  Contact</a>
+                      </li>
+                      <li>
+                        <a href="#"> <i className="icon-check"/>  Privacy</a>
                       </li>
                     </ul>
                   </div>
                 </Col>
                 <Col md="4">
                   <div className="probootstrap-footer-widget">
-                    <h3>Links</h3>
-                    <ul>
+                    <h3>RECENT BLOG</h3>
+                    <ul className="footer-information">
                       <li>
-                        <a href="#">Knowledge Base</a>
+                        <a className="footer-blog" href="#">
+                          <img  src="content/img/blog-1.jpg" />
+                          <div>
+                            <p>Photoshoot Technique</p>
+                            <span>30 March 2018</span>
+                          </div>
+                        </a>
                       </li>
                       <li>
-                        <a href="#">Career</a>
+                        <a className="footer-blog" href="#">
+                          <img  src="content/img/blog-2.jpg" />
+                          <div>
+                            <p>Photoshoot Technique</p>
+                            <span>30 March 2018</span>
+                          </div>
+                        </a>
                       </li>
                       <li>
-                        <a href="#">Press Releases</a>
-                      </li>
-                      <li>
-                        <a href="#">Terms of services</a>
-                      </li>
-                      <li>
-                        <a href="#">Privacy Policy</a>
+                        <a className="footer-blog" href="#">
+                          <img  src="content/img/blog-3.jpg" />
+                          <div>
+                            <p>Photoshoot Technique</p>
+                            <span>30 March 2018</span>
+                          </div>
+                        </a>
                       </li>
                     </ul>
                   </div>
                 </Col>
-                <Col md="4">
+                <Col md="2">
                   <div className="probootstrap-footer-widget">
-                    <h3>Links</h3>
-                    <ul>
+                    <h3>CONTACT INFO</h3>
+                    <ul className="footer-information">
                       <li>
-                        <a href="#">Knowledge Base</a>
+                        291 South 21th Street,
+                        Suite 721 New York NY 10016
                       </li>
                       <li>
-                        <a href="#">Career</a>
+                        <a className="footer-blog footer-contact" href="#">
+                          <i style={{marginRight: 5}} className="icon-phone"/> 1235 2355 98 </a>
                       </li>
                       <li>
-                        <a href="#">Press Releases</a>
+                        <a className="footer-blog footer-contact" href="#">
+                          <i style={{marginRight: 5}} className="icon-mail"/> info@yoursite.com
+                        </a>
                       </li>
                       <li>
-                        <a href="#">Terms of services</a>
-                      </li>
-                      <li>
-                        <a href="#">Privacy Policy</a>
+                        <a className="footer-blog footer-contact" href="#">
+                          <i style={{marginRight: 5}} className="icon-location"/> yourwebsite.com
+                        </a>
                       </li>
                     </ul>
                   </div>
                 </Col>
               </Row>
-            </Col>
-            <Col md="6">
-              <div className="probootstrap-footer-widget">
-                <h3>Paragraph</h3>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                  provident qui tempore natus quos quibusdam soluta at.
-                </p>
-                <ul className="probootstrap-footer-social">
-                  <li>
-                    <a href="#">
-                      <i className="icon-twitter"/>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i className="icon-facebook"/>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i className="icon-github"/>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i className="icon-dribbble"/>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i className="icon-linkedin"/>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i className="icon-youtube"/>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
             </Col>
           </Row>
           {/* END row */}

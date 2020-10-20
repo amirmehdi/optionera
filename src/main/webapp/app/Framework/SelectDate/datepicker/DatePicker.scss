@@ -1,0 +1,145 @@
+.week {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .weekDay-container {
+    width: 14.28%;
+    padding-top: 10.28%;
+    margin: 5px 0;
+    cursor: pointer;
+    position: relative;
+
+    .weekDay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      font-size: 1.1rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background-color: #eee;
+      }
+    }
+  }
+
+  &:first-child {
+    justify-content: flex-end;
+  }
+}
+
+.start-select {
+  background-color: #037ef3 !important;
+  color: #fff !important;
+}
+
+.disabled-date {
+  cursor: default !important;
+
+  .weekDay {
+    //color: #ededf1 !important;
+    opacity: 0.3;
+
+    &:hover {
+      background-color: #fff !important;
+    }
+  }
+}
+
+.mid-select {
+  background-color: rgba(0, 172, 199, 0.16) !important;
+  color: #858585 !important;
+}
+
+.date-search-page-one {
+  text-align: center;
+  z-index: 5;
+  display: flex !important;
+
+  .box {
+    width: 100%;
+    color: #9b9b9b;
+
+    .part1 {
+      padding: 20px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .btn {
+        width: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .icon-part {
+          width: 30px;
+          cursor: pointer;
+        }
+
+        .name {
+          font-size: 1rem;
+          font-weight: bold;
+          cursor: none;
+        }
+      }
+    }
+
+    .part2 {
+      .top-box {
+        display: flex;
+        justify-content: space-between;
+
+        span {
+          padding: 10px;
+          font-size: 1.2rem;
+          font-weight: bold;
+        }
+      }
+
+      hr {
+        width: 100%;
+        display: inline-block;
+        border: none;
+        height: 1px;
+        background-color: #ddd;
+        margin-bottom: 15px;
+      }
+
+      .main-box {
+        display: flex;
+        flex-wrap: wrap;
+
+        span {
+          display: inline-block;
+          width: 12%;
+          padding: 10.5px 13px;
+          margin: 1%;
+          font-size: 1.1rem;
+          color: #9b9b9b;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #eee;
+          }
+        }
+
+        .one-select {
+          background-color: #00aec7;
+          color: #fff;
+          border-radius: 10px;
+        }
+
+        .more-select {
+        }
+      }
+    }
+  }
+}

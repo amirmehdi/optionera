@@ -41,22 +41,22 @@
     },
     "pricing": {
       "title": "Pricing",
-      "subtitle":"Subscribe to the site for instant access to the options market board and use the site features",
+      "subtitle": "Subscribe to the site for instant access to the options market board and use the site features",
       "select": "select plan",
       "perMonth": "toman per month",
       "cards": {
-        "title1":"Basic",
+        "title1": "Basic",
         "price1": "Free",
         "feature1": "access to option stats table(only for options with expiration date less than 30 days)<br/>black scholes calculations<br/>break evev<br/>leverage",
-        "title2":"Bronze",
+        "title2": "Bronze",
         "price2": "500,000",
         "feature2": "full access to option stats table<br/>black scholes calculations<br/>break even<br/>leverage<br/>access to VIP signals",
-        "title3":"Silver",
+        "title3": "Silver",
         "price3": "1,000,000",
-        "feature3": "full access to option stats table<br/>black scholes calculations<br/>break even<br/>leverage<br/>access to VIP signals<br/>access to payoff diagram<br/>profit probability calculations<br/>greeks calculations(delta,theta,rho,gamma)",
-        "title4":"Golden",
+        "feature3": "full access to option stats table<br/>black scholes calculations<br/>break even<br/>leverage<br/>access to VIP signals<br/>access to payoff diagram<br/>profit probability calculations<br/>greeks calculations (delta,theta,rho,gamma)",
+        "title4": "Golden",
         "price4": "4,000,000",
-        "feature4": "full access to option stats table<br/>black scholes calculations<br/>break even<br/>leverage<br/>access to VIP signals<br/>access to payoff diagram<br/>profit probability calculations<br/>greeks calculations(delta,theta,rho,gamma)<br/>access to realtime API"
+        "feature4": "full access to option stats table<br/>black scholes calculations<br/>break even<br/>leverage<br/>access to VIP signals<br/>access to payoff diagram<br/>profit probability calculations<br/>greeks calculations (delta,theta,rho,gamma)<br/>access to realtime API"
       }
     },
     "github": "GitHub"
