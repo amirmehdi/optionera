@@ -19,7 +19,7 @@
       "name": "Name",
       "callIsin": "Call Isin",
       "putIsin": "Put Isin",
-      "expDate": "سررسید",
+      "expDate": "سررسید (روز باقیمانده)",
       "strikePrice": "قیمت اعمال",
       "contractSize": "اندازه قرارداد",
       "callInTheMoney": "Call In The Money",

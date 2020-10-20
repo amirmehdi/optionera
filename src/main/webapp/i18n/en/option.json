@@ -19,7 +19,7 @@
       "name": "Name",
       "callIsin": "Call Isin",
       "putIsin": "Put Isin",
-      "expDate": "Exp Date",
+      "expDate": "Exp Date (remaining day)",
       "strikePrice": "Strike Price",
       "contractSize": "Contract Size",
       "callInTheMoney": "Call In The Money",

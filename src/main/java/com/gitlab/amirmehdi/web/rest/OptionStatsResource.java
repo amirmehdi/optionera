@@ -7,7 +7,9 @@ import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -39,6 +42,16 @@ public class OptionStatsResource {
     @GetMapping("/option-stats")
     public ResponseEntity<List<OptionStats>> getAllOptions(OptionCriteria criteria,Pageable pageable) {
         log.debug("REST request to get a page of OptionStats");
+        if (pageable.getSort().isSorted()){
+            if (pageable.getSort().get().count() ==1) {
+                List<Sort.Order> orders = pageable.getSort().get().collect(Collectors.toList());
+                if (orders.get(0).getProperty().equals("id")){
+                    pageable = PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),Sort.by(orders.get(0).withProperty("callAskToBS")));
+                }else if (orders.get(0).getProperty().equals("expDate")){
+                    pageable = PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),Sort.by(orders.get(0),Sort.Order.asc("instrument.isin"), Sort.Order.asc("strikePrice")));
+                }
+            }
+        }
         Page<OptionStats> page = optionStatsService.findAll(criteria,pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());

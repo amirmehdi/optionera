@@ -3,11 +3,11 @@ package com.gitlab.amirmehdi.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gitlab.amirmehdi.domain.Order;
+import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.domain.enumeration.Side;
 import com.gitlab.amirmehdi.domain.enumeration.Validity;
 import com.gitlab.amirmehdi.repository.TokenRepository;
-import com.gitlab.amirmehdi.service.dto.tadbir.SendOrderRequest;
-import com.gitlab.amirmehdi.service.dto.tadbir.SendOrderResponse;
+import com.gitlab.amirmehdi.service.dto.tadbir.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
@@ -52,8 +52,100 @@ public class TadbirService {
             .shortSellIncentivePercent(0)
             .build();
 
+        try {
+            ResponseEntity<SendOrderResponse> response =
+                restTemplate.exchange("https://api.refahbroker.ir/Web/V1/Order/Post"
+                    , HttpMethod.POST
+                    , new HttpEntity<>(objectMapper.writeValueAsString(sendOrderRequest), getHeaders(order.getBroker()))
+                    , SendOrderResponse.class);
+            log.info("order:{} response:{}", order, response);
+            return response.getBody().getMessageDesc();
+        } catch (JsonProcessingException e) {
+            log.error("order:{} response:{}", order, "JsonProcessingException", e);
+            return "parsing error";
+        } catch (HttpStatusCodeException e) {
+            log.error("order:{} response:{}", order, e.getResponseBodyAsString(), e);
+            return e.getResponseBodyAsString();
+        }
+    }
+
+    public UserOpenInterestResponse getUserOpenInterest() {
+        try {
+            ResponseEntity<UserOpenInterestResponse> response =
+                restTemplate.exchange("https://silver.refahbroker.ir/Customer/GetCustomerSummaryList"
+                    ,HttpMethod.POST
+                    ,new HttpEntity<>(new Object(),getHeaders(Broker.REFAH))
+                    ,UserOpenInterestResponse.class);
+            log.debug("getUserOpenInterest response {}",response);
+            return response.getBody();
+        }catch (HttpStatusCodeException e){
+            log.error("getUserOpenInterest response:{}", e.getResponseBodyAsString(), e);
+            return null;
+        }
+    }
+
+    public DailyPortfolioResponse getDailyPortfolio() {
+        try {
+            ResponseEntity<DailyPortfolioResponse> response =
+                restTemplate.exchange("https://api.refahbroker.ir/Web/V1/DailyPortfolio/Get/DailyPortfolio?symbolIsin="
+                    ,HttpMethod.GET
+                    ,new HttpEntity<>(getHeaders(Broker.REFAH))
+                    ,DailyPortfolioResponse.class);
+            log.debug("getDailyPortfolio response {}",response);
+            return response.getBody();
+        }catch (HttpStatusCodeException e){
+            log.error("getDailyPortfolio response:{}", e.getResponseBodyAsString(), e);
+            return null;
+        }
+    }
+    public RemainResponse getRemain() {
+        try {
+            ResponseEntity<RemainResponse> response =
+                restTemplate.exchange("https://api.refahbroker.ir/Web/V1/Accounting/Remain"
+                ,HttpMethod.GET
+                ,new HttpEntity<>(getHeaders(Broker.REFAH))
+                ,RemainResponse.class);
+            log.debug("getRemain response {}",response);
+            return response.getBody();
+        }catch (HttpStatusCodeException e){
+            log.error("getRemain response:{}", e.getResponseBodyAsString(), e);
+            return null;
+        }
+    }
+
+    public OpenOrderResponse getOpenOrders() {
+        try {
+            ResponseEntity<OpenOrderResponse> response =
+                restTemplate.exchange("https://api.refahbroker.ir/Web/V1/Order/GetOpenOrder/OpenOrder"
+                    ,HttpMethod.GET
+                    ,new HttpEntity<>(getHeaders(Broker.REFAH))
+                    ,OpenOrderResponse.class);
+            log.debug("getOpenOrders response {}",response);
+            return response.getBody();
+        }catch (HttpStatusCodeException e){
+            log.error("getOpenOrders response:{}", e.getResponseBodyAsString(), e);
+            return null;
+        }
+    }
+
+    public OpenOrderResponse getTodayOrder() {
+        try {
+            ResponseEntity<OpenOrderResponse> response =
+                restTemplate.exchange("https://api.refahbroker.ir/Web/V1/Order/GetTodayOrders/Customer/GetCustomerTodayOrders"
+                    ,HttpMethod.GET
+                    ,new HttpEntity<>(getHeaders(Broker.REFAH))
+                    ,OpenOrderResponse.class);
+            log.debug("getTodayOrder response {}",response);
+            return response.getBody();
+        }catch (HttpStatusCodeException e){
+            log.error("getTodayOrder response:{}", e.getResponseBodyAsString(), e);
+            return null;
+        }
+    }
+
+    protected LinkedMultiValueMap<String, String> getHeaders(Broker broker) {
         LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        String[] token = tokenRepository.findTopByBrokerOrderByIdDesc(order.getBroker())
+        String[] token = tokenRepository.findTopByBrokerOrderByIdDesc(broker)
             .orElseThrow(RuntimeException::new)
             .getToken().split(";");
         headers.add("Authorization", "BasicAuthentication " + token[0]);
@@ -73,17 +165,7 @@ public class TadbirService {
         headers.add("Sec-Fetch-Dest", "empty");
         headers.add("Referer", "https://silver.refahbroker.ir/");
         headers.add("Accept-Language", "en-US,en;q=0.9,fa-IR;q=0.8,fa;q=0.7");
-        try {
-            ResponseEntity<SendOrderResponse> response = restTemplate.exchange("https://api.refahbroker.ir/Web/V1/Order/Post", HttpMethod.POST, new HttpEntity<>(objectMapper.writeValueAsString(sendOrderRequest), headers), SendOrderResponse.class);
-            log.info("order:{} response:{}", order, response);
-            return response.getBody().getMessageDesc();
-        } catch (JsonProcessingException e) {
-            log.error("order:{} response:{}", order, "JsonProcessingException", e);
-            return "parsing error";
-        } catch (HttpStatusCodeException e) {
-            log.error("order:{} response:{}", order, e.getResponseBodyAsString(), e);
-            return e.getResponseBodyAsString();
-        }
+        return headers;
     }
 
 }
