@@ -6,11 +6,9 @@ import './style.scss';
 import {DatePicker, Radio, Select} from 'antd';
 import axios from 'axios';
 import 'moment/locale/fa';
-import locale from 'antd/es/date-picker/locale/fa_IR';
 import moment from 'moment';
-import SelectDate from 'app/Framework/SelectDate';
-import { selectDateType } from 'app/Framework/SelectDate/SelectDate';
-import { monthNameConverter } from 'app/Framework/SelectDate/datepicker/DatePicker';
+import {selectDateType} from 'app/Framework/SelectDate/SelectDate';
+
 moment.locale('fa_IR');
 
 const {RangePicker} = DatePicker;
@@ -84,7 +82,7 @@ export const SearchOptionStats = (props) => {
       </div>
 
       <div style={{marginLeft: 20}}>
-        {/*<SelectDate*/}
+        {/* <SelectDate*/}
         {/*  enableOlderDate*/}
         {/*  twoSelect*/}
         {/*  closeOnSelect*/}
@@ -104,7 +102,7 @@ export const SearchOptionStats = (props) => {
         {/*      selectDate: { ...e, titleString: getDateTitleString(e) },*/}
         {/*    });*/}
         {/*  }}*/}
-        {/*/>*/}
+        {/* />*/}
 
         <RangePicker />
 

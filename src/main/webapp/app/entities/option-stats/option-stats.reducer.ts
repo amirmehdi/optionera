@@ -1,17 +1,10 @@
 import axios from 'axios';
-import {
-  parseHeaderForLinks,
-  loadMoreDataWhenScrolled,
-  ICrudGetAction,
-  ICrudGetAllAction,
-  ICrudPutAction,
-  ICrudDeleteAction
-} from 'react-jhipster';
+import { ICrudDeleteAction, ICrudGetAction, ICrudPutAction, loadMoreDataWhenScrolled, parseHeaderForLinks } from 'react-jhipster';
 
 import { cleanEntity } from 'app/shared/util/entity-utils';
-import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
+import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
 
-import { IOptionStats, defaultValue } from 'app/shared/model/option-stats.model';
+import { defaultValue, IOptionStats } from 'app/shared/model/option-stats.model';
 
 export const ACTION_TYPES = {
   FETCH_OPTIONSTATS_LIST: 'optionStats/FETCH_OPTIONSTATS_LIST',
@@ -114,12 +107,10 @@ const apiUrl = 'api/option-stats';
 // Actions
 
 export const getEntities: any = (page, size, sort, instrumentId?, callInTheMoney?) => {
-  const requestUrl = `${apiUrl}${
-    sort
-      ? `?page=${page}&size=${size}&sort=${sort}&${instrumentId && `instrumentId.equals=${instrumentId}`}&${callInTheMoney &&
-          `callInTheMoney.equals=${callInTheMoney}`}`
-      : ''
-  }`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}${
+    instrumentId ? `&instrumentId.equals=${instrumentId}` : ''
+  }${callInTheMoney ? `&callInTheMoney.equals=${callInTheMoney}` : ''}`;
+
   return {
     type: ACTION_TYPES.FETCH_OPTIONSTATS_LIST,
     payload: axios.get<IOptionStats>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`)

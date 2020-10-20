@@ -1,10 +1,10 @@
 import "./SelectDate.scss";
 import * as React from "react";
-import { useMemo, useState } from "react";
+import {useMemo, useState} from "react";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import LeftArrowIcon from "./left-arrow.svg";
-import DatePicker, { dateType } from "./datepicker/DatePicker";
+import DatePicker, {dateType} from "./datepicker/DatePicker";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import moment from "jalali-moment";
@@ -64,8 +64,8 @@ export default function SelectDate({
           setShowDateModal(!showDateModal);
         }}
       >
-        {/*<img alt="" style={{height: 25}} src={require('./ic-calendar.svg')}/>*/}
-        {/*<hr className="custom-date-internal-hotel-hr"/>*/}
+        {/* <img alt="" style={{height: 25}} src={require('./ic-calendar.svg')}/>*/}
+        {/* <hr className="custom-date-internal-hotel-hr"/>*/}
         <div
           className="custom-date-text"
           style={!titleStringState || showDateModal ? { color: "#8f909e" } : { color: "#585962" }}
