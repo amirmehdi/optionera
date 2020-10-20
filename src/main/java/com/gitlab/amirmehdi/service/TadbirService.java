@@ -73,12 +73,12 @@ public class TadbirService {
         try {
             ResponseEntity<UserOpenInterestResponse> response =
                 restTemplate.exchange("https://silver.refahbroker.ir/Customer/GetCustomerSummaryList"
-                    ,HttpMethod.POST
-                    ,new HttpEntity<>(new Object(),getHeaders(Broker.REFAH))
-                    ,UserOpenInterestResponse.class);
-            log.debug("getUserOpenInterest response {}",response);
+                    , HttpMethod.POST
+                    , new HttpEntity<>(new Object(), getHeaders(Broker.REFAH))
+                    , UserOpenInterestResponse.class);
+            log.debug("getUserOpenInterest response {}", response);
             return response.getBody();
-        }catch (HttpStatusCodeException e){
+        } catch (HttpStatusCodeException e) {
             log.error("getUserOpenInterest response:{}", e.getResponseBodyAsString(), e);
             return null;
         }
@@ -88,26 +88,27 @@ public class TadbirService {
         try {
             ResponseEntity<DailyPortfolioResponse> response =
                 restTemplate.exchange("https://api.refahbroker.ir/Web/V1/DailyPortfolio/Get/DailyPortfolio?symbolIsin="
-                    ,HttpMethod.GET
-                    ,new HttpEntity<>(getHeaders(Broker.REFAH))
-                    ,DailyPortfolioResponse.class);
-            log.debug("getDailyPortfolio response {}",response);
+                    , HttpMethod.GET
+                    , new HttpEntity<>(getHeaders(Broker.REFAH))
+                    , DailyPortfolioResponse.class);
+            log.debug("getDailyPortfolio response {}", response);
             return response.getBody();
-        }catch (HttpStatusCodeException e){
+        } catch (HttpStatusCodeException e) {
             log.error("getDailyPortfolio response:{}", e.getResponseBodyAsString(), e);
             return null;
         }
     }
+
     public RemainResponse getRemain() {
         try {
             ResponseEntity<RemainResponse> response =
                 restTemplate.exchange("https://api.refahbroker.ir/Web/V1/Accounting/Remain"
-                ,HttpMethod.GET
-                ,new HttpEntity<>(getHeaders(Broker.REFAH))
-                ,RemainResponse.class);
-            log.debug("getRemain response {}",response);
+                    , HttpMethod.GET
+                    , new HttpEntity<>(getHeaders(Broker.REFAH))
+                    , RemainResponse.class);
+            log.debug("getRemain response {}", response);
             return response.getBody();
-        }catch (HttpStatusCodeException e){
+        } catch (HttpStatusCodeException e) {
             log.error("getRemain response:{}", e.getResponseBodyAsString(), e);
             return null;
         }
@@ -117,12 +118,12 @@ public class TadbirService {
         try {
             ResponseEntity<OpenOrderResponse> response =
                 restTemplate.exchange("https://api.refahbroker.ir/Web/V1/Order/GetOpenOrder/OpenOrder"
-                    ,HttpMethod.GET
-                    ,new HttpEntity<>(getHeaders(Broker.REFAH))
-                    ,OpenOrderResponse.class);
-            log.debug("getOpenOrders response {}",response);
+                    , HttpMethod.GET
+                    , new HttpEntity<>(getHeaders(Broker.REFAH))
+                    , OpenOrderResponse.class);
+            log.debug("getOpenOrders response {}", response);
             return response.getBody();
-        }catch (HttpStatusCodeException e){
+        } catch (HttpStatusCodeException e) {
             log.error("getOpenOrders response:{}", e.getResponseBodyAsString(), e);
             return null;
         }
@@ -132,12 +133,12 @@ public class TadbirService {
         try {
             ResponseEntity<OpenOrderResponse> response =
                 restTemplate.exchange("https://api.refahbroker.ir/Web/V1/Order/GetTodayOrders/Customer/GetCustomerTodayOrders"
-                    ,HttpMethod.GET
-                    ,new HttpEntity<>(getHeaders(Broker.REFAH))
-                    ,OpenOrderResponse.class);
-            log.debug("getTodayOrder response {}",response);
+                    , HttpMethod.GET
+                    , new HttpEntity<>(getHeaders(Broker.REFAH))
+                    , OpenOrderResponse.class);
+            log.debug("getTodayOrder response {}", response);
             return response.getBody();
-        }catch (HttpStatusCodeException e){
+        } catch (HttpStatusCodeException e) {
             log.error("getTodayOrder response:{}", e.getResponseBodyAsString(), e);
             return null;
         }
@@ -147,7 +148,7 @@ public class TadbirService {
         LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         String[] token = tokenRepository.findTopByBrokerOrderByIdDesc(broker)
             .orElseThrow(RuntimeException::new)
-            .getToken().split(";");
+            .getToken().split("__");
         headers.add("Authorization", "BasicAuthentication " + token[0]);
         headers.add("Content-Type", "application/json");
         headers.add("Connection", "keep-alive");
