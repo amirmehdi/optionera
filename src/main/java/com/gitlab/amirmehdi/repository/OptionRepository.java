@@ -29,6 +29,8 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
         " o.putIsin=?1 ")
     Optional<Option> findByCallIsinOrPutIsin(String isin);
 
+    Optional<Option> findByCallIsin(String isin);
+
     Optional<Option> findByCallIsinAndPutIsin(String callIsin, String putIsin);
 
     List<Option> findAllByExpDateGreaterThanEqual(LocalDate date);
