@@ -106,7 +106,7 @@ spring:
       thread-name-prefix: e-trade-task-
       pool:
         core-size: 2
-        max-size: 50
+        max-size: 200
         queue-capacity: 10000
     scheduling:
       thread-name-prefix: e-trade-scheduling-
