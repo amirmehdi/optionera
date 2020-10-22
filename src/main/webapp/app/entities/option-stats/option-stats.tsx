@@ -25,7 +25,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
   const [switchId, setSwitchId] = useState(undefined);
 
   const getAllEntities = () => {
-    props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
+    props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}` , instrumentId?.value , switchId);
   };
 
   const resetAll = () => {
@@ -98,7 +98,6 @@ export const OptionStats = (props: IOptionStatsProps) => {
       props.reset();
     }
   };
-
   const { optionStatsList, loading } = props;
   return (
     <InfiniteScroll
@@ -114,13 +113,17 @@ export const OptionStats = (props: IOptionStatsProps) => {
           <div className="content-search-box">
             <SyncOutlined onClick={() => getAllEntities()}/>
             <SearchOptionStats
-              instrumentId={(id:number) => {
+              switchValue={switchId}
+              instrumentValue={instrumentId}
+              instrumentId={(id) => {
                 setInstrumentId(id);
-                id && props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}` , id , switchId)}
-              }
+                props.getEntities(0, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}` , id?.value , switchId);
+                props.reset();
+              }}
               switch={(id:number) => {
                 setSwitchId(id);
-                id && props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}` , instrumentId , id)
+                props.getEntities(0, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}` , instrumentId?.value , id);
+                props.reset();
               }}/>
           </div>
           <Table sticky pagination={false} onChange={handleChange} dataSource={optionStatsList as any}
@@ -354,9 +357,11 @@ export const OptionStats = (props: IOptionStatsProps) => {
 
       ) : (
         !loading && (
+        <Spin>
           <div className="alert alert-warning">
             <Translate contentKey="eTradeApp.optionStats.home.notFound">No Option Stats found</Translate>
           </div>
+        </Spin>
         )
       )}
     </InfiniteScroll>

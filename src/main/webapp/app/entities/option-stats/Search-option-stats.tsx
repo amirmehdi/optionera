@@ -8,7 +8,7 @@ import axios from 'axios';
 import 'moment/locale/fa';
 import moment from 'moment';
 import {selectDateType} from 'app/Framework/SelectDate/SelectDate';
-
+import {CloseCircleOutlined } from '@ant-design/icons';
 moment.locale('fa_IR');
 
 const {RangePicker} = DatePicker;
@@ -20,13 +20,12 @@ export const SearchOptionStats = (props) => {
   const [selectDateIsOpen, setSelectDateIsOpen] = useState<boolean>();
   const [selectDate, setSelectDate] = useState<selectDateType>();
 
-  function onChange(value) {
-    props.instrumentId(value)
+  function onChange(value , val) {
+    props.instrumentId(val)
   }
 
   function onChangeRadio(e:any) {
-    props.switch(e.target.value)
-
+    props.switch(e.target.value === "undefined" ? undefined : e.target.value);
   }
 
   // eslint-disable-next-line no-shadow
@@ -60,7 +59,6 @@ export const SearchOptionStats = (props) => {
       setInstrument(res.data)
     });
   }
-
   return (
     <div className="container-search">
       <div style={{marginLeft: 20}}>
@@ -69,7 +67,8 @@ export const SearchOptionStats = (props) => {
           style={{ width: 200 }}
           placeholder="جستجو"
           optionFilterProp="children"
-          onChange={onChange}
+          value={props.instrumentValue?.children}
+          onChange={(e , val) => onChange(e, val)}
           onSearch={onSearch}
           filterOption={(input, option) =>
             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -79,6 +78,9 @@ export const SearchOptionStats = (props) => {
             return <Option key={ix} value={i.isin}>{i.name}</Option>
           })}
         </Select>
+        {props.instrumentValue ? <CloseCircleOutlined
+          onClick={() =>  props.instrumentId(undefined)}
+          style={{fontSize:20, marginLeft: 5}} />: null}
       </div>
 
       <div style={{marginLeft: 20}}>
@@ -111,7 +113,8 @@ export const SearchOptionStats = (props) => {
       </div>
 
       <div style={{marginLeft: 20}}>
-        <Radio.Group onChange={onChangeRadio} defaultValue="a">
+        <Radio.Group onChange={onChangeRadio} defaultValue={!props.switchValue ? "undefined" : props.switchValue}
+                     value={!props.switchValue ? "undefined" : props.switchValue}>
           <Radio.Button value="true">Active</Radio.Button>
           <Radio.Button value="undefined">In between</Radio.Button>
           <Radio.Button value="false">Inactive</Radio.Button>
