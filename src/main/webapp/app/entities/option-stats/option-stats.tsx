@@ -170,6 +170,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
               }/>
               <Column
                 sorter={true}
+                width={110}
                 sortDirections={['ascend', 'descend']}
                 sortOrder={paginationState.sort === 'callAskToBS' ?
                   paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
@@ -349,6 +350,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
 
               }/>
               <Column sorter={true}
+                      width={110}
                       sortDirections={['ascend', 'descend']}
                       sortOrder={paginationState.sort === 'putAskToBS' ?
                         paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
