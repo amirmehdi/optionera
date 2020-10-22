@@ -1,19 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import {connect} from 'react-redux';
-import {RouteComponentProps} from 'react-router-dom';
-import {Spin, Table} from 'antd';
-import {getSortState, Translate} from 'react-jhipster';
-import {IRootState} from 'app/shared/reducers';
-import {getEntities, reset} from './option-stats.reducer';
-import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
+import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
+import { Spin, Table } from 'antd';
+import { getSortState, Translate } from 'react-jhipster';
+import { IRootState } from 'app/shared/reducers';
+import { getEntities, reset } from './option-stats.reducer';
+import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import './style.scss';
-import {SyncOutlined} from '@ant-design/icons';
-import {SearchOptionStats} from 'app/entities/option-stats/Search-option-stats';
-import DateTime from "./../../DateTime/DateTime"
-import Number from "./../../Framework/Number"
+import { SyncOutlined } from '@ant-design/icons';
+import { SearchOptionStats } from 'app/entities/option-stats/Search-option-stats';
+import DateTime from './../../DateTime/DateTime';
+import Number from './../../Framework/Number';
 
-const {Column, ColumnGroup} = Table;
+const { Column, ColumnGroup } = Table;
 
 export interface IOptionStatsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {
 }
@@ -23,9 +23,12 @@ export const OptionStats = (props: IOptionStatsProps) => {
   const [sorting, setSorting] = useState(false);
   const [instrumentId, setInstrumentId] = useState(undefined);
   const [switchId, setSwitchId] = useState(undefined);
+  const [fromDate, setFromDate] = useState(undefined);
+  const [toDate, setToDate] = useState(undefined);
 
   const getAllEntities = () => {
-    props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}` , instrumentId?.value , switchId);
+    props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage,
+      `${paginationState.sort},${paginationState.order}`, instrumentId?.value, switchId, fromDate, toDate);
   };
 
   const resetAll = () => {
@@ -52,22 +55,22 @@ export const OptionStats = (props: IOptionStatsProps) => {
       });
     }
   };
-  const _computeDateInJalaliFormat = (createdAt:any) => {
-      const date1 = new Date(createdAt);
-      const date2 = new Date();
-      const timeDiff = Math.abs(date2.getTime() - date1.getTime());
-      const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  const _computeDateInJalaliFormat = (createdAt: any) => {
+    const date1 = new Date(createdAt);
+    const date2 = new Date();
+    const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
     if (createdAt) {
       const createAtDate = DateTime.stringToDate(createdAt);
       const createAtJalaliDate = DateTime.gregorianToJalali(createAtDate.year, createAtDate.month, createAtDate.day);
-      return  <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-        <p style={{margin: 0, width:110 , textAlign: "center"}}>
-          { createAtJalaliDate.year +'/' +createAtJalaliDate.month + '/' +createAtJalaliDate.day +  ' (' + diffDays + ')' }
+      return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ margin: 0, width: 110, textAlign: 'center' }}>
+          {createAtJalaliDate.year + '/' + createAtJalaliDate.month + '/' + createAtJalaliDate.day + ' (' + diffDays + ')'}
         </p>
-      </div>
+      </div>;
     }
-    return null
+    return null;
   };
 
   useEffect(() => {
@@ -115,14 +118,26 @@ export const OptionStats = (props: IOptionStatsProps) => {
             <SearchOptionStats
               switchValue={switchId}
               instrumentValue={instrumentId}
+              FromDateValue={fromDate}
+              toDateValue={toDate}
+              fromDateRange={(from) => {
+                 setFromDate(from);
+                 setToDate(undefined);
+              }}
+              toDateRange={(to) => {
+                setToDate(to);
+                fromDate && props.getEntities(0, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`
+                  , instrumentId?.value, switchId, fromDate, to);
+                fromDate && props.reset();
+              }}
               instrumentId={(id) => {
                 setInstrumentId(id);
-                props.getEntities(0, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}` , id?.value , switchId);
+                props.getEntities(0, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`, id?.value, switchId, fromDate, toDate);
                 props.reset();
               }}
-              switch={(id:number) => {
+              switch={(id: number) => {
                 setSwitchId(id);
-                props.getEntities(0, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}` , instrumentId?.value , id);
+                props.getEntities(0, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`, instrumentId?.value, id, fromDate, toDate);
                 props.reset();
               }}/>
           </div>
@@ -199,32 +214,38 @@ export const OptionStats = (props: IOptionStatsProps) => {
               <Column title={<Translate contentKey="eTradeApp.optionStats.Last"> Last</Translate>}
                       dataIndex="callStockWatch" key="callStockWatchLast" render={(callStockWatch, row: any) =>
                 <div
-                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{callStockWatch?.last}</Number></div>
+                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{callStockWatch?.last}</Number></div>
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.OpenInterest"> Open Interest</Translate>}
                       dataIndex="callStockWatch" key="callStockWatchOpenInterest" render={(callStockWatch, row: any) =>
                 <div
-                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{callStockWatch?.openInterest}</Number></div>
+                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{callStockWatch?.openInterest}</Number></div>
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.BidVolume"> Bid Volume</Translate>}
                       dataIndex="callBidAsk" key="callBidAskBidQuantity" render={(callBidAsk, row: any) =>
                 <div
-                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{callBidAsk.bidQuantity}</Number></div>
+                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{callBidAsk.bidQuantity}</Number></div>
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.BidPrice"> Bid Price</Translate>}
                       dataIndex="callBidAsk" key="callBidAskBidPrice" render={(callBidAsk, row: any) =>
                 <div
-                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{callBidAsk.bidPrice}</Number></div>
+                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{callBidAsk.bidPrice}</Number></div>
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.AskPrice"> Ask Price</Translate>}
                       dataIndex="callBidAsk" key="callBidAskAskPrice" render={(callBidAsk, row: any) =>
                 <div
-                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{callBidAsk.askPrice}</Number></div>
+                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{callBidAsk.askPrice}</Number></div>
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.AskVolume"> Ask Volume</Translate>}
                       dataIndex="callBidAsk" key="callBidAskAskQuantity" render={(callBidAsk, row: any) =>
                 <div
-                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{callBidAsk.askQuantity}</Number></div>
+                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{callBidAsk.askQuantity}</Number></div>
               }/>
 
             </ColumnGroup>
@@ -235,7 +256,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                     showSorterTooltip={false}
                     title={<Translate contentKey="eTradeApp.option.strikePrice">Strike Price</Translate>}
                     dataIndex="option" key="strikePrice" render={(option) =>
-              <div className={`padding-col`}> <Number>{option.strikePrice}</Number></div>
+              <div className={`padding-col`}><Number>{option.strikePrice}</Number></div>
             }/>
             <Column className="bg-color-gray"
                     width={210}
@@ -261,41 +282,48 @@ export const OptionStats = (props: IOptionStatsProps) => {
               <Column title={<Translate contentKey="eTradeApp.optionStats.BidVolume"> Bid Volume</Translate>}
                       dataIndex="putBidAsk" key="putBidAskBidQuantity" render={(putBidAsk, row: any) =>
                 <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{putBidAsk.bidQuantity}</Number></div>
+                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{putBidAsk.bidQuantity}</Number></div>
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.BidPrice"> Bid Price</Translate>}
                       dataIndex="putBidAsk" key="putBidAskBidPrice" render={(putBidAsk, row: any) =>
                 <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{putBidAsk.bidPrice}</Number></div>
+                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{putBidAsk.bidPrice}</Number></div>
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.AskPrice"> Ask Price</Translate>}
-                      dataIndex="putBidAsk" key="putBidAskAskPrice" render={(putBidAsk , row:any) =>
+                      dataIndex="putBidAsk" key="putBidAskAskPrice" render={(putBidAsk, row: any) =>
                 <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{putBidAsk.askPrice}</Number></div>
+                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{putBidAsk.askPrice}</Number></div>
 
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.AskVolume"> Ask Volume</Translate>}
-                      dataIndex="putBidAsk" key="putBidAskAskQuantity" render={(putBidAsk , row:any) =>
+                      dataIndex="putBidAsk" key="putBidAskAskQuantity" render={(putBidAsk, row: any) =>
                 <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{putBidAsk.askQuantity}</Number></div>
+                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{putBidAsk.askQuantity}</Number></div>
 
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.OpenInterest"> Open Interest</Translate>}
-                      dataIndex="putStockWatch" key="putStockWatchOpenInterest" render={(putStockWatch , row:any) =>
+                      dataIndex="putStockWatch" key="putStockWatchOpenInterest" render={(putStockWatch, row: any) =>
                 <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{putStockWatch?.openInterest}</Number></div>
+                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{putStockWatch?.openInterest}</Number></div>
 
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.Last"> Last</Translate>}
-                      dataIndex="putStockWatch" key="putStockWatchLast" render={(putStockWatch , row:any) =>
+                      dataIndex="putStockWatch" key="putStockWatchLast" render={(putStockWatch, row: any) =>
                 <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{putStockWatch?.last}</Number></div>
+                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{putStockWatch?.last}</Number></div>
 
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.TradeVolume"> Trade Volume</Translate>}
-                      dataIndex="putStockWatch" key="putStockWatchTradeVolume" render={(putStockWatch , row:any) =>
+                      dataIndex="putStockWatch" key="putStockWatchTradeVolume" render={(putStockWatch, row: any) =>
                 <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{putStockWatch?.tradeVolume}</Number></div>
+                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{putStockWatch?.tradeVolume}</Number></div>
               }/>
               <Column sorter={true}
                       sortDirections={['ascend', 'descend']}
@@ -303,9 +331,10 @@ export const OptionStats = (props: IOptionStatsProps) => {
                         paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
                       showSorterTooltip={false}
                       title={<Translate contentKey="eTradeApp.optionStats.Leverage"> Leverage</Translate>}
-                      dataIndex="option" key="putLeverage" render={(option , row:any) =>
+                      dataIndex="option" key="putLeverage" render={(option, row: any) =>
                 <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{option.putLeverage}</Number></div>
+                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{option.putLeverage}</Number></div>
               }/>
               <Column sorter={true}
                       sortDirections={['ascend', 'descend']}
@@ -313,9 +342,10 @@ export const OptionStats = (props: IOptionStatsProps) => {
                         paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
                       showSorterTooltip={false}
                       title={<Translate contentKey="eTradeApp.optionStats.BreakEven"> Break Even</Translate>}
-                      dataIndex="option" key="putBreakEven" render={(option , row:any) =>
+                      dataIndex="option" key="putBreakEven" render={(option, row: any) =>
                 <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{option.putBreakEven}</Number></div>
+                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{option.putBreakEven}</Number></div>
 
               }/>
               <Column sorter={true}
@@ -324,20 +354,23 @@ export const OptionStats = (props: IOptionStatsProps) => {
                         paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
                       showSorterTooltip={false}
                       title={<Translate contentKey="eTradeApp.optionStats.AskPriceToBS"> Ask Price To BS</Translate>}
-                      dataIndex="option" key="putAskToBS" render={(option , row:any) =>
+                      dataIndex="option" key="putAskToBS" render={(option, row: any) =>
                 <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{option.putAskToBS}</Number></div>
+                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{option.putAskToBS}</Number></div>
 
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.EffectivePrice"> Effective Price</Translate>}
-                      dataIndex="option" key="optionPutEffectivePrice" render={(option , row:any) =>
+                      dataIndex="option" key="optionPutEffectivePrice" render={(option, row: any) =>
                 <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{option.putEffectivePrice}</Number></div>
+                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{option.putEffectivePrice}</Number></div>
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.BlackScholes30"> Black Scholes 30</Translate>}
-                      dataIndex="option" key="optionPutBS30" render={(option , row:any) =>
+                      dataIndex="option" key="optionPutBS30" render={(option, row: any) =>
                 <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}> <Number>{option.putBS30}</Number></div>
+                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{option.putBS30}</Number></div>
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
                       dataIndex="option" key="option" render={(option, row: any) =>
@@ -351,17 +384,15 @@ export const OptionStats = (props: IOptionStatsProps) => {
               }/>
             </ColumnGroup>
           </Table>
-          {loading ? <Spin/> : ""}
+          {loading ? <Spin/> : ''}
         </div>
 
 
       ) : (
         !loading && (
-        <Spin>
-          <div className="alert alert-warning">
-            <Translate contentKey="eTradeApp.optionStats.home.notFound">No Option Stats found</Translate>
-          </div>
-        </Spin>
+            <div className="alert alert-warning">
+              <Translate contentKey="eTradeApp.optionStats.home.notFound">No Option Stats found</Translate>
+            </div>
         )
       )}
     </InfiniteScroll>

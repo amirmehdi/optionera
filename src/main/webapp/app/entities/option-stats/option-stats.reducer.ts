@@ -106,11 +106,12 @@ const apiUrl = 'api/option-stats';
 
 // Actions
 
-export const getEntities: any = (page, size, sort, instrumentId?, callInTheMoney?) => {
+export const getEntities: any = (page, size, sort, instrumentId?, callInTheMoney?, greaterThanOrEqual?, lessThanOrEqual?) => {
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}${
     instrumentId ? `&instrumentId.equals=${instrumentId}` : ''
-  }${callInTheMoney ? `&callInTheMoney.equals=${callInTheMoney}` : ''}`;
-
+  }${callInTheMoney ? `&callInTheMoney.equals=${callInTheMoney}` : ''}${
+    greaterThanOrEqual ? `&expDate.greaterThanOrEqual=${greaterThanOrEqual}` : ''
+  }${lessThanOrEqual ? `&expDate.lessThanOrEqual=${lessThanOrEqual}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_OPTIONSTATS_LIST,
     payload: axios.get<IOptionStats>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`)
