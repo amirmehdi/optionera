@@ -368,7 +368,7 @@ export const Home = (props: IHomeProp) => {
                       </li>*/}
                       <li>
                         <a className="footer-blog footer-contact" href="#">
-                          <i style={{marginRight: 5}} className="icon-mail"/> info@optionera.ir
+                          <i style={{marginRight: 5}} className="icon-mail"/> optionera@gmail.com
                         </a>
                       </li>
                       <li>

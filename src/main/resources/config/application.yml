@@ -147,16 +147,16 @@ jhipster:
   #     allow-credentials: true
   #     max-age: 1800
   mail:
-    from: eTrade@localhost
+    from: optionera@gmail.com
   swagger:
     default-include-pattern: /api/.*
-    title: eTrade API
+    title: Optionera API
     description: eTrade API documentation
     version: 0.0.1
     terms-of-service-url:
-    contact-name:
-    contact-url:
-    contact-email:
+    contact-name: optionera
+    contact-url: optionera.ir
+    contact-email: optionera@gmail.com
     license:
     license-url:
 # ===================================================================
