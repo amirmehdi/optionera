@@ -118,7 +118,7 @@ export const Home = (props: IHomeProp) => {
             </div>
           </div>
         </section>
-        <section className="probootstrap-section probootstrap-bg-white probootstrap-zindex-above-showcase">
+        <section id="features" className="probootstrap-section probootstrap-bg-white probootstrap-zindex-above-showcase">
           <div className="container">
             <div className="row">
               <div
@@ -286,60 +286,41 @@ export const Home = (props: IHomeProp) => {
           <Row>
             <Col md="12">
               <Row>
-                <Col md="3">
+                <Col md="6">
                   <div className="probootstrap-footer-widget">
-                    <h3>ABOUT UNAPP</h3>
-                    <p style={{fontSize: 13}}>Far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics</p>
+                    <h3><Translate contentKey="home.footer.aboutApp">ABOUT Optionera</Translate></h3>
+                    <p style={{fontSize: 14}}><Translate contentKey="home.footer.about"></Translate></p>
                     <ul className="probootstrap-footer-social">
                       <li>
-                        <a href="#">
-                          <i className="icon-twitter"/>
+                        <a href="https://t.me/optionera">
+                          <i className="icon-telegram"/>
                         </a>
                       </li>
                       <li>
-                        <a href="#">
-                          <i className="icon-facebook"/>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <i className="icon-github"/>
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <i className="icon-linkedin"/>
+                        <a href="https://t.me/Optionera_admin">
+                          <i className="icon-chat"/>
                         </a>
                       </li>
                     </ul>
                   </div>
                 </Col>
-                <Col md="3">
+                <Col md="2">
                   <div className="probootstrap-footer-widget">
-                    <h3>INFORMATION</h3>
+                    <h3><Translate contentKey="home.footer.info">INFORMATION</Translate></h3>
                     <ul className="footer-information">
                       <li>
-                        <a href="#"> <i className="icon-check"/> Home</a>
+                        <a href="#"> <i className="icon-check"/> <Translate contentKey="global.menu.home"> Home</Translate></a>
                       </li>
                       <li>
-                        <a href="#"> <i className="icon-check"/> Gallery</a>
+                        <a href="#features"> <i className="icon-check"/> <Translate contentKey="home.features.title">Platform Features</Translate></a>
                       </li>
                       <li>
-                        <a href="#"> <i className="icon-check"/> About</a>
-                      </li>
-                      <li>
-                        <a href="#"> <i className="icon-check"/>  Blog</a>
-                      </li>
-                      <li>
-                        <a href="#"> <i className="icon-check"/>  Contact</a>
-                      </li>
-                      <li>
-                        <a href="#"> <i className="icon-check"/>  Privacy</a>
+                        <a href="#pricing"> <i className="icon-check"/> <Translate contentKey="home.pricing.title">Pricing</Translate></a>
                       </li>
                     </ul>
                   </div>
                 </Col>
-                <Col md="4">
+                {/* <Col md="4">
                   <div className="probootstrap-footer-widget">
                     <h3>RECENT BLOG</h3>
                     <ul className="footer-information">
@@ -372,27 +353,27 @@ export const Home = (props: IHomeProp) => {
                       </li>
                     </ul>
                   </div>
-                </Col>
-                <Col md="2">
+                </Col>*/}
+                <Col md="4">
                   <div className="probootstrap-footer-widget">
-                    <h3>CONTACT INFO</h3>
+                    <h3><Translate contentKey="home.footer.contactInfo">CONTACT INFO</Translate></h3>
                     <ul className="footer-information">
-                      <li>
+                      {/* <li>
                         291 South 21th Street,
                         Suite 721 New York NY 10016
-                      </li>
-                      <li>
+                      </li>*/}
+                      {/* <li>
                         <a className="footer-blog footer-contact" href="#">
                           <i style={{marginRight: 5}} className="icon-phone"/> 1235 2355 98 </a>
-                      </li>
+                      </li>*/}
                       <li>
                         <a className="footer-blog footer-contact" href="#">
-                          <i style={{marginRight: 5}} className="icon-mail"/> info@yoursite.com
+                          <i style={{marginRight: 5}} className="icon-mail"/> info@optionera.ir
                         </a>
                       </li>
                       <li>
                         <a className="footer-blog footer-contact" href="#">
-                          <i style={{marginRight: 5}} className="icon-location"/> yourwebsite.com
+                          <i style={{marginRight: 5}} className="icon-location"/> optionera.ir
                         </a>
                       </li>
                     </ul>
