@@ -147,7 +147,7 @@ jhipster:
 application:
   telegram:
     token: 1154072624:AAE9byP-2eXRfxZPHeZ92ffjd0LaO4Ys1iA
-    #    publicchat: -1001468700748
+    #publicchat: -1001468700748
     publicchat: -1001318208609
     privatechat: -1001427342656
   schedules:

@@ -14,6 +14,7 @@ import com.gitlab.amirmehdi.util.JalaliCalendar;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -48,9 +49,11 @@ public abstract class Strategy {
             "<a href='%s'>TSETMC</a> \n" +
             "\uD83D\uDCDDدارایی پایه: %s " +
             "<a href='%s'>TSETMC</a> \n" +
-            "\uD83D\uDDD3تاریخ: %s \n" +
-            "⏰ساعت: %s\n" +
-            "\uD83D\uDCB0قیمت بهترین عرضه: %s\n" +
+            "⏰تاریخ: %s \n" +
+            "⏳روز تا سررسید: %s \n" +
+            "\uD83D\uDD04حجم معاملات: %s\n" +
+            "↔️بازه ی روز: %s\n" +
+            "\uD83D\uDCB0بهترین عرضه: %s\n" +
             "\uD83D\uDD06تعداد عرضه: %s\n" +
             "\uD83D\uDCB2بلک شولز: %s\n" +
             "〽️سر به سری: %s\n" +
@@ -59,12 +62,14 @@ public abstract class Strategy {
             "\uD83D\uDEA8ریسک: #%s\n" +
             "@optionera";
         return String.format(s
-            , "ض" + optionStats.getOption().getName()
+            , "ض" + optionStats.getOption().getName() + '-' + optionStats.getOption().getStrikePrice() + '-' + new JalaliCalendar(optionStats.getOption().getExpDate()).toStringRTL()
             , getTseLink(optionStats.getOption().getCallTseId())
             , optionStats.getOption().getInstrument().getName()
             , getTseLink(optionStats.getOption().getInstrument().getTseId())
-            , new JalaliCalendar(new Date()).toStringRTL()
-            , LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_TIME)
+            , new JalaliCalendar(new Date()).toStringRTL() + '-' + LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_TIME)
+            , ChronoUnit.DAYS.between(LocalDate.now(), optionStats.getOption().getExpDate())
+            , optionStats.getCallStockWatch().getTradeVolume()
+            , optionStats.getCallStockWatch().getLow() + '-' + optionStats.getCallStockWatch().getHigh()
             , optionStats.getCallBidAsk().getAskPrice()
             , optionStats.getCallBidAsk().getAskQuantity()
             , optionStats.getCallBlackScholes30()
