@@ -1,7 +1,6 @@
 package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.OptionStats;
-import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.security.SecurityUtils;
 import com.gitlab.amirmehdi.service.OptionStatsService;
 import com.gitlab.amirmehdi.service.dto.OptionCriteria;
@@ -46,8 +45,12 @@ public class OptionStatsResource {
     @GetMapping("/option-stats")
     public ResponseEntity<List<OptionStats>> getAllOptions(OptionCriteria criteria, Pageable pageable) {
         log.debug("REST request to get a page of OptionStats");
-        if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.USER)) {
-            criteria.setExpDate(new LocalDateFilter().setLessThan(LocalDate.now().plusDays(30)));
+        if (SecurityUtils.isCurrentUserInRoleJustUser()) {
+            if (criteria.getExpDate() == null) {
+                criteria.setExpDate(new LocalDateFilter().setLessThan(LocalDate.now().plusDays(30)));
+            } else if (criteria.getExpDate().getLessThan() == null || criteria.getExpDate().getLessThan().isAfter(LocalDate.now().plusDays(30))) {
+                criteria.getExpDate().setLessThan(LocalDate.now().plusDays(30));
+            }
         }
         if (pageable.getSort().isSorted()) {
             if (pageable.getSort().get().count() == 1) {

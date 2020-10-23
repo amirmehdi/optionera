@@ -77,6 +77,13 @@ public final class SecurityUtils {
             getAuthorities(authentication).anyMatch(authority::equals);
     }
 
+    public static boolean isCurrentUserInRoleJustUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null &&
+            getAuthorities(authentication).anyMatch(AuthoritiesConstants.USER::equals) &&
+            getAuthorities(authentication).noneMatch(AuthoritiesConstants.ADMIN::equals);
+    }
+
     private static Stream<String> getAuthorities(Authentication authentication) {
         return authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority);
