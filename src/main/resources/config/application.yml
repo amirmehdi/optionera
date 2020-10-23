@@ -170,3 +170,4 @@ jhipster:
 
 application:
   oa-base-url: https://api.algo.ir
+  unusual1Threshold: -10
