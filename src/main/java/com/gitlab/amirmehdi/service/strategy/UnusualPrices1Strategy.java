@@ -16,7 +16,6 @@ import net.jodah.expiringmap.ExpiringMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 public class UnusualPrices1Strategy extends Strategy {
     private final Map<Long, Float> cachedIsin = ExpiringMap.builder()
         .expirationPolicy(ExpiringMap.ExpirationPolicy.CREATED)
-        .expiration(5, TimeUnit.MINUTES)
+        .expiration(15, TimeUnit.MINUTES)
         .build();
 
     @Autowired
@@ -37,17 +36,12 @@ public class UnusualPrices1Strategy extends Strategy {
         super(optionRepository, optionStatsService, market);
     }
 
-    @PostConstruct
-    public void a(){
-        System.out.println(properties.getUnusual1Threshold());
-    }
-
     @Override
     public StrategyResponse getSignals() {
         return StrategyResponse.builder()
             .callSignals(optionRepository.findAllByCallBreakEvenIsLessThanEqual(properties.getUnusual1Threshold())
                 .stream()
-                .filter(option -> !cachedIsin.containsKey(option.getId()) || cachedIsin.get(option.getId()) > option.getCallBreakEven())
+                .filter(option -> !cachedIsin.containsKey(option.getId()) || cachedIsin.get(option.getId()) - 1 > option.getCallBreakEven())
                 .peek(option -> cachedIsin.put(option.getId(), option.getCallBreakEven()))
                 .map(option -> getSignal(option.getCallIsin()))
                 .collect(Collectors.toList()))
