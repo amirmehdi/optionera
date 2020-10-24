@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
@@ -29,6 +30,8 @@ public class MetricService {
         this.market = market;
     }
 
+    HashMap<String,AtomicLong> metricValues = new HashMap<>();
+
     @Scheduled(cron = "0,30 * * * * *")
     public void publishMetricsOfBeingRealTime() {
         if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
@@ -36,12 +39,22 @@ public class MetricService {
         instrumentRepository.findAll().forEach(instrument -> {
             StockWatch stockWatch = market.getStockWatch(instrument.getIsin());
             if (stockWatch != null) {
-                registry.gauge("omid.rlc.stockwatch", Collections.singleton(new ImmutableTag("isin", stockWatch.getIsin())), new AtomicLong((stockWatch.getDateTime().getTime() - new Date().getTime()) / 1000));
+                long value = (new Date().getTime() - stockWatch.getDateTime().getTime()) / 1000;
+                reportValue("omid.rlc.stockwatch", stockWatch.getIsin(), value);
             }
             BidAsk bidAsk = market.getBidAsk(instrument.getIsin());
             if (bidAsk != null) {
-                registry.gauge("omid.rlc.bidask", Collections.singleton(new ImmutableTag("isin", bidAsk.getIsin())), new AtomicLong((bidAsk.getDateTime().getTime() - new Date().getTime()) / 1000));
+                long value = (new Date().getTime() - bidAsk.getDateTime().getTime()) / 1000;
+                reportValue("omid.rlc.bidask", bidAsk.getIsin(), value);
             }
         });
+    }
+
+    protected void reportValue(String metricName, String isin, long value) {
+        if (metricValues.containsKey(metricName + isin)) {
+            metricValues.get(metricName + isin).set(value);
+        } else {
+            registry.gauge(metricName, Collections.singleton(new ImmutableTag("isin", isin)), new AtomicLong(value));
+        }
     }
 }
