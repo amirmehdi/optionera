@@ -30,11 +30,11 @@ public class StrategyService {
 
     private final TaskScheduler executor;
     private final HashMap<String, Strategy> strategies = new HashMap<>();
-    @Value("${application.schedules.timecheck}")
+    @Value("${application.schedule.timeCheck}")
     private boolean marketTimeCheck;
     @Value("${application.telegram.token}")
     private String apiToken;
-    @Value("${application.telegram.privatechat}")
+    @Value("${application.telegram.privateChat}")
     private String privateChannelId;
 
     public StrategyService(TelegramMessageSender telegramMessageSender, SignalRepository signalRepository, OrderService orderService, OptionRepository optionRepository, TaskScheduler executor) {

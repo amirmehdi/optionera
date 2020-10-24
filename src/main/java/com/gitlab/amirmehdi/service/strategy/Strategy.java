@@ -27,7 +27,7 @@ public abstract class Strategy {
     protected final OptionStatsService optionStatsService;
     protected final Market market;
 
-    @Value("${application.telegram.publicchat}")
+    @Value("${application.telegram.publicChat}")
     protected String optionEraChatId;
 
 

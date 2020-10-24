@@ -113,14 +113,16 @@ jhipster:
 # More documentation is available at:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
-
 application:
   oa-base-url: https://api.algo.ir
   telegram:
     token: 1154072624:AAE9byP-2eXRfxZPHeZ92ffjd0LaO4Ys1iA
-    publicchat: -1001468700748
-    privatechat: -1001468700748
-  schedules:
-    timecheck: true
+    publicChat: -1001468700748
+    privateChat: -1001468700748
+  schedule:
+    timeCheck: true
+    arbitrage: 30000
     market: 60000
     interest: 120000
+  strategy:
+    unusual1Threshold: -10

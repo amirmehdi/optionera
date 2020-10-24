@@ -15,5 +15,31 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 public class ApplicationProperties {
     private String oaBaseUrl;
-    private float unusual1Threshold;
+
+    private final Schedule schedule = new Schedule();
+    private final Telegram telegram = new Telegram();
+    private final Strategy strategy = new Strategy();
+
+    @Getter
+    @Setter
+    public static class Schedule{
+        private boolean timeCheck;
+        private String arbitrage;
+        private String market;
+        private String interest;
+    }
+
+    @Getter
+    @Setter
+    public static class Telegram{
+        private String token;
+        private String publicChat;
+        private String privateChat;
+    }
+
+    @Getter
+    @Setter
+    public static class Strategy{
+        private float unusual1Threshold;
+    }
 }

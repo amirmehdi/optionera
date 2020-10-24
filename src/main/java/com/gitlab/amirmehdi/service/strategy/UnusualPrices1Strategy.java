@@ -39,7 +39,7 @@ public class UnusualPrices1Strategy extends Strategy {
     @Override
     public StrategyResponse getSignals() {
         return StrategyResponse.builder()
-            .callSignals(optionRepository.findAllByCallBreakEvenIsLessThanEqual(properties.getUnusual1Threshold())
+            .callSignals(optionRepository.findAllByCallBreakEvenIsLessThanEqual(properties.getStrategy().getUnusual1Threshold())
                 .stream()
                 .filter(option -> !cachedIsin.containsKey(option.getId()) || cachedIsin.get(option.getId()) - 1 > option.getCallBreakEven())
                 .peek(option -> cachedIsin.put(option.getId(), option.getCallBreakEven()))
