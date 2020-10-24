@@ -1,6 +1,5 @@
 package com.gitlab.amirmehdi.service;
 
-import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Signal;
 import com.gitlab.amirmehdi.repository.OptionRepository;
@@ -16,7 +15,10 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Log4j2
@@ -84,10 +86,6 @@ public class StrategyService {
                 if (StrategyResponse.SendOrderType.NEED_ALLOW.equals(s.getSendOrderType())) {
                     s.getCallSignals()
                         .stream()
-                        .filter(signal -> {
-                            Optional<Option> option = optionRepository.findByCallIsin(signal.getIsin());
-                            return option.filter(value -> Arrays.asList("IRO1BPAR0001", "IRO1MKBT0001").contains(value.getInstrument().getIsin())).isPresent();
-                        })
                         .map(signal -> new TelegramMessageDto(apiToken
                             , privateChatId
                             , strategy.getMessageTemplateWithOrderLink(signal)))
