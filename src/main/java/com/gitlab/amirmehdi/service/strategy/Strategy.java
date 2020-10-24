@@ -62,14 +62,14 @@ public abstract class Strategy {
             "\uD83D\uDEA8ریسک: #%s\n" +
             "@optionera";
         return String.format(s
-            , "ض" + optionStats.getOption().getName() + '-' + optionStats.getOption().getStrikePrice() + '-' + new JalaliCalendar(optionStats.getOption().getExpDate()).toStringRTL()
+            , "ض" + optionStats.getOption().getName() + "-" + optionStats.getOption().getStrikePrice() + '-' + new JalaliCalendar(optionStats.getOption().getExpDate()).toStringRTL()
             , getTseLink(optionStats.getOption().getCallTseId())
             , optionStats.getOption().getInstrument().getName()
             , getTseLink(optionStats.getOption().getInstrument().getTseId())
-            , new JalaliCalendar(new Date()).toStringRTL() + '-' + LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_TIME)
+            , new JalaliCalendar(new Date()).toStringRTL() + "-" + LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_TIME)
             , ChronoUnit.DAYS.between(LocalDate.now(), optionStats.getOption().getExpDate())
             , optionStats.getCallStockWatch().getTradeVolume()
-            , optionStats.getCallStockWatch().getLow() + '-' + optionStats.getCallStockWatch().getHigh()
+            , optionStats.getCallStockWatch().getLow() + " - " + optionStats.getCallStockWatch().getHigh()
             , optionStats.getCallBidAsk().getAskPrice()
             , optionStats.getCallBidAsk().getAskQuantity()
             , optionStats.getCallBlackScholes30()
