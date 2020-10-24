@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class MetricService {
@@ -35,11 +36,11 @@ public class MetricService {
         instrumentRepository.findAll().forEach(instrument -> {
             StockWatch stockWatch = market.getStockWatch(instrument.getIsin());
             if (stockWatch != null) {
-                registry.gauge("omid.rlc.stockwatch", Collections.singleton(new ImmutableTag("isin", stockWatch.getIsin())), (stockWatch.getDateTime().getTime() - new Date().getTime()) / 1000);
+                registry.gauge("omid.rlc.stockwatch", Collections.singleton(new ImmutableTag("isin", stockWatch.getIsin())), new AtomicLong((stockWatch.getDateTime().getTime() - new Date().getTime()) / 1000));
             }
             BidAsk bidAsk = market.getBidAsk(instrument.getIsin());
             if (bidAsk != null) {
-                registry.gauge("omid.rlc.bidask", Collections.singleton(new ImmutableTag("isin", bidAsk.getIsin())), (bidAsk.getDateTime().getTime() - new Date().getTime()) / 1000);
+                registry.gauge("omid.rlc.bidask", Collections.singleton(new ImmutableTag("isin", bidAsk.getIsin())), new AtomicLong((bidAsk.getDateTime().getTime() - new Date().getTime()) / 1000));
             }
         });
     }
