@@ -51,10 +51,11 @@ public class MetricService {
     }
 
     protected void reportValue(String metricName, String isin, long value) {
-        if (metricValues.containsKey(metricName + isin)) {
-            metricValues.get(metricName + isin).set(value);
+        String mapKey = metricName + isin;
+        if (metricValues.containsKey(mapKey)) {
+            metricValues.get(mapKey).set(value);
         } else {
-            registry.gauge(metricName, Collections.singleton(new ImmutableTag("isin", isin)), new AtomicLong(value));
+            metricValues.put(mapKey,registry.gauge(metricName, Collections.singleton(new ImmutableTag("isin", isin)), new AtomicLong(value)));
         }
     }
 }
