@@ -20,7 +20,7 @@ public class MetricService {
     private final MeterRegistry registry;
     private final InstrumentRepository instrumentRepository;
     private final Market market;
-
+    HashMap<String, AtomicLong> metricValues = new HashMap<>();
     @Value("${application.schedule.timeCheck}")
     private boolean marketTimeCheck;
 
@@ -30,8 +30,6 @@ public class MetricService {
         this.market = market;
     }
 
-    HashMap<String,AtomicLong> metricValues = new HashMap<>();
-
     @Scheduled(cron = "0,30 * * * * *")
     public void publishMetricsOfBeingRealTime() {
         if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
@@ -40,22 +38,22 @@ public class MetricService {
             StockWatch stockWatch = market.getStockWatch(instrument.getIsin());
             if (stockWatch != null) {
                 long value = (new Date().getTime() - stockWatch.getDateTime().getTime()) / 1000;
-                reportValue("omid.rlc.stockwatch", stockWatch.getIsin(), value);
+                reportMetric("omid.rlc.stockwatch", new ImmutableTag("isin", stockWatch.getIsin()), value);
             }
             BidAsk bidAsk = market.getBidAsk(instrument.getIsin());
             if (bidAsk != null) {
                 long value = (new Date().getTime() - bidAsk.getDateTime().getTime()) / 1000;
-                reportValue("omid.rlc.bidask", bidAsk.getIsin(), value);
+                reportMetric("omid.rlc.bidask", new ImmutableTag("isin", bidAsk.getIsin()), value);
             }
         });
     }
 
-    protected void reportValue(String metricName, String isin, long value) {
-        String mapKey = metricName + isin;
+    public void reportMetric(String name, ImmutableTag immutableTag, long value) {
+        String mapKey = name + immutableTag.getValue();
         if (metricValues.containsKey(mapKey)) {
             metricValues.get(mapKey).set(value);
         } else {
-            metricValues.put(mapKey,registry.gauge(metricName, Collections.singleton(new ImmutableTag("isin", isin)), new AtomicLong(value)));
+            metricValues.put(mapKey, registry.gauge(name, Collections.singleton(immutableTag), new AtomicLong(value)));
         }
     }
 }

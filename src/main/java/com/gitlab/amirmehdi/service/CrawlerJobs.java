@@ -8,6 +8,7 @@ import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import com.gitlab.amirmehdi.service.dto.tsemodels.BDatum;
 import com.gitlab.amirmehdi.service.dto.tsemodels.OptionResponse;
 import com.gitlab.amirmehdi.util.DateUtil;
+import io.micrometer.core.instrument.ImmutableTag;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 
@@ -31,9 +33,17 @@ public class CrawlerJobs {
     private final OmidRLCConsumer omidRLCConsumer;
     private final StrategyService strategyService;
     private final Market market;
+    private final MetricService metricService;
+    private Date firstUpdate;
+    private Date bidAskLastUpdate;
+    private AtomicLong bidAskSuccessCount = new AtomicLong(0);
+    private AtomicLong bidAskErrorCount = new AtomicLong(0);
 
+    private Date stockWatchLastUpdate;
+    private AtomicLong stockWatchSuccessCount = new AtomicLong(0);
+    private AtomicLong stockWatchErrorCount = new AtomicLong(0);
 
-    public CrawlerJobs(RestTemplate restTemplate, OptionService optionService, OptionStatsService optionStatsService, InstrumentService instrumentRepository, OmidRLCConsumer omidRLCConsumer, StrategyService strategyService, Market market) {
+    public CrawlerJobs(RestTemplate restTemplate, OptionService optionService, OptionStatsService optionStatsService, InstrumentService instrumentRepository, OmidRLCConsumer omidRLCConsumer, StrategyService strategyService, Market market, MetricService metricService) {
         this.restTemplate = restTemplate;
         this.optionService = optionService;
         this.optionStatsService = optionStatsService;
@@ -41,8 +51,8 @@ public class CrawlerJobs {
         this.omidRLCConsumer = omidRLCConsumer;
         this.strategyService = strategyService;
         this.market = market;
+        this.metricService = metricService;
     }
-
 
     @SneakyThrows
     public void arbitrageOptionsUpdater() {
@@ -66,6 +76,20 @@ public class CrawlerJobs {
     }
 
     public void marketUpdater() {
+        if (bidAskLastUpdate != null) {
+            metricService.reportMetric("crawler.updater.bidask.seconds", new ImmutableTag("status", "all"), (bidAskLastUpdate.getTime() - firstUpdate.getTime()) / 1000);
+            metricService.reportMetric("crawler.updater.bidask.count", new ImmutableTag("status", "success"), bidAskSuccessCount.get());
+            metricService.reportMetric("crawler.updater.bidask.count", new ImmutableTag("status", "error"), bidAskErrorCount.get());
+            metricService.reportMetric("crawler.updater.stockwatch.seconds", new ImmutableTag("status", "all"), (stockWatchLastUpdate.getTime() - firstUpdate.getTime()) / 1000);
+            metricService.reportMetric("crawler.updater.stockwatch.count", new ImmutableTag("status", "success"), stockWatchSuccessCount.get());
+            metricService.reportMetric("crawler.updater.stockwatch.count", new ImmutableTag("status", "error"), stockWatchErrorCount.get());
+
+        }
+        firstUpdate = new Date();
+        bidAskSuccessCount.set(0);
+        stockWatchSuccessCount.set(0);
+        bidAskErrorCount.set(0);
+        stockWatchErrorCount.set(0);
         updateOptionsMarket();
         updateInstrumentsMarket();
     }
@@ -88,17 +112,23 @@ public class CrawlerJobs {
                     omidRLCConsumer.getBulkBidAsk(optionsIsin).whenCompleteAsync((bidAsks, throwable) -> {
                         if (throwable != null) {
                             throwable.printStackTrace();
+                            bidAskErrorCount.incrementAndGet();
                         } else {
                             log.debug("update bidask option stat {}", s);
                             market.saveAllBidAsk(bidAsks);
+                            bidAskSuccessCount.incrementAndGet();
+                            bidAskLastUpdate = new Date();
                         }
                     });
                     omidRLCConsumer.getBulkStockWatch(optionsIsin).whenCompleteAsync((stockWatches, throwable) -> {
                         if (throwable != null) {
                             throwable.printStackTrace();
+                            stockWatchErrorCount.incrementAndGet();
                         } else {
                             log.debug("update stockwatch option stat {}", s);
                             market.saveAllStockWatch(stockWatches);
+                            stockWatchSuccessCount.incrementAndGet();
+                            stockWatchLastUpdate = new Date();
                         }
                     });
                 } catch (Exception e) {
