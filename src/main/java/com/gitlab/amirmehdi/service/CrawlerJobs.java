@@ -91,7 +91,6 @@ public class CrawlerJobs {
         bidAskErrorCount.set(0);
         stockWatchErrorCount.set(0);
         updateOptionsMarket();
-        updateInstrumentsMarket();
     }
 
     private void updateOptionsMarket() {
@@ -100,16 +99,19 @@ public class CrawlerJobs {
             .collect(Collectors.groupingBy(option -> option.getInstrument().getIsin()))
             .forEach((s, optionStats) -> {
                 StockWatch stockWatch = market.getStockWatch(s);
-                if (stockWatch == null || stockWatch.getState() == null || !stockWatch.getState().equals("A")) {
-                    return;
+                if (stockWatch != null && stockWatch.getState() != null && !stockWatch.getState().equals("A")) {
+                    if (Math.abs((new Date().getTime() - stockWatch.getDateTime().getTime()) / 1000) < 60) {
+                        return;
+                    }
                 }
                 List<String> optionsIsin = new ArrayList<>();
+                optionsIsin.add(s);
                 for (Option option : optionStats) {
                     optionsIsin.add(option.getCallIsin());
                     optionsIsin.add(option.getPutIsin());
                 }
                 try {
-                    omidRLCConsumer.getBulkBidAsk(optionsIsin).whenCompleteAsync((bidAsks, throwable) -> {
+                    omidRLCConsumer.getBulkBidAsk(optionsIsin).whenComplete((bidAsks, throwable) -> {
                         if (throwable != null) {
                             throwable.printStackTrace();
                             bidAskErrorCount.incrementAndGet();
@@ -120,13 +122,14 @@ public class CrawlerJobs {
                             bidAskLastUpdate = new Date();
                         }
                     });
-                    omidRLCConsumer.getBulkStockWatch(optionsIsin).whenCompleteAsync((stockWatches, throwable) -> {
+                    omidRLCConsumer.getBulkStockWatch(optionsIsin).whenComplete((stockWatches, throwable) -> {
                         if (throwable != null) {
                             throwable.printStackTrace();
                             stockWatchErrorCount.incrementAndGet();
                         } else {
                             log.debug("update stockwatch option stat {}", s);
                             market.saveAllStockWatch(stockWatches);
+                            optionService.updateParams(s);
                             stockWatchSuccessCount.incrementAndGet();
                             stockWatchLastUpdate = new Date();
                         }

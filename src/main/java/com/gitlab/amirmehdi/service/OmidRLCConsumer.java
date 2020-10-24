@@ -24,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @Log4j2
+@Timed(value = "omid.rlc")
 public class OmidRLCConsumer {
 
     private final ObjectMapper objectMapper;
@@ -36,7 +37,6 @@ public class OmidRLCConsumer {
         this.applicationProperties = applicationProperties;
     }
 
-    @Timed(value = "omid.rlc")
     public List<Instrument> searchInstrument(String name) {
         log.debug("searchInstrument for name :{}", name);
         return restTemplate.exchange(
@@ -47,7 +47,6 @@ public class OmidRLCConsumer {
             }).getBody();
     }
 
-    @Timed(value = "omid.rlc")
     public List<Instrument> getInstruments(List<String> isins) throws JsonProcessingException {
         log.debug("getInstruments for isins :{}", isins);
         ResponseEntity<List<Instrument>> response = restTemplate.exchange(
@@ -60,7 +59,6 @@ public class OmidRLCConsumer {
     }
 
     @Async
-    @Timed(value = "omid.rlc")
     public CompletableFuture<List<BidAsk>> getBulkBidAsk(List<String> isins) throws JsonProcessingException {
         log.debug("getBulkBidAsk for isins :{}", isins);
         ResponseEntity<List<BidAsk>> response = restTemplate.exchange(
@@ -73,7 +71,6 @@ public class OmidRLCConsumer {
     }
 
     @Async
-    @Timed(value = "omid.rlc")
     public CompletableFuture<List<StockWatch>> getBulkStockWatch(List<String> isins) throws JsonProcessingException {
         log.debug("getBulkStockWatch for isins :{}", isins);
         ResponseEntity<List<StockWatch>> response = restTemplate.exchange(

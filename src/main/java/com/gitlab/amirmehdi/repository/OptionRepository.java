@@ -24,6 +24,8 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
 
     List<Option> findAllByInstrumentIsinIsIn(List<String> isins);
 
+    List<Option> findAllByInstrumentIsin(String isin);
+
     @Query(value = "select o from Option o where" +
         " o.callIsin=?1 or " +
         " o.putIsin=?1 ")
