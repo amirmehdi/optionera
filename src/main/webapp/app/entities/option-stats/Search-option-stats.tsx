@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { IRootState } from 'app/shared/reducers';
-import { getEntities, reset } from './../instrument/instrument.reducer';
+import React, {useState} from 'react';
+import {connect} from 'react-redux';
+import {IRootState} from 'app/shared/reducers';
+import {getEntities, reset} from './../instrument/instrument.reducer';
 import './style.scss';
-import { Radio, Select } from 'antd';
+import {Radio, Select} from 'antd';
 import axios from 'axios';
 import 'moment/locale/fa';
 import moment from 'moment';
-import { CloseCircleOutlined } from '@ant-design/icons';
+import {CloseCircleOutlined} from '@ant-design/icons';
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
 import DatePicker from 'react-modern-calendar-datepicker';
 import Persian from 'persian-info';
+import {Translate} from "react-jhipster";
 
 moment.locale('fa_IR');
 
@@ -114,9 +115,9 @@ export const SearchOptionStats = (props) => {
       <div style={{ marginLeft: 20 }}>
         <Radio.Group onChange={onChangeRadio} defaultValue={!props.switchValue ? 'undefined' : props.switchValue}
                      value={!props.switchValue ? 'undefined' : props.switchValue}>
-          <Radio.Button value="true">Active</Radio.Button>
-          <Radio.Button value="undefined">In between</Radio.Button>
-          <Radio.Button value="false">Inactive</Radio.Button>
+          <Radio.Button value="true"><Translate contentKey="eTradeApp.optionStats.inTheMoney">call ITM</Translate></Radio.Button>
+          <Radio.Button value="undefined"><Translate contentKey="eTradeApp.optionStats.all">all</Translate></Radio.Button>
+          <Radio.Button value="false"><Translate contentKey="eTradeApp.optionStats.outOfMoney">call OTM</Translate></Radio.Button>
         </Radio.Group>
       </div>
 

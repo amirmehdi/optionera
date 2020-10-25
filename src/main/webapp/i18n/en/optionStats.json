@@ -16,6 +16,9 @@
       "detail": {
         "title": "Option Stats"
       },
+      "inTheMoney": "call ITM",
+      "outOfMoney": "call OTM",
+      "all": "all",
       "callTitle": "call",
       "putTitle": "put",
       "Last": "Last",
