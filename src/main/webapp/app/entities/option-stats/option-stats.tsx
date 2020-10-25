@@ -66,7 +66,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
 
     if (createdAt) {
       const createAtDate = DateTime.stringToDate(createdAt);
-      const createAtJalaliDate = DateTime.gregorianToJalali(createAtDate?.year, createAtDate?.month, createAtDate?.day);
+      const createAtJalaliDate = DateTime.gregorianToJalali(createAtDate.year, createAtDate.month, createAtDate.day);
       return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <p style={{ margin: 0, width: 120, textAlign: 'center' }}>
           {createAtJalaliDate.year + '/' + createAtJalaliDate.month + '/' + createAtJalaliDate.day + ' (' + diffDays + ')'}
@@ -144,7 +144,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
              props.reset();
            }}/>
        </div>
-       {optionStatsList && optionStatsList.length > 0 ? (
+
          <div>
            <Table sticky pagination={false} onChange={handleChange} dataSource={optionStatsList as any}
                   scroll={{ x: 2400 }}>
@@ -393,13 +393,6 @@ export const OptionStats = (props: IOptionStatsProps) => {
            </Table>
            {loading  ? <Spin/> : null}
          </div>
-       ) : (
-         !loading && (
-           <div className="alert alert-warning">
-             <Translate contentKey="eTradeApp.optionStats.home.notFound">No Option Stats found</Translate>
-           </div>
-         )
-       )}
      </InfiniteScroll>
    </div>
   );

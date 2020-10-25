@@ -73,8 +73,6 @@ const DateTime = {
         return { day: jd ,month: jm,year: jy};
     },
     stringToDate(dateTime) {
-       if(dateTime)
-         return null;
         const [date, time] = dateTime.split('T');
       // eslint-disable-next-line radix
         const sp1 = date.split('-').map(v => parseInt(v));
