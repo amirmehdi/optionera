@@ -9,9 +9,7 @@ import 'moment/locale/fa';
 import moment from 'moment';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
-
 import DatePicker from 'react-modern-calendar-datepicker';
-import { Calendar } from 'react-modern-calendar-datepicker';
 import Persian from 'persian-info';
 
 moment.locale('fa_IR');
@@ -21,28 +19,9 @@ const { Option } = Select;
 
 export const SearchOptionStats = (props) => {
   const [instrument, setInstrument] = useState([]);
-  // convert From Date
-  const FromDateValue = props.FromDateValue;
-  const FromDate = new Date(FromDateValue).toLocaleDateString('fa-IR');
-  const date = FromDate.split('/');
-  const month = Persian.number.convertPersianNumberToEnglish(date[1]);
-  const day = Persian.number.convertPersianNumberToEnglish(date[2]);
-  const years = Persian.number.convertPersianNumberToEnglish(date[0]);
-  const FromDateFormat = { day: Number(day), month: Number(month), year: Number(years) };
-  // End convert From Date
-  // convert To Date
-  const ToDateValue = props.toDateValue;
-  const ToDate = new Date(ToDateValue).toLocaleDateString('fa-IR');
-  const PersianDate = ToDate.split('/');
-  const persianMonth = Persian.number.convertPersianNumberToEnglish(PersianDate[1]);
-  const persianDay = Persian.number.convertPersianNumberToEnglish(PersianDate[2]);
-  const persianYears = Persian.number.convertPersianNumberToEnglish(PersianDate[0]);
-  const ToDateFormat = { day: Number(persianDay), month: Number(persianMonth), year: Number(persianYears) };
-  // End convert From Date
-
   const [selectedDayRange, setSelectedDayRange] = useState({
-    from: month ? FromDateFormat : undefined,
-    to: persianMonth ? ToDateFormat : undefined
+    from:  undefined,
+    to: undefined
   });
 
   function onChange(value, val) {
@@ -73,7 +52,6 @@ export const SearchOptionStats = (props) => {
       });
       const getMonthFrom = dateSplitFrom.getMonth() + 1;
       const outDateFrom = dateSplitFrom.getFullYear() + '-' + getMonthFrom.toString().padStart(2, '0') + '-' + dateSplitFrom.getDate().toString().padStart(2, '0');
-      setSelectedDayRange({ from: e.from, to: null });
       props.fromDateRange(outDateFrom);
     }
 
@@ -128,6 +106,7 @@ export const SearchOptionStats = (props) => {
           onClick={() => {
             props.toDateRange(undefined);
             props.fromDateRange(undefined);
+            setSelectedDayRange({to : undefined , from: undefined})
           }}
           style={{ fontSize: 20, marginLeft: 5 }}/> : null}
       </div>
