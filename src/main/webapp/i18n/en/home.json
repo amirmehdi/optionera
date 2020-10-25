@@ -59,6 +59,12 @@
         "feature4": "full access to option stats table<br/>black scholes calculations<br/>break even<br/>leverage<br/>access to VIP signals<br/>access to payoff diagram<br/>profit probability calculations<br/>greeks calculations (delta,theta,rho,gamma)<br/>access to realtime API"
       }
     },
+    "footer": {
+      "aboutApp": "ABOUT Optionera",
+      "about": "Instant and analytical information service provider in the option trading market<br/>Signaling attractive options market positions and arbitrage positions<br/>",
+      "info": "INFORMATION",
+      "contactInfo": "CONTACT INFO"
+    },
     "github": "GitHub"
   }
 }

@@ -3,6 +3,7 @@ package com.gitlab.amirmehdi.web.rest;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Signal;
 import com.gitlab.amirmehdi.security.AuthoritiesConstants;
+import com.gitlab.amirmehdi.security.SecurityUtils;
 import com.gitlab.amirmehdi.service.SignalQueryService;
 import com.gitlab.amirmehdi.service.SignalService;
 import com.gitlab.amirmehdi.service.dto.SignalCriteria;
@@ -16,9 +17,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -98,6 +101,9 @@ public class SignalResource {
     @GetMapping("/signals")
     public ResponseEntity<List<Signal>> getAllSignals(SignalCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Signals by criteria: {}", criteria);
+        if (SecurityUtils.isCurrentUserInRoleJustUser()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
         Page<Signal> page = signalQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());

@@ -9,28 +9,28 @@ import org.springframework.stereotype.Service;
 public class ScheduledJobs {
     private final CrawlerJobs crawlerJobs;
 
-    @Value("${application.schedules.timecheck}")
+    @Value("${application.schedule.timeCheck}")
     private boolean marketTimeCheck;
 
     public ScheduledJobs(CrawlerJobs crawlerJobs) {
         this.crawlerJobs = crawlerJobs;
     }
 
-    @Scheduled(fixedDelayString = "${application.schedules.arbitrage}")
+    @Scheduled(fixedDelayString = "${application.schedule.arbitrage}")
     public void updateImportantOptions() {
         if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
             return;
         crawlerJobs.arbitrageOptionsUpdater();
     }
 
-    @Scheduled(fixedRateString = "${application.schedules.market}")
+    @Scheduled(fixedRateString = "${application.schedule.market}")
     public void marketUpdater() {
         if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
             return;
         crawlerJobs.marketUpdater();
     }
 
-    @Scheduled(fixedRateString = "${application.schedules.interest}")
+    @Scheduled(fixedRateString = "${application.schedule.interest}")
     public void openInterestUpdater() {
         if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
             return;

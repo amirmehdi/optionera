@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
-import { Spin, Table } from 'antd';
-import { getSortState, Translate } from 'react-jhipster';
-import { IRootState } from 'app/shared/reducers';
-import { getEntities, reset } from './option-stats.reducer';
-import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+import {connect} from 'react-redux';
+import {RouteComponentProps} from 'react-router-dom';
+import {Spin, Table} from 'antd';
+import {getSortState, Translate} from 'react-jhipster';
+import {IRootState} from 'app/shared/reducers';
+import {getEntities, reset} from './option-stats.reducer';
+import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
 import './style.scss';
-import { SyncOutlined } from '@ant-design/icons';
-import { SearchOptionStats } from 'app/entities/option-stats/Search-option-stats';
+import {SyncOutlined} from '@ant-design/icons';
+import {SearchOptionStats} from 'app/entities/option-stats/Search-option-stats';
 import DateTime from './../../DateTime/DateTime';
 import Number from './../../Framework/Number';
 
@@ -65,7 +65,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
       const createAtDate = DateTime.stringToDate(createdAt);
       const createAtJalaliDate = DateTime.gregorianToJalali(createAtDate.year, createAtDate.month, createAtDate.day);
       return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ margin: 0, width: 110, textAlign: 'center' }}>
+        <p style={{ margin: 0, width: 120, textAlign: 'center' }}>
           {createAtJalaliDate.year + '/' + createAtJalaliDate.month + '/' + createAtJalaliDate.day + ' (' + diffDays + ')'}
         </p>
       </div>;
@@ -148,7 +148,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
               <div className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                 {/* {optionStats ? <Link to={`option/${optionStats.id}`}>{'ض' + optionStats.name}</Link> : ''}*/}
                 {row.option ? <a target="_blank" rel="noopener noreferrer"
-                                 href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${row.option.callTseId}`}>{'ض' + row.option.name}</a> : ''}
+                                 href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${row.option.callTseId}`}>{'ض' + row.option.name + ' '}</a> : ''}
 
               </div>
             }/>
@@ -379,7 +379,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                 <div className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                   {/* {option ? <Link to={`option/${option.id}`}>{'ض' + option.name}</Link> : ''}*/}
                   {option ? <a target="_blank" rel="noopener noreferrer"
-                               href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${option.putTseId}`}>{'ط' + option.name}</a> : ''}
+                               href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${option.putTseId}`}>{'ط' + option.name + ' '}</a> : ''}
 
                 </div>
 

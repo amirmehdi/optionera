@@ -105,9 +105,9 @@ spring:
     execution:
       thread-name-prefix: e-trade-task-
       pool:
-        core-size: 2
-        max-size: 200
-        queue-capacity: 10000
+        core-size: 20
+        max-size: 50
+        queue-capacity: 1000
     scheduling:
       thread-name-prefix: e-trade-scheduling-
       pool:
@@ -147,16 +147,16 @@ jhipster:
   #     allow-credentials: true
   #     max-age: 1800
   mail:
-    from: eTrade@localhost
+    from: optionera@gmail.com
   swagger:
     default-include-pattern: /api/.*
-    title: eTrade API
+    title: Optionera API
     description: eTrade API documentation
     version: 0.0.1
     terms-of-service-url:
-    contact-name:
-    contact-url:
-    contact-email:
+    contact-name: optionera
+    contact-url: optionera.ir
+    contact-email: optionera@gmail.com
     license:
     license-url:
 # ===================================================================
@@ -170,3 +170,14 @@ jhipster:
 
 application:
   oa-base-url: https://api.algo.ir
+  telegram:
+    token: 1154072624:AAE9byP-2eXRfxZPHeZ92ffjd0LaO4Ys1iA
+    publicChat: -1001468700748
+    privateChat: -1001468700748
+  schedule:
+    timeCheck: true
+    arbitrage: 30000
+    market: 60000
+    interest: 120000
+  strategy:
+    unusual1Threshold: -10

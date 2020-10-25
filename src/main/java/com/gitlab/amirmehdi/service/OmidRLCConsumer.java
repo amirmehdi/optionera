@@ -6,6 +6,7 @@ import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.service.dto.core.BidAsk;
 import com.gitlab.amirmehdi.service.dto.core.Instrument;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
+import io.micrometer.core.annotation.Timed;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
@@ -23,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @Log4j2
+@Timed(value = "omid.rlc")
 public class OmidRLCConsumer {
 
     private final ObjectMapper objectMapper;

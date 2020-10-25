@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.service.strategy;
 
+import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Signal;
@@ -12,6 +13,7 @@ import com.gitlab.amirmehdi.service.OptionStatsService;
 import com.gitlab.amirmehdi.service.dto.StrategyResponse;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import net.jodah.expiringmap.ExpiringMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -24,8 +26,11 @@ import java.util.stream.Collectors;
 public class UnusualPrices1Strategy extends Strategy {
     private final Map<Long, Float> cachedIsin = ExpiringMap.builder()
         .expirationPolicy(ExpiringMap.ExpirationPolicy.CREATED)
-        .expiration(5, TimeUnit.MINUTES)
+        .expiration(15, TimeUnit.MINUTES)
         .build();
+
+    @Autowired
+    private ApplicationProperties properties;
 
     protected UnusualPrices1Strategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market) {
         super(optionRepository, optionStatsService, market);
@@ -34,9 +39,9 @@ public class UnusualPrices1Strategy extends Strategy {
     @Override
     public StrategyResponse getSignals() {
         return StrategyResponse.builder()
-            .callSignals(optionRepository.findAllByCallBreakEvenIsLessThanEqual(-4)
+            .callSignals(optionRepository.findAllByCallBreakEvenIsLessThanEqual(properties.getStrategy().getUnusual1Threshold())
                 .stream()
-                .filter(option -> !cachedIsin.containsKey(option.getId()) || cachedIsin.get(option.getId()) > option.getCallBreakEven())
+                .filter(option -> !cachedIsin.containsKey(option.getId()) || cachedIsin.get(option.getId()) - 1 > option.getCallBreakEven())
                 .peek(option -> cachedIsin.put(option.getId(), option.getCallBreakEven()))
                 .map(option -> getSignal(option.getCallIsin()))
                 .collect(Collectors.toList()))

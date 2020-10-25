@@ -117,6 +117,17 @@ public class OptionService {
             });
     }
 
+    public void updateParams(String isin) {
+        List<Option> options = optionRepository.findAllByInstrumentIsin(isin);
+        StockWatch stockWatch = market.getStockWatch(isin);
+        options
+            .forEach(option -> updateParams(
+                option
+                , stockWatch
+                , market.getBidAsk(option.getCallIsin())
+                , market.getBidAsk(option.getPutIsin())));
+    }
+
     private void updateParams(Option option, StockWatch stockWatch, BidAsk callBidAsk, BidAsk putBidAsk) {
         OptionStats optionStats = new OptionStats()
             .option(option)

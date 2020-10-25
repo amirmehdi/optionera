@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -306,5 +307,16 @@ public class UserService {
         if (user.getEmail() != null) {
             Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
         }
+    }
+
+    @Scheduled(cron = "0 0 0,6,8,13 * * *")
+    public void changeExpiredUsersToUserRole(){
+        userRepository.findAllByPlanExpDateIsNotNullAndPlanExpDateBefore(LocalDate.now()).forEach(user -> {
+            user.setPlanExpDate(null);
+            user.getAuthorities().clear();
+            user.getAuthorities().add(authorityRepository.findById(AuthoritiesConstants.USER).get());
+            clearUserCaches(user);
+            userRepository.save(user);
+        });
     }
 }

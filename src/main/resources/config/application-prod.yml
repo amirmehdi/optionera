@@ -53,10 +53,16 @@ spring:
       repositories:
         enabled: false
   mail:
-    host: localhost
-    port: 25
-    username:
-    password:
+    host: smtp.gmail.com
+    port: 587
+    username: optionera@gmail.com
+    password: EbDcfKe43K8KQah
+    protocol: smtp
+    tls: true
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: smtp.gmail.com
   thymeleaf:
     cache: true
 
@@ -113,7 +119,8 @@ jhipster:
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
   mail: # specific JHipster mail property, for standard properties see MailProperties
-    base-url: http://my-server-url-to-change # Modify according to your server's URL
+    enabled: true
+    base-url: http://optionera.ir
   metrics:
     logs: # Reports metrics in the logs
       enabled: false
@@ -137,14 +144,5 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-application:
-  telegram:
-    token: 1154072624:AAE9byP-2eXRfxZPHeZ92ffjd0LaO4Ys1iA
-    #    publicchat: -1001468700748
-    publicchat: -1001318208609
-    privatechat: -1001427342656
-  schedules:
-    timecheck: true
-    arbitrage: 1000
-    market: 5000
-    interest: 30000
+#application:
+
