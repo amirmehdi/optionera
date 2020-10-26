@@ -77,4 +77,6 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
     void updateParam(Option option);*/
 
     void deleteAllByExpDateBefore(LocalDate localDate);
+
+    List<Option> findAllOptionsByExpDate(LocalDate now);
 }

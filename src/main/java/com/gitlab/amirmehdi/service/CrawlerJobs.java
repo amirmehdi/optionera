@@ -70,7 +70,7 @@ public class CrawlerJobs {
                         for (BidAsk bidAsk : bidAsks) {
                             optionStatsService.findOne(callIsins.get(bidAsk.getIsin())).ifPresent(optionService::updateOption);
                         }
-                        strategyService.run("UnusualPrices1Strategy");
+                        strategyService.run("ExerciseOptionsStrategy");
                     }
                 });
         }
