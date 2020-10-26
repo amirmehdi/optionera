@@ -19,7 +19,7 @@ public class ObjectMapperConfiguration {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        objectMapper.setTimeZone(TimeZone.getDefault());
+        objectMapper.setTimeZone(TimeZone.getTimeZone("UTC"));
         objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"));
         return objectMapper;
     }
