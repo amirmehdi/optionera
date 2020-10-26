@@ -3,7 +3,6 @@ package com.gitlab.amirmehdi.config;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,10 +26,10 @@ public class RestTemplateConfiguration {
         httpRequestFactory.setConnectionRequestTimeout(6000);
         httpRequestFactory.setConnectTimeout(10000);
         httpRequestFactory.setReadTimeout(10000);
-        httpRequestFactory.setHttpClient(HttpClientBuilder.create()
-            .setMaxConnTotal(300)
-            .setMaxConnPerRoute(100)
-            .build());
+//        httpRequestFactory.setHttpClient(HttpClientBuilder.create()
+//            .setMaxConnTotal(300)
+//            .setMaxConnPerRoute(100)
+//            .build());
         return new RestTemplate(httpRequestFactory);
     }
 
