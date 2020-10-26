@@ -19,7 +19,7 @@ public class BidAsk {
 
     private String isin;
     private ArrayList<BidAskItem> items = new ArrayList<>();
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Tehran")
     private Date dateTime;
 
     @JsonIgnore

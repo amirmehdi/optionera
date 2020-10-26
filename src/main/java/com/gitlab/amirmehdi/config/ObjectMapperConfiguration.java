@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 @Configuration
 public class ObjectMapperConfiguration {
@@ -19,9 +18,7 @@ public class ObjectMapperConfiguration {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        objectMapper.setTimeZone(TimeZone.getTimeZone("Asia/Tehran"));
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Tehran"));
         objectMapper.setDateFormat(dateFormat);
         return objectMapper;
     }

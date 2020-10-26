@@ -36,7 +36,7 @@ public class StockWatch {
     private long tradeVolume;
     private int tradesCount;
     private int referencePrice;
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Tehran")
     @JsonProperty("lastTrade")
     private Date dateTime;
 

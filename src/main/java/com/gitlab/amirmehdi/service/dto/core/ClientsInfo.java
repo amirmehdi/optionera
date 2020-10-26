@@ -25,7 +25,7 @@ public class ClientsInfo {
     private int naturalSellCount;
 
     private String isin;
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Tehran")
     private Date dateTime;
     private double buyerDensityValue;
     private double sellerDensityValue;
