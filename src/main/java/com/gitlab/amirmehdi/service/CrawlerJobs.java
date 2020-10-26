@@ -209,7 +209,6 @@ public class CrawlerJobs {
             callStockWatch.setSettlementPrice(Integer.parseInt(numberNormalizer(bDatum.getVal().get(i).getV())));
             callStockWatch.setOpenInterest(Integer.parseInt(numberNormalizer(bDatum.getVal().get(i2).getV())));
         }
-        callStockWatch.setDateTime(new Date());
         market.saveStockWatch(callStockWatch);
     }
 
