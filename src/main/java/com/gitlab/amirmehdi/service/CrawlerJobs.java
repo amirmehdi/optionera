@@ -59,20 +59,21 @@ public class CrawlerJobs {
         Map<String, Long> callIsins = optionService.findAllOptionsByLocalDateAndCallInTheMoney(LocalDate.now(), true)
             .stream()
             .collect(Collectors.toMap(Option::getCallIsin, Option::getId));
-
-        omidRLCConsumer.getBulkBidAsk(new ArrayList<>(callIsins.keySet()))
-            .whenCompleteAsync((bidAsks, throwable) -> {
-                if (throwable != null) {
-                    throwable.printStackTrace();
-                } else {
-                    log.debug("update bidask in arbitrageOptionsUpdater");
-                    market.saveAllBidAsk(bidAsks);
-                    for (BidAsk bidAsk : bidAsks) {
-                        optionStatsService.findOne(callIsins.get(bidAsk.getIsin())).ifPresent(optionService::updateOption);
+        if (!callIsins.isEmpty()) {
+            omidRLCConsumer.getBulkBidAsk(new ArrayList<>(callIsins.keySet()))
+                .whenComplete((bidAsks, throwable) -> {
+                    if (throwable != null) {
+                        throwable.printStackTrace();
+                    } else {
+                        log.debug("update bidask in arbitrageOptionsUpdater");
+                        market.saveAllBidAsk(bidAsks);
+                        for (BidAsk bidAsk : bidAsks) {
+                            optionStatsService.findOne(callIsins.get(bidAsk.getIsin())).ifPresent(optionService::updateOption);
+                        }
+                        strategyService.run("UnusualPrices1Strategy");
                     }
-                    strategyService.run("UnusualPrices1Strategy");
-                }
-            });
+                });
+        }
     }
 
     public void marketUpdater() {
