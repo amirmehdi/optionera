@@ -19,9 +19,9 @@ public class ObjectMapperConfiguration {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        objectMapper.setTimeZone(TimeZone.getTimeZone("UTC"));
+        objectMapper.setTimeZone(TimeZone.getTimeZone("Asia/Tehran"));
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Tehran"));
         objectMapper.setDateFormat(dateFormat);
         return objectMapper;
     }
