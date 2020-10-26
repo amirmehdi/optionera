@@ -76,7 +76,7 @@ public class CrawlerJobs {
     }
 
     public void marketUpdater() {
-        if (bidAskLastUpdate != null) {
+        if (bidAskLastUpdate != null && stockWatchLastUpdate!=null) {
             metricService.reportMetric("crawler.updater.bidask.seconds", new ImmutableTag("status", "all"), (bidAskLastUpdate.getTime() - firstUpdate.getTime()) / 1000);
             metricService.reportMetric("crawler.updater.bidask.count", new ImmutableTag("status", "success"), bidAskSuccessCount.get());
             metricService.reportMetric("crawler.updater.bidask.count", new ImmutableTag("status", "error"), bidAskErrorCount.get());
