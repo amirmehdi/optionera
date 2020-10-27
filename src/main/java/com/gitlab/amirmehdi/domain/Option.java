@@ -96,6 +96,13 @@ public class Option implements Serializable {
     @Column(name = "put_leverage", nullable = false)
     private float putLeverage;
 
+    @NotNull
+    @Column(name = "call_margin", nullable = false)
+    private float callMargin;
+
+    @NotNull
+    @Column(name = "put_margin", nullable = false)
+    private float putMargin;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
