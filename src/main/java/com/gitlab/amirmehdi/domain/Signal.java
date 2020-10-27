@@ -60,7 +60,7 @@ public class Signal implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @OneToMany(mappedBy = "signal")
+    @OneToMany(mappedBy = "signal" ,fetch =FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Order> orders = new HashSet<>();
 
