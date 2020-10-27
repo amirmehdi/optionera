@@ -7,7 +7,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.Instant;
+import java.util.Date;
 
 /**
  * A Token.
@@ -34,7 +34,7 @@ public class Token implements Serializable {
     private Broker broker;
 
     @Column(name = "created_at")
-    private Instant createdAt;
+    private Date createdAt;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -71,16 +71,16 @@ public class Token implements Serializable {
         this.broker = broker;
     }
 
-    public Instant getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public Token createdAt(Instant createdAt) {
+    public Token createdAt(Date createdAt) {
         this.createdAt = createdAt;
         return this;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove

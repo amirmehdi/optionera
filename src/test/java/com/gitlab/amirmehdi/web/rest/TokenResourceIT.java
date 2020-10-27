@@ -15,8 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,8 +38,8 @@ public class TokenResourceIT {
     private static final Broker DEFAULT_BROKER = Broker.REFAH;
     private static final Broker UPDATED_BROKER = Broker.FIROOZE_ASIA;
 
-    private static final Instant DEFAULT_CREATED_AT = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_CREATED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final Date DEFAULT_CREATED_AT = new Date();
+    private static final Date UPDATED_CREATED_AT = new Date();
 
     @Autowired
     private TokenRepository tokenRepository;
