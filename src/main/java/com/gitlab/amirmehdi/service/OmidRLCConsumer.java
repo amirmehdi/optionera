@@ -18,7 +18,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -72,7 +71,7 @@ public class OmidRLCConsumer {
             return CompletableFuture.completedFuture(response.getBody());
         } catch (ResourceAccessException e) {
             log.error("getBulkBidAsk got error isinsCount:{} error:{}", isins.size(), e.toString());
-            return CompletableFuture.completedFuture(Collections.emptyList());
+            throw e;
         }
     }
 
@@ -89,7 +88,7 @@ public class OmidRLCConsumer {
             return CompletableFuture.completedFuture(response.getBody());
         } catch (ResourceAccessException e) {
             log.error("getBulkStockWatch got error isinsCount:{} error:{}", isins.size(), e.toString());
-            return CompletableFuture.completedFuture(Collections.emptyList());
+            throw e;
         }
     }
 

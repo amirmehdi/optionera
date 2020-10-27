@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
@@ -77,7 +78,7 @@ public class CrawlerJobs {
     }
 
     public void marketUpdater() {
-        if (bidAskLastUpdate != null && stockWatchLastUpdate!=null) {
+        if (bidAskLastUpdate != null && stockWatchLastUpdate != null) {
             metricService.reportMetric("crawler.updater.bidask.seconds", new ImmutableTag("status", "all"), (bidAskLastUpdate.getTime() - firstUpdate.getTime()) / 1000);
             metricService.reportMetric("crawler.updater.bidask.count", new ImmutableTag("status", "success"), bidAskSuccessCount.get());
             metricService.reportMetric("crawler.updater.bidask.count", new ImmutableTag("status", "error"), bidAskErrorCount.get());
@@ -114,7 +115,9 @@ public class CrawlerJobs {
                 try {
                     omidRLCConsumer.getBulkBidAsk(optionsIsin).whenComplete((bidAsks, throwable) -> {
                         if (throwable != null) {
-                            throwable.printStackTrace();
+                            if (!(throwable instanceof ResourceAccessException)) {
+                                throwable.printStackTrace();
+                            }
                             bidAskErrorCount.incrementAndGet();
                         } else {
                             log.debug("update bidask option stat {}", s);
@@ -125,7 +128,9 @@ public class CrawlerJobs {
                     });
                     omidRLCConsumer.getBulkStockWatch(optionsIsin).whenComplete((stockWatches, throwable) -> {
                         if (throwable != null) {
-                            throwable.printStackTrace();
+                            if (!(throwable instanceof ResourceAccessException)) {
+                                throwable.printStackTrace();
+                            }
                             stockWatchErrorCount.incrementAndGet();
                         } else {
                             log.debug("update stockwatch option stat {}", s);
