@@ -75,7 +75,7 @@ public class StrategyService {
     }
 
     private void runSignalAndSendToTelegram(Strategy strategy, boolean marketTimeCheck) {
-        if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
+        if (marketTimeCheck && !MarketTimeUtil.isTradingOpen())
             return;
         Optional
             .ofNullable(strategy.getSignals())
