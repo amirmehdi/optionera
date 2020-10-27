@@ -30,7 +30,7 @@ public class MetricService {
         this.market = market;
     }
 
-    @Scheduled(cron = "0/20 * * * * *")
+    @Scheduled(cron = "0/15 * * * * *")
     public void publishMetricsOfBeingRealTime() {
         if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
             return;
