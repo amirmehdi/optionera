@@ -1,8 +1,8 @@
 package com.gitlab.amirmehdi.service;
 
-import com.gitlab.amirmehdi.domain.InstrumentHistory;
 import com.gitlab.amirmehdi.domain.InstrumentHistoryCompositeKey;
-import com.gitlab.amirmehdi.repository.InstrumentHistoryRepository;
+import com.gitlab.amirmehdi.domain.InstrumentTradeHistory;
+import com.gitlab.amirmehdi.repository.InstrumentTradeHistoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -13,29 +13,29 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 /**
- * Service Implementation for managing {@link InstrumentHistory}.
+ * Service Implementation for managing {@link InstrumentTradeHistory}.
  */
 @Service
 @Transactional
-public class InstrumentHistoryService {
+public class InstrumentTradeHistoryService {
 
-    private final Logger log = LoggerFactory.getLogger(InstrumentHistoryService.class);
+    private final Logger log = LoggerFactory.getLogger(InstrumentTradeHistoryService.class);
 
-    private final InstrumentHistoryRepository instrumentHistoryRepository;
+    private final InstrumentTradeHistoryRepository instrumentTradeHistoryRepository;
 
-    public InstrumentHistoryService(InstrumentHistoryRepository instrumentHistoryRepository) {
-        this.instrumentHistoryRepository = instrumentHistoryRepository;
+    public InstrumentTradeHistoryService(InstrumentTradeHistoryRepository instrumentTradeHistoryRepository) {
+        this.instrumentTradeHistoryRepository = instrumentTradeHistoryRepository;
     }
 
     /**
      * Save a instrumentHistory.
      *
-     * @param instrumentHistory the entity to save.
+     * @param instrumentTradeHistory the entity to save.
      * @return the persisted entity.
      */
-    public InstrumentHistory save(InstrumentHistory instrumentHistory) {
-        log.debug("Request to save InstrumentHistory : {}", instrumentHistory);
-        return instrumentHistoryRepository.save(instrumentHistory);
+    public InstrumentTradeHistory save(InstrumentTradeHistory instrumentTradeHistory) {
+        log.debug("Request to save InstrumentHistory : {}", instrumentTradeHistory);
+        return instrumentTradeHistoryRepository.save(instrumentTradeHistory);
     }
 
     /**
@@ -45,9 +45,9 @@ public class InstrumentHistoryService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<InstrumentHistory> findAll(Pageable pageable) {
+    public Page<InstrumentTradeHistory> findAll(Pageable pageable) {
         log.debug("Request to get all InstrumentHistories");
-        return instrumentHistoryRepository.findAll(pageable);
+        return instrumentTradeHistoryRepository.findAll(pageable);
     }
 
     /**
@@ -57,9 +57,9 @@ public class InstrumentHistoryService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<InstrumentHistory> findOne(InstrumentHistoryCompositeKey id) {
+    public Optional<InstrumentTradeHistory> findOne(InstrumentHistoryCompositeKey id) {
         log.debug("Request to get InstrumentHistory : {}", id);
-        return instrumentHistoryRepository.findById(id);
+        return instrumentTradeHistoryRepository.findById(id);
     }
 
     /**
@@ -69,6 +69,6 @@ public class InstrumentHistoryService {
      */
     public void delete(InstrumentHistoryCompositeKey id) {
         log.debug("Request to delete InstrumentHistory : {}", id);
-        instrumentHistoryRepository.deleteById(id);
+        instrumentTradeHistoryRepository.deleteById(id);
     }
 }

@@ -1,0 +1,101 @@
+{
+    "name": "Board",
+    "fields": [
+        {
+            "fieldName": "isin",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "date",
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "last",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "close",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "first",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "low",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "high",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "tradeCount",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "tradeVolume",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "tradeValue",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "askPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "askVolume",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "bidPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "bidVolume",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "individualBuyVolume",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "individualSellVolume",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "legalBuyVolume",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "legalSellVolume",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "referencePrice",
+            "fieldType": "Integer"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20201029183600",
+    "entityTableName": "board",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*",
+    "searchEngine": false,
+    "databaseType": "sql"
+}

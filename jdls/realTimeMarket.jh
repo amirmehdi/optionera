@@ -1,0 +1,26 @@
+entity Board {
+    isin String required,
+    date Instant required,
+
+    last Integer,
+    close Integer,
+    first Integer,
+    low Integer,
+    high Integer,
+    tradeCount Integer,
+    tradeVolume Long,
+    tradeValue Long,
+
+    askPrice Integer,
+    askVolume Integer,
+    bidPrice Integer,
+    bidVolume Integer,
+
+    individualBuyVolume Integer,
+    individualSellVolume Integer,
+    legalBuyVolume Integer,
+    legalSellVolume Integer
+}
+
+paginate Board with pagination
+filter Board

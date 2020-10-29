@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.config;
 
+import com.gitlab.amirmehdi.domain.InstrumentTradeHistory;
 import io.github.jhipster.config.JHipsterProperties;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.ExpiryPolicyBuilder;
@@ -46,11 +47,12 @@ public class CacheConfiguration {
             createCache(cm, com.gitlab.amirmehdi.domain.Instrument.class.getName());
             createCache(cm, com.gitlab.amirmehdi.domain.Instrument.class.getName() + ".options");
             createCache(cm, com.gitlab.amirmehdi.domain.Option.class.getName());
-            createCache(cm, com.gitlab.amirmehdi.domain.InstrumentHistory.class.getName());
+            createCache(cm, InstrumentTradeHistory.class.getName());
             createCache(cm, com.gitlab.amirmehdi.domain.Signal.class.getName());
             createCache(cm, com.gitlab.amirmehdi.domain.Signal.class.getName() + ".orders");
             createCache(cm, com.gitlab.amirmehdi.domain.Order.class.getName());
             createCache(cm, com.gitlab.amirmehdi.domain.Token.class.getName());
+            createCache(cm, com.gitlab.amirmehdi.domain.Board.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

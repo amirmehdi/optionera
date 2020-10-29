@@ -2,7 +2,7 @@ package com.gitlab.amirmehdi.batch;
 
 import com.gitlab.amirmehdi.batch.model.DayCandleBatchItem;
 import com.gitlab.amirmehdi.domain.Instrument;
-import com.gitlab.amirmehdi.domain.InstrumentHistory;
+import com.gitlab.amirmehdi.domain.InstrumentTradeHistory;
 import com.gitlab.amirmehdi.util.DateUtil;
 import com.gitlab.amirmehdi.util.ZipUtil;
 import org.slf4j.Logger;
@@ -47,14 +47,14 @@ public class DayCandleProcessor implements ItemProcessor<Instrument, DayCandleBa
         BufferedReader in = ZipUtil.getBufferedReader(responseEntity.getBody());
         stopWatch.stop();
         stopWatch.start("parse data");
-        ArrayList<InstrumentHistory> candles = new ArrayList<>();
+        ArrayList<InstrumentTradeHistory> candles = new ArrayList<>();
         String readed;
         while ((readed = in.readLine()) != null) {
             String[] ohlc = readed.split(";");
             for (String s : ohlc) {
                 String[] values = s.split("@");
                 LocalDate date2 = DateUtil.convertToLocalDateViaInstant(simpleDateFormat.parse(values[0]));
-                candles.add(new InstrumentHistory(item.getIsin(),date2, Double.valueOf(values[4]).intValue()
+                candles.add(new InstrumentTradeHistory(item.getIsin(),date2, Double.valueOf(values[4]).intValue()
                     , Double.valueOf(values[3]).intValue(), Double.valueOf(values[5]).intValue()
                     , Double.valueOf(values[6]).intValue(), Double.valueOf(values[2]).intValue()
                     , Double.valueOf(values[1]).intValue(),  Double.valueOf(values[9]).intValue()

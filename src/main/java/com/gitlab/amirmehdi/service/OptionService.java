@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -169,5 +170,18 @@ public class OptionService {
 
     public List<Option> findAllOptionsByLocalDateAndCallInTheMoney(LocalDate localdate, boolean callInTheMoney) {
         return optionRepository.findAllByExpDateAndCallInTheMoney(localdate, callInTheMoney);
+    }
+
+    public List<String> findAllCallAndPutIsins() {
+        List<String> isins = new ArrayList<>();
+        for (Object[] isin : optionRepository.findAllCallAndPutIsins()) {
+            if (isin[0] == null || !((String) isin[0]).isEmpty()) {
+                isins.add((String) isin[0]);
+            }
+            if (isin[1] == null || !((String) isin[1]).isEmpty()) {
+                isins.add((String) isin[1]);
+            }
+        }
+        return isins;
     }
 }

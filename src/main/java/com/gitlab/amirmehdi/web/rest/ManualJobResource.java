@@ -3,6 +3,7 @@ package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.batch.BatchConfiguration;
 import com.gitlab.amirmehdi.security.AuthoritiesConstants;
+import com.gitlab.amirmehdi.service.BoardService;
 import com.gitlab.amirmehdi.service.CrawlerJobs;
 import com.gitlab.amirmehdi.service.StrategyService;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class ManualJobResource {
     private final BatchConfiguration batchConfiguration;
     private final CrawlerJobs crawlerJobs;
+    private final BoardService boardService;
     private final StrategyService strategyService;
 
-    public ManualJobResource(BatchConfiguration batchConfiguration, CrawlerJobs crawlerJobs, StrategyService strategyService) {
+    public ManualJobResource(BatchConfiguration batchConfiguration, CrawlerJobs crawlerJobs, BoardService boardService, StrategyService strategyService) {
         this.batchConfiguration = batchConfiguration;
         this.crawlerJobs = crawlerJobs;
+        this.boardService = boardService;
         this.strategyService = strategyService;
     }
 
@@ -33,15 +36,29 @@ public class ManualJobResource {
 
     @PostMapping(value = "arbitrage")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<Object> importantOptionsUpdater() throws Exception {
+    public ResponseEntity<Object> importantOptionsUpdater() {
         crawlerJobs.arbitrageOptionsUpdater();
         return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = "market")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<Object> marketUpdater() throws Exception {
+    public ResponseEntity<Object> marketUpdater() {
         crawlerJobs.marketUpdater();
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "clients-info")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<Object> clientsInfoUpdater() {
+        crawlerJobs.clientsInfoUpdater();
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "board")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<Object> updateAllBoard() {
+        boardService.updateAllBoard();
         return ResponseEntity.ok().build();
     }
 

@@ -79,4 +79,8 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
     void deleteAllByExpDateBefore(LocalDate localDate);
 
     List<Option> findAllOptionsByExpDate(LocalDate now);
+
+
+    @Query(value = "SELECT call_isin,put_isin from option ", nativeQuery = true)
+    List<Object[]> findAllCallAndPutIsins();
 }

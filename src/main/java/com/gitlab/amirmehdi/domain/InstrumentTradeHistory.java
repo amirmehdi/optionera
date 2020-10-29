@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @Table(name = "instrument_history")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @IdClass(InstrumentHistoryCompositeKey.class)
-public class InstrumentHistory implements Serializable {
+public class InstrumentTradeHistory implements Serializable {
 
     @Id
     @NotNull

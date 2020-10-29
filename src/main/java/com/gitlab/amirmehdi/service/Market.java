@@ -2,10 +2,7 @@ package com.gitlab.amirmehdi.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gitlab.amirmehdi.service.dto.core.BidAsk;
-import com.gitlab.amirmehdi.service.dto.core.BidAskItem;
-import com.gitlab.amirmehdi.service.dto.core.MessageEventEnum;
-import com.gitlab.amirmehdi.service.dto.core.StockWatch;
+import com.gitlab.amirmehdi.service.dto.core.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -29,6 +26,14 @@ public class Market {
     public StockWatch getStockWatch(String isin) {
         try {
             return objectMapper.readValue((String) (redisTemplate.opsForHash().get(isin, MessageEventEnum.STOCKWATCH.toString())), StockWatch.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public ClientsInfo getClientsInfo(String isin) {
+        try {
+            return objectMapper.readValue((String) (redisTemplate.opsForHash().get(isin, MessageEventEnum.CLIENTS_INFO.toString())), ClientsInfo.class);
         } catch (Exception e) {
             return null;
         }
@@ -69,6 +74,13 @@ public class Market {
             e.printStackTrace();
         }
     }
+    public void saveClientsInfo(ClientsInfo clientsInfo) {
+        try {
+            redisTemplate.opsForHash().put(clientsInfo.getIsin(), MessageEventEnum.CLIENTS_INFO.toString(), objectMapper.writeValueAsString(clientsInfo));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public void saveStockWatch(StockWatch stockWatch) {
@@ -88,6 +100,11 @@ public class Market {
     public void saveAllStockWatch(List<StockWatch> stockWatches) {
         for (StockWatch stockWatch : stockWatches) {
             saveStockWatch(stockWatch);
+        }
+    }
+    public void saveAllClientsInfo(List<ClientsInfo> clientsInfos) {
+        for (ClientsInfo clientsInfo : clientsInfos) {
+            saveClientsInfo(clientsInfo);
         }
     }
 }

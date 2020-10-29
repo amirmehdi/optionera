@@ -1,9 +1,9 @@
 package com.gitlab.amirmehdi.web.rest;
 
-import com.gitlab.amirmehdi.domain.InstrumentHistory;
 import com.gitlab.amirmehdi.domain.InstrumentHistoryCompositeKey;
+import com.gitlab.amirmehdi.domain.InstrumentTradeHistory;
 import com.gitlab.amirmehdi.security.AuthoritiesConstants;
-import com.gitlab.amirmehdi.service.InstrumentHistoryService;
+import com.gitlab.amirmehdi.service.InstrumentTradeHistoryService;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -23,18 +23,18 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing {@link com.gitlab.amirmehdi.domain.InstrumentHistory}.
+ * REST controller for managing {@link InstrumentTradeHistory}.
  */
 @RestController
 @RequestMapping("/api")
-public class InstrumentHistoryResource {
+public class InstrumentTradeHistoryResource {
 
-    private final Logger log = LoggerFactory.getLogger(InstrumentHistoryResource.class);
+    private final Logger log = LoggerFactory.getLogger(InstrumentTradeHistoryResource.class);
 
-    private final InstrumentHistoryService instrumentHistoryService;
+    private final InstrumentTradeHistoryService instrumentTradeHistoryService;
 
-    public InstrumentHistoryResource(InstrumentHistoryService instrumentHistoryService) {
-        this.instrumentHistoryService = instrumentHistoryService;
+    public InstrumentTradeHistoryResource(InstrumentTradeHistoryService instrumentTradeHistoryService) {
+        this.instrumentTradeHistoryService = instrumentTradeHistoryService;
     }
 
     /**
@@ -45,9 +45,9 @@ public class InstrumentHistoryResource {
      */
     @GetMapping("/instrument-histories")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<List<InstrumentHistory>> getAllInstrumentHistories(Pageable pageable) {
+    public ResponseEntity<List<InstrumentTradeHistory>> getAllInstrumentHistories(Pageable pageable) {
         log.debug("REST request to get a page of InstrumentHistories");
-        Page<InstrumentHistory> page = instrumentHistoryService.findAll(pageable);
+        Page<InstrumentTradeHistory> page = instrumentTradeHistoryService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -60,9 +60,9 @@ public class InstrumentHistoryResource {
      */
     @GetMapping("/instrument-histories/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<InstrumentHistory> getInstrumentHistory(@PathVariable InstrumentHistoryCompositeKey id) {
+    public ResponseEntity<InstrumentTradeHistory> getInstrumentHistory(@PathVariable InstrumentHistoryCompositeKey id) {
         log.debug("REST request to get InstrumentHistory : {}", id);
-        Optional<InstrumentHistory> instrumentHistory = instrumentHistoryService.findOne(id);
+        Optional<InstrumentTradeHistory> instrumentHistory = instrumentTradeHistoryService.findOne(id);
         return ResponseUtil.wrapOrNotFound(instrumentHistory);
     }
 }

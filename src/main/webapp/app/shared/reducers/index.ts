@@ -26,6 +26,9 @@ import order, {OrderState} from 'app/entities/order/order.reducer';
 // prettier-ignore
 import token, {TokenState} from 'app/entities/token/token.reducer';
 
+// prettier-ignore
+import board, {BoardState} from 'app/entities/board/board.reducer';
+
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -45,6 +48,7 @@ export interface IRootState {
   readonly signal: SignalState;
   readonly order: OrderState;
   readonly token: TokenState;
+  readonly board: BoardState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -66,6 +70,7 @@ const rootReducer = combineReducers<IRootState>({
   signal,
   order,
   token,
+  board,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

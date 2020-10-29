@@ -2,9 +2,9 @@ package com.gitlab.amirmehdi.batch;
 
 import com.gitlab.amirmehdi.batch.model.DayCandleBatchItem;
 import com.gitlab.amirmehdi.domain.Instrument;
-import com.gitlab.amirmehdi.domain.InstrumentHistory;
-import com.gitlab.amirmehdi.repository.InstrumentHistoryRepository;
+import com.gitlab.amirmehdi.domain.InstrumentTradeHistory;
 import com.gitlab.amirmehdi.repository.InstrumentRepository;
+import com.gitlab.amirmehdi.repository.InstrumentTradeHistoryRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.JobRegistry;
@@ -48,16 +48,16 @@ public class BatchConfiguration {
     private final JobCompletionNotificationListener listener;
 
     private final InstrumentRepository instrumentRepository;
-    private final InstrumentHistoryRepository instrumentHistoryRepository;
+    private final InstrumentTradeHistoryRepository instrumentTradeHistoryRepository;
 
-    public BatchConfiguration(JobRegistry jobRegistry, JobLauncher jobLauncher, JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, JobCompletionNotificationListener listener, InstrumentRepository instrumentRepository, InstrumentHistoryRepository instrumentHistoryRepository) {
+    public BatchConfiguration(JobRegistry jobRegistry, JobLauncher jobLauncher, JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, JobCompletionNotificationListener listener, InstrumentRepository instrumentRepository, InstrumentTradeHistoryRepository instrumentTradeHistoryRepository) {
         this.jobRegistry = jobRegistry;
         this.jobLauncher = jobLauncher;
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
         this.listener = listener;
         this.instrumentRepository = instrumentRepository;
-        this.instrumentHistoryRepository = instrumentHistoryRepository;
+        this.instrumentTradeHistoryRepository = instrumentTradeHistoryRepository;
     }
 
 
@@ -94,7 +94,7 @@ public class BatchConfiguration {
             for (DayCandleBatchItem batchItem : batchItems) {
                 log.info("batch save for isin:{} day candles size:{} ", batchItem.getIsin(), batchItem.getMinTickDataList() == null ? 0 : batchItem.getMinTickDataList().size());
                 if (batchItem.getMinTickDataList() != null && !batchItem.getMinTickDataList().isEmpty()) {
-                    instrumentHistoryRepository.saveAll(batchItem.getMinTickDataList().subList(0, 200));
+                    instrumentTradeHistoryRepository.saveAll(batchItem.getMinTickDataList().subList(0, 200));
                 }
             }
         };
@@ -140,7 +140,7 @@ public class BatchConfiguration {
 
     public void updateVolatility() {
         List<Instrument> instruments = instrumentRepository.findAll().parallelStream().peek(instrument -> {
-            List<InstrumentHistory> history = instrumentHistoryRepository.findAllByIsin(instrument.getIsin(), PageRequest.of(0, 128, Sort.by(Sort.Order.desc("date"))));
+            List<InstrumentTradeHistory> history = instrumentTradeHistoryRepository.findAllByIsin(instrument.getIsin(), PageRequest.of(0, 128, Sort.by(Sort.Order.desc("date"))));
             List<Double> logReturn = history.stream().mapToDouble(value -> 1.0 * value.getClose() / value.getReferencePrice()).boxed().collect(Collectors.toList());
             List<Double> logReturn2 = logReturn.stream().mapToDouble(value -> pow(value, 2)).boxed().collect(Collectors.toList());
             instrument.setVolatility30(calcVolatility(22, logReturn, logReturn2));

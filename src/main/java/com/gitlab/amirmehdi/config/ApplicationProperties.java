@@ -27,6 +27,7 @@ public class ApplicationProperties {
         private String arbitrage;
         private String market;
         private String interest;
+        private String clientsInfo;
     }
 
     @Getter

@@ -8,6 +8,7 @@ import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import com.gitlab.amirmehdi.service.dto.tsemodels.BDatum;
 import com.gitlab.amirmehdi.service.dto.tsemodels.OptionResponse;
 import com.gitlab.amirmehdi.util.DateUtil;
+import com.google.common.collect.Lists;
 import io.micrometer.core.instrument.ImmutableTag;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -37,12 +38,17 @@ public class CrawlerJobs {
     private final MetricService metricService;
     private Date firstUpdate;
     private Date bidAskLastUpdate;
-    private AtomicLong bidAskSuccessCount = new AtomicLong(0);
-    private AtomicLong bidAskErrorCount = new AtomicLong(0);
+    private final AtomicLong bidAskSuccessCount = new AtomicLong(0);
+    private final AtomicLong bidAskErrorCount = new AtomicLong(0);
 
     private Date stockWatchLastUpdate;
-    private AtomicLong stockWatchSuccessCount = new AtomicLong(0);
-    private AtomicLong stockWatchErrorCount = new AtomicLong(0);
+    private final AtomicLong stockWatchSuccessCount = new AtomicLong(0);
+    private final AtomicLong stockWatchErrorCount = new AtomicLong(0);
+
+    private Date clientsInfoFirstUpdate;
+    private Date clientsInfoLastUpdate;
+    private final AtomicLong clientsInfoSuccessCount = new AtomicLong(0);
+    private final AtomicLong clientsInfoErrorCount = new AtomicLong(0);
 
     public CrawlerJobs(RestTemplate restTemplate, OptionService optionService, OptionStatsService optionStatsService, InstrumentService instrumentRepository, OmidRLCConsumer omidRLCConsumer, StrategyService strategyService, Market market, MetricService metricService) {
         this.restTemplate = restTemplate;
@@ -341,5 +347,44 @@ public class CrawlerJobs {
                 return "14" + year;
         }
         throw new IllegalArgumentException(year + " undefined");
+    }
+
+    public void clientsInfoUpdater() {
+        if (clientsInfoLastUpdate != null) {
+            metricService.reportMetric("crawler.updater.clientsInfo.seconds", new ImmutableTag("status", "all"), (clientsInfoLastUpdate.getTime() - clientsInfoFirstUpdate.getTime()) / 1000);
+            metricService.reportMetric("crawler.updater.clientsInfo.count", new ImmutableTag("status", "success"), clientsInfoSuccessCount.get());
+            metricService.reportMetric("crawler.updater.clientsInfo.count", new ImmutableTag("status", "error"), clientsInfoErrorCount.get());
+
+        }
+        clientsInfoFirstUpdate = new Date();
+        clientsInfoSuccessCount.set(0);
+        clientsInfoErrorCount.set(0);
+        List<String> isins = instrumentRepository.findAll().stream().map(Instrument::getIsin).collect(Collectors.toList());
+        isins.addAll(optionService.findAllCallAndPutIsins());
+
+        List<List<String>> partition = Lists.partition(isins, 50);
+        updateClientsInfos(partition);
+    }
+
+    private void updateClientsInfos(List<List<String>> partition) {
+        for (List<String> strings : partition) {
+            try {
+                omidRLCConsumer.getBulkClientsInfo(strings).whenComplete((clientsInfos, throwable) -> {
+                    if (throwable != null) {
+                        if (!(throwable instanceof ResourceAccessException)) {
+                            throwable.printStackTrace();
+                        }
+                        clientsInfoErrorCount.incrementAndGet();
+                    } else {
+                        log.debug("update clientsInfos option stat {}", strings.size());
+                        market.saveAllClientsInfo(clientsInfos);
+                        clientsInfoSuccessCount.incrementAndGet();
+                        clientsInfoLastUpdate = new Date();
+                    }
+                });
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

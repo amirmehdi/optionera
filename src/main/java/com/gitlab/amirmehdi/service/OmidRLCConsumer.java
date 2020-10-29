@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.service.dto.core.BidAsk;
+import com.gitlab.amirmehdi.service.dto.core.ClientsInfo;
 import com.gitlab.amirmehdi.service.dto.core.Instrument;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import io.micrometer.core.annotation.Timed;
@@ -88,6 +89,23 @@ public class OmidRLCConsumer {
             return CompletableFuture.completedFuture(response.getBody());
         } catch (ResourceAccessException e) {
             log.error("getBulkStockWatch got error isinsCount:{} error:{}", isins.size(), e.toString());
+            throw e;
+        }
+    }
+
+    @Async
+    public CompletableFuture<List<ClientsInfo>> getBulkClientsInfo(List<String> isins) throws JsonProcessingException {
+        log.debug("getBulkClientsInfo for isins :{}", isins);
+        try {
+            ResponseEntity<List<ClientsInfo>> response = restTemplate.exchange(
+                applicationProperties.getOaBaseUrl() + "/core/clientsinfo-bulk",
+                HttpMethod.POST,
+                getRequestBodyForBulkRequest(isins),
+                new ParameterizedTypeReference<List<ClientsInfo>>() {
+                });
+            return CompletableFuture.completedFuture(response.getBody());
+        } catch (ResourceAccessException e) {
+            log.error("getBulkClientsInfo got error isinsCount:{} error:{}", isins.size(), e.toString());
             throw e;
         }
     }
