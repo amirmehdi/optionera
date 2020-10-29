@@ -77,6 +77,17 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="20201029183600-1-min-max" author="jhipster">
+        <addColumn tableName="board">
+            <column name="min" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="max" type="integer">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
     <changeSet id="20201029183600-1-relations" author="jhipster">
 
     </changeSet>

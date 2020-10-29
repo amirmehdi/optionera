@@ -34,6 +34,10 @@ public class BoardCriteria implements Serializable, Criteria {
 
     private IntegerFilter high;
 
+    private IntegerFilter min;
+
+    private IntegerFilter max;
+
     private IntegerFilter tradeCount;
 
     private LongFilter tradeVolume;
@@ -68,6 +72,8 @@ public class BoardCriteria implements Serializable, Criteria {
         this.first = other.first == null ? null : other.first.copy();
         this.low = other.low == null ? null : other.low.copy();
         this.high = other.high == null ? null : other.high.copy();
+        this.min = other.min == null ? null : other.min.copy();
+        this.max = other.max == null ? null : other.max.copy();
         this.tradeCount = other.tradeCount == null ? null : other.tradeCount.copy();
         this.tradeVolume = other.tradeVolume == null ? null : other.tradeVolume.copy();
         this.tradeValue = other.tradeValue == null ? null : other.tradeValue.copy();
@@ -133,6 +139,21 @@ public class BoardCriteria implements Serializable, Criteria {
 
     public void setHigh(IntegerFilter high) {
         this.high = high;
+    }
+    public IntegerFilter getMin() {
+        return min;
+    }
+
+    public void setMin(IntegerFilter min) {
+        this.min = min;
+    }
+
+    public IntegerFilter getMax() {
+        return max;
+    }
+
+    public void setMax(IntegerFilter max) {
+        this.max = max;
     }
 
     public IntegerFilter getTradeCount() {

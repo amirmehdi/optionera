@@ -55,6 +55,8 @@ public class BoardService {
                         .referencePrice(stockWatch.getReferencePrice())
                         .low(stockWatch.getLow())
                         .high(stockWatch.getHigh())
+                        .min(stockWatch.getMin())
+                        .max(stockWatch.getMax())
                         .tradeCount(stockWatch.getTradesCount())
                         .tradeVolume(stockWatch.getTradeVolume())
                         .tradeValue(stockWatch.getTradeValue());

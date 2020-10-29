@@ -96,6 +96,12 @@ public class BoardQueryService extends QueryService<Board> {
             if (criteria.getHigh() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getHigh(), Board_.high));
             }
+            if (criteria.getMin() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getMin(), Board_.min));
+            }
+            if (criteria.getMax() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getMax(), Board_.max));
+            }
             if (criteria.getTradeCount() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getTradeCount(), Board_.tradeCount));
             }

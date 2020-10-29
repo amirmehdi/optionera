@@ -45,6 +45,12 @@ public class Board {
     @Column(name = "high")
     private Integer high;
 
+    @Column(name = "min")
+    private Integer min;
+
+    @Column(name = "max")
+    private Integer max;
+
     @Column(name = "trade_count")
     private Integer tradeCount;
 
@@ -178,9 +184,29 @@ public class Board {
         this.high = high;
         return this;
     }
+    public Integer getMin() {
+        return min;
+    }
 
-    public void setHigh(Integer high) {
-        this.high = high;
+    public Board min(Integer min) {
+        this.min = min;
+        return this;
+    }
+
+    public void setMin(Integer min) {
+        this.min = min;
+    }
+
+    public Integer getMax() {
+        return max;
+    }
+
+    public Board max(Integer max) {
+        this.max = max;
+        return this;
+    }
+    public void setMax(Integer max) {
+        this.max = max;
     }
 
     public Integer getTradeCount() {
