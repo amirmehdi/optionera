@@ -145,7 +145,9 @@ public class OptionService {
             .putBreakEven(optionStats.getPutBreakEven())
             .callLeverage(optionStats.getCallLeverage())
             .putLeverage(optionStats.getPutLeverage())
-            .callInTheMoney(optionStats.getCallInTheMoney());
+            .callInTheMoney(optionStats.getCallInTheMoney())
+            .callMargin(optionStats.getCallMargin())
+            .putMargin(optionStats.getPutMargin());
         optionRepository.save(optionStats.getOption());
     }
 

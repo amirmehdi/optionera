@@ -140,7 +140,7 @@ public class OptionStats {
             return 0;
         }
         int callBlackScholes30 = getCallBlackScholes30();
-        if (callBidAsk.getAskPrice() == 0 || callBlackScholes30 ==0) {
+        if (callBidAsk.getAskPrice() == 0 || callBlackScholes30 == 0) {
             return Integer.MAX_VALUE;
         }
         return (float) (Math.round((callBidAsk.getAskPrice() * 1.0 / callBlackScholes30 - 1) * 10000.0) / 100.0);
@@ -152,7 +152,7 @@ public class OptionStats {
             return 0;
         }
         int putBlackScholes30 = getPutBlackScholes30();
-        if (putBidAsk.getAskPrice() == 0 || putBlackScholes30 ==0) {
+        if (putBidAsk.getAskPrice() == 0 || putBlackScholes30 == 0) {
             return Integer.MAX_VALUE;
         }
         return (float) (Math.round((putBidAsk.getAskPrice() * 1.0 / putBlackScholes30 - 1) * 10000.0) / 100.0);
@@ -203,35 +203,29 @@ public class OptionStats {
     }
 
     @JsonIgnore
-    public float getCallMargin() {
-        if (checkForNull()) {
+    public int getCallMargin() {
+        if (checkForNull() ||  callStockWatch == null) {
             return 0;
         }
-        if (callBidAsk.getAskPrice() == 0) {
-            return 0;
-        }
-        int OTM = Math.max(option.getStrikePrice()-baseStockWatch.getClosing(),0)*option.getContractSize();
-        int I1 = (int) (0.2*baseStockWatch.getClosing()*option.getContractSize()-OTM);
-        int I2 = (int) (0.1*option.getStrikePrice()*option.getContractSize()-OTM);
-        int V1 = 100_000*(Math.max(I1,I2)/100_000+1);
-        int V2 = callStockWatch.getSettlementPrice()*option.getContractSize();
-        return  V1+V2;
+        int OTM = Math.max(option.getStrikePrice() - baseStockWatch.getClosing(), 0) * option.getContractSize();
+        int I1 = (int) (0.2 * baseStockWatch.getClosing() * option.getContractSize() - OTM);
+        int I2 = (int) (0.1 * option.getStrikePrice() * option.getContractSize());
+        int V1 = 100_000 * (Math.max(I1, I2) / 100_000 + 1);
+        int V2 = callStockWatch.getSettlementPrice() * option.getContractSize();
+        return V1 + V2;
     }
 
     @JsonIgnore
-    public float getPutMargin() {
-        if (checkForNull()) {
+    public int getPutMargin() {
+        if (checkForNull() || putStockWatch == null) {
             return 0;
         }
-        if (putBidAsk.getAskPrice() == 0) {
-            return 0;
-        }
-        int OTM = Math.max(baseStockWatch.getClosing()-option.getStrikePrice(),0)*option.getContractSize();
-        int I1 = (int) (0.2*baseStockWatch.getClosing()*option.getContractSize()-OTM);
-        int I2 = (int) (0.1*option.getStrikePrice()*option.getContractSize()-OTM);
-        int V1 = 100_000*(Math.max(I1,I2)/100_000+1);
-        int V2 = putStockWatch.getSettlementPrice()*option.getContractSize();
-        return  V1+V2;
+        int OTM = Math.max(baseStockWatch.getClosing() - option.getStrikePrice(), 0) * option.getContractSize();
+        int I1 = (int) (0.2 * baseStockWatch.getClosing() * option.getContractSize() - OTM);
+        int I2 = (int) (0.1 * option.getStrikePrice() * option.getContractSize());
+        int V1 = 100_000 * (Math.max(I1, I2) / 100_000 + 1);
+        int V2 = putStockWatch.getSettlementPrice() * option.getContractSize();
+        return V1 + V2;
     }
 
     @JsonIgnore

@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
     <!--
         Added the entity Signal.
     -->
     <changeSet id="20201012151000-1" author="jhipster">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="signal"/>
+            </not>
+        </preConditions>
         <createTable tableName="signal">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
@@ -25,7 +30,7 @@
             <column name="trade_volume" type="bigint">
                 <constraints nullable="true"/>
             </column>
-            <column name="bid_volume" type="bigint">
+            <column name="bid_volume" type="integer">
                 <constraints nullable="true"/>
             </column>
             <column name="bid_price" type="integer">
@@ -34,7 +39,7 @@
             <column name="ask_price" type="integer">
                 <constraints nullable="true"/>
             </column>
-            <column name="ask_volume" type="bigint">
+            <column name="ask_volume" type="integer">
                 <constraints nullable="true"/>
             </column>
             <column name="base_instrument_last" type="integer">
@@ -63,9 +68,9 @@
     -->
     <changeSet id="20201012151000-1-data" author="jhipster" context="faker">
         <loadData
-                file="config/liquibase/fake-data/signal.csv"
-                separator=";"
-                tableName="signal">
+            file="config/liquibase/fake-data/signal.csv"
+            separator=";"
+            tableName="signal">
             <column name="id" type="numeric"/>
             <column name="type" type="string"/>
             <column name="isin" type="string"/>

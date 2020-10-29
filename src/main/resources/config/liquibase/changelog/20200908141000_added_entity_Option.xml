@@ -76,6 +76,18 @@
             <column name="put_tse_id" type="varchar(31)"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="20200908141000-1-margin" author="amirmehdi">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="option" columnName="call_margin"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="option">
+            <column name="call_margin" type="integer"/>
+            <column name="put_margin" type="integer"/>
+        </addColumn>
+    </changeSet>
     <changeSet id="20200908141000-1-relations" author="jhipster">
 
     </changeSet>

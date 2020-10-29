@@ -97,12 +97,12 @@ public class Option implements Serializable {
     private float putLeverage;
 
     @NotNull
-    @Column(name = "call_margin", nullable = false)
-    private float callMargin;
+    @Column(name = "call_margin")
+    private int callMargin;
 
     @NotNull
-    @Column(name = "put_margin", nullable = false)
-    private float putMargin;
+    @Column(name = "put_margin")
+    private int putMargin;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -192,6 +192,16 @@ public class Option implements Serializable {
 
     public Option putLeverage(float putLeverage) {
         this.putLeverage = putLeverage;
+        return this;
+    }
+
+    public Option callMargin(int callMargin) {
+        this.callMargin = callMargin;
+        return this;
+    }
+
+    public Option putMargin(int putMargin) {
+        this.putMargin = putMargin;
         return this;
     }
 
