@@ -25,7 +25,7 @@ public class Board {
     @Column(name = "date", nullable = false)
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private Date date = new Date();
 
     @Column(name = "last")
     private Integer last;
