@@ -49,13 +49,13 @@
         "price1": "Free",
         "feature1": "access to option stats table(only for options with expiration date less than 30 days)<br/>black scholes calculations<br/>break evev<br/>leverage",
         "title2": "Bronze",
-        "price2": "500,000",
+        "price2": "50,000",
         "feature2": "full access to option stats table<br/>black scholes calculations<br/>break even<br/>leverage<br/>access to VIP signals",
         "title3": "Silver",
-        "price3": "1,000,000",
+        "price3": "200,000",
         "feature3": "full access to option stats table<br/>black scholes calculations<br/>break even<br/>leverage<br/>access to VIP signals<br/>access to payoff diagram<br/>profit probability calculations<br/>greeks calculations (delta,theta,rho,gamma)",
         "title4": "Golden",
-        "price4": "4,000,000",
+        "price4": "1,000,000",
         "feature4": "full access to option stats table<br/>black scholes calculations<br/>break even<br/>leverage<br/>access to VIP signals<br/>access to payoff diagram<br/>profit probability calculations<br/>greeks calculations (delta,theta,rho,gamma)<br/>access to realtime API"
       }
     },
