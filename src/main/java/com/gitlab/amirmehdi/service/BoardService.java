@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ public class BoardService {
     private final OptionService optionService;
     private final Market market;
     private final InstrumentService instrumentService;
+
     public BoardService(BoardRepository boardRepository, OptionService optionService, Market market, InstrumentService instrumentService) {
         this.boardRepository = boardRepository;
         this.optionService = optionService;
@@ -38,43 +40,46 @@ public class BoardService {
         this.instrumentService = instrumentService;
     }
 
-    public void updateAllBoard(){
+    public void updateAllBoard() {
         List<String> isins = instrumentService.findAll().stream().map(Instrument::getIsin).collect(Collectors.toList());
         isins.addAll(optionService.findAllCallAndPutIsins());
 
-        Lists.partition(isins,100).forEach(strings -> {
+        Lists.partition(isins, 100).forEach(strings -> {
 
             List<Board> boards = strings.stream().map(s -> {
-                Board board = new Board()
-                    .isin(s);
                 StockWatch stockWatch = market.getStockWatch(s);
-                if (stockWatch!=null){
-                    board.close(stockWatch.getClosing())
-                        .last(stockWatch.getLast())
-                        .first(stockWatch.getFirst())
-                        .referencePrice(stockWatch.getReferencePrice())
-                        .low(stockWatch.getLow())
-                        .high(stockWatch.getHigh())
-                        .min(stockWatch.getMin())
-                        .max(stockWatch.getMax())
-                        .tradeCount(stockWatch.getTradesCount())
-                        .tradeVolume(stockWatch.getTradeVolume())
-                        .tradeValue(stockWatch.getTradeValue());
+                if (stockWatch == null) {
+                    return null;
                 }
                 BidAskItem bidAsk = market.getBidAsk(s).getBestBidAsk();
+                ClientsInfo clientsInfo = market.getClientsInfo(s);
+                Board board = new Board()
+                    .isin(s);
+
+                board.close(stockWatch.getClosing())
+                    .last(stockWatch.getLast())
+                    .first(stockWatch.getFirst())
+                    .referencePrice(stockWatch.getReferencePrice())
+                    .low(stockWatch.getLow())
+                    .high(stockWatch.getHigh())
+                    .min(stockWatch.getMin())
+                    .max(stockWatch.getMax())
+                    .tradeCount(stockWatch.getTradesCount())
+                    .tradeVolume(stockWatch.getTradeVolume())
+                    .tradeValue(stockWatch.getTradeValue());
+
                 board.askPrice(bidAsk.getAskPrice())
                     .bidPrice(bidAsk.getBidPrice())
                     .bidVolume(bidAsk.getBidQuantity())
                     .askVolume(bidAsk.getAskQuantity());
-                ClientsInfo clientsInfo = market.getClientsInfo(s);
-                if (clientsInfo!=null){
+                if (clientsInfo != null) {
                     board.legalBuyVolume(clientsInfo.getNaturalBuyVolume())
                         .legalSellVolume(clientsInfo.getNaturalSellVolume())
                         .individualBuyVolume(clientsInfo.getIndividualBuyVolume())
                         .individualSellVolume(clientsInfo.getIndividualSellVolume());
                 }
                 return board;
-            }).collect(Collectors.toList());
+            }).filter(Objects::nonNull).collect(Collectors.toList());
             boardRepository.saveAll(boards);
         });
     }
