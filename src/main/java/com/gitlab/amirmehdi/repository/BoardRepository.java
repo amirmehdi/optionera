@@ -16,7 +16,7 @@ import java.util.List;
 public interface BoardRepository extends JpaRepository<Board, String>, JpaSpecificationExecutor<Board> {
 
     @Query(value = "select b " +
-        " from Board b where b.isin like '%IRO9' " +
+        " from Board b where b.isin like 'IRO9%' " +
         "               and 2*b.legalSellVolume>b.tradeVolume " +
         "               and b.tradeValue>10000000")
     List<Board> findAllForLegalSupplyStrategy();
