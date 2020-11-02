@@ -18,6 +18,6 @@ public interface BoardRepository extends JpaRepository<Board, String>, JpaSpecif
     @Query(value = "select b " +
         " from Board b where b.isin like 'IRO9%' " +
         "               and 2*b.legalSellVolume>b.tradeVolume " +
-        "               and b.tradeValue>10000000")
+        "               and b.tradeValue>100000000")
     List<Board> findAllForLegalSupplyStrategy();
 }

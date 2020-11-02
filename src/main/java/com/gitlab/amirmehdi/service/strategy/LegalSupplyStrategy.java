@@ -15,7 +15,7 @@ public class LegalSupplyStrategy extends Strategy {
     private final BoardRepository boardRepository;
     private final Map<String, Float> cachedIsin = ExpiringMap.builder()
         .expirationPolicy(ExpiringMap.ExpirationPolicy.CREATED)
-        .expiration(1, TimeUnit.HOURS)
+        .expiration(90, TimeUnit.MINUTES)
         .build();
 
     protected LegalSupplyStrategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market, BoardRepository boardRepository) {
