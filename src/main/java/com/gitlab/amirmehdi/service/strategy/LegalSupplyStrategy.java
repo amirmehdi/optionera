@@ -6,11 +6,13 @@ import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OptionStatsService;
 import com.gitlab.amirmehdi.service.dto.StrategyResponse;
 import net.jodah.expiringmap.ExpiringMap;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+@Service
 public class LegalSupplyStrategy extends Strategy {
     private final BoardRepository boardRepository;
     private final Map<String, Float> cachedIsin = ExpiringMap.builder()
