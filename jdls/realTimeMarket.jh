@@ -7,6 +7,8 @@ entity Board {
     first Integer,
     low Integer,
     high Integer,
+    min Integer,
+    max Integer,
     tradeCount Integer,
     tradeVolume Long,
     tradeValue Long,

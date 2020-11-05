@@ -45,9 +45,9 @@ public abstract class Strategy {
 
     public String getMessageTemplate(String isin) {
         OptionStats optionStats = optionStatsService.findByCallOrPutIsin(isin);
-        String s = "\uD83C\uDF10نماد: %s " +
+        String s = "\uD83C\uDF10نماد: #%s " +
             "<a href='%s'>TSETMC</a> \n" +
-            "\uD83D\uDCDDدارایی پایه: %s " +
+            "\uD83D\uDCDDدارایی پایه: #%s " +
             "<a href='%s'>TSETMC</a> \n" +
             "⏰تاریخ: %s \n" +
             "⏳روز تا سررسید: %s \n" +

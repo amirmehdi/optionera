@@ -2,6 +2,7 @@ package com.gitlab.amirmehdi.service;
 
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.domain.OptionStats;
+import com.gitlab.amirmehdi.repository.BoardRepository;
 import com.gitlab.amirmehdi.repository.OptionRepository;
 import com.gitlab.amirmehdi.service.dto.core.BidAsk;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
@@ -30,10 +31,12 @@ public class OptionService {
     private final Logger log = LoggerFactory.getLogger(OptionService.class);
 
     private final OptionRepository optionRepository;
+    private final BoardRepository boardRepository;
     private final Market market;
 
-    public OptionService(OptionRepository optionRepository, Market market) {
+    public OptionService(OptionRepository optionRepository, BoardRepository boardRepository, Market market) {
         this.optionRepository = optionRepository;
+        this.boardRepository = boardRepository;
         this.market = market;
     }
 
@@ -164,8 +167,10 @@ public class OptionService {
         }
     }
 
+    @Transactional
     public void deleteAllExpiredOption() {
-        optionRepository.deleteAllByExpDateBefore(LocalDate.now());
+        boardRepository.deleteAllByExpDateBefore();
+        optionRepository.deleteAllByExpDateBefore();
     }
 
     public List<Option> findAllOptionsByLocalDateAndCallInTheMoney(LocalDate localdate, boolean callInTheMoney) {
