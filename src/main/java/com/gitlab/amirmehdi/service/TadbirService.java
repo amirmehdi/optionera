@@ -74,7 +74,7 @@ public class TadbirService {
             ResponseEntity<UserOpenInterestResponse> response =
                 restTemplate.exchange("https://silver.refahbroker.ir/Customer/GetCustomerSummaryList"
                     , HttpMethod.POST
-                    , new HttpEntity<>(new Object(), getHeaders(Broker.REFAH))
+                    , new HttpEntity<>("{}", getHeaders2(Broker.REFAH))
                     , UserOpenInterestResponse.class);
             log.debug("getUserOpenInterest response {}", response);
             return response.getBody();
@@ -149,24 +149,36 @@ public class TadbirService {
         String[] token = tokenRepository.findTopByBrokerOrderByIdDesc(broker)
             .orElseThrow(RuntimeException::new)
             .getToken().split("__");
+        addCommonHeader(headers, token[1]);
         headers.add("Authorization", "BasicAuthentication " + token[0]);
+        headers.add("Referer", "https://silver.refahbroker.ir/");
+        return headers;
+    }
+
+    protected LinkedMultiValueMap<String, String> getHeaders2(Broker broker) {
+        LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        String[] token = tokenRepository.findTopByBrokerOrderByIdDesc(broker)
+            .orElseThrow(RuntimeException::new)
+            .getToken().split("__");
+        addCommonHeader(headers, token[1]);
+        headers.add("Referer", "https://silver.refahbroker.ir/Home/Default/page-1");
+        headers.add("X-Requested-With", "XMLHttpRequest");
+        headers.add("Cookie", token[2]);
+        return headers;
+    }
+
+    private void addCommonHeader(LinkedMultiValueMap<String, String> headers, String userAgent) {
         headers.add("Content-Type", "application/json");
         headers.add("Connection", "keep-alive");
         headers.add("sec-ch-ua", "\"\\Not;A\"Brand\";v=\"99\", \"Google Chrome\";v=\"85\", \"Chromium\";v=\"85\"");
         headers.add("sec-ch-ua-mobile", "?0");
-        if (token.length < 2 || token[1].isEmpty()) {
-            headers.add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.80 Safari/537.36");
-        } else {
-            headers.add("User-Agent", token[1]);
-        }
+        headers.add("User-Agent", userAgent);
         headers.add("Accept", "*/*");
         headers.add("Origin", "https://silver.refahbroker.ir");
         headers.add("Sec-Fetch-Site", "same-site");
         headers.add("Sec-Fetch-Mode", "cors");
         headers.add("Sec-Fetch-Dest", "empty");
-        headers.add("Referer", "https://silver.refahbroker.ir/");
         headers.add("Accept-Language", "en-US,en;q=0.9,fa-IR;q=0.8,fa;q=0.7");
-        return headers;
     }
 
 }
