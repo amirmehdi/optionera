@@ -1,1 +1,11 @@
-id;name;call_isin;put_isin;exp_date;strike_price;contract_size;call_in_the_money;call_break_even;put_break_even;call_ask_to_bs;put_ask_to_bs;call_leverage;put_leverage;instrument_id
+id;name;call_isin;put_isin;exp_date;strike_price;contract_size;call_in_the_money;call_break_even;put_break_even;call_ask_to_bs;put_ask_to_bs;call_leverage;put_leverage;call_hedge;call_indifference;call_gain;call_gain_monthly;call_margin;put_margin;instrument_id
+1;PCI Florida attitude;empower;Forward dedicated;2020-09-08;53364;79286;false;32443;84343;99598;98413;68944;45189;32686;66019;74145;80576;39706;18216;1
+2;EXE Shoal;Auto Loan Account back-end;Incredible seize;2020-09-07;98322;34974;false;98546;6151;41862;87563;71539;81722;38911;35565;45441;55822;90192;22716;2
+3;Plastic Licensed;Paradigm;Officer Sleek;2020-09-08;5342;35700;true;89816;16161;49844;45438;59152;80134;29860;34419;94819;62615;60158;48438;3
+4;Buckinghamshire;Investor navigate RSS;Plastic;2020-09-08;56456;22037;false;80445;16304;65326;42905;62169;41768;70725;58951;28535;66703;22026;30930;4
+5;disintermediate Usability Somali Shilling;Junctions purple Chair;Delaware Home;2020-09-08;51564;84408;false;73570;36905;80530;89499;54580;63076;85534;3476;3942;22108;23639;97824;5
+6;Saudi Arabia;Ouguiya;Brazilian Real dedicated calculating;2020-09-07;89800;54128;false;27206;95379;45946;54002;26688;69083;54180;67935;66226;62029;72786;81009;6
+7;Metal;withdrawal Investment Account Plastic;wireless Cambridgeshire;2020-09-08;14980;37669;false;39011;386;29797;689;32556;26436;5845;51303;12053;43810;87698;28929;7
+8;Chicken;Licensed Soft Chair program;Pizza;2020-09-07;92398;82974;false;10033;64747;36295;97925;58876;42272;51319;91917;39897;45827;31778;93169;8
+9;compressing Luxembourg bleeding-edge;invoice;networks 1080p throughput;2020-09-08;45619;48807;false;32732;13688;47351;68015;84098;46976;85199;19228;79490;58609;79221;98119;9
+10;lime Strategist;Vision-oriented primary;repurpose;2020-09-07;57578;98050;false;33038;65247;43751;18728;29234;43178;18233;67731;62943;37563;42358;25725;10

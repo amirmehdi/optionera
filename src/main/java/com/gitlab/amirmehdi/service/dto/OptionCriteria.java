@@ -47,6 +47,18 @@ public class OptionCriteria implements Serializable, Criteria {
 
     private FloatFilter putLeverage;
 
+    private FloatFilter callHedge;
+
+    private FloatFilter callIndifference;
+
+    private FloatFilter callGain;
+
+    private FloatFilter callGainMonthly;
+
+    private IntegerFilter callMargin;
+
+    private IntegerFilter putMargin;
+
     private StringFilter instrumentId;
 
     public OptionCriteria() {
@@ -67,6 +79,12 @@ public class OptionCriteria implements Serializable, Criteria {
         this.putAskToBS = other.putAskToBS == null ? null : other.putAskToBS.copy();
         this.callLeverage = other.callLeverage == null ? null : other.callLeverage.copy();
         this.putLeverage = other.putLeverage == null ? null : other.putLeverage.copy();
+        this.callHedge = other.callHedge == null ? null : other.callHedge.copy();
+        this.callIndifference = other.callIndifference == null ? null : other.callIndifference.copy();
+        this.callGain = other.callGain == null ? null : other.callGain.copy();
+        this.callGainMonthly = other.callGainMonthly == null ? null : other.callGainMonthly.copy();
+        this.callMargin = other.callMargin == null ? null : other.callMargin.copy();
+        this.putMargin = other.putMargin == null ? null : other.putMargin.copy();
         this.instrumentId = other.instrumentId == null ? null : other.instrumentId.copy();
     }
 
@@ -187,6 +205,54 @@ public class OptionCriteria implements Serializable, Criteria {
         this.putLeverage = putLeverage;
     }
 
+    public FloatFilter getCallHedge() {
+        return callHedge;
+    }
+
+    public void setCallHedge(FloatFilter callHedge) {
+        this.callHedge = callHedge;
+    }
+
+    public FloatFilter getCallIndifference() {
+        return callIndifference;
+    }
+
+    public void setCallIndifference(FloatFilter callIndifference) {
+        this.callIndifference = callIndifference;
+    }
+
+    public FloatFilter getCallGain() {
+        return callGain;
+    }
+
+    public void setCallGain(FloatFilter callGain) {
+        this.callGain = callGain;
+    }
+
+    public FloatFilter getCallGainMonthly() {
+        return callGainMonthly;
+    }
+
+    public void setCallGainMonthly(FloatFilter callGainMonthly) {
+        this.callGainMonthly = callGainMonthly;
+    }
+
+    public IntegerFilter getCallMargin() {
+        return callMargin;
+    }
+
+    public void setCallMargin(IntegerFilter callMargin) {
+        this.callMargin = callMargin;
+    }
+
+    public IntegerFilter getPutMargin() {
+        return putMargin;
+    }
+
+    public void setPutMargin(IntegerFilter putMargin) {
+        this.putMargin = putMargin;
+    }
+
     public StringFilter getInstrumentId() {
         return instrumentId;
     }
@@ -220,6 +286,12 @@ public class OptionCriteria implements Serializable, Criteria {
             Objects.equals(putAskToBS, that.putAskToBS) &&
             Objects.equals(callLeverage, that.callLeverage) &&
             Objects.equals(putLeverage, that.putLeverage) &&
+            Objects.equals(callHedge, that.callHedge) &&
+            Objects.equals(callIndifference, that.callIndifference) &&
+            Objects.equals(callGain, that.callGain) &&
+            Objects.equals(callGainMonthly, that.callGainMonthly) &&
+            Objects.equals(callMargin, that.callMargin) &&
+            Objects.equals(putMargin, that.putMargin) &&
             Objects.equals(instrumentId, that.instrumentId);
     }
 
@@ -240,6 +312,12 @@ public class OptionCriteria implements Serializable, Criteria {
         putAskToBS,
         callLeverage,
         putLeverage,
+        callHedge,
+        callIndifference,
+        callGain,
+        callGainMonthly,
+        callMargin,
+        putMargin,
         instrumentId
         );
     }
@@ -261,6 +339,12 @@ public class OptionCriteria implements Serializable, Criteria {
                 (putAskToBS != null ? "putAskToBS=" + putAskToBS + ", " : "") +
                 (callLeverage != null ? "callLeverage=" + callLeverage + ", " : "") +
                 (putLeverage != null ? "putLeverage=" + putLeverage + ", " : "") +
+                (callHedge != null ? "callHedge=" + callHedge + ", " : "") +
+                (callIndifference != null ? "callIndifference=" + callIndifference + ", " : "") +
+                (callGain != null ? "callGain=" + callGain + ", " : "") +
+                (callGainMonthly != null ? "callGainMonthly=" + callGainMonthly + ", " : "") +
+                (callMargin != null ? "callMargin=" + callMargin + ", " : "") +
+                (putMargin != null ? "putMargin=" + putMargin + ", " : "") +
                 (instrumentId != null ? "instrumentId=" + instrumentId + ", " : "") +
             "}";
     }

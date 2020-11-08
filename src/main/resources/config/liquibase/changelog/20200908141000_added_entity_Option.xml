@@ -88,6 +88,19 @@
             <column name="put_margin" type="integer"/>
         </addColumn>
     </changeSet>
+    <changeSet id="20200908141000-1-hedge" author="amirmehdi">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="option" columnName="call_hedge"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="option">
+            <column name="call_hedge" type="${floatType}"/>
+            <column name="call_indifference" type="${floatType}"/>
+            <column name="call_gain" type="${floatType}"/>
+            <column name="call_gain_monthly" type="${floatType}"/>
+        </addColumn>
+    </changeSet>
     <changeSet id="20200908141000-1-relations" author="jhipster">
 
     </changeSet>
@@ -120,6 +133,12 @@
             <column name="put_ask_to_bs" type="numeric"/>
             <column name="call_leverage" type="numeric"/>
             <column name="put_leverage" type="numeric"/>
+            <column name="call_hedge" type="numeric"/>
+            <column name="call_indifference" type="numeric"/>
+            <column name="call_gain" type="numeric"/>
+            <column name="call_gain_monthly" type="numeric"/>
+            <column name="call_margin" type="numeric"/>
+            <column name="put_margin" type="numeric"/>
             <column name="instrument_id" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>
