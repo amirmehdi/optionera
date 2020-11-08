@@ -4,7 +4,6 @@ import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.domain.OptionStats;
 import com.gitlab.amirmehdi.repository.BoardRepository;
 import com.gitlab.amirmehdi.repository.OptionRepository;
-import com.gitlab.amirmehdi.service.dto.core.BidAsk;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,10 +113,7 @@ public class OptionService {
         options
             .parallelStream()
             .forEach(option -> {
-                updateParams(
-                    option, map.get(option.getInstrument().getIsin())
-                    , market.getBidAsk(option.getCallIsin())
-                    , market.getBidAsk(option.getPutIsin()));
+                updateParams(option, map.get(option.getInstrument().getIsin()));
             });
     }
 
@@ -125,19 +121,17 @@ public class OptionService {
         List<Option> options = optionRepository.findAllByInstrumentIsin(isin);
         StockWatch stockWatch = market.getStockWatch(isin);
         options
-            .forEach(option -> updateParams(
-                option
-                , stockWatch
-                , market.getBidAsk(option.getCallIsin())
-                , market.getBidAsk(option.getPutIsin())));
+            .forEach(option -> updateParams(option, stockWatch));
     }
 
-    private void updateParams(Option option, StockWatch stockWatch, BidAsk callBidAsk, BidAsk putBidAsk) {
+    private void updateParams(Option option, StockWatch stockWatch) {
         OptionStats optionStats = new OptionStats()
             .option(option)
             .baseStockWatch(stockWatch)
-            .callBidAsk(callBidAsk.getBestBidAsk())
-            .putBidAsk(putBidAsk.getBestBidAsk());
+            .callBidAsk(market.getBidAsk(option.getCallIsin()).getBestBidAsk())
+            .putBidAsk(market.getBidAsk(option.getPutIsin()).getBestBidAsk())
+            .callStockWatch(market.getStockWatch(option.getCallIsin()))
+            .putStockWatch(market.getStockWatch(option.getPutIsin()));
         updateOption(optionStats);
     }
 
