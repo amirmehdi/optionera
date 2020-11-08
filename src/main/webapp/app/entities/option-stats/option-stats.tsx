@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
-import { Spin, Table } from 'antd';
-import { getSortState, Translate } from 'react-jhipster';
-import { IRootState } from 'app/shared/reducers';
-import { getEntities, reset } from './option-stats.reducer';
-import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+import {connect} from 'react-redux';
+import {RouteComponentProps} from 'react-router-dom';
+import {Spin, Table} from 'antd';
+import {getSortState, Translate} from 'react-jhipster';
+import {IRootState} from 'app/shared/reducers';
+import {getEntities, reset} from './option-stats.reducer';
+import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
 import './style.scss';
-import { SyncOutlined } from '@ant-design/icons';
-import { SearchOptionStats } from 'app/entities/option-stats/Search-option-stats';
+import {SyncOutlined} from '@ant-design/icons';
+import {SearchOptionStats} from 'app/entities/option-stats/Search-option-stats';
 import DateTime from './../../DateTime/DateTime';
 import Number from './../../Framework/Number';
 
@@ -276,6 +276,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                <div className={`padding-col`}>{_computeDateInJalaliFormat(option.expDate)}</div>
              }/>
              <Column className="bg-color-gray"
+                     width={100}
                      title={<Translate contentKey="eTradeApp.option.instrument">underlying asset</Translate>}
                      dataIndex="option" key="optionInstrument" render={(option, record: any) =>
                <div className={`padding-col`}>
