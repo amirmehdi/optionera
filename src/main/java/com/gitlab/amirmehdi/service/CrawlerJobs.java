@@ -12,6 +12,7 @@ import com.google.common.collect.Lists;
 import io.micrometer.core.instrument.ImmutableTag;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -36,21 +37,19 @@ public class CrawlerJobs {
     private final StrategyService strategyService;
     private final Market market;
     private final MetricService metricService;
-    private Date firstUpdate;
-    private Date bidAskLastUpdate;
     private final AtomicLong bidAskSuccessCount = new AtomicLong(0);
     private final AtomicLong bidAskErrorCount = new AtomicLong(0);
-
-    private Date stockWatchLastUpdate;
     private final AtomicLong stockWatchSuccessCount = new AtomicLong(0);
     private final AtomicLong stockWatchErrorCount = new AtomicLong(0);
-
-    private Date clientsInfoFirstUpdate;
-    private Date clientsInfoLastUpdate;
     private final AtomicLong clientsInfoSuccessCount = new AtomicLong(0);
     private final AtomicLong clientsInfoErrorCount = new AtomicLong(0);
+    private Date firstUpdate;
+    private Date bidAskLastUpdate;
+    private Date stockWatchLastUpdate;
+    private Date clientsInfoFirstUpdate;
+    private Date clientsInfoLastUpdate;
 
-    public CrawlerJobs(RestTemplate restTemplate, OptionService optionService, OptionStatsService optionStatsService, InstrumentService instrumentRepository, OmidRLCConsumer omidRLCConsumer, StrategyService strategyService, Market market, MetricService metricService) {
+    public CrawlerJobs(@Qualifier("trustedRestTemplate") RestTemplate restTemplate, OptionService optionService, OptionStatsService optionStatsService, InstrumentService instrumentRepository, OmidRLCConsumer omidRLCConsumer, StrategyService strategyService, Market market, MetricService metricService) {
         this.restTemplate = restTemplate;
         this.optionService = optionService;
         this.optionStatsService = optionStatsService;
