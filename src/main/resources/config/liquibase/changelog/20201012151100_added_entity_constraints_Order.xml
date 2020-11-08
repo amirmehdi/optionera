@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     <!--
         Added the constraints for entity Order.
     -->
@@ -13,6 +13,16 @@
                                  constraintName="fk_orders_signal_id"
                                  referencedColumnNames="id"
                                  referencedTableName="signal"/>
+
+
+    </changeSet>
+    <changeSet id="20201012151100-3" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="algorithm_id"
+                                 baseTableName="orders"
+                                 constraintName="fk_orders_algorithm_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="algorithm"/>
 
     </changeSet>
 </databaseChangeLog>

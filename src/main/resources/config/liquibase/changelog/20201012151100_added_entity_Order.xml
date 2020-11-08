@@ -45,6 +45,13 @@
             <column name="created_at" type="TIMESTAMP"/>
         </addColumn>
     </changeSet>
+    <changeSet id="20201012151100-1-algorithm_idn" author="amirmehdi">
+        <addColumn tableName="orders">
+            <column name="algorithm_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
     <changeSet id="20201012151100-1-relations" author="jhipster">
 
     </changeSet>

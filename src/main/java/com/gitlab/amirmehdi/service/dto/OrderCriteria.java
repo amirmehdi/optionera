@@ -40,7 +40,6 @@ public class OrderCriteria implements Serializable, Criteria {
         }
 
     }
-
     /**
      * Class for filtering Side
      */
@@ -59,7 +58,6 @@ public class OrderCriteria implements Serializable, Criteria {
         }
 
     }
-
     /**
      * Class for filtering Broker
      */
@@ -99,6 +97,8 @@ public class OrderCriteria implements Serializable, Criteria {
 
     private LongFilter signalId;
 
+    private LongFilter algorithmId;
+
     public OrderCriteria() {
     }
 
@@ -112,6 +112,7 @@ public class OrderCriteria implements Serializable, Criteria {
         this.broker = other.broker == null ? null : other.broker.copy();
         this.omsId = other.omsId == null ? null : other.omsId.copy();
         this.signalId = other.signalId == null ? null : other.signalId.copy();
+        this.algorithmId = other.algorithmId == null ? null : other.algorithmId.copy();
     }
 
     @Override
@@ -191,6 +192,14 @@ public class OrderCriteria implements Serializable, Criteria {
         this.signalId = signalId;
     }
 
+    public LongFilter getAlgorithmId() {
+        return algorithmId;
+    }
+
+    public void setAlgorithmId(LongFilter algorithmId) {
+        this.algorithmId = algorithmId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -203,43 +212,46 @@ public class OrderCriteria implements Serializable, Criteria {
         final OrderCriteria that = (OrderCriteria) o;
         return
             Objects.equals(id, that.id) &&
-                Objects.equals(isin, that.isin) &&
-                Objects.equals(price, that.price) &&
-                Objects.equals(quantity, that.quantity) &&
-                Objects.equals(validity, that.validity) &&
-                Objects.equals(side, that.side) &&
-                Objects.equals(broker, that.broker) &&
-                Objects.equals(omsId, that.omsId) &&
-                Objects.equals(signalId, that.signalId);
+            Objects.equals(isin, that.isin) &&
+            Objects.equals(price, that.price) &&
+            Objects.equals(quantity, that.quantity) &&
+            Objects.equals(validity, that.validity) &&
+            Objects.equals(side, that.side) &&
+            Objects.equals(broker, that.broker) &&
+            Objects.equals(omsId, that.omsId) &&
+            Objects.equals(signalId, that.signalId) &&
+            Objects.equals(algorithmId, that.algorithmId);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-            id,
-            isin,
-            price,
-            quantity,
-            validity,
-            side,
-            broker,
-            omsId,
-            signalId
+        id,
+        isin,
+        price,
+        quantity,
+        validity,
+        side,
+        broker,
+        omsId,
+        signalId,
+        algorithmId
         );
     }
 
     @Override
     public String toString() {
         return "OrderCriteria{" +
-            (id != null ? "id=" + id + ", " : "") +
-            (isin != null ? "isin=" + isin + ", " : "") +
-            (price != null ? "price=" + price + ", " : "") +
-            (quantity != null ? "quantity=" + quantity + ", " : "") +
-            (validity != null ? "validity=" + validity + ", " : "") +
-            (side != null ? "side=" + side + ", " : "") +
-            (broker != null ? "broker=" + broker + ", " : "") +
-            (omsId != null ? "omsId=" + omsId + ", " : "") +
-            (signalId != null ? "signalId=" + signalId + ", " : "") +
+                (id != null ? "id=" + id + ", " : "") +
+                (isin != null ? "isin=" + isin + ", " : "") +
+                (price != null ? "price=" + price + ", " : "") +
+                (quantity != null ? "quantity=" + quantity + ", " : "") +
+                (validity != null ? "validity=" + validity + ", " : "") +
+                (side != null ? "side=" + side + ", " : "") +
+                (broker != null ? "broker=" + broker + ", " : "") +
+                (omsId != null ? "omsId=" + omsId + ", " : "") +
+                (signalId != null ? "signalId=" + signalId + ", " : "") +
+                (algorithmId != null ? "algorithmId=" + algorithmId + ", " : "") +
             "}";
     }
 

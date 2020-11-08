@@ -1,0 +1,31 @@
+{
+  "eTradeApp": {
+    "algorithm": {
+      "home": {
+        "title": "Algorithms",
+        "createLabel": "Create a new Algorithm",
+        "createOrEditLabel": "Create or edit a Algorithm",
+        "notFound": "No Algorithms found"
+      },
+      "created": "A new Algorithm is created with identifier {{ param }}",
+      "updated": "A Algorithm is updated with identifier {{ param }}",
+      "deleted": "A Algorithm is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Algorithm {{ id }}?"
+      },
+      "detail": {
+        "title": "Algorithm"
+      },
+      "type": "Type",
+      "side": "Side",
+      "state": "State",
+      "input": "Input",
+      "tradeVolumeLimit": "Trade Volume Limit",
+      "tradeValueLimit": "Trade Value Limit",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "isins": "Isins",
+      "order": "Order"
+    }
+  }
+}

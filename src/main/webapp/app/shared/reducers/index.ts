@@ -22,12 +22,15 @@ import optionStats, {OptionStatsState} from 'app/entities/option-stats/option-st
 // prettier-ignore
 import signal, {SignalState} from 'app/entities/signal/signal.reducer';
 // prettier-ignore
-import order, {OrderState} from 'app/entities/order/order.reducer';
-// prettier-ignore
 import token, {TokenState} from 'app/entities/token/token.reducer';
 
 // prettier-ignore
 import board, {BoardState} from 'app/entities/board/board.reducer';
+
+// prettier-ignore
+import algorithm, {AlgorithmState} from 'app/entities/algorithm/algorithm.reducer';
+// prettier-ignore
+import order, {OrderState} from 'app/entities/order/order.reducer';
 
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
@@ -49,6 +52,7 @@ export interface IRootState {
   readonly order: OrderState;
   readonly token: TokenState;
   readonly board: BoardState;
+  readonly algorithm: AlgorithmState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -71,6 +75,7 @@ const rootReducer = combineReducers<IRootState>({
   order,
   token,
   board,
+  algorithm,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

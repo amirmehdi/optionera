@@ -5,6 +5,9 @@ import {NavDropdown} from './menu-components';
 
 const adminMenus = (
   <>
+    <MenuItem icon="asterisk" to="/algorithm">
+      <Translate contentKey="global.menu.entities.algorithm" />
+    </MenuItem>
     <MenuItem icon="asterisk" to="/signal">
       <Translate contentKey="global.menu.entities.signal" />
     </MenuItem>

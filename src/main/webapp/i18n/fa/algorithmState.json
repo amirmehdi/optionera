@@ -1,0 +1,9 @@
+{
+  "eTradeApp": {
+    "AlgorithmState": {
+      "null": "",
+      "ENABLE": "ENABLE",
+      "DISABLE": "DISABLE"
+    }
+  }
+}

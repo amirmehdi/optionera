@@ -6,12 +6,10 @@ import com.gitlab.amirmehdi.domain.enumeration.Side;
 import com.gitlab.amirmehdi.domain.enumeration.Validity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * A Order.
@@ -58,14 +56,13 @@ public class Order implements Serializable {
     @Column(name = "oms_id")
     private String omsId;
 
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private Date createdAt;
-
     @ManyToOne
     @JsonIgnoreProperties("orders")
     private Signal signal;
+
+    @ManyToOne
+    @JsonIgnoreProperties("orders")
+    private Algorithm algorithm;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -167,10 +164,6 @@ public class Order implements Serializable {
         this.omsId = omsId;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
     public Signal getSignal() {
         return signal;
     }
@@ -182,6 +175,19 @@ public class Order implements Serializable {
 
     public void setSignal(Signal signal) {
         this.signal = signal;
+    }
+
+    public Algorithm getAlgorithm() {
+        return algorithm;
+    }
+
+    public Order algorithm(Algorithm algorithm) {
+        this.algorithm = algorithm;
+        return this;
+    }
+
+    public void setAlgorithm(Algorithm algorithm) {
+        this.algorithm = algorithm;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

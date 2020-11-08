@@ -58,10 +58,17 @@
       "otherEntityRelationshipName": "order",
       "relationshipName": "signal",
       "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "algorithm",
+      "otherEntityRelationshipName": "order",
+      "relationshipName": "algorithm",
+      "otherEntityField": "id"
     }
   ],
   "changelogDate": "20201012151100",
-  "entityTableName": "order",
+  "entityTableName": "orders",
   "dto": "no",
   "pagination": "infinite-scroll",
   "service": "serviceClass",

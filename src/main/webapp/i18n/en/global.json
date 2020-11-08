@@ -14,6 +14,7 @@
         "order": "Order",
         "token": "Token",
         "board": "Board",
+        "algorithm": "Algorithm",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

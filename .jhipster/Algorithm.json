@@ -1,0 +1,76 @@
+{
+    "name": "Algorithm",
+    "fields": [
+        {
+            "fieldName": "type",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "side",
+            "fieldType": "AlgorithmSide",
+            "fieldValues": "BUY,SELL,SIDE",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "state",
+            "fieldType": "AlgorithmState",
+            "fieldValues": "ENABLE,DISABLE",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "input",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "tradeVolumeLimit",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "tradeValueLimit",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "createdAt",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "updatedAt",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "isins",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "order",
+            "otherEntityRelationshipName": "algorithm",
+            "relationshipName": "order"
+        }
+    ],
+    "changelogDate": "20201106231800",
+    "entityTableName": "algorithm",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*",
+    "searchEngine": false,
+    "databaseType": "sql"
+}

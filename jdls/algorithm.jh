@@ -1,0 +1,31 @@
+entity Algorithm {
+ 	type String required,
+
+    include String,
+    exclude String,
+
+ 	side AlgorithmSide required,
+    state AlgorithmState required,
+    input String,
+
+    tradeVolumeLimit Integer,
+    tradeValueLimit Long,
+    createdAt Instant,
+    updatedAt Instant
+}
+
+enum AlgorithmState {
+	ENABLE, DISABLE
+}
+enum AlgorithmSide {
+	BUY, SELL, SIDE
+}
+
+relationship OneToMany {
+	Algorithm to Order{algorithm}
+}
+
+dto Algorithm with mapstruct
+paginate Algorithm with pagination
+filter Algorithm
+

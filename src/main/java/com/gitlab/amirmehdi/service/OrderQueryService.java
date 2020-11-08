@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.service;
 
+import com.gitlab.amirmehdi.domain.Algorithm_;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Order_;
 import com.gitlab.amirmehdi.domain.Signal_;
@@ -37,7 +38,6 @@ public class OrderQueryService extends QueryService<Order> {
 
     /**
      * Return a {@link List} of {@link Order} which matches the criteria from the database.
-     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching entities.
      */
@@ -50,9 +50,8 @@ public class OrderQueryService extends QueryService<Order> {
 
     /**
      * Return a {@link Page} of {@link Order} which matches the criteria from the database.
-     *
      * @param criteria The object which holds all the filters, which the entities should match.
-     * @param page     The page, which should be returned.
+     * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
@@ -64,7 +63,6 @@ public class OrderQueryService extends QueryService<Order> {
 
     /**
      * Return the number of matching entities in the database.
-     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the number of matching entities.
      */
@@ -77,7 +75,6 @@ public class OrderQueryService extends QueryService<Order> {
 
     /**
      * Function to convert {@link OrderCriteria} to a {@link Specification}
-     *
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
      */
@@ -111,6 +108,10 @@ public class OrderQueryService extends QueryService<Order> {
             if (criteria.getSignalId() != null) {
                 specification = specification.and(buildSpecification(criteria.getSignalId(),
                     root -> root.join(Order_.signal, JoinType.LEFT).get(Signal_.id)));
+            }
+            if (criteria.getAlgorithmId() != null) {
+                specification = specification.and(buildSpecification(criteria.getAlgorithmId(),
+                    root -> root.join(Order_.algorithm, JoinType.LEFT).get(Algorithm_.id)));
             }
         }
         return specification;

@@ -1,6 +1,7 @@
 package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.ETradeApp;
+import com.gitlab.amirmehdi.domain.Algorithm;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Signal;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
@@ -26,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 /**
  * Integration tests for the {@link OrderResource} REST controller.
  */
@@ -78,7 +78,7 @@ public class OrderResourceIT {
 
     /**
      * Create an entity for this test.
-     * <p>
+     *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -93,10 +93,9 @@ public class OrderResourceIT {
             .omsId(DEFAULT_OMS_ID);
         return order;
     }
-
     /**
      * Create an updated entity for this test.
-     * <p>
+     *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -380,8 +379,7 @@ public class OrderResourceIT {
         // Get all the orderList where isin is null
         defaultOrderShouldNotBeFound("isin.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
     public void getAllOrdersByIsinContainsSomething() throws Exception {
         // Initialize the database
@@ -825,8 +823,7 @@ public class OrderResourceIT {
         // Get all the orderList where omsId is null
         defaultOrderShouldNotBeFound("omsId.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
     public void getAllOrdersByOmsIdContainsSomething() throws Exception {
         // Initialize the database
@@ -870,6 +867,26 @@ public class OrderResourceIT {
 
         // Get all the orderList where signal equals to signalId + 1
         defaultOrderShouldNotBeFound("signalId.equals=" + (signalId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllOrdersByAlgorithmIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+        Algorithm algorithm = AlgorithmResourceIT.createEntity(em);
+        em.persist(algorithm);
+        em.flush();
+        order.setAlgorithm(algorithm);
+        orderRepository.saveAndFlush(order);
+        Long algorithmId = algorithm.getId();
+
+        // Get all the orderList where algorithm equals to algorithmId
+        defaultOrderShouldBeFound("algorithmId.equals=" + algorithmId);
+
+        // Get all the orderList where algorithm equals to algorithmId + 1
+        defaultOrderShouldNotBeFound("algorithmId.equals=" + (algorithmId + 1));
     }
 
     /**

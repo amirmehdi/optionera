@@ -10,8 +10,7 @@ import {IRootState} from 'app/shared/reducers';
 import {getEntities, reset} from './order.reducer';
 import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
 
-export interface IOrderProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {
-}
+export interface IOrderProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Order = (props: IOrderProps) => {
   const [paginationState, setPaginationState] = useState(getSortState(props.location, ITEMS_PER_PAGE));
@@ -64,13 +63,13 @@ export const Order = (props: IOrderProps) => {
     setSorting(true);
   };
 
-  const {orderList, match, loading} = props;
+  const { orderList, match, loading } = props;
   return (
     <div>
       <h2 id="order-heading">
         <Translate contentKey="eTradeApp.order.home.title">Orders</Translate>
         <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
-          <FontAwesomeIcon icon="plus"/>
+          <FontAwesomeIcon icon="plus" />
           &nbsp;
           <Translate contentKey="eTradeApp.order.home.createLabel">Create new Order</Translate>
         </Link>
@@ -87,83 +86,87 @@ export const Order = (props: IOrderProps) => {
           {orderList && orderList.length > 0 ? (
             <Table responsive>
               <thead>
-              <tr>
-                <th className="hand" onClick={sort('id')}>
-                  <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('isin')}>
-                  <Translate contentKey="eTradeApp.order.isin">Isin</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('price')}>
-                  <Translate contentKey="eTradeApp.order.price">Price</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('quantity')}>
-                  <Translate contentKey="eTradeApp.order.quantity">Quantity</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('validity')}>
-                  <Translate contentKey="eTradeApp.order.validity">Validity</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('side')}>
-                  <Translate contentKey="eTradeApp.order.side">Side</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('broker')}>
-                  <Translate contentKey="eTradeApp.order.broker">Broker</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('omsId')}>
-                  <Translate contentKey="eTradeApp.order.omsId">Oms Id</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th>
-                  <Translate contentKey="eTradeApp.order.signal">Signal</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th/>
-              </tr>
+                <tr>
+                  <th className="hand" onClick={sort('id')}>
+                    <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('isin')}>
+                    <Translate contentKey="eTradeApp.order.isin">Isin</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('price')}>
+                    <Translate contentKey="eTradeApp.order.price">Price</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('quantity')}>
+                    <Translate contentKey="eTradeApp.order.quantity">Quantity</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('validity')}>
+                    <Translate contentKey="eTradeApp.order.validity">Validity</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('side')}>
+                    <Translate contentKey="eTradeApp.order.side">Side</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('broker')}>
+                    <Translate contentKey="eTradeApp.order.broker">Broker</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('omsId')}>
+                    <Translate contentKey="eTradeApp.order.omsId">Oms Id</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th>
+                    <Translate contentKey="eTradeApp.order.signal">Signal</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th>
+                    <Translate contentKey="eTradeApp.order.algorithm">Algorithm</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th />
+                </tr>
               </thead>
               <tbody>
-              {orderList.map((order, i) => (
-                <tr key={`entity-${i}`}>
-                  <td>
-                    <Button tag={Link} to={`${match.url}/${order.id}`} color="link" size="sm">
-                      {order.id}
-                    </Button>
-                  </td>
-                  <td>{order.isin}</td>
-                  <td>{order.price}</td>
-                  <td>{order.quantity}</td>
-                  <td>
-                    <Translate contentKey={`eTradeApp.Validity.${order.validity}`}/>
-                  </td>
-                  <td>
-                    <Translate contentKey={`eTradeApp.Side.${order.side}`}/>
-                  </td>
-                  <td>
-                    <Translate contentKey={`eTradeApp.Broker.${order.broker}`}/>
-                  </td>
-                  <td>{order.omsId}</td>
-                  <td>{order.signal ? <Link to={`signal/${order.signal.id}`}>{order.signal.id}</Link> : ''}</td>
-                  <td className="text-right">
-                    <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${order.id}`} color="info" size="sm">
-                        <FontAwesomeIcon icon="eye"/>{' '}
-                        <span className="d-none d-md-inline">
+                {orderList.map((order, i) => (
+                  <tr key={`entity-${i}`}>
+                    <td>
+                      <Button tag={Link} to={`${match.url}/${order.id}`} color="link" size="sm">
+                        {order.id}
+                      </Button>
+                    </td>
+                    <td>{order.isin}</td>
+                    <td>{order.price}</td>
+                    <td>{order.quantity}</td>
+                    <td>
+                      <Translate contentKey={`eTradeApp.Validity.${order.validity}`} />
+                    </td>
+                    <td>
+                      <Translate contentKey={`eTradeApp.Side.${order.side}`} />
+                    </td>
+                    <td>
+                      <Translate contentKey={`eTradeApp.Broker.${order.broker}`} />
+                    </td>
+                    <td>{order.omsId}</td>
+                    <td>{order.signal ? <Link to={`signal/${order.signal.id}`}>{order.signal.id}</Link> : ''}</td>
+                    <td>{order.algorithm ? <Link to={`algorithm/${order.algorithm.id}`}>{order.algorithm.id}</Link> : ''}</td>
+                    <td className="text-right">
+                      <div className="btn-group flex-btn-group-container">
+                        <Button tag={Link} to={`${match.url}/${order.id}`} color="info" size="sm">
+                          <FontAwesomeIcon icon="eye" />{' '}
+                          <span className="d-none d-md-inline">
                             <Translate contentKey="entity.action.view">View</Translate>
                           </span>
-                      </Button>
-                      <Button tag={Link} to={`${match.url}/${order.id}/edit`} color="primary" size="sm">
-                        <FontAwesomeIcon icon="pencil-alt"/>{' '}
-                        <span className="d-none d-md-inline">
+                        </Button>
+                        <Button tag={Link} to={`${match.url}/${order.id}/edit`} color="primary" size="sm">
+                          <FontAwesomeIcon icon="pencil-alt" />{' '}
+                          <span className="d-none d-md-inline">
                             <Translate contentKey="entity.action.edit">Edit</Translate>
                           </span>
-                      </Button>
-                      <Button tag={Link} to={`${match.url}/${order.id}/delete`} color="danger" size="sm">
-                        <FontAwesomeIcon icon="trash"/>{' '}
-                        <span className="d-none d-md-inline">
+                        </Button>
+                        <Button tag={Link} to={`${match.url}/${order.id}/delete`} color="danger" size="sm">
+                          <FontAwesomeIcon icon="trash" />{' '}
+                          <span className="d-none d-md-inline">
                             <Translate contentKey="entity.action.delete">Delete</Translate>
                           </span>
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
           ) : (
@@ -179,7 +182,7 @@ export const Order = (props: IOrderProps) => {
   );
 };
 
-const mapStateToProps = ({order}: IRootState) => ({
+const mapStateToProps = ({ order }: IRootState) => ({
   orderList: order.entities,
   loading: order.loading,
   totalItems: order.totalItems,
