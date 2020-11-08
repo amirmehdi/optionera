@@ -2,7 +2,6 @@ package com.gitlab.amirmehdi.service;
 
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Signal;
-import com.gitlab.amirmehdi.repository.OptionRepository;
 import com.gitlab.amirmehdi.repository.SignalRepository;
 import com.gitlab.amirmehdi.service.dto.StrategyResponse;
 import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
@@ -26,7 +25,6 @@ public class StrategyService {
     private final TelegramMessageSender telegramMessageSender;
     private final SignalRepository signalRepository;
     private final OrderService orderService;
-    private final OptionRepository optionRepository;
 
     private final TaskScheduler executor;
     private final HashMap<String, Strategy> strategies = new HashMap<>();
@@ -37,11 +35,10 @@ public class StrategyService {
     @Value("${application.telegram.privateChat}")
     private String privateChannelId;
 
-    public StrategyService(TelegramMessageSender telegramMessageSender, SignalRepository signalRepository, OrderService orderService, OptionRepository optionRepository, TaskScheduler executor) {
+    public StrategyService(TelegramMessageSender telegramMessageSender, SignalRepository signalRepository, OrderService orderService, TaskScheduler executor) {
         this.telegramMessageSender = telegramMessageSender;
         this.signalRepository = signalRepository;
         this.orderService = orderService;
-        this.optionRepository = optionRepository;
         this.executor = executor;
     }
 
