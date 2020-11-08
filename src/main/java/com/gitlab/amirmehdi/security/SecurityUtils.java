@@ -81,7 +81,7 @@ public final class SecurityUtils {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null &&
             getAuthorities(authentication).anyMatch(AuthoritiesConstants.USER::equals) &&
-            getAuthorities(authentication).noneMatch(AuthoritiesConstants.ADMIN::equals);
+            getAuthorities(authentication).count() == 1;
     }
 
     private static Stream<String> getAuthorities(Authentication authentication) {
