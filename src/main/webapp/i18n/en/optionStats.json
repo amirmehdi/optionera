@@ -36,6 +36,12 @@
       "BlackScholes30": "Black Scholes",
       "AskPriceToBS": "Ask Price To BS",
       "EffectivePrice": "Effective Price",
+      "FinalPrice": "Final Price",
+      "Hedge": "Hedge",
+      "Indifference": "Indifference",
+      "Gain": "Gain",
+      "GainMonthly": "Gain Monthly",
+      "Margin": "Margin",
       "BreakEven": "Break Even",
       "Leverage": "Leverage",
       "option": "Option"

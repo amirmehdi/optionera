@@ -12,6 +12,7 @@ export interface IOptionStats {
   putBS90?: number;
   callEffectivePrice?: number;
   putEffectivePrice?: number;
+  callFinalPrice?: number;
 
   option?: IOption;
 

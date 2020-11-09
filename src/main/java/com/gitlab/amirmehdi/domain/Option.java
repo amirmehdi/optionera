@@ -104,6 +104,23 @@ public class Option implements Serializable {
     @Column(name = "put_margin")
     private int putMargin;
 
+    @NotNull
+    @Column(name = "call_hedge", nullable = false)
+    private float callHedge;
+
+    @NotNull
+    @Column(name = "call_indifference", nullable = false)
+    private float callIndifference;
+
+    @NotNull
+    @Column(name = "call_gain", nullable = false)
+    private float callGain;
+
+    @NotNull
+    @Column(name = "call_gain_monthly", nullable = false)
+    private float callGainMonthly;
+
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
@@ -205,6 +222,26 @@ public class Option implements Serializable {
         return this;
     }
 
+    public Option callHedge(float callHedge) {
+        this.callHedge = callHedge;
+        return this;
+    }
+
+    public Option callIndifference(float callIndifference) {
+        this.callIndifference = callIndifference;
+        return this;
+    }
+
+    public Option callGain(float callGain) {
+        this.callGain = callGain;
+        return this;
+    }
+
+    public Option callGainMonthly(float callGainMonthly) {
+        this.callGainMonthly = callGainMonthly;
+        return this;
+    }
+
     public Option instrument(Instrument instrument) {
         this.instrument = instrument;
         return this;
@@ -243,6 +280,12 @@ public class Option implements Serializable {
             ", putAskToBS=" + getPutAskToBS() +
             ", callLeverage=" + getCallLeverage() +
             ", putLeverage=" + getPutLeverage() +
+            ", callHedge=" + getCallHedge() +
+            ", callIndifference=" + getCallIndifference() +
+            ", callGain=" + getCallGain() +
+            ", callGainMonthly=" + getCallGainMonthly() +
+            ", callMargin=" + getCallMargin() +
+            ", putMargin=" + getPutMargin() +
             "}";
     }
 }

@@ -122,6 +122,24 @@ public class OptionQueryService extends QueryService<Option> {
             if (criteria.getPutLeverage() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getPutLeverage(), Option_.putLeverage));
             }
+            if (criteria.getCallHedge() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCallHedge(), Option_.callHedge));
+            }
+            if (criteria.getCallIndifference() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCallIndifference(), Option_.callIndifference));
+            }
+            if (criteria.getCallGain() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCallGain(), Option_.callGain));
+            }
+            if (criteria.getCallGainMonthly() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCallGainMonthly(), Option_.callGainMonthly));
+            }
+            if (criteria.getCallMargin() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCallMargin(), Option_.callMargin));
+            }
+            if (criteria.getPutMargin() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getPutMargin(), Option_.putMargin));
+            }
             if (criteria.getInstrumentId() != null) {
                 specification = specification.and(buildSpecification(criteria.getInstrumentId(),
                     root -> root.join(Option_.instrument, JoinType.LEFT).get(Instrument_.isin)));

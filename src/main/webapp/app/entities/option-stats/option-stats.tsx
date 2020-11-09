@@ -174,8 +174,15 @@ export const OptionStats = (props: IOptionStatsProps) => {
                    <Number>{callEffectivePrice}</Number></div>
                }/>
                <Column
+                 title={<Translate contentKey="eTradeApp.optionStats.FinalPrice">FinalPrice</Translate>}
+                 dataIndex="callFinalPrice" key="callFinalPrice" render={(callFinalPrice, row: any) =>
+                 <div
+                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                   <Number>{callFinalPrice}</Number></div>
+               }/>
+               <Column
                  sorter={true}
-                 width={120}
+                 width={110}
                  sortDirections={['ascend', 'descend']}
                  sortOrder={paginationState.sort === 'callAskToBS' ?
                    paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
@@ -187,6 +194,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                    <Number>{option.callAskToBS}</Number></div>
                }/>
                <Column
+                 width={70}
                  sorter={true}
                  sortDirections={['ascend', 'descend']}
                  sortOrder={paginationState.sort === 'callBreakEven' ?
@@ -199,6 +207,72 @@ export const OptionStats = (props: IOptionStatsProps) => {
                    <Number>{option.callBreakEven}</Number></div>
                }/>
                <Column
+                 width={80}
+                 sorter={true}
+                 sortDirections={['ascend', 'descend']}
+                 sortOrder={paginationState.sort === 'callMargin' ?
+                   paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                 showSorterTooltip={false}
+                 title={<Translate contentKey="eTradeApp.optionStats.Margin">Margin</Translate>}
+                 dataIndex="option" key="callMargin" render={(option, row: any) =>
+                 <div
+                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                   <Number>{option.callMargin}</Number></div>
+               }/>
+               <Column
+                 width={75}
+                 sorter={true}
+                 sortDirections={['ascend', 'descend']}
+                 sortOrder={paginationState.sort === 'callHedge' ?
+                   paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                 showSorterTooltip={false}
+                 title={<Translate contentKey="eTradeApp.optionStats.Hedge">Hedge</Translate>}
+                 dataIndex="option" key="callHedge" render={(option, row: any) =>
+                 <div
+                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                   <Number>{option.callHedge}</Number></div>
+               }/>
+               <Column
+                 width={90}
+                 sorter={true}
+                 sortDirections={['ascend', 'descend']}
+                 sortOrder={paginationState.sort === 'callIndifference' ?
+                   paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                 showSorterTooltip={false}
+                 title={<Translate contentKey="eTradeApp.optionStats.Indifference">Indifference</Translate>}
+                 dataIndex="option" key="callIndifference" render={(option, row: any) =>
+                 <div
+                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                   <Number>{option.callIndifference}</Number></div>
+               }/>
+               <Column
+                 width={90}
+                 sorter={true}
+                 sortDirections={['ascend', 'descend']}
+                 sortOrder={paginationState.sort === 'callGain' ?
+                   paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                 showSorterTooltip={false}
+                 title={<Translate contentKey="eTradeApp.optionStats.Gain">Gain</Translate>}
+                 dataIndex="option" key="callGain" render={(option, row: any) =>
+                 <div
+                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                   <Number>{option.callGain}</Number></div>
+               }/>
+               <Column
+                 width={90}
+                 sorter={true}
+                 sortDirections={['ascend', 'descend']}
+                 sortOrder={paginationState.sort === 'callGainMonthly' ?
+                   paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                 showSorterTooltip={false}
+                 title={<Translate contentKey="eTradeApp.optionStats.GainMonthly">GainMonthly</Translate>}
+                 dataIndex="option" key="callGainMonthly" render={(option, row: any) =>
+                 <div
+                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                   <Number>{option.callGainMonthly}</Number></div>
+               }/>
+               <Column
+                 width={70}
                  sorter={true}
                  sortDirections={['ascend', 'descend']}
                  sortOrder={paginationState.sort === 'callLeverage' ?
@@ -265,7 +339,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                <div className={`padding-col`}><Number>{option.strikePrice}</Number></div>
              }/>
              <Column className="bg-color-gray"
-                     width={210}
+                     width={180}
                      sorter={true}
                      sortDirections={['ascend', 'descend']}
                      sortOrder={paginationState.sort === 'expDate' ?
@@ -276,7 +350,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                <div className={`padding-col`}>{_computeDateInJalaliFormat(option.expDate)}</div>
              }/>
              <Column className="bg-color-gray"
-                     width={100}
+                     width={80}
                      title={<Translate contentKey="eTradeApp.option.instrument">underlying asset</Translate>}
                      dataIndex="option" key="optionInstrument" render={(option, record: any) =>
                <div className={`padding-col`}>

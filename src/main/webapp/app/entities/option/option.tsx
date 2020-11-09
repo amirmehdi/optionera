@@ -11,8 +11,7 @@ import {getEntities, reset} from './option.reducer';
 import {APP_LOCAL_DATE_FORMAT} from 'app/config/constants';
 import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
 
-export interface IOptionProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {
-}
+export interface IOptionProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Option = (props: IOptionProps) => {
   const [paginationState, setPaginationState] = useState(getSortState(props.location, ITEMS_PER_PAGE));
@@ -65,13 +64,13 @@ export const Option = (props: IOptionProps) => {
     setSorting(true);
   };
 
-  const {optionList, match, loading} = props;
+  const { optionList, match, loading } = props;
   return (
     <div>
       <h2 id="option-heading">
         <Translate contentKey="eTradeApp.option.home.title">Options</Translate>
         <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
-          <FontAwesomeIcon icon="plus"/>
+          <FontAwesomeIcon icon="plus" />
           &nbsp;
           <Translate contentKey="eTradeApp.option.home.createLabel">Create new Option</Translate>
         </Link>
@@ -88,114 +87,127 @@ export const Option = (props: IOptionProps) => {
           {optionList && optionList.length > 0 ? (
             <Table responsive>
               <thead>
-              <tr>
-                <th className="hand" onClick={sort('id')}>
-                  <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('name')}>
-                  <Translate contentKey="eTradeApp.option.name">Name</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('callIsin')}>
-                  <Translate contentKey="eTradeApp.option.callIsin">Call Isin</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('putIsin')}>
-                  <Translate contentKey="eTradeApp.option.putIsin">Put Isin</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('expDate')}>
-                  <Translate contentKey="eTradeApp.option.expDate">Exp Date</Translate> <FontAwesomeIcon icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('strikePrice')}>
-                  <Translate contentKey="eTradeApp.option.strikePrice">Strike Price</Translate> <FontAwesomeIcon
-                  icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('contractSize')}>
-                  <Translate contentKey="eTradeApp.option.contractSize">Contract Size</Translate> <FontAwesomeIcon
-                  icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('callInTheMoney')}>
-                  <Translate contentKey="eTradeApp.option.callInTheMoney">Call In The Money</Translate> <FontAwesomeIcon
-                  icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('callBreakEven')}>
-                  <Translate contentKey="eTradeApp.option.callBreakEven">Call Break Even</Translate> <FontAwesomeIcon
-                  icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('putBreakEven')}>
-                  <Translate contentKey="eTradeApp.option.putBreakEven">Put Break Even</Translate> <FontAwesomeIcon
-                  icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('callAskToBS')}>
-                  <Translate contentKey="eTradeApp.option.callAskToBS">Call Ask To BS</Translate> <FontAwesomeIcon
-                  icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('putAskToBS')}>
-                  <Translate contentKey="eTradeApp.option.putAskToBS">Put Ask To BS</Translate> <FontAwesomeIcon
-                  icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('callLeverage')}>
-                  <Translate contentKey="eTradeApp.option.callLeverage">Call Leverage</Translate> <FontAwesomeIcon
-                  icon="sort"/>
-                </th>
-                <th className="hand" onClick={sort('putLeverage')}>
-                  <Translate contentKey="eTradeApp.option.putLeverage">Put Leverage</Translate> <FontAwesomeIcon
-                  icon="sort"/>
-                </th>
-                <th>
-                  <Translate contentKey="eTradeApp.option.instrument">Instrument</Translate> <FontAwesomeIcon
-                  icon="sort"/>
-                </th>
-                <th/>
-              </tr>
+                <tr>
+                  <th className="hand" onClick={sort('id')}>
+                    <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('name')}>
+                    <Translate contentKey="eTradeApp.option.name">Name</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('callIsin')}>
+                    <Translate contentKey="eTradeApp.option.callIsin">Call Isin</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('putIsin')}>
+                    <Translate contentKey="eTradeApp.option.putIsin">Put Isin</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('expDate')}>
+                    <Translate contentKey="eTradeApp.option.expDate">Exp Date</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('strikePrice')}>
+                    <Translate contentKey="eTradeApp.option.strikePrice">Strike Price</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('contractSize')}>
+                    <Translate contentKey="eTradeApp.option.contractSize">Contract Size</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('callInTheMoney')}>
+                    <Translate contentKey="eTradeApp.option.callInTheMoney">Call In The Money</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('callBreakEven')}>
+                    <Translate contentKey="eTradeApp.option.callBreakEven">Call Break Even</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('putBreakEven')}>
+                    <Translate contentKey="eTradeApp.option.putBreakEven">Put Break Even</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('callAskToBS')}>
+                    <Translate contentKey="eTradeApp.option.callAskToBS">Call Ask To BS</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('putAskToBS')}>
+                    <Translate contentKey="eTradeApp.option.putAskToBS">Put Ask To BS</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('callLeverage')}>
+                    <Translate contentKey="eTradeApp.option.callLeverage">Call Leverage</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('putLeverage')}>
+                    <Translate contentKey="eTradeApp.option.putLeverage">Put Leverage</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('callHedge')}>
+                    <Translate contentKey="eTradeApp.option.callHedge">Call Hedge</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('callIndifference')}>
+                    <Translate contentKey="eTradeApp.option.callIndifference">Call Indifference</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('callGain')}>
+                    <Translate contentKey="eTradeApp.option.callGain">Call Gain</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('callGainMonthly')}>
+                    <Translate contentKey="eTradeApp.option.callGainMonthly">Call Gain Monthly</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('callMargin')}>
+                    <Translate contentKey="eTradeApp.option.callMargin">Call Margin</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('putMargin')}>
+                    <Translate contentKey="eTradeApp.option.putMargin">Put Margin</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th>
+                    <Translate contentKey="eTradeApp.option.instrument">Instrument</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th />
+                </tr>
               </thead>
               <tbody>
-              {optionList.map((option, i) => (
-                <tr key={`entity-${i}`}>
-                  <td>
-                    <Button tag={Link} to={`${match.url}/${option.id}`} color="link" size="sm">
-                      {option.id}
-                    </Button>
-                  </td>
-                  <td>{option.name}</td>
-                  <td>{option.callIsin}</td>
-                  <td>{option.putIsin}</td>
-                  <td>
-                    <TextFormat type="date" value={option.expDate} format={APP_LOCAL_DATE_FORMAT}/>
-                  </td>
-                  <td>{option.strikePrice}</td>
-                  <td>{option.contractSize}</td>
-                  <td>{option.callInTheMoney ? 'true' : 'false'}</td>
-                  <td>{option.callBreakEven}</td>
-                  <td>{option.putBreakEven}</td>
-                  <td>{option.callAskToBS}</td>
-                  <td>{option.putAskToBS}</td>
-                  <td>{option.callLeverage}</td>
-                  <td>{option.putLeverage}</td>
-                  <td>{option.instrument ?
-                    <Link to={`instrument/${option.instrument.isin}`}>{option.instrument.name}</Link> : ''}</td>
-                  <td className="text-right">
-                    <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${option.id}`} color="info" size="sm">
-                        <FontAwesomeIcon icon="eye"/>{' '}
-                        <span className="d-none d-md-inline">
+                {optionList.map((option, i) => (
+                  <tr key={`entity-${i}`}>
+                    <td>
+                      <Button tag={Link} to={`${match.url}/${option.id}`} color="link" size="sm">
+                        {option.id}
+                      </Button>
+                    </td>
+                    <td>{option.name}</td>
+                    <td>{option.callIsin}</td>
+                    <td>{option.putIsin}</td>
+                    <td>
+                      <TextFormat type="date" value={option.expDate} format={APP_LOCAL_DATE_FORMAT} />
+                    </td>
+                    <td>{option.strikePrice}</td>
+                    <td>{option.contractSize}</td>
+                    <td>{option.callInTheMoney ? 'true' : 'false'}</td>
+                    <td>{option.callBreakEven}</td>
+                    <td>{option.putBreakEven}</td>
+                    <td>{option.callAskToBS}</td>
+                    <td>{option.putAskToBS}</td>
+                    <td>{option.callLeverage}</td>
+                    <td>{option.putLeverage}</td>
+                    <td>{option.callHedge}</td>
+                    <td>{option.callIndifference}</td>
+                    <td>{option.callGain}</td>
+                    <td>{option.callGainMonthly}</td>
+                    <td>{option.callMargin}</td>
+                    <td>{option.putMargin}</td>
+                    <td>{option.instrument ? <Link to={`instrument/${option.instrument.isin}`}>{option.instrument.name}</Link> : ''}</td>
+                    <td className="text-right">
+                      <div className="btn-group flex-btn-group-container">
+                        <Button tag={Link} to={`${match.url}/${option.id}`} color="info" size="sm">
+                          <FontAwesomeIcon icon="eye" />{' '}
+                          <span className="d-none d-md-inline">
                             <Translate contentKey="entity.action.view">View</Translate>
                           </span>
-                      </Button>
-                      <Button tag={Link} to={`${match.url}/${option.id}/edit`} color="primary" size="sm">
-                        <FontAwesomeIcon icon="pencil-alt"/>{' '}
-                        <span className="d-none d-md-inline">
+                        </Button>
+                        <Button tag={Link} to={`${match.url}/${option.id}/edit`} color="primary" size="sm">
+                          <FontAwesomeIcon icon="pencil-alt" />{' '}
+                          <span className="d-none d-md-inline">
                             <Translate contentKey="entity.action.edit">Edit</Translate>
                           </span>
-                      </Button>
-                      <Button tag={Link} to={`${match.url}/${option.id}/delete`} color="danger" size="sm">
-                        <FontAwesomeIcon icon="trash"/>{' '}
-                        <span className="d-none d-md-inline">
+                        </Button>
+                        <Button tag={Link} to={`${match.url}/${option.id}/delete`} color="danger" size="sm">
+                          <FontAwesomeIcon icon="trash" />{' '}
+                          <span className="d-none d-md-inline">
                             <Translate contentKey="entity.action.delete">Delete</Translate>
                           </span>
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
           ) : (
@@ -211,7 +223,7 @@ export const Option = (props: IOptionProps) => {
   );
 };
 
-const mapStateToProps = ({option}: IRootState) => ({
+const mapStateToProps = ({ option }: IRootState) => ({
   optionList: option.entities,
   loading: option.loading,
   totalItems: option.totalItems,

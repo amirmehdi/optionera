@@ -1,18 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IRootState } from 'app/shared/reducers';
-
-import { IInstrument } from 'app/shared/model/instrument.model';
-import { getEntities as getInstruments } from 'app/entities/instrument/instrument.reducer';
-import { getEntity, updateEntity, createEntity, reset } from './option.reducer';
-import { IOption } from 'app/shared/model/option.model';
-import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
-import { mapIdList } from 'app/shared/util/entity-utils';
+import React, {useEffect, useState} from 'react';
+import {connect} from 'react-redux';
+import {Link, RouteComponentProps} from 'react-router-dom';
+import {Button, Col, Label, Row} from 'reactstrap';
+import {AvFeedback, AvField, AvForm, AvGroup, AvInput} from 'availity-reactstrap-validation';
+import {Translate, translate} from 'react-jhipster';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {IRootState} from 'app/shared/reducers';
+import {getEntities as getInstruments} from 'app/entities/instrument/instrument.reducer';
+import {createEntity, getEntity, reset, updateEntity} from './option.reducer';
 
 export interface IOptionUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -242,6 +237,96 @@ export const OptionUpdate = (props: IOptionUpdateProps) => {
                   type="string"
                   className="form-control"
                   name="putLeverage"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
+                <Label id="callHedgeLabel" for="option-callHedge">
+                  <Translate contentKey="eTradeApp.option.callHedge">Call Hedge</Translate>
+                </Label>
+                <AvField
+                  id="option-callHedge"
+                  type="string"
+                  className="form-control"
+                  name="callHedge"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
+                <Label id="callIndifferenceLabel" for="option-callIndifference">
+                  <Translate contentKey="eTradeApp.option.callIndifference">Call Indifference</Translate>
+                </Label>
+                <AvField
+                  id="option-callIndifference"
+                  type="string"
+                  className="form-control"
+                  name="callIndifference"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
+                <Label id="callGainLabel" for="option-callGain">
+                  <Translate contentKey="eTradeApp.option.callGain">Call Gain</Translate>
+                </Label>
+                <AvField
+                  id="option-callGain"
+                  type="string"
+                  className="form-control"
+                  name="callGain"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
+                <Label id="callGainMonthlyLabel" for="option-callGainMonthly">
+                  <Translate contentKey="eTradeApp.option.callGainMonthly">Call Gain Monthly</Translate>
+                </Label>
+                <AvField
+                  id="option-callGainMonthly"
+                  type="string"
+                  className="form-control"
+                  name="callGainMonthly"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
+                <Label id="callMarginLabel" for="option-callMargin">
+                  <Translate contentKey="eTradeApp.option.callMargin">Call Margin</Translate>
+                </Label>
+                <AvField
+                  id="option-callMargin"
+                  type="string"
+                  className="form-control"
+                  name="callMargin"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
+                  }}
+                />
+              </AvGroup>
+              <AvGroup>
+                <Label id="putMarginLabel" for="option-putMargin">
+                  <Translate contentKey="eTradeApp.option.putMargin">Put Margin</Translate>
+                </Label>
+                <AvField
+                  id="option-putMargin"
+                  type="string"
+                  className="form-control"
+                  name="putMargin"
                   validate={{
                     required: { value: true, errorMessage: translate('entity.validation.required') },
                     number: { value: true, errorMessage: translate('entity.validation.number') }

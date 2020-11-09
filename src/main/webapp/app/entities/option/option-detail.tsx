@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, {useEffect} from 'react';
+import {connect} from 'react-redux';
+import {Link, RouteComponentProps} from 'react-router-dom';
+import {Button, Col, Row} from 'reactstrap';
+import {TextFormat, Translate} from 'react-jhipster';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
-import { getEntity } from './option.reducer';
-import { IOption } from 'app/shared/model/option.model';
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import {IRootState} from 'app/shared/reducers';
+import {getEntity} from './option.reducer';
+import {APP_LOCAL_DATE_FORMAT} from 'app/config/constants';
 
 export interface IOptionDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -105,6 +104,42 @@ export const OptionDetail = (props: IOptionDetailProps) => {
             </span>
           </dt>
           <dd>{optionEntity.putLeverage}</dd>
+          <dt>
+            <span id="callHedge">
+              <Translate contentKey="eTradeApp.option.callHedge">Call Hedge</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.callHedge}</dd>
+          <dt>
+            <span id="callIndifference">
+              <Translate contentKey="eTradeApp.option.callIndifference">Call Indifference</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.callIndifference}</dd>
+          <dt>
+            <span id="callGain">
+              <Translate contentKey="eTradeApp.option.callGain">Call Gain</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.callGain}</dd>
+          <dt>
+            <span id="callGainMonthly">
+              <Translate contentKey="eTradeApp.option.callGainMonthly">Call Gain Monthly</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.callGainMonthly}</dd>
+          <dt>
+            <span id="callMargin">
+              <Translate contentKey="eTradeApp.option.callMargin">Call Margin</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.callMargin}</dd>
+          <dt>
+            <span id="putMargin">
+              <Translate contentKey="eTradeApp.option.putMargin">Put Margin</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.putMargin}</dd>
           <dt>
             <Translate contentKey="eTradeApp.option.instrument">Instrument</Translate>
           </dt>

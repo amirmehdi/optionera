@@ -29,6 +29,12 @@
       "putAskToBS": "Put Ask To BS",
       "callLeverage": "Call Leverage",
       "putLeverage": "Put Leverage",
+      "callHedge": "Call Hedge",
+      "callIndifference": "Call Indifference",
+      "callGain": "Call Gain",
+      "callGainMonthly": "Call Gain Monthly",
+      "callMargin": "Call Margin",
+      "putMargin": "Put Margin",
       "instrument": "Underlying Asset"
     }
   }

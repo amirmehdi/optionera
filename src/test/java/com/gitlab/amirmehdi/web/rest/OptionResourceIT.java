@@ -83,6 +83,30 @@ public class OptionResourceIT {
     private static final Float UPDATED_PUT_LEVERAGE = 2F;
     private static final Float SMALLER_PUT_LEVERAGE = 1F - 1F;
 
+    private static final Float DEFAULT_CALL_HEDGE = 1F;
+    private static final Float UPDATED_CALL_HEDGE = 2F;
+    private static final Float SMALLER_CALL_HEDGE = 1F - 1F;
+
+    private static final Float DEFAULT_CALL_INDIFFERENCE = 1F;
+    private static final Float UPDATED_CALL_INDIFFERENCE = 2F;
+    private static final Float SMALLER_CALL_INDIFFERENCE = 1F - 1F;
+
+    private static final Float DEFAULT_CALL_GAIN = 1F;
+    private static final Float UPDATED_CALL_GAIN = 2F;
+    private static final Float SMALLER_CALL_GAIN = 1F - 1F;
+
+    private static final Float DEFAULT_CALL_GAIN_MONTHLY = 1F;
+    private static final Float UPDATED_CALL_GAIN_MONTHLY = 2F;
+    private static final Float SMALLER_CALL_GAIN_MONTHLY = 1F - 1F;
+
+    private static final Integer DEFAULT_CALL_MARGIN = 1;
+    private static final Integer UPDATED_CALL_MARGIN = 2;
+    private static final Integer SMALLER_CALL_MARGIN = 1 - 1;
+
+    private static final Integer DEFAULT_PUT_MARGIN = 1;
+    private static final Integer UPDATED_PUT_MARGIN = 2;
+    private static final Integer SMALLER_PUT_MARGIN = 1 - 1;
+
     @Autowired
     private OptionRepository optionRepository;
 
@@ -120,7 +144,13 @@ public class OptionResourceIT {
             .callAskToBS(DEFAULT_CALL_ASK_TO_BS)
             .putAskToBS(DEFAULT_PUT_ASK_TO_BS)
             .callLeverage(DEFAULT_CALL_LEVERAGE)
-            .putLeverage(DEFAULT_PUT_LEVERAGE);
+            .putLeverage(DEFAULT_PUT_LEVERAGE)
+            .callHedge(DEFAULT_CALL_HEDGE)
+            .callIndifference(DEFAULT_CALL_INDIFFERENCE)
+            .callGain(DEFAULT_CALL_GAIN)
+            .callGainMonthly(DEFAULT_CALL_GAIN_MONTHLY)
+            .callMargin(DEFAULT_CALL_MARGIN)
+            .putMargin(DEFAULT_PUT_MARGIN);
         // Add required entity
         Instrument instrument;
         if (TestUtil.findAll(em, Instrument.class).isEmpty()) {
@@ -153,7 +183,13 @@ public class OptionResourceIT {
             .callAskToBS(UPDATED_CALL_ASK_TO_BS)
             .putAskToBS(UPDATED_PUT_ASK_TO_BS)
             .callLeverage(UPDATED_CALL_LEVERAGE)
-            .putLeverage(UPDATED_PUT_LEVERAGE);
+            .putLeverage(UPDATED_PUT_LEVERAGE)
+            .callHedge(UPDATED_CALL_HEDGE)
+            .callIndifference(UPDATED_CALL_INDIFFERENCE)
+            .callGain(UPDATED_CALL_GAIN)
+            .callGainMonthly(UPDATED_CALL_GAIN_MONTHLY)
+            .callMargin(UPDATED_CALL_MARGIN)
+            .putMargin(UPDATED_PUT_MARGIN);
         // Add required entity
         Instrument instrument;
         if (TestUtil.findAll(em, Instrument.class).isEmpty()) {
@@ -200,6 +236,12 @@ public class OptionResourceIT {
         assertThat(testOption.getPutAskToBS()).isEqualTo(DEFAULT_PUT_ASK_TO_BS);
         assertThat(testOption.getCallLeverage()).isEqualTo(DEFAULT_CALL_LEVERAGE);
         assertThat(testOption.getPutLeverage()).isEqualTo(DEFAULT_PUT_LEVERAGE);
+        assertThat(testOption.getCallHedge()).isEqualTo(DEFAULT_CALL_HEDGE);
+        assertThat(testOption.getCallIndifference()).isEqualTo(DEFAULT_CALL_INDIFFERENCE);
+        assertThat(testOption.getCallGain()).isEqualTo(DEFAULT_CALL_GAIN);
+        assertThat(testOption.getCallGainMonthly()).isEqualTo(DEFAULT_CALL_GAIN_MONTHLY);
+        assertThat(testOption.getCallMargin()).isEqualTo(DEFAULT_CALL_MARGIN);
+        assertThat(testOption.getPutMargin()).isEqualTo(DEFAULT_PUT_MARGIN);
     }
 
     @Test
@@ -336,7 +378,13 @@ public class OptionResourceIT {
             .andExpect(jsonPath("$.[*].callAskToBS").value(hasItem(DEFAULT_CALL_ASK_TO_BS.doubleValue())))
             .andExpect(jsonPath("$.[*].putAskToBS").value(hasItem(DEFAULT_PUT_ASK_TO_BS.doubleValue())))
             .andExpect(jsonPath("$.[*].callLeverage").value(hasItem(DEFAULT_CALL_LEVERAGE.doubleValue())))
-            .andExpect(jsonPath("$.[*].putLeverage").value(hasItem(DEFAULT_PUT_LEVERAGE.doubleValue())));
+            .andExpect(jsonPath("$.[*].putLeverage").value(hasItem(DEFAULT_PUT_LEVERAGE.doubleValue())))
+            .andExpect(jsonPath("$.[*].callHedge").value(hasItem(DEFAULT_CALL_HEDGE.doubleValue())))
+            .andExpect(jsonPath("$.[*].callIndifference").value(hasItem(DEFAULT_CALL_INDIFFERENCE.doubleValue())))
+            .andExpect(jsonPath("$.[*].callGain").value(hasItem(DEFAULT_CALL_GAIN.doubleValue())))
+            .andExpect(jsonPath("$.[*].callGainMonthly").value(hasItem(DEFAULT_CALL_GAIN_MONTHLY.doubleValue())))
+            .andExpect(jsonPath("$.[*].callMargin").value(hasItem(DEFAULT_CALL_MARGIN)))
+            .andExpect(jsonPath("$.[*].putMargin").value(hasItem(DEFAULT_PUT_MARGIN)));
     }
 
     @Test
@@ -362,7 +410,13 @@ public class OptionResourceIT {
             .andExpect(jsonPath("$.callAskToBS").value(DEFAULT_CALL_ASK_TO_BS.doubleValue()))
             .andExpect(jsonPath("$.putAskToBS").value(DEFAULT_PUT_ASK_TO_BS.doubleValue()))
             .andExpect(jsonPath("$.callLeverage").value(DEFAULT_CALL_LEVERAGE.doubleValue()))
-            .andExpect(jsonPath("$.putLeverage").value(DEFAULT_PUT_LEVERAGE.doubleValue()));
+            .andExpect(jsonPath("$.putLeverage").value(DEFAULT_PUT_LEVERAGE.doubleValue()))
+            .andExpect(jsonPath("$.callHedge").value(DEFAULT_CALL_HEDGE.doubleValue()))
+            .andExpect(jsonPath("$.callIndifference").value(DEFAULT_CALL_INDIFFERENCE.doubleValue()))
+            .andExpect(jsonPath("$.callGain").value(DEFAULT_CALL_GAIN.doubleValue()))
+            .andExpect(jsonPath("$.callGainMonthly").value(DEFAULT_CALL_GAIN_MONTHLY.doubleValue()))
+            .andExpect(jsonPath("$.callMargin").value(DEFAULT_CALL_MARGIN))
+            .andExpect(jsonPath("$.putMargin").value(DEFAULT_PUT_MARGIN));
     }
 
 
@@ -1618,6 +1672,636 @@ public class OptionResourceIT {
 
     @Test
     @Transactional
+    public void getAllOptionsByCallHedgeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callHedge equals to DEFAULT_CALL_HEDGE
+        defaultOptionShouldBeFound("callHedge.equals=" + DEFAULT_CALL_HEDGE);
+
+        // Get all the optionList where callHedge equals to UPDATED_CALL_HEDGE
+        defaultOptionShouldNotBeFound("callHedge.equals=" + UPDATED_CALL_HEDGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallHedgeIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callHedge not equals to DEFAULT_CALL_HEDGE
+        defaultOptionShouldNotBeFound("callHedge.notEquals=" + DEFAULT_CALL_HEDGE);
+
+        // Get all the optionList where callHedge not equals to UPDATED_CALL_HEDGE
+        defaultOptionShouldBeFound("callHedge.notEquals=" + UPDATED_CALL_HEDGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallHedgeIsInShouldWork() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callHedge in DEFAULT_CALL_HEDGE or UPDATED_CALL_HEDGE
+        defaultOptionShouldBeFound("callHedge.in=" + DEFAULT_CALL_HEDGE + "," + UPDATED_CALL_HEDGE);
+
+        // Get all the optionList where callHedge equals to UPDATED_CALL_HEDGE
+        defaultOptionShouldNotBeFound("callHedge.in=" + UPDATED_CALL_HEDGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallHedgeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callHedge is not null
+        defaultOptionShouldBeFound("callHedge.specified=true");
+
+        // Get all the optionList where callHedge is null
+        defaultOptionShouldNotBeFound("callHedge.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallHedgeIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callHedge is greater than or equal to DEFAULT_CALL_HEDGE
+        defaultOptionShouldBeFound("callHedge.greaterThanOrEqual=" + DEFAULT_CALL_HEDGE);
+
+        // Get all the optionList where callHedge is greater than or equal to UPDATED_CALL_HEDGE
+        defaultOptionShouldNotBeFound("callHedge.greaterThanOrEqual=" + UPDATED_CALL_HEDGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallHedgeIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callHedge is less than or equal to DEFAULT_CALL_HEDGE
+        defaultOptionShouldBeFound("callHedge.lessThanOrEqual=" + DEFAULT_CALL_HEDGE);
+
+        // Get all the optionList where callHedge is less than or equal to SMALLER_CALL_HEDGE
+        defaultOptionShouldNotBeFound("callHedge.lessThanOrEqual=" + SMALLER_CALL_HEDGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallHedgeIsLessThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callHedge is less than DEFAULT_CALL_HEDGE
+        defaultOptionShouldNotBeFound("callHedge.lessThan=" + DEFAULT_CALL_HEDGE);
+
+        // Get all the optionList where callHedge is less than UPDATED_CALL_HEDGE
+        defaultOptionShouldBeFound("callHedge.lessThan=" + UPDATED_CALL_HEDGE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallHedgeIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callHedge is greater than DEFAULT_CALL_HEDGE
+        defaultOptionShouldNotBeFound("callHedge.greaterThan=" + DEFAULT_CALL_HEDGE);
+
+        // Get all the optionList where callHedge is greater than SMALLER_CALL_HEDGE
+        defaultOptionShouldBeFound("callHedge.greaterThan=" + SMALLER_CALL_HEDGE);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallIndifferenceIsEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callIndifference equals to DEFAULT_CALL_INDIFFERENCE
+        defaultOptionShouldBeFound("callIndifference.equals=" + DEFAULT_CALL_INDIFFERENCE);
+
+        // Get all the optionList where callIndifference equals to UPDATED_CALL_INDIFFERENCE
+        defaultOptionShouldNotBeFound("callIndifference.equals=" + UPDATED_CALL_INDIFFERENCE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallIndifferenceIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callIndifference not equals to DEFAULT_CALL_INDIFFERENCE
+        defaultOptionShouldNotBeFound("callIndifference.notEquals=" + DEFAULT_CALL_INDIFFERENCE);
+
+        // Get all the optionList where callIndifference not equals to UPDATED_CALL_INDIFFERENCE
+        defaultOptionShouldBeFound("callIndifference.notEquals=" + UPDATED_CALL_INDIFFERENCE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallIndifferenceIsInShouldWork() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callIndifference in DEFAULT_CALL_INDIFFERENCE or UPDATED_CALL_INDIFFERENCE
+        defaultOptionShouldBeFound("callIndifference.in=" + DEFAULT_CALL_INDIFFERENCE + "," + UPDATED_CALL_INDIFFERENCE);
+
+        // Get all the optionList where callIndifference equals to UPDATED_CALL_INDIFFERENCE
+        defaultOptionShouldNotBeFound("callIndifference.in=" + UPDATED_CALL_INDIFFERENCE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallIndifferenceIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callIndifference is not null
+        defaultOptionShouldBeFound("callIndifference.specified=true");
+
+        // Get all the optionList where callIndifference is null
+        defaultOptionShouldNotBeFound("callIndifference.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallIndifferenceIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callIndifference is greater than or equal to DEFAULT_CALL_INDIFFERENCE
+        defaultOptionShouldBeFound("callIndifference.greaterThanOrEqual=" + DEFAULT_CALL_INDIFFERENCE);
+
+        // Get all the optionList where callIndifference is greater than or equal to UPDATED_CALL_INDIFFERENCE
+        defaultOptionShouldNotBeFound("callIndifference.greaterThanOrEqual=" + UPDATED_CALL_INDIFFERENCE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallIndifferenceIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callIndifference is less than or equal to DEFAULT_CALL_INDIFFERENCE
+        defaultOptionShouldBeFound("callIndifference.lessThanOrEqual=" + DEFAULT_CALL_INDIFFERENCE);
+
+        // Get all the optionList where callIndifference is less than or equal to SMALLER_CALL_INDIFFERENCE
+        defaultOptionShouldNotBeFound("callIndifference.lessThanOrEqual=" + SMALLER_CALL_INDIFFERENCE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallIndifferenceIsLessThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callIndifference is less than DEFAULT_CALL_INDIFFERENCE
+        defaultOptionShouldNotBeFound("callIndifference.lessThan=" + DEFAULT_CALL_INDIFFERENCE);
+
+        // Get all the optionList where callIndifference is less than UPDATED_CALL_INDIFFERENCE
+        defaultOptionShouldBeFound("callIndifference.lessThan=" + UPDATED_CALL_INDIFFERENCE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallIndifferenceIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callIndifference is greater than DEFAULT_CALL_INDIFFERENCE
+        defaultOptionShouldNotBeFound("callIndifference.greaterThan=" + DEFAULT_CALL_INDIFFERENCE);
+
+        // Get all the optionList where callIndifference is greater than SMALLER_CALL_INDIFFERENCE
+        defaultOptionShouldBeFound("callIndifference.greaterThan=" + SMALLER_CALL_INDIFFERENCE);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainIsEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGain equals to DEFAULT_CALL_GAIN
+        defaultOptionShouldBeFound("callGain.equals=" + DEFAULT_CALL_GAIN);
+
+        // Get all the optionList where callGain equals to UPDATED_CALL_GAIN
+        defaultOptionShouldNotBeFound("callGain.equals=" + UPDATED_CALL_GAIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGain not equals to DEFAULT_CALL_GAIN
+        defaultOptionShouldNotBeFound("callGain.notEquals=" + DEFAULT_CALL_GAIN);
+
+        // Get all the optionList where callGain not equals to UPDATED_CALL_GAIN
+        defaultOptionShouldBeFound("callGain.notEquals=" + UPDATED_CALL_GAIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainIsInShouldWork() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGain in DEFAULT_CALL_GAIN or UPDATED_CALL_GAIN
+        defaultOptionShouldBeFound("callGain.in=" + DEFAULT_CALL_GAIN + "," + UPDATED_CALL_GAIN);
+
+        // Get all the optionList where callGain equals to UPDATED_CALL_GAIN
+        defaultOptionShouldNotBeFound("callGain.in=" + UPDATED_CALL_GAIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGain is not null
+        defaultOptionShouldBeFound("callGain.specified=true");
+
+        // Get all the optionList where callGain is null
+        defaultOptionShouldNotBeFound("callGain.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGain is greater than or equal to DEFAULT_CALL_GAIN
+        defaultOptionShouldBeFound("callGain.greaterThanOrEqual=" + DEFAULT_CALL_GAIN);
+
+        // Get all the optionList where callGain is greater than or equal to UPDATED_CALL_GAIN
+        defaultOptionShouldNotBeFound("callGain.greaterThanOrEqual=" + UPDATED_CALL_GAIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGain is less than or equal to DEFAULT_CALL_GAIN
+        defaultOptionShouldBeFound("callGain.lessThanOrEqual=" + DEFAULT_CALL_GAIN);
+
+        // Get all the optionList where callGain is less than or equal to SMALLER_CALL_GAIN
+        defaultOptionShouldNotBeFound("callGain.lessThanOrEqual=" + SMALLER_CALL_GAIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainIsLessThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGain is less than DEFAULT_CALL_GAIN
+        defaultOptionShouldNotBeFound("callGain.lessThan=" + DEFAULT_CALL_GAIN);
+
+        // Get all the optionList where callGain is less than UPDATED_CALL_GAIN
+        defaultOptionShouldBeFound("callGain.lessThan=" + UPDATED_CALL_GAIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGain is greater than DEFAULT_CALL_GAIN
+        defaultOptionShouldNotBeFound("callGain.greaterThan=" + DEFAULT_CALL_GAIN);
+
+        // Get all the optionList where callGain is greater than SMALLER_CALL_GAIN
+        defaultOptionShouldBeFound("callGain.greaterThan=" + SMALLER_CALL_GAIN);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainMonthlyIsEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGainMonthly equals to DEFAULT_CALL_GAIN_MONTHLY
+        defaultOptionShouldBeFound("callGainMonthly.equals=" + DEFAULT_CALL_GAIN_MONTHLY);
+
+        // Get all the optionList where callGainMonthly equals to UPDATED_CALL_GAIN_MONTHLY
+        defaultOptionShouldNotBeFound("callGainMonthly.equals=" + UPDATED_CALL_GAIN_MONTHLY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainMonthlyIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGainMonthly not equals to DEFAULT_CALL_GAIN_MONTHLY
+        defaultOptionShouldNotBeFound("callGainMonthly.notEquals=" + DEFAULT_CALL_GAIN_MONTHLY);
+
+        // Get all the optionList where callGainMonthly not equals to UPDATED_CALL_GAIN_MONTHLY
+        defaultOptionShouldBeFound("callGainMonthly.notEquals=" + UPDATED_CALL_GAIN_MONTHLY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainMonthlyIsInShouldWork() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGainMonthly in DEFAULT_CALL_GAIN_MONTHLY or UPDATED_CALL_GAIN_MONTHLY
+        defaultOptionShouldBeFound("callGainMonthly.in=" + DEFAULT_CALL_GAIN_MONTHLY + "," + UPDATED_CALL_GAIN_MONTHLY);
+
+        // Get all the optionList where callGainMonthly equals to UPDATED_CALL_GAIN_MONTHLY
+        defaultOptionShouldNotBeFound("callGainMonthly.in=" + UPDATED_CALL_GAIN_MONTHLY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainMonthlyIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGainMonthly is not null
+        defaultOptionShouldBeFound("callGainMonthly.specified=true");
+
+        // Get all the optionList where callGainMonthly is null
+        defaultOptionShouldNotBeFound("callGainMonthly.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainMonthlyIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGainMonthly is greater than or equal to DEFAULT_CALL_GAIN_MONTHLY
+        defaultOptionShouldBeFound("callGainMonthly.greaterThanOrEqual=" + DEFAULT_CALL_GAIN_MONTHLY);
+
+        // Get all the optionList where callGainMonthly is greater than or equal to UPDATED_CALL_GAIN_MONTHLY
+        defaultOptionShouldNotBeFound("callGainMonthly.greaterThanOrEqual=" + UPDATED_CALL_GAIN_MONTHLY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainMonthlyIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGainMonthly is less than or equal to DEFAULT_CALL_GAIN_MONTHLY
+        defaultOptionShouldBeFound("callGainMonthly.lessThanOrEqual=" + DEFAULT_CALL_GAIN_MONTHLY);
+
+        // Get all the optionList where callGainMonthly is less than or equal to SMALLER_CALL_GAIN_MONTHLY
+        defaultOptionShouldNotBeFound("callGainMonthly.lessThanOrEqual=" + SMALLER_CALL_GAIN_MONTHLY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainMonthlyIsLessThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGainMonthly is less than DEFAULT_CALL_GAIN_MONTHLY
+        defaultOptionShouldNotBeFound("callGainMonthly.lessThan=" + DEFAULT_CALL_GAIN_MONTHLY);
+
+        // Get all the optionList where callGainMonthly is less than UPDATED_CALL_GAIN_MONTHLY
+        defaultOptionShouldBeFound("callGainMonthly.lessThan=" + UPDATED_CALL_GAIN_MONTHLY);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallGainMonthlyIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callGainMonthly is greater than DEFAULT_CALL_GAIN_MONTHLY
+        defaultOptionShouldNotBeFound("callGainMonthly.greaterThan=" + DEFAULT_CALL_GAIN_MONTHLY);
+
+        // Get all the optionList where callGainMonthly is greater than SMALLER_CALL_GAIN_MONTHLY
+        defaultOptionShouldBeFound("callGainMonthly.greaterThan=" + SMALLER_CALL_GAIN_MONTHLY);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallMarginIsEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callMargin equals to DEFAULT_CALL_MARGIN
+        defaultOptionShouldBeFound("callMargin.equals=" + DEFAULT_CALL_MARGIN);
+
+        // Get all the optionList where callMargin equals to UPDATED_CALL_MARGIN
+        defaultOptionShouldNotBeFound("callMargin.equals=" + UPDATED_CALL_MARGIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallMarginIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callMargin not equals to DEFAULT_CALL_MARGIN
+        defaultOptionShouldNotBeFound("callMargin.notEquals=" + DEFAULT_CALL_MARGIN);
+
+        // Get all the optionList where callMargin not equals to UPDATED_CALL_MARGIN
+        defaultOptionShouldBeFound("callMargin.notEquals=" + UPDATED_CALL_MARGIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallMarginIsInShouldWork() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callMargin in DEFAULT_CALL_MARGIN or UPDATED_CALL_MARGIN
+        defaultOptionShouldBeFound("callMargin.in=" + DEFAULT_CALL_MARGIN + "," + UPDATED_CALL_MARGIN);
+
+        // Get all the optionList where callMargin equals to UPDATED_CALL_MARGIN
+        defaultOptionShouldNotBeFound("callMargin.in=" + UPDATED_CALL_MARGIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallMarginIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callMargin is not null
+        defaultOptionShouldBeFound("callMargin.specified=true");
+
+        // Get all the optionList where callMargin is null
+        defaultOptionShouldNotBeFound("callMargin.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallMarginIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callMargin is greater than or equal to DEFAULT_CALL_MARGIN
+        defaultOptionShouldBeFound("callMargin.greaterThanOrEqual=" + DEFAULT_CALL_MARGIN);
+
+        // Get all the optionList where callMargin is greater than or equal to UPDATED_CALL_MARGIN
+        defaultOptionShouldNotBeFound("callMargin.greaterThanOrEqual=" + UPDATED_CALL_MARGIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallMarginIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callMargin is less than or equal to DEFAULT_CALL_MARGIN
+        defaultOptionShouldBeFound("callMargin.lessThanOrEqual=" + DEFAULT_CALL_MARGIN);
+
+        // Get all the optionList where callMargin is less than or equal to SMALLER_CALL_MARGIN
+        defaultOptionShouldNotBeFound("callMargin.lessThanOrEqual=" + SMALLER_CALL_MARGIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallMarginIsLessThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callMargin is less than DEFAULT_CALL_MARGIN
+        defaultOptionShouldNotBeFound("callMargin.lessThan=" + DEFAULT_CALL_MARGIN);
+
+        // Get all the optionList where callMargin is less than UPDATED_CALL_MARGIN
+        defaultOptionShouldBeFound("callMargin.lessThan=" + UPDATED_CALL_MARGIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByCallMarginIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where callMargin is greater than DEFAULT_CALL_MARGIN
+        defaultOptionShouldNotBeFound("callMargin.greaterThan=" + DEFAULT_CALL_MARGIN);
+
+        // Get all the optionList where callMargin is greater than SMALLER_CALL_MARGIN
+        defaultOptionShouldBeFound("callMargin.greaterThan=" + SMALLER_CALL_MARGIN);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutMarginIsEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putMargin equals to DEFAULT_PUT_MARGIN
+        defaultOptionShouldBeFound("putMargin.equals=" + DEFAULT_PUT_MARGIN);
+
+        // Get all the optionList where putMargin equals to UPDATED_PUT_MARGIN
+        defaultOptionShouldNotBeFound("putMargin.equals=" + UPDATED_PUT_MARGIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutMarginIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putMargin not equals to DEFAULT_PUT_MARGIN
+        defaultOptionShouldNotBeFound("putMargin.notEquals=" + DEFAULT_PUT_MARGIN);
+
+        // Get all the optionList where putMargin not equals to UPDATED_PUT_MARGIN
+        defaultOptionShouldBeFound("putMargin.notEquals=" + UPDATED_PUT_MARGIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutMarginIsInShouldWork() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putMargin in DEFAULT_PUT_MARGIN or UPDATED_PUT_MARGIN
+        defaultOptionShouldBeFound("putMargin.in=" + DEFAULT_PUT_MARGIN + "," + UPDATED_PUT_MARGIN);
+
+        // Get all the optionList where putMargin equals to UPDATED_PUT_MARGIN
+        defaultOptionShouldNotBeFound("putMargin.in=" + UPDATED_PUT_MARGIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutMarginIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putMargin is not null
+        defaultOptionShouldBeFound("putMargin.specified=true");
+
+        // Get all the optionList where putMargin is null
+        defaultOptionShouldNotBeFound("putMargin.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutMarginIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putMargin is greater than or equal to DEFAULT_PUT_MARGIN
+        defaultOptionShouldBeFound("putMargin.greaterThanOrEqual=" + DEFAULT_PUT_MARGIN);
+
+        // Get all the optionList where putMargin is greater than or equal to UPDATED_PUT_MARGIN
+        defaultOptionShouldNotBeFound("putMargin.greaterThanOrEqual=" + UPDATED_PUT_MARGIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutMarginIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putMargin is less than or equal to DEFAULT_PUT_MARGIN
+        defaultOptionShouldBeFound("putMargin.lessThanOrEqual=" + DEFAULT_PUT_MARGIN);
+
+        // Get all the optionList where putMargin is less than or equal to SMALLER_PUT_MARGIN
+        defaultOptionShouldNotBeFound("putMargin.lessThanOrEqual=" + SMALLER_PUT_MARGIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutMarginIsLessThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putMargin is less than DEFAULT_PUT_MARGIN
+        defaultOptionShouldNotBeFound("putMargin.lessThan=" + DEFAULT_PUT_MARGIN);
+
+        // Get all the optionList where putMargin is less than UPDATED_PUT_MARGIN
+        defaultOptionShouldBeFound("putMargin.lessThan=" + UPDATED_PUT_MARGIN);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOptionsByPutMarginIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        optionRepository.saveAndFlush(option);
+
+        // Get all the optionList where putMargin is greater than DEFAULT_PUT_MARGIN
+        defaultOptionShouldNotBeFound("putMargin.greaterThan=" + DEFAULT_PUT_MARGIN);
+
+        // Get all the optionList where putMargin is greater than SMALLER_PUT_MARGIN
+        defaultOptionShouldBeFound("putMargin.greaterThan=" + SMALLER_PUT_MARGIN);
+    }
+
+
+    @Test
+    @Transactional
     public void getAllOptionsByInstrumentIsEqualToSomething() throws Exception {
         // Get already existing entity
         Instrument instrument = option.getInstrument();
@@ -1651,7 +2335,13 @@ public class OptionResourceIT {
             .andExpect(jsonPath("$.[*].callAskToBS").value(hasItem(DEFAULT_CALL_ASK_TO_BS.doubleValue())))
             .andExpect(jsonPath("$.[*].putAskToBS").value(hasItem(DEFAULT_PUT_ASK_TO_BS.doubleValue())))
             .andExpect(jsonPath("$.[*].callLeverage").value(hasItem(DEFAULT_CALL_LEVERAGE.doubleValue())))
-            .andExpect(jsonPath("$.[*].putLeverage").value(hasItem(DEFAULT_PUT_LEVERAGE.doubleValue())));
+            .andExpect(jsonPath("$.[*].putLeverage").value(hasItem(DEFAULT_PUT_LEVERAGE.doubleValue())))
+            .andExpect(jsonPath("$.[*].callHedge").value(hasItem(DEFAULT_CALL_HEDGE.doubleValue())))
+            .andExpect(jsonPath("$.[*].callIndifference").value(hasItem(DEFAULT_CALL_INDIFFERENCE.doubleValue())))
+            .andExpect(jsonPath("$.[*].callGain").value(hasItem(DEFAULT_CALL_GAIN.doubleValue())))
+            .andExpect(jsonPath("$.[*].callGainMonthly").value(hasItem(DEFAULT_CALL_GAIN_MONTHLY.doubleValue())))
+            .andExpect(jsonPath("$.[*].callMargin").value(hasItem(DEFAULT_CALL_MARGIN)))
+            .andExpect(jsonPath("$.[*].putMargin").value(hasItem(DEFAULT_PUT_MARGIN)));
 
         // Check, that the count call also returns 1
         restOptionMockMvc.perform(get("/api/options/count?sort=id,desc&" + filter))
@@ -1711,7 +2401,13 @@ public class OptionResourceIT {
             .callAskToBS(UPDATED_CALL_ASK_TO_BS)
             .putAskToBS(UPDATED_PUT_ASK_TO_BS)
             .callLeverage(UPDATED_CALL_LEVERAGE)
-            .putLeverage(UPDATED_PUT_LEVERAGE);
+            .putLeverage(UPDATED_PUT_LEVERAGE)
+            .callHedge(UPDATED_CALL_HEDGE)
+            .callIndifference(UPDATED_CALL_INDIFFERENCE)
+            .callGain(UPDATED_CALL_GAIN)
+            .callGainMonthly(UPDATED_CALL_GAIN_MONTHLY)
+            .callMargin(UPDATED_CALL_MARGIN)
+            .putMargin(UPDATED_PUT_MARGIN);
 
         restOptionMockMvc.perform(put("/api/options")
             .contentType(MediaType.APPLICATION_JSON)
@@ -1735,6 +2431,12 @@ public class OptionResourceIT {
         assertThat(testOption.getPutAskToBS()).isEqualTo(UPDATED_PUT_ASK_TO_BS);
         assertThat(testOption.getCallLeverage()).isEqualTo(UPDATED_CALL_LEVERAGE);
         assertThat(testOption.getPutLeverage()).isEqualTo(UPDATED_PUT_LEVERAGE);
+        assertThat(testOption.getCallHedge()).isEqualTo(UPDATED_CALL_HEDGE);
+        assertThat(testOption.getCallIndifference()).isEqualTo(UPDATED_CALL_INDIFFERENCE);
+        assertThat(testOption.getCallGain()).isEqualTo(UPDATED_CALL_GAIN);
+        assertThat(testOption.getCallGainMonthly()).isEqualTo(UPDATED_CALL_GAIN_MONTHLY);
+        assertThat(testOption.getCallMargin()).isEqualTo(UPDATED_CALL_MARGIN);
+        assertThat(testOption.getPutMargin()).isEqualTo(UPDATED_PUT_MARGIN);
     }
 
     @Test

@@ -18,6 +18,12 @@ export interface IOption {
   putAskToBS?: number;
   callLeverage?: number;
   putLeverage?: number;
+  callHedge?: number;
+  callIndifference?: number;
+  callGain?: number;
+  callGainMonthly?: number;
+  callMargin?: number;
+  putMargin?: number;
   instrument?: IInstrument;
 }
 

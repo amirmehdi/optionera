@@ -36,8 +36,14 @@
       "BlackScholes30": "بلک شولز",
       "AskPriceToBS": "% قیمت فروش به بلک شولز",
       "EffectivePrice": "قیمت موثر",
+      "FinalPrice": "قیمت تمام شده",
       "BreakEven": "% سربه سری",
       "Leverage": "اهرم",
+      "Hedge": "پوشش ریسک",
+      "Indifference": "% بی‌تفاوتی",
+      "Gain": "سودفروش درصورت اعمال",
+      "GainMonthly": "سودفروش ماهانه",
+      "Margin": "وجه تضمین",
       "underlyingAssetLast": "قیمت دارایی پایه",
       "option": "اختیار"
     }
