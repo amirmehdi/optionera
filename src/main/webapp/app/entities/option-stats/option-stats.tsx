@@ -148,12 +148,14 @@ export const OptionStats = (props: IOptionStatsProps) => {
          <div>
            <Table sticky pagination={false} onChange={handleChange} dataSource={optionStatsList as any}
                   scroll={{ x: 2400 }}>
-             <Column fixed={'left'} title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
+             <Column
+               width={110}
+               fixed={'left'} title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
                      dataIndex="option" key="optionStats.name" render={(optionStats, row: any) =>
                <div className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                  {/* {optionStats ? <Link to={`option/${optionStats.id}`}>{'ض' + optionStats.name}</Link> : ''}*/}
                  {row.option ? <a target="_blank" rel="noopener noreferrer"
-                                  href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${row.option.callTseId}`}>{'ض' + row.option.name + ' '}</a> : ''}
+                                  href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${row.option.callTseId}`}>{' '+'ض' + row.option.name + ' '}</a> : ''}
 
                </div>
              }/>
@@ -454,12 +456,14 @@ export const OptionStats = (props: IOptionStatsProps) => {
                    className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                    <Number>{option.putBS30}</Number></div>
                }/>
-               <Column title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
+               <Column
+                 width={110}
+                 title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
                        dataIndex="option" key="option" render={(option, row: any) =>
                  <div className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                    {/* {option ? <Link to={`option/${option.id}`}>{'ض' + option.name}</Link> : ''}*/}
                    {option ? <a target="_blank" rel="noopener noreferrer"
-                                href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${option.putTseId}`}>{'ط' + option.name + ' '}</a> : ''}
+                                href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${option.putTseId}`}>{' ' +'ط' + option.name + ' '}</a> : ''}
 
                  </div>
 
