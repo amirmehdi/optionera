@@ -257,7 +257,7 @@ public class OptionStats {
         if (callBidAsk.getAskPrice() == 0) {
             return Integer.MAX_VALUE;
         }
-        return (float) (Math.round((option.getStrikePrice() * 1.0 / (baseStockWatch.getLast() - callBidAsk.getAskPrice())) * 10000.0) / 100.0);
+        return (float) (Math.round((option.getStrikePrice() * 1.0 / (baseStockWatch.getLast() - callBidAsk.getAskPrice())) * 10000.0) / 100.0) - 100;
     }
 
     @JsonIgnore
