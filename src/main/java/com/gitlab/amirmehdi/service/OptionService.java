@@ -144,6 +144,10 @@ public class OptionService {
             .callLeverage(optionStats.getCallLeverage())
             .putLeverage(optionStats.getPutLeverage())
             .callInTheMoney(optionStats.getCallInTheMoney())
+            .callHedge(optionStats.getCallHedge())
+            .callIndifference(optionStats.getCallIndifference())
+            .callGain(optionStats.getCallGain())
+            .callGainMonthly(optionStats.getCallGainMonthly())
             .callMargin(optionStats.getCallMargin())
             .putMargin(optionStats.getPutMargin());
         optionRepository.save(optionStats.getOption());

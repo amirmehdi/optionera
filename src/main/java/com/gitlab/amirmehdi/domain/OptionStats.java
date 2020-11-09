@@ -204,7 +204,7 @@ public class OptionStats {
 
     @JsonIgnore
     public int getCallMargin() {
-        if (checkForNull() ||  callStockWatch == null) {
+        if (checkForNull() || callStockWatch == null) {
             return 0;
         }
         int OTM = Math.max(option.getStrikePrice() - baseStockWatch.getClosing(), 0) * option.getContractSize();
@@ -226,6 +226,60 @@ public class OptionStats {
         int V1 = 100_000 * (Math.max(I1, I2) / 100_000 + 1);
         int V2 = putStockWatch.getSettlementPrice() * option.getContractSize();
         return V1 + V2;
+    }
+
+    @JsonIgnore
+    public float getCallHedge() {
+        if (checkForNull()) {
+            return 0;
+        }
+        if (callBidAsk.getBidPrice() == 0) {
+            return Integer.MAX_VALUE;
+        }
+        return (float) (Math.round((callBidAsk.getBidPrice() * 1.0 / baseStockWatch.getLast()) * 10000.0) / 100.0);
+    }
+
+    public Integer getCallFinalPrice() {
+        if (checkForNull()) {
+            return 0;
+        }
+        if (callBidAsk.getBidPrice() == 0) {
+            return Integer.MAX_VALUE;
+        }
+        return baseStockWatch.getLast() - callBidAsk.getBidPrice();
+    }
+
+    @JsonIgnore
+    public float getCallIndifference() {
+        if (checkForNull()) {
+            return 0;
+        }
+        if (callBidAsk.getAskPrice() == 0) {
+            return Integer.MAX_VALUE;
+        }
+        return (float) (Math.round((option.getStrikePrice() * 1.0 / (baseStockWatch.getLast() - callBidAsk.getAskPrice())) * 10000.0) / 100.0);
+    }
+
+    @JsonIgnore
+    public float getCallGain() {
+        if (checkForNull()) {
+            return 0;
+        }
+        if (callBidAsk.getBidPrice() == 0) {
+            return Integer.MAX_VALUE;
+        }
+        return (float) (Math.round((option.getStrikePrice() * 1.0 / getCallFinalPrice() - 1) * 10000.0) / 100.0);
+    }
+
+    @JsonIgnore
+    public float getCallGainMonthly() {
+        if (checkForNull()) {
+            return 0;
+        }
+        if (callBidAsk.getBidPrice() == 0) {
+            return Integer.MAX_VALUE;
+        }
+        return (float) (getCallGain() * 30.0 / ChronoUnit.DAYS.between(LocalDate.now(), option.getExpDate()));
     }
 
     @JsonIgnore
