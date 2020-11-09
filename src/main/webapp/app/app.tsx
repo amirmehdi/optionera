@@ -1,22 +1,21 @@
 import 'react-toastify/dist/ReactToastify.css';
 import './app.scss';
 
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { Card } from 'reactstrap';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import { hot } from 'react-hot-loader';
+import React, {useEffect} from 'react';
+import {connect} from 'react-redux';
+import {BrowserRouter as Router} from 'react-router-dom';
+import {toast, ToastContainer} from 'react-toastify';
+import {hot} from 'react-hot-loader';
 import "antd/dist/antd.css";
-import { IRootState } from 'app/shared/reducers';
-import { getSession } from 'app/shared/reducers/authentication';
-import { getProfile } from 'app/shared/reducers/application-profile';
-import { setLocale } from 'app/shared/reducers/locale';
+import {IRootState} from 'app/shared/reducers';
+import {getSession} from 'app/shared/reducers/authentication';
+import {getProfile} from 'app/shared/reducers/application-profile';
+import {setLocale} from 'app/shared/reducers/locale';
 import Header from 'app/shared/layout/header/header';
 import Footer from 'app/shared/layout/footer/footer';
-import { hasAnyAuthority } from 'app/shared/auth/private-route';
+import {hasAnyAuthority} from 'app/shared/auth/private-route';
 import ErrorBoundary from 'app/shared/error/error-boundary';
-import { AUTHORITIES } from 'app/config/constants';
+import {AUTHORITIES} from 'app/config/constants';
 import AppRoutes from 'app/routes';
 
 const baseHref = document
@@ -46,6 +45,7 @@ export const App = (props: IAppProps) => {
             ribbonEnv={props.ribbonEnv}
             isInProduction={props.isInProduction}
             isSwaggerEnabled={props.isSwaggerEnabled}
+            account={props.authorities}
           />
         </ErrorBoundary>
         <div style={{padding: 0}} className="container-fluid" id="app-view-container">
@@ -62,6 +62,7 @@ export const App = (props: IAppProps) => {
 const mapStateToProps = ({ authentication, applicationProfile, locale }: IRootState) => ({
   currentLocale: locale.currentLocale,
   isAuthenticated: authentication.isAuthenticated,
+  authorities: authentication.account.authorities,
   isAdmin: hasAnyAuthority(authentication.account.authorities, [AUTHORITIES.ADMIN]),
   ribbonEnv: applicationProfile.ribbonEnv,
   isInProduction: applicationProfile.inProduction,

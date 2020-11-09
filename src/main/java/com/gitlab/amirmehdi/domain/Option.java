@@ -242,10 +242,6 @@ public class Option implements Serializable {
         return this;
     }
 
-    public float getCallGainMonthly() {
-        return (int) callGainMonthly;
-    }
-
     public Option instrument(Instrument instrument) {
         this.instrument = instrument;
         return this;

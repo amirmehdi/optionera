@@ -18,6 +18,7 @@ export interface IHeaderProps {
   isSwaggerEnabled: boolean;
   currentLocale: string;
   onLocaleChange: Function;
+  account : string[];
 }
 
 const Header = (props: IHeaderProps) => {
@@ -54,7 +55,7 @@ const Header = (props: IHeaderProps) => {
         <Collapse isOpen={menuOpen} navbar>
           <Nav id="header-tabs" className="ml-auto" navbar>
             <Home />
-            {props.isAuthenticated && <EntitiesMenu isAdmin={props.isAdmin}/>}
+            {props.isAuthenticated && <EntitiesMenu authorities={props.account}/>}
             {props.isAuthenticated && props.isAdmin && (
               <AdminMenu showSwagger={props.isSwaggerEnabled} showDatabase={!props.isInProduction}/>
             )}

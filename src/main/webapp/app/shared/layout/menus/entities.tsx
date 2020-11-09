@@ -2,12 +2,11 @@ import React from 'react';
 import MenuItem from 'app/shared/layout/menus/menu-item';
 import {Translate, translate} from 'react-jhipster';
 import {NavDropdown} from './menu-components';
+import {hasAnyAuthority} from "app/shared/auth/private-route";
+import {AUTHORITIES} from "app/config/constants";
 
 const adminMenus = (
   <>
-    <MenuItem icon="asterisk" to="/signal">
-      <Translate contentKey="global.menu.entities.signal" />
-    </MenuItem>
     <MenuItem icon="asterisk" to="/board">
       <Translate contentKey="global.menu.entities.board" />
     </MenuItem>
@@ -26,7 +25,7 @@ const adminMenus = (
   </>
 );
 
-export const EntitiesMenu = ({ isAdmin }) => (
+export const EntitiesMenu = ({ authorities }) => (
   <NavDropdown
     icon="th-list"
     name={translate('global.menu.entities.main')}
@@ -36,7 +35,14 @@ export const EntitiesMenu = ({ isAdmin }) => (
     <MenuItem icon="asterisk" to="/option-stats">
       <Translate contentKey="global.menu.entities.optionStats" />
     </MenuItem>
-    {isAdmin && adminMenus}
+    {hasAnyAuthority(authorities, [AUTHORITIES.ADMIN,AUTHORITIES.SILVER,AUTHORITIES.GOLDEN]) ?
+
+      <MenuItem icon="asterisk" to="/signal">
+        <Translate contentKey="global.menu.entities.signal"/>
+      </MenuItem>
+      : null
+    }
+    {hasAnyAuthority(authorities,[AUTHORITIES.ADMIN]) && adminMenus}
     {/* jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here */}
   </NavDropdown>
 );
