@@ -233,17 +233,11 @@ public class OptionStats {
         if (checkForNull()) {
             return 0;
         }
-        if (callBidAsk.getBidPrice() == 0) {
-            return Integer.MAX_VALUE;
-        }
         return (float) (Math.round((callBidAsk.getBidPrice() * 1.0 / baseStockWatch.getLast()) * 10000.0) / 100.0);
     }
 
     public Integer getCallFinalPrice() {
         if (checkForNull()) {
-            return 0;
-        }
-        if (callBidAsk.getBidPrice() == 0) {
             return Integer.MAX_VALUE;
         }
         return baseStockWatch.getLast() - callBidAsk.getBidPrice();
@@ -265,9 +259,6 @@ public class OptionStats {
         if (checkForNull()) {
             return 0;
         }
-        if (callBidAsk.getBidPrice() == 0) {
-            return Integer.MAX_VALUE;
-        }
         return (float) (Math.round((option.getStrikePrice() * 1.0 / getCallFinalPrice() - 1) * 10000.0) / 100.0);
     }
 
@@ -275,9 +266,6 @@ public class OptionStats {
     public float getCallGainMonthly() {
         if (checkForNull()) {
             return 0;
-        }
-        if (callBidAsk.getBidPrice() == 0) {
-            return Integer.MAX_VALUE;
         }
         return (float) (getCallGain() * 30.0 / ChronoUnit.DAYS.between(LocalDate.now(), option.getExpDate()));
     }
