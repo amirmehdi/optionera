@@ -352,7 +352,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                <div className={`padding-col`}>{_computeDateInJalaliFormat(option.expDate)}</div>
              }/>
              <Column className="bg-color-gray"
-                     width={80}
+                     width={90}
                      title={<Translate contentKey="eTradeApp.option.instrument">underlying asset</Translate>}
                      dataIndex="option" key="optionInstrument" render={(option, record: any) =>
                <div className={`padding-col`}>
