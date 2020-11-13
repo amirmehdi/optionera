@@ -453,23 +453,23 @@ export const OptionStats = (props: IOptionStatsProps) => {
 
                }/>
                <Column title={<Translate contentKey="eTradeApp.optionStats.EffectivePrice"> Effective Price</Translate>}
-                       dataIndex="option" key="optionPutEffectivePrice" render={(option, row: any) =>
+                       dataIndex="putEffectivePrice" key="putEffectivePrice" render={(putEffectivePrice, row: any) =>
                  <div
                    className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                   <Number>{option.putEffectivePrice}</Number></div>
+                   <Number>{putEffectivePrice}</Number></div>
                }/>
                <Column title={<Translate contentKey="eTradeApp.optionStats.BlackScholes30"> Black Scholes 30</Translate>}
-                       dataIndex="option" key="optionPutBS30" render={(option, row: any) =>
+                       dataIndex="putBS30" key="putBS30" render={(putBS30, row: any) =>
                  <div
                    className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                   <Number>{option.putBS30}</Number></div>
+                   <Number>{putBS30}</Number></div>
                }/>
                <Column
                  width={110}
                  title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
                        dataIndex="option" key="option" render={(option, row: any) =>
                  <div className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                   {/* {option ? <Link to={`option/${option.id}`}>{'ض' + option.name}</Link> : ''}*/}
+                   {/* {option ? <Link to={`option/${option.id}`}>{'ط' + option.name}</Link> : ''}*/}
                    {option ? <a target="_blank" rel="noopener noreferrer"
                                 href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${option.putTseId}`}>{' ' +'ط' + option.name + ' '}</a> : ''}
 
