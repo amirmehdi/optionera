@@ -26,6 +26,32 @@ Main page styles
     }
   }
 }
+.price {
+  text-align: center;
+  color: #4aca85;
+  font-size: 28px;
+  margin-top: 10px;
+}
+.content-list-warning {
+  direction: rtl;
+  li {
+    text-align: right;
+    direction: rtl;
+  }
+}
+
+.container-btn-modal {
+  display: flex;
+  justify-content: center;
+  flex-direction: row-reverse;
+  .btn-green {
+    background-color: #4aca85;
+    color: #fff;
+    border: 1px solid #4aca85;
+    margin-left: 10px;
+  }
+}
+
 .container-pricing {
   display: flex;
   justify-content: space-around;
@@ -58,6 +84,7 @@ Main page styles
       border-radius: 31px;
       padding: 7px;
       width: 65%;
+      cursor: pointer;
       margin: 0 auto;
     }
   }

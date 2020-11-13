@@ -5,11 +5,19 @@ import {connect} from 'react-redux';
 import {Alert, Col, Row} from 'reactstrap';
 import {Link} from "react-router-dom";
 import {Translate} from "react-jhipster";
+import { Modal  , Button} from 'antd';
 
 export type IHomeProp = StateProps;
 export const Home = (props: IHomeProp) => {
   const {account} = props;
   const [active , setActive] = useState<number>(1);
+  const [visible , setVisible] = useState<boolean>(false);
+  const [price , setPrice] = useState<string>("0");
+
+  const visibleModal = (e) => {
+    setVisible(true);
+    setPrice(e)
+  };
 
   return (
     <div>
@@ -256,7 +264,7 @@ export const Home = (props: IHomeProp) => {
                   <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
                 </div>
                 <p style={{height: "60%"}}><Translate contentKey="home.pricing.cards.feature2"></Translate></p>
-                <p className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
+                <p onClick={() => visibleModal("50,000")} className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
               </div>
               <div className="card-price">
                 <h2><Translate contentKey="home.pricing.cards.title3"></Translate></h2>
@@ -265,7 +273,7 @@ export const Home = (props: IHomeProp) => {
                   <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
                 </div>
                 <p style={{height: "60%"}}><Translate contentKey="home.pricing.cards.feature3"></Translate></p>
-                <p className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
+                <p onClick={() => visibleModal("200,000")} className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
               </div>
               <div className="card-price">
                 <h2><Translate contentKey="home.pricing.cards.title4"></Translate></h2>
@@ -274,10 +282,33 @@ export const Home = (props: IHomeProp) => {
                   <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
                 </div>
                 <p style={{height: "60%"}}><Translate contentKey="home.pricing.cards.feature4"></Translate></p>
-                <p className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
+                <p onClick={() => visibleModal("1000,000")} className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
               </div>
             </div>
           </div>
+          <Modal
+            title="خرید اشتراک"
+            visible={visible}
+            footer={null}
+            onCancel={() => setVisible(false)}
+          >
+            <h2 className="price">{price}</h2>
+           <ul className="content-list-warning">
+             <li>قبل از خرید اشتراک در سایت ثبت نام کنید</li>
+             <li>دقت کنید ایمیل هنگام پرداخت با ایمیل حساب کاربری یکسان باشد</li>
+             <li>اشتراک شما تا حداکثر ۲۴ ساعت پس از پرداخت فعال میگردد</li>
+             <li>در صورت بروز مشکلی به ادمین کانال تلگرام به ادرس @optionera_admin پیام دهید</li>
+           </ul>
+            <div className="container-btn-modal">
+              <Button onClick={() => {
+                const value = price.replace(',', '');
+                window.open(`https://idpay.ir/optionera-ir/${value}`)
+              }
+
+              } className="btn-green">خرید اشتراک</Button>
+              <Button onClick={() => setVisible(false)}>انصراف</Button>
+            </div>
+          </Modal>
         </section>
       </div>
 
@@ -385,8 +416,6 @@ export const Home = (props: IHomeProp) => {
           {/* END row */}
         </div>
       </footer>
-
-
     </div>
   );
 };
