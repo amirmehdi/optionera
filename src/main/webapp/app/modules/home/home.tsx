@@ -244,7 +244,6 @@ export const Home = (props: IHomeProp) => {
                   <p><Translate contentKey="home.pricing.cards.price1">free</Translate></p>
                   <span>.</span>
                 </div>
-                <p style={{height: "60%"}}><Translate contentKey="home.pricing.cards.feature1"></Translate></p>
                 <Link to="/account/register" role="button">
                   <p className="btn-price"><Translate contentKey="global.menu.account.register">register</Translate></p>
                 </Link>
@@ -255,7 +254,6 @@ export const Home = (props: IHomeProp) => {
                   <p><Translate contentKey="home.pricing.cards.price2"></Translate></p>
                   <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
                 </div>
-                <p style={{height: "60%"}}><Translate contentKey="home.pricing.cards.feature2"></Translate></p>
                 <p className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
               </div>
               <div className="card-price">
@@ -264,16 +262,6 @@ export const Home = (props: IHomeProp) => {
                   <p><Translate contentKey="home.pricing.cards.price3"></Translate></p>
                   <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
                 </div>
-                <p style={{height: "60%"}}><Translate contentKey="home.pricing.cards.feature3"></Translate></p>
-                <p className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
-              </div>
-              <div className="card-price">
-                <h2><Translate contentKey="home.pricing.cards.title4"></Translate></h2>
-                <div className="price-green">
-                  <p><Translate contentKey="home.pricing.cards.price4"></Translate></p>
-                  <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
-                </div>
-                <p style={{height: "60%"}}><Translate contentKey="home.pricing.cards.feature4"></Translate></p>
                 <p className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
               </div>
             </div>
