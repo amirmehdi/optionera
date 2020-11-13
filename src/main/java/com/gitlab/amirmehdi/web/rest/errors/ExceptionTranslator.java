@@ -2,9 +2,10 @@ package com.gitlab.amirmehdi.web.rest.errors;
 
 import com.gitlab.amirmehdi.service.errors.UsernameAlreadyUsedException;
 import io.github.jhipster.web.util.HeaderUtil;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.ConcurrencyFailureException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -72,7 +73,13 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
                 builder.with(MESSAGE_KEY, "error.http." + problem.getStatus().getStatusCode());
             }
         }
-        return new ResponseEntity<>(builder.build(), entity.getHeaders(), entity.getStatusCode());
+        HttpHeaders headers = new HttpHeaders();
+        if (problem.getDetail() == null || "Full authentication is required to access this resource".equals(problem.getDetail())) {
+            headers.add("X-" + applicationName + "-error", "error.http." + problem.getStatus().getStatusCode());
+        } else {
+            headers.add("X-" + applicationName + "-error", "error." + problem.getDetail().replace(" ", ""));
+        }
+        return new ResponseEntity<>(builder.build(), headers, HttpStatus.BAD_REQUEST);
     }
 
     @Override
@@ -95,13 +102,19 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
     @ExceptionHandler
     public ResponseEntity<Problem> handleEmailAlreadyUsedException(com.gitlab.amirmehdi.service.errors.EmailAlreadyUsedException ex, NativeWebRequest request) {
         EmailAlreadyUsedException problem = new EmailAlreadyUsedException();
-        return create(problem, request, HeaderUtil.createFailureAlert(applicationName,  true, problem.getEntityName(), problem.getErrorKey(), problem.getMessage()));
+        return create(problem, request, HeaderUtil.createFailureAlert(applicationName, true, problem.getEntityName(), problem.getErrorKey(), problem.getMessage()));
     }
 
     @ExceptionHandler
     public ResponseEntity<Problem> handleUsernameAlreadyUsedException(UsernameAlreadyUsedException ex, NativeWebRequest request) {
         LoginAlreadyUsedException problem = new LoginAlreadyUsedException();
-        return create(problem, request, HeaderUtil.createFailureAlert(applicationName,  true, problem.getEntityName(), problem.getErrorKey(), problem.getMessage()));
+        return create(problem, request, HeaderUtil.createFailureAlert(applicationName, true, problem.getEntityName(), problem.getErrorKey(), problem.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Problem> handleBadCredentials(org.springframework.security.authentication.BadCredentialsException ex, NativeWebRequest request) {
+        BadRequestAlertException problem = new BadRequestAlertException(ErrorConstants.CONSTRAINT_VIOLATION_TYPE, "Bad credentials", "userManagement", "badcredentials");
+        return create(problem, request, HeaderUtil.createFailureAlert(applicationName, true, problem.getEntityName(), problem.getErrorKey(), problem.getMessage()));
     }
 
     @ExceptionHandler
