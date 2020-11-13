@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {Alert, Col, Row} from 'reactstrap';
 import {Link} from "react-router-dom";
 import {Translate} from "react-jhipster";
-import { Modal  , Button} from 'antd';
+import {Button, Modal} from 'antd';
 
 export type IHomeProp = StateProps;
 export const Home = (props: IHomeProp) => {
@@ -262,7 +262,7 @@ export const Home = (props: IHomeProp) => {
                   <p><Translate contentKey="home.pricing.cards.price2"></Translate></p>
                   <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
                 </div>
-                <p onClick={() => visibleModal("50,000")} className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
+                <p onClick={() => visibleModal("500,000")} className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
               </div>
               <div className="card-price">
                 <h2><Translate contentKey="home.pricing.cards.title3"></Translate></h2>
@@ -270,7 +270,7 @@ export const Home = (props: IHomeProp) => {
                   <p><Translate contentKey="home.pricing.cards.price3"></Translate></p>
                   <span><Translate contentKey="home.pricing.perMonth"></Translate></span>
                 </div>
-                <p onClick={() => visibleModal("200,000")} className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
+                <p onClick={() => visibleModal("1,300,000")} className="btn-price"><Translate contentKey="home.pricing.select">select plan</Translate></p>
               </div>
             </div>
           </div>
@@ -289,7 +289,7 @@ export const Home = (props: IHomeProp) => {
            </ul>
             <div className="container-btn-modal">
               <Button onClick={() => {
-                const value = price.replace(',', '');
+                const value = price.replace(/,/g, '');
                 window.open(`https://idpay.ir/optionera-ir/${value}`)
               }
 
