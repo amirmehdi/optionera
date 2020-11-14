@@ -11,13 +11,15 @@ export const HomePage = (props: IOptionStatsProps) => {
   const { account } = props;
   return (
     <div style={{padding: 10}}>
-      {account.authorities && account.authorities.includes("ROLE_USER") ?
+      {/* {account.authorities && account.authorities.includes("ROLE_USER") ?
         !account.authorities.includes("ROLE_ADMIN") ?
         <OptionStats  history={props.history}
                       location={props.location}
                       match={props.match} /> : "" : ""
-      }
-
+      }*/ }
+      <OptionStats  history={props.history}
+                    location={props.location}
+                    match={props.match} />
     </div>
   );
 };
