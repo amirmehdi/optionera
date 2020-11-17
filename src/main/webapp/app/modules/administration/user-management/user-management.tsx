@@ -5,7 +5,12 @@ import {Badge, Button, Row, Table} from 'reactstrap';
 import {getSortState, JhiItemCount, JhiPagination, TextFormat, Translate} from 'react-jhipster';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
-import {APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT} from 'app/config/constants';
+import {
+  APP_DATE_FORMAT,
+  APP_LOCAL_DATE_DASH_FORMAT,
+  APP_LOCAL_DATE_FORMAT,
+  APP_LOCAL_DATETIME_FORMAT2
+} from 'app/config/constants';
 import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
 import {getUsers, updateUser} from './user-management.reducer';
 import {IRootState} from 'app/shared/reducers';
@@ -122,14 +127,14 @@ export const UserManagement = (props: IUserManagementProps) => {
                   : null}
               </td>
               <td>
-                <TextFormat value={user.planExpDate} type="date" format={APP_LOCAL_DATE_FORMAT} blankOnInvalid/>
+                <TextFormat value={user.planExpDate} type="date" format={APP_LOCAL_DATE_DASH_FORMAT} blankOnInvalid/>
               </td>
               <td>
-                <TextFormat value={user.createdDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid/>
+                <TextFormat value={user.createdDate} type="date" format={APP_LOCAL_DATETIME_FORMAT2} blankOnInvalid/>
               </td>
               <td>{user.lastModifiedBy}</td>
               <td>
-                <TextFormat value={user.lastModifiedDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid/>
+                <TextFormat value={user.lastModifiedDate} type="date" format={APP_LOCAL_DATETIME_FORMAT2} blankOnInvalid/>
               </td>
               <td className="text-right">
                 <div className="btn-group flex-btn-group-container">

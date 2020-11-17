@@ -21,13 +21,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.time.Instant;
 import java.util.*;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -528,9 +527,9 @@ public class UserResourceIT {
     public void testUserToUserDTO() {
         user.setId(DEFAULT_ID);
         user.setCreatedBy(DEFAULT_LOGIN);
-        user.setCreatedDate(Instant.now());
+        user.setCreatedDate(new Date());
         user.setLastModifiedBy(DEFAULT_LOGIN);
-        user.setLastModifiedDate(Instant.now());
+        user.setLastModifiedDate(new Date());
         Set<Authority> authorities = new HashSet<>();
         Authority authority = new Authority();
         authority.setName(AuthoritiesConstants.USER);

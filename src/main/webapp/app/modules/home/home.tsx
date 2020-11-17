@@ -305,7 +305,7 @@ export const Home = (props: IHomeProp) => {
           <Row>
             <Col md="12">
               <Row>
-                <Col md="6">
+                <Col md="5">
                   <div className="probootstrap-footer-widget">
                     <h3><Translate contentKey="home.footer.aboutApp">ABOUT Optionera</Translate></h3>
                     <p style={{fontSize: 14}}><Translate contentKey="home.footer.about"></Translate></p>
@@ -373,7 +373,7 @@ export const Home = (props: IHomeProp) => {
                     </ul>
                   </div>
                 </Col>*/}
-                <Col md="4">
+                <Col md="3">
                   <div className="probootstrap-footer-widget">
                     <h3><Translate contentKey="home.footer.contactInfo">CONTACT INFO</Translate></h3>
                     <ul className="footer-information">
@@ -394,6 +394,22 @@ export const Home = (props: IHomeProp) => {
                         <a className="footer-blog footer-contact" href="#">
                           <i style={{marginRight: 5}} className="icon-location"/> optionera.ir
                         </a>
+                      </li>
+                    </ul>
+                  </div>
+                </Col>
+                <Col md="2">
+                  <div className="probootstrap-footer-widget">
+                    <h3><Translate contentKey="home.footer.links">پیوند ها</Translate></h3>
+                    <ul className="footer-information">
+                      <li>
+                        <a href="https://tse.ir/MarketWatch-ang.html?cat=tradeOption"> <i className="icon-check"/>بورس اوراق بهادار</a>
+                      </li>
+                      <li>
+                        <a href="https://t.me/hrnoption"> <i className="icon-check"/>کانال اموزش اختیار معامله</a>
+                      </li>
+                      <li>
+                        <a href="https://t.me/TradingOptionhrn"> <i className="icon-check"/>گروه اموزش اختیار معامله</a>
                       </li>
                     </ul>
                   </div>

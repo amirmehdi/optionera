@@ -225,6 +225,19 @@ export const OptionStats = (props: IOptionStatsProps) => {
                      <Number>{option.callMargin}</Number></div>
                  }/> : null
                }
+               <Column
+                 width={90}
+                 sorter={true}
+                 sortDirections={['ascend', 'descend']}
+                 sortOrder={paginationState.sort === 'callIndifference' ?
+                   paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                 showSorterTooltip={false}
+                 title={<Translate contentKey="eTradeApp.optionStats.Indifference">Indifference</Translate>}
+                 dataIndex="option" key="callIndifference" render={(option, row: any) =>
+                 <div
+                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                   <Number>{option.callIndifference}</Number></div>
+               }/>
                {account.authorities.includes("GOLDEN") || account.authorities.includes("ROLE_ADMIN") ?
                 <>
                  <Column
@@ -239,19 +252,6 @@ export const OptionStats = (props: IOptionStatsProps) => {
                    <div
                      className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                      <Number>{option.callHedge}</Number></div>
-                 }/>
-                 <Column
-                   width={90}
-                   sorter={true}
-                   sortDirections={['ascend', 'descend']}
-                   sortOrder={paginationState.sort === 'callIndifference' ?
-                     paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
-                   showSorterTooltip={false}
-                   title={<Translate contentKey="eTradeApp.optionStats.Indifference">Indifference</Translate>}
-                   dataIndex="option" key="callIndifference" render={(option, row: any) =>
-                   <div
-                     className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                     <Number>{option.callIndifference}</Number></div>
                  }/>
                  <Column
                  width={90}
