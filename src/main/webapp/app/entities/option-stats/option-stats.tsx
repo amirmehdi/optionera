@@ -5,18 +5,22 @@ import {RouteComponentProps} from 'react-router-dom';
 import {Spin, Table} from 'antd';
 import {getSortState, Translate} from 'react-jhipster';
 import {IRootState} from 'app/shared/reducers';
-import {getEntities, reset} from './option-stats.reducer';
+import {getEntities, reset,getEntitiesUpdate } from './option-stats.reducer';
 import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
 import './style.scss';
 import {SyncOutlined} from '@ant-design/icons';
 import {SearchOptionStats} from 'app/entities/option-stats/Search-option-stats';
 import DateTime from './../../DateTime/DateTime';
 import Number from './../../Framework/Number';
+import { Switch } from 'antd';
+import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 
 const { Column, ColumnGroup } = Table;
 
 export interface IOptionStatsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {
 }
+/* eslint-disable no-var */
+var intervalId:any;
 
 export const OptionStats = (props: IOptionStatsProps) => {
   const [paginationState, setPaginationState] = useState(getSortState(props.location, ITEMS_PER_PAGE));
@@ -25,6 +29,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
   const [switchId, setSwitchId] = useState(undefined);
   const [fromDate, setFromDate] = useState(undefined);
   const [toDate, setToDate] = useState(undefined);
+  const [checkAutoRefresh, setCheckAutoRefresh] = useState(undefined);
 
   const getAllEntities = () => {
     props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage,
@@ -48,6 +53,12 @@ export const OptionStats = (props: IOptionStatsProps) => {
   }, [paginationState.activePage]);
 
   const handleLoadMore = () => {
+    if(paginationState.activePage > 1){
+      setCheckAutoRefresh(undefined);
+      window.clearInterval(intervalId);
+      clearInterval(intervalId);
+      intervalId = 0
+    }
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     if (optionStatsList && optionStatsList.length > 19) {
       if (window.pageYOffset > 0) {
@@ -56,6 +67,12 @@ export const OptionStats = (props: IOptionStatsProps) => {
           activePage: paginationState.activePage + 1
         });
       }
+    }
+  };
+  const getAllEntitiesPageOne = () => {
+    if(checkAutoRefresh){
+      props.getEntitiesUpdate(paginationState.activePage - 1, paginationState.itemsPerPage,
+        `${paginationState.sort},${paginationState.order}`, instrumentId?.value, switchId, fromDate, toDate);
     }
   };
   const _computeDateInJalaliFormat = (createdAt: any) => {
@@ -82,6 +99,17 @@ export const OptionStats = (props: IOptionStatsProps) => {
       setSorting(false);
     }
   }, [sorting]);
+
+  useEffect(() => {
+    if(checkAutoRefresh === true){
+      intervalId = setInterval(() =>
+        getAllEntitiesPageOne(), 15000);
+    } else if(checkAutoRefresh === false){
+      window.clearInterval(intervalId);
+      clearInterval(intervalId);
+      intervalId = 0
+    }
+  }, [checkAutoRefresh]);
 
   const handleChange = (pagination, filters, sorter) => {
     if (sorter.column && sorter.column.sorter) {
@@ -116,7 +144,13 @@ export const OptionStats = (props: IOptionStatsProps) => {
        initialLoad={false}
      >
        <div className="content-search-box">
-         <SyncOutlined onClick={() => getAllEntities()}/>
+         {!checkAutoRefresh &&  <SyncOutlined style={{marginRight: 10}} onClick={() => getAllEntitiesPageOne()}/> }
+         <Switch
+           checked={checkAutoRefresh}
+           checkedChildren={<CheckOutlined />}
+           unCheckedChildren={<CloseOutlined />}
+           onChange={(e) => setCheckAutoRefresh(e)}
+         />
          <SearchOptionStats
            switchValue={switchId}
            instrumentValue={instrumentId}
@@ -487,6 +521,7 @@ const mapStateToProps = ({ optionStats }: IRootState) => ({
 });
 
 const mapDispatchToProps = {
+  getEntitiesUpdate,
   getEntities,
   reset
 };

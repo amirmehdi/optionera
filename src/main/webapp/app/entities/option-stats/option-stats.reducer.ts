@@ -8,6 +8,7 @@ import { defaultValue, IOptionStats } from 'app/shared/model/option-stats.model'
 
 export const ACTION_TYPES = {
   FETCH_OPTIONSTATS_LIST: 'optionStats/FETCH_OPTIONSTATS_LIST',
+  FETCH_OPTIONSTATS_LIST_UPDATE: 'optionStats/FETCH_OPTIONSTATS_LIST_UPDATE',
   FETCH_OPTIONSTATS: 'optionStats/FETCH_OPTIONSTATS',
   CREATE_OPTIONSTATS: 'optionStats/CREATE_OPTIONSTATS',
   UPDATE_OPTIONSTATS: 'optionStats/UPDATE_OPTIONSTATS',
@@ -72,6 +73,13 @@ export default (state: OptionStatsState = initialState, action): OptionStatsStat
         totalItems: parseInt(action.payload.headers['x-total-count'], 10)
       };
     }
+    case SUCCESS(ACTION_TYPES.FETCH_OPTIONSTATS_LIST_UPDATE): {
+      return {
+        ...state,
+        loading: false,
+        entities: action.payload.data
+      };
+    }
     case SUCCESS(ACTION_TYPES.FETCH_OPTIONSTATS):
       return {
         ...state,
@@ -114,6 +122,18 @@ export const getEntities: any = (page, size, sort, instrumentId?, callInTheMoney
   }${lessThanOrEqual ? `&expDate.lessThanOrEqual=${lessThanOrEqual}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_OPTIONSTATS_LIST,
+    payload: axios.get<IOptionStats>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`)
+  };
+};
+
+export const getEntitiesUpdate: any = (page, size, sort, instrumentId?, callInTheMoney?, greaterThanOrEqual?, lessThanOrEqual?) => {
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}${
+    instrumentId ? `&instrumentId.equals=${instrumentId}` : ''
+  }${callInTheMoney ? `&callInTheMoney.equals=${callInTheMoney}` : ''}${
+    greaterThanOrEqual ? `&expDate.greaterThanOrEqual=${greaterThanOrEqual}` : ''
+  }${lessThanOrEqual ? `&expDate.lessThanOrEqual=${lessThanOrEqual}` : ''}`;
+  return {
+    type: ACTION_TYPES.FETCH_OPTIONSTATS_LIST_UPDATE,
     payload: axios.get<IOptionStats>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`)
   };
 };
