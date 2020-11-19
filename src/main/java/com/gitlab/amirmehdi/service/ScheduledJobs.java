@@ -70,10 +70,10 @@ public class ScheduledJobs {
     @Scheduled(fixedDelay = 30 * 60 * 1000)
     public void checkNullStockWatch() {
         if (market.getStockWatch("IRO1FOLD0001") == null) {
-            telegramMessageSender.sendMessage(new TelegramMessageDto(apiToken,privateChannelId,"Why redis is empty!"));
             crawlerJobs.optionCrawler();
             crawlerJobs.openInterestUpdater();
             crawlerJobs.marketUpdater();
+            telegramMessageSender.sendMessage(new TelegramMessageDto(apiToken,privateChannelId,"Why redis is empty!"));
         }
     }
 }
