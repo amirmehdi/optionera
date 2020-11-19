@@ -46,6 +46,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
   };
 
   useEffect(() => {
+    localStorage.removeItem("switch");
     resetAll();
   }, []);
 
@@ -71,10 +72,9 @@ export const OptionStats = (props: IOptionStatsProps) => {
     }
   };
   const getAllEntitiesPageOne = () => {
-    if(checkAutoRefresh){
+    setPaginationState({...paginationState , activePage: 1});
       props.getEntitiesUpdate(paginationState.activePage - 1, paginationState.itemsPerPage,
         `${paginationState.sort},${paginationState.order}`, instrumentId?.value, switchId, fromDate, toDate);
-    }
   };
   const _computeDateInJalaliFormat = (createdAt: any) => {
     const date1 = new Date(createdAt);
@@ -133,6 +133,10 @@ export const OptionStats = (props: IOptionStatsProps) => {
       props.reset();
     }
   };
+  const getScroll = () =>{
+    const AutoRefresh = localStorage.getItem("switch");
+    setCheckAutoRefresh(AutoRefresh === "true");
+  };
   const { optionStatsList, loading } = props;
   return (
    <div style={{width: "100%" , paddingRight : 20 , paddingLeft: 20}}>
@@ -143,14 +147,19 @@ export const OptionStats = (props: IOptionStatsProps) => {
        loader={<div className="loader"> <Spin/> </div>}
        threshold={0}
        initialLoad={false}
+       getScrollParent={() => window.pageYOffset === 0 ? getScroll() : null}
      >
        <div className="content-search-box">
-         {!checkAutoRefresh &&  <SyncOutlined style={{marginRight: 10}} onClick={() => getAllEntitiesPageOne()}/> }
+         {!checkAutoRefresh &&  <SyncOutlined style={{marginRight: 10}}
+                                              onClick={() => getAllEntitiesPageOne()}/> }
          <Switch
            checked={checkAutoRefresh}
            checkedChildren={<CheckOutlined />}
            unCheckedChildren={<CloseOutlined />}
-           onChange={(e) => setCheckAutoRefresh(e)}
+           onChange={(e) => {
+             localStorage.setItem("switch" , `${e}`);
+             setCheckAutoRefresh(e)
+           }}
          />
          <SearchOptionStats
            switchValue={switchId}
