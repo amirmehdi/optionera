@@ -5,7 +5,7 @@ import {Badge, Button, Row} from 'reactstrap';
 import {TextFormat, Translate} from 'react-jhipster';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
-import {APP_DATE_FORMAT} from 'app/config/constants';
+import {APP_DATE_FORMAT, APP_LOCAL_DATE_DASH_FORMAT, APP_LOCAL_DATETIME_FORMAT2} from 'app/config/constants';
 import {languages} from 'app/config/translation';
 import {getUser} from './user-management.reducer';
 import {IRootState} from 'app/shared/reducers';
@@ -66,7 +66,7 @@ export const UserManagementDetail = (props: IUserManagementDetailProps) => {
             <Translate contentKey="userManagement.createdDate">Created Date</Translate>
           </dt>
           <dd>
-            <TextFormat value={user.createdDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
+            <TextFormat value={user.createdDate} type="date" format={APP_LOCAL_DATETIME_FORMAT2} blankOnInvalid />
           </dd>
           <dt>
             <Translate contentKey="userManagement.lastModifiedBy">Last Modified By</Translate>
@@ -76,7 +76,7 @@ export const UserManagementDetail = (props: IUserManagementDetailProps) => {
             <Translate contentKey="userManagement.lastModifiedDate">Last Modified Date</Translate>
           </dt>
           <dd>
-            <TextFormat value={user.lastModifiedDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
+            <TextFormat value={user.lastModifiedDate} type="date" format={APP_LOCAL_DATETIME_FORMAT2} blankOnInvalid />
           </dd>
           <dt>
             <Translate contentKey="userManagement.profiles">Profiles</Translate>
@@ -96,7 +96,7 @@ export const UserManagementDetail = (props: IUserManagementDetailProps) => {
             <Translate contentKey="userManagement.planExpDate">plan exp date</Translate>
           </dt>
           <dd>
-            <TextFormat value={user.planExpDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid/>
+            <TextFormat value={user.planExpDate} type="date" format={APP_LOCAL_DATE_DASH_FORMAT} blankOnInvalid/>
           </dd>
         </dl>
       </Row>

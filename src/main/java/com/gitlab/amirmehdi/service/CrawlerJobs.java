@@ -270,6 +270,7 @@ public class CrawlerJobs {
                     .contractSize(Integer.valueOf(bDatum.getVal().get(12).getV().replace(",", "")));
             })
             .filter(Objects::nonNull)
+            .filter(option -> !option.getExpDate().isBefore(LocalDate.now()))
             .collect(Collectors.toList());
         stopWatch.stop();
 

@@ -1,14 +1,15 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import {shallow} from 'enzyme';
 
 import sinon from 'sinon';
 
 import LoadingBar from 'react-redux-loading-bar';
-import { Navbar, Nav } from 'reactstrap';
+import {Nav, Navbar} from 'reactstrap';
 
-import { Home, Brand } from 'app/shared/layout/header/header-components';
-import { AdminMenu, EntitiesMenu, AccountMenu, LocaleMenu } from 'app/shared/layout/menus';
+import {Brand, Home} from 'app/shared/layout/header/header-components';
+import {AccountMenu, AdminMenu, EntitiesMenu, LocaleMenu} from 'app/shared/layout/menus';
 import Header from 'app/shared/layout/header/header';
+import {AUTHORITIES} from "app/config/constants";
 
 describe('Header', () => {
   let mountedWrapper;
@@ -22,7 +23,8 @@ describe('Header', () => {
     onLocaleChange: localeSpy,
     ribbonEnv: 'dev',
     isInProduction: false,
-    isSwaggerEnabled: true
+    isSwaggerEnabled: true,
+    account:[AUTHORITIES.ADMIN,AUTHORITIES.USER]
   };
   const prodProps = {
     ...devProps,
@@ -32,12 +34,14 @@ describe('Header', () => {
   };
   const userProps = {
     ...prodProps,
-    isAdmin: false
+    isAdmin: false,
+    account:[AUTHORITIES.USER]
   };
   const guestProps = {
     ...prodProps,
     isAdmin: false,
-    isAuthenticated: false
+    isAuthenticated: false,
+    account:[AUTHORITIES.USER]
   };
 
   const wrapper = (props = devProps) => {

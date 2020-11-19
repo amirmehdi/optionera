@@ -30,6 +30,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
   const [fromDate, setFromDate] = useState(undefined);
   const [toDate, setToDate] = useState(undefined);
   const [checkAutoRefresh, setCheckAutoRefresh] = useState(undefined);
+  const { account } = props;
 
   const getAllEntities = () => {
     props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage,
@@ -180,7 +181,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
        </div>
 
          <div>
-           <Table sticky pagination={false} onChange={handleChange} dataSource={optionStatsList as any}
+           <Table sticky pagination={false} onChange={handleChange} dataSource={optionStatsList}
                   scroll={{ x: 2400 }}>
              <Column
                width={110}
@@ -209,13 +210,15 @@ export const OptionStats = (props: IOptionStatsProps) => {
                    className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                    <Number>{callEffectivePrice}</Number></div>
                }/>
-               <Column
-                 title={<Translate contentKey="eTradeApp.optionStats.FinalPrice">FinalPrice</Translate>}
-                 dataIndex="callFinalPrice" key="callFinalPrice" render={(callFinalPrice, row: any) =>
-                 <div
-                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                   <Number>{callFinalPrice}</Number></div>
-               }/>
+               {account.authorities.includes("GOLDEN") || account.authorities.includes("ROLE_ADMIN") ?
+                 <Column
+                   title={<Translate contentKey="eTradeApp.optionStats.FinalPrice">FinalPrice</Translate>}
+                   dataIndex="callFinalPrice" key="callFinalPrice" render={(callFinalPrice, row: any) =>
+                   <div
+                     className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                     <Number>{callFinalPrice}</Number></div>
+                 }/>:null
+               }
                <Column
                  sorter={true}
                  width={110}
@@ -242,32 +245,21 @@ export const OptionStats = (props: IOptionStatsProps) => {
                    className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                    <Number>{option.callBreakEven}</Number></div>
                }/>
-               <Column
-                 width={80}
-                 sorter={true}
-                 sortDirections={['ascend', 'descend']}
-                 sortOrder={paginationState.sort === 'callMargin' ?
-                   paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
-                 showSorterTooltip={false}
-                 title={<Translate contentKey="eTradeApp.optionStats.Margin">Margin</Translate>}
-                 dataIndex="option" key="callMargin" render={(option, row: any) =>
-                 <div
-                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                   <Number>{option.callMargin}</Number></div>
-               }/>
-               <Column
-                 width={75}
-                 sorter={true}
-                 sortDirections={['ascend', 'descend']}
-                 sortOrder={paginationState.sort === 'callHedge' ?
-                   paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
-                 showSorterTooltip={false}
-                 title={<Translate contentKey="eTradeApp.optionStats.Hedge">Hedge</Translate>}
-                 dataIndex="option" key="callHedge" render={(option, row: any) =>
-                 <div
-                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                   <Number>{option.callHedge}</Number></div>
-               }/>
+               {account.authorities.includes("ROLE_ADMIN") ?
+                 <Column
+                   width={80}
+                   sorter={true}
+                   sortDirections={['ascend', 'descend']}
+                   sortOrder={paginationState.sort === 'callMargin' ?
+                     paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                   showSorterTooltip={false}
+                   title={<Translate contentKey="eTradeApp.optionStats.Margin">Margin</Translate>}
+                   dataIndex="option" key="callMargin" render={(option, row: any) =>
+                   <div
+                     className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                     <Number>{option.callMargin}</Number></div>
+                 }/> : null
+               }
                <Column
                  width={90}
                  sorter={true}
@@ -281,12 +273,27 @@ export const OptionStats = (props: IOptionStatsProps) => {
                    className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                    <Number>{option.callIndifference}</Number></div>
                }/>
-               <Column
+               {account.authorities.includes("GOLDEN") || account.authorities.includes("ROLE_ADMIN") ?
+                <>
+                 <Column
+                   width={75}
+                   sorter={true}
+                   sortDirections={['ascend', 'descend']}
+                   sortOrder={paginationState.sort === 'callHedge' ?
+                     paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                   showSorterTooltip={false}
+                   title={<Translate contentKey="eTradeApp.optionStats.Hedge">Hedge</Translate>}
+                   dataIndex="option" key="callHedge" render={(option, row: any) =>
+                   <div
+                     className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                     <Number>{option.callHedge}</Number></div>
+                 }/>
+                 <Column
                  width={90}
                  sorter={true}
                  sortDirections={['ascend', 'descend']}
                  sortOrder={paginationState.sort === 'callGain' ?
-                   paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                 paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
                  showSorterTooltip={false}
                  title={<Translate contentKey="eTradeApp.optionStats.Gain">Gain</Translate>}
                  dataIndex="option" key="callGain" render={(option, row: any) =>
@@ -294,12 +301,12 @@ export const OptionStats = (props: IOptionStatsProps) => {
                    className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                    <Number>{option.callGain}</Number></div>
                }/>
-               <Column
+                 <Column
                  width={90}
                  sorter={true}
                  sortDirections={['ascend', 'descend']}
                  sortOrder={paginationState.sort === 'callGainMonthly' ?
-                   paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                 paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
                  showSorterTooltip={false}
                  title={<Translate contentKey="eTradeApp.optionStats.GainMonthly">GainMonthly</Translate>}
                  dataIndex="option" key="callGainMonthly" render={(option, row: any) =>
@@ -307,6 +314,8 @@ export const OptionStats = (props: IOptionStatsProps) => {
                    className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                    <Number>{option.callGainMonthly}</Number></div>
                }/>
+               </> : null
+               }
                <Column
                  width={70}
                  sorter={true}
@@ -479,23 +488,23 @@ export const OptionStats = (props: IOptionStatsProps) => {
 
                }/>
                <Column title={<Translate contentKey="eTradeApp.optionStats.EffectivePrice"> Effective Price</Translate>}
-                       dataIndex="option" key="optionPutEffectivePrice" render={(option, row: any) =>
+                       dataIndex="putEffectivePrice" key="putEffectivePrice" render={(putEffectivePrice, row: any) =>
                  <div
                    className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                   <Number>{option.putEffectivePrice}</Number></div>
+                   <Number>{putEffectivePrice}</Number></div>
                }/>
                <Column title={<Translate contentKey="eTradeApp.optionStats.BlackScholes30"> Black Scholes 30</Translate>}
-                       dataIndex="option" key="optionPutBS30" render={(option, row: any) =>
+                       dataIndex="putBS30" key="putBS30" render={(putBS30, row: any) =>
                  <div
                    className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                   <Number>{option.putBS30}</Number></div>
+                   <Number>{putBS30}</Number></div>
                }/>
                <Column
                  width={110}
                  title={<Translate contentKey="eTradeApp.optionStats.option">Option</Translate>}
                        dataIndex="option" key="option" render={(option, row: any) =>
                  <div className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                   {/* {option ? <Link to={`option/${option.id}`}>{'ض' + option.name}</Link> : ''}*/}
+                   {/* {option ? <Link to={`option/${option.id}`}>{'ط' + option.name}</Link> : ''}*/}
                    {option ? <a target="_blank" rel="noopener noreferrer"
                                 href={`http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=${option.putTseId}`}>{' ' +'ط' + option.name + ' '}</a> : ''}
 
@@ -511,13 +520,14 @@ export const OptionStats = (props: IOptionStatsProps) => {
   );
 };
 
-const mapStateToProps = ({ optionStats }: IRootState) => ({
-  optionStatsList: optionStats.entities,
-  loading: optionStats.loading,
-  totalItems: optionStats.totalItems,
-  links: optionStats.links,
-  entity: optionStats.entity,
-  updateSuccess: optionStats.updateSuccess
+const mapStateToProps = storeState => ({
+  optionStatsList: storeState.optionStats.entities,
+  loading: storeState.optionStats.loading,
+  totalItems: storeState.optionStats.totalItems,
+  links: storeState.optionStats.links,
+  entity: storeState.optionStats.entity,
+  updateSuccess: storeState.optionStats.updateSuccess,
+  account: storeState.authentication.account
 });
 
 const mapDispatchToProps = {

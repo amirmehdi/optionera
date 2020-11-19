@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.security;
 
+import com.gitlab.amirmehdi.domain.Authority;
 import com.gitlab.amirmehdi.domain.User;
 import com.gitlab.amirmehdi.repository.UserRepository;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
@@ -13,7 +14,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -50,8 +54,12 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     private org.springframework.security.core.userdetails.User createSpringSecurityUser(String lowercaseLogin, User user) {
         if (!user.getActivated()) {
-            throw new UserNotActivatedException("User " + lowercaseLogin + " was not activated");
+            throw new UserNotActivatedException("User was not activated");
         }
+        if (user.getAuthorities().size()==1 && user.getAuthorities().stream().map(Authority::getName).findAny().get().equals(AuthoritiesConstants.USER) && ChronoUnit.DAYS.between(user.getCreatedDate().toInstant(), Instant.now())>3){
+            throw new UserExpiredPlanException("expired plan");
+        }
+        //TODO expire
         List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
             .map(authority -> new SimpleGrantedAuthority(authority.getName()))
             .collect(Collectors.toList());

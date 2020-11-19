@@ -251,7 +251,7 @@ public class OptionStats {
         if (callBidAsk.getAskPrice() == 0) {
             return Integer.MAX_VALUE;
         }
-        return (float) (Math.round((option.getStrikePrice() * 1.0 / (baseStockWatch.getLast() - callBidAsk.getAskPrice())) * 10000.0) / 100.0) - 100;
+        return (float) (Math.round(((float) (Math.round((option.getStrikePrice() * 1.0 / (baseStockWatch.getLast() - callBidAsk.getAskPrice())) * 10000.0) / 100.0) - 100) * 100.0) / 100.0);
     }
 
     @JsonIgnore
@@ -267,7 +267,7 @@ public class OptionStats {
         if (checkForNull()) {
             return 0;
         }
-        return (float) (getCallGain() * 30.0 / ChronoUnit.DAYS.between(LocalDate.now(), option.getExpDate()));
+        return (float) (Math.round(((float) (getCallGain() * 30.0 / ChronoUnit.DAYS.between(LocalDate.now(), option.getExpDate()))) * 100.0) / 100.0);
     }
 
     @JsonIgnore
