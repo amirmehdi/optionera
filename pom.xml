@@ -76,7 +76,7 @@
         <frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
         <git-commit-id-plugin.version>4.0.0</git-commit-id-plugin.version>
         <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
-        <jib-maven-plugin.version>2.5.2</jib-maven-plugin.version>
+        <jib-maven-plugin.version>2.6.0</jib-maven-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
         <sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
@@ -656,7 +656,8 @@
                             </environment>
                             <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
                             <volumes>
-                                <volume>/app/resources/static</volume>
+                                <volume>/app/resources/static/</volume>
+                                <volume>/app/classes/static/content/</volume>
                             </volumes>
                         </container>
                         <extraDirectories>
