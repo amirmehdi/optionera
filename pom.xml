@@ -655,6 +655,9 @@
                                 <TZ>Asia/Tehran</TZ>
                             </environment>
                             <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+                            <volumes>
+                                <volume>/app/resources/static</volume>
+                            </volumes>
                         </container>
                         <extraDirectories>
                             <paths>src/main/jib</paths>
