@@ -73,7 +73,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
   };
   const getAllEntitiesPageOne = () => {
     setPaginationState({...paginationState , activePage: 1});
-      props.getEntitiesUpdate(paginationState.activePage - 1, paginationState.itemsPerPage,
+      props.getEntitiesUpdate(0, paginationState.itemsPerPage,
         `${paginationState.sort},${paginationState.order}`, instrumentId?.value, switchId, fromDate, toDate);
   };
   const _computeDateInJalaliFormat = (createdAt: any) => {
@@ -173,19 +173,22 @@ export const OptionStats = (props: IOptionStatsProps) => {
              // eslint-disable-next-line no-shadow
              const toDate = to ? fromDate : undefined;
              setToDate(to);
-             fromDate && props.getEntities(0, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`
-               , instrumentId?.value, switchId, toDate, to);
-             fromDate && props.reset();
+               fromDate && props.getEntities(0, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`
+                 , instrumentId?.value, switchId, toDate, to);
+               fromDate && props.reset();
+               setCheckAutoRefresh(false)
            }}
            instrumentId={(id) => {
              setInstrumentId(id);
-             props.getEntities(0, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`, id?.value, switchId, fromDate, toDate);
-             props.reset();
+               props.getEntities(0, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`, id?.value, switchId, fromDate, toDate);
+               props.reset();
+             setCheckAutoRefresh(false)
            }}
            switch={(id: number) => {
              setSwitchId(id);
-             props.getEntities(0, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`, instrumentId?.value, id, fromDate, toDate);
-             props.reset();
+               props.getEntities(0, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`, instrumentId?.value, id, fromDate, toDate);
+               props.reset();
+             setCheckAutoRefresh(false)
            }}/>
        </div>
 
