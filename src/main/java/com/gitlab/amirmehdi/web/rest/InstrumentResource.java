@@ -2,6 +2,7 @@ package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.repository.InstrumentRepository;
+import com.gitlab.amirmehdi.repository.OptionRepository;
 import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.service.dto.InstrumentSearchDTO;
 import com.gitlab.amirmehdi.web.rest.errors.BadRequestAlertException;
@@ -40,11 +41,13 @@ public class InstrumentResource {
     private static final String ENTITY_NAME = "instrument";
     private final Logger log = LoggerFactory.getLogger(InstrumentResource.class);
     private final InstrumentRepository instrumentRepository;
+    private final OptionRepository optionRepository;
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    public InstrumentResource(InstrumentRepository instrumentRepository) {
+    public InstrumentResource(InstrumentRepository instrumentRepository, OptionRepository optionRepository) {
         this.instrumentRepository = instrumentRepository;
+        this.optionRepository = optionRepository;
     }
 
     /**
@@ -132,10 +135,23 @@ public class InstrumentResource {
 
     @GetMapping("/instruments/search/{name}")
     public ResponseEntity<List<InstrumentSearchDTO>> searchByName(@PathVariable String name) {
-        List<InstrumentSearchDTO> list = instrumentRepository.findAllByNameLike("%" + name + "%", PageRequest.of(0, 10))
-            .stream()
-            .map(instrument -> new InstrumentSearchDTO(instrument.getIsin(), instrument.getName()))
-            .collect(Collectors.toList());
+        List<InstrumentSearchDTO> list;
+        if (name.charAt(0) == 'ض' || name.charAt(0) == 'ط'){
+            list= optionRepository.findAllByNameLike("%" + name.substring(1) + "%",PageRequest.of(0, 10))
+                .stream().map(option -> new InstrumentSearchDTO(option.getInstrument().getIsin(), option.getInstrument().getName()))
+                .distinct()
+                .collect(Collectors.toList());
+        }else {
+            list = instrumentRepository.findAllByNameLike("%" + name + "%", PageRequest.of(0, 10))
+                .stream()
+                .map(instrument -> new InstrumentSearchDTO(instrument.getIsin(), instrument.getName()))
+                .collect(Collectors.toList());
+            list.addAll(optionRepository.findAllByNameLike("%" + name + "%",PageRequest.of(0, 10))
+                .stream().map(option -> new InstrumentSearchDTO(option.getInstrument().getIsin(), option.getInstrument().getName()))
+                .distinct()
+                .collect(Collectors.toList()));
+        }
+        list = list.stream().distinct().collect(Collectors.toList());
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), new PageImpl<>(list));
         return ResponseEntity.ok()
             .headers(headers)

@@ -76,7 +76,7 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
         "where o.id= :#{#option.id}")
     void updateParam(Option option);*/
 
-    @Query(nativeQuery = true,value = "delete " +
+    @Query(nativeQuery = true, value = "delete " +
         "from option o where o.exp_date<now()")
     @Modifying
     void deleteAllByExpDateBefore();
@@ -86,4 +86,6 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
 
     @Query(value = "SELECT call_isin,put_isin from option ", nativeQuery = true)
     List<Object[]> findAllCallAndPutIsins();
+
+    List<Option> findAllByNameLike(String name, Pageable pageable);
 }
