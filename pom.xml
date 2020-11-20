@@ -657,7 +657,6 @@
                             <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
                             <volumes>
                                 <volume>/app/resources/static/</volume>
-                                <volume>/app/classes/static/content/</volume>
                             </volumes>
                         </container>
                         <extraDirectories>

@@ -101,7 +101,7 @@ public class SignalResource {
     @GetMapping("/signals")
     public ResponseEntity<List<Signal>> getAllSignals(SignalCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Signals by criteria: {}", criteria);
-        if (SecurityUtils.isCurrentUserInRoleJustUser() || SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.BRONZE)) {
+        if (SecurityUtils.isCurrentUserInRoleJustUser(AuthoritiesConstants.USER) || SecurityUtils.isCurrentUserInRoleJustUser(AuthoritiesConstants.BRONZE)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         Page<Signal> page = signalQueryService.findByCriteria(criteria, pageable);

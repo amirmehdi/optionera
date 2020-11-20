@@ -77,10 +77,10 @@ public final class SecurityUtils {
             getAuthorities(authentication).anyMatch(authority::equals);
     }
 
-    public static boolean isCurrentUserInRoleJustUser() {
+    public static boolean isCurrentUserInRoleJustUser(String authority) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null &&
-            getAuthorities(authentication).anyMatch(AuthoritiesConstants.USER::equals) &&
+            getAuthorities(authentication).anyMatch(authority::equals) &&
             getAuthorities(authentication).count() == 1;
     }
 
