@@ -2,6 +2,14 @@
   background-color: #eee !important;
 }
 
+.auto-refresh {
+  display: flex;
+  align-items: center;
+  width: 135px;
+  justify-content: space-around;
+  flex-direction: row-reverse;
+}
+
 .content-search-box {
   height: 100px;
   border-radius: 5px;
