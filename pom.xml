@@ -5,9 +5,9 @@
 
     <groupId>com.gitlab.amirmehdi</groupId>
     <artifactId>e-trade</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <packaging>jar</packaging>
-    <name>E Trade</name>
+    <name>optionera</name>
 
     <repositories>
         <!-- jhipster-needle-maven-repository -->
