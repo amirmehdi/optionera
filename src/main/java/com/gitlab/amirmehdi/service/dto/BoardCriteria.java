@@ -52,13 +52,13 @@ public class BoardCriteria implements Serializable, Criteria {
 
     private IntegerFilter bidVolume;
 
-    private IntegerFilter individualBuyVolume;
+    private LongFilter individualBuyVolume;
 
-    private IntegerFilter individualSellVolume;
+    private LongFilter individualSellVolume;
 
-    private IntegerFilter legalBuyVolume;
+    private LongFilter legalBuyVolume;
 
-    private IntegerFilter legalSellVolume;
+    private LongFilter legalSellVolume;
 
     private IntegerFilter referencePrice;
 
@@ -212,35 +212,35 @@ public class BoardCriteria implements Serializable, Criteria {
         this.bidVolume = bidVolume;
     }
 
-    public IntegerFilter getIndividualBuyVolume() {
+    public LongFilter getIndividualBuyVolume() {
         return individualBuyVolume;
     }
 
-    public void setIndividualBuyVolume(IntegerFilter individualBuyVolume) {
+    public void setIndividualBuyVolume(LongFilter individualBuyVolume) {
         this.individualBuyVolume = individualBuyVolume;
     }
 
-    public IntegerFilter getIndividualSellVolume() {
+    public LongFilter getIndividualSellVolume() {
         return individualSellVolume;
     }
 
-    public void setIndividualSellVolume(IntegerFilter individualSellVolume) {
+    public void setIndividualSellVolume(LongFilter individualSellVolume) {
         this.individualSellVolume = individualSellVolume;
     }
 
-    public IntegerFilter getLegalBuyVolume() {
+    public LongFilter getLegalBuyVolume() {
         return legalBuyVolume;
     }
 
-    public void setLegalBuyVolume(IntegerFilter legalBuyVolume) {
+    public void setLegalBuyVolume(LongFilter legalBuyVolume) {
         this.legalBuyVolume = legalBuyVolume;
     }
 
-    public IntegerFilter getLegalSellVolume() {
+    public LongFilter getLegalSellVolume() {
         return legalSellVolume;
     }
 
-    public void setLegalSellVolume(IntegerFilter legalSellVolume) {
+    public void setLegalSellVolume(LongFilter legalSellVolume) {
         this.legalSellVolume = legalSellVolume;
     }
 
