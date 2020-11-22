@@ -12,11 +12,11 @@ public class ClientsInfo {
 
     private int individualBuyCount;
     private int individualSellCount;
-    private int individualBuyVolume;
-    private int individualSellVolume;
+    private long individualBuyVolume;
+    private long individualSellVolume;
 
-    private int naturalBuyVolume;
-    private int naturalSellVolume;
+    private long naturalBuyVolume;
+    private long naturalSellVolume;
     private int naturalBuyCount;
     private int naturalSellCount;
 

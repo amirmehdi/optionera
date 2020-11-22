@@ -73,16 +73,16 @@ public class Board {
     private Integer bidVolume;
 
     @Column(name = "individual_buy_volume")
-    private Integer individualBuyVolume;
+    private Long individualBuyVolume;
 
     @Column(name = "individual_sell_volume")
-    private Integer individualSellVolume;
+    private Long individualSellVolume;
 
     @Column(name = "legal_buy_volume")
-    private Integer legalBuyVolume;
+    private Long legalBuyVolume;
 
     @Column(name = "legal_sell_volume")
-    private Integer legalSellVolume;
+    private Long legalSellVolume;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getIsin() {
@@ -300,55 +300,55 @@ public class Board {
         this.bidVolume = bidVolume;
     }
 
-    public Integer getIndividualBuyVolume() {
+    public Long getIndividualBuyVolume() {
         return individualBuyVolume;
     }
 
-    public Board individualBuyVolume(Integer individualBuyVolume) {
+    public Board individualBuyVolume(Long individualBuyVolume) {
         this.individualBuyVolume = individualBuyVolume;
         return this;
     }
 
-    public void setIndividualBuyVolume(Integer individualBuyVolume) {
+    public void setIndividualBuyVolume(Long individualBuyVolume) {
         this.individualBuyVolume = individualBuyVolume;
     }
 
-    public Integer getIndividualSellVolume() {
+    public Long getIndividualSellVolume() {
         return individualSellVolume;
     }
 
-    public Board individualSellVolume(Integer individualSellVolume) {
+    public Board individualSellVolume(Long individualSellVolume) {
         this.individualSellVolume = individualSellVolume;
         return this;
     }
 
-    public void setIndividualSellVolume(Integer individualSellVolume) {
+    public void setIndividualSellVolume(Long individualSellVolume) {
         this.individualSellVolume = individualSellVolume;
     }
 
-    public Integer getLegalBuyVolume() {
+    public Long getLegalBuyVolume() {
         return legalBuyVolume;
     }
 
-    public Board legalBuyVolume(Integer legalBuyVolume) {
+    public Board legalBuyVolume(Long legalBuyVolume) {
         this.legalBuyVolume = legalBuyVolume;
         return this;
     }
 
-    public void setLegalBuyVolume(Integer legalBuyVolume) {
+    public void setLegalBuyVolume(Long legalBuyVolume) {
         this.legalBuyVolume = legalBuyVolume;
     }
 
-    public Integer getLegalSellVolume() {
+    public Long getLegalSellVolume() {
         return legalSellVolume;
     }
 
-    public Board legalSellVolume(Integer legalSellVolume) {
+    public Board legalSellVolume(Long legalSellVolume) {
         this.legalSellVolume = legalSellVolume;
         return this;
     }
 
-    public void setLegalSellVolume(Integer legalSellVolume) {
+    public void setLegalSellVolume(Long legalSellVolume) {
         this.legalSellVolume = legalSellVolume;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove

@@ -87,21 +87,18 @@ public class BoardResourceIT {
     private static final Integer UPDATED_BID_VOLUME = 2;
     private static final Integer SMALLER_BID_VOLUME = 1 - 1;
 
-    private static final Integer DEFAULT_INDIVIDUAL_BUY_VOLUME = 1;
-    private static final Integer UPDATED_INDIVIDUAL_BUY_VOLUME = 2;
-    private static final Integer SMALLER_INDIVIDUAL_BUY_VOLUME = 1 - 1;
-
-    private static final Integer DEFAULT_INDIVIDUAL_SELL_VOLUME = 1;
-    private static final Integer UPDATED_INDIVIDUAL_SELL_VOLUME = 2;
-    private static final Integer SMALLER_INDIVIDUAL_SELL_VOLUME = 1 - 1;
-
-    private static final Integer DEFAULT_LEGAL_BUY_VOLUME = 1;
-    private static final Integer UPDATED_LEGAL_BUY_VOLUME = 2;
-    private static final Integer SMALLER_LEGAL_BUY_VOLUME = 1 - 1;
-
-    private static final Integer DEFAULT_LEGAL_SELL_VOLUME = 1;
-    private static final Integer UPDATED_LEGAL_SELL_VOLUME = 2;
-    private static final Integer SMALLER_LEGAL_SELL_VOLUME = 1 - 1;
+    private static final Long DEFAULT_INDIVIDUAL_BUY_VOLUME = 1L;
+    private static final Long UPDATED_INDIVIDUAL_BUY_VOLUME = 2L;
+    private static final Long SMALLER_INDIVIDUAL_BUY_VOLUME = 1 - 1L;
+    private static final Long DEFAULT_INDIVIDUAL_SELL_VOLUME = 1L;
+    private static final Long UPDATED_INDIVIDUAL_SELL_VOLUME = 2L;
+    private static final Long SMALLER_INDIVIDUAL_SELL_VOLUME = 1 - 1L;
+    private static final Long DEFAULT_LEGAL_BUY_VOLUME = 1L;
+    private static final Long UPDATED_LEGAL_BUY_VOLUME = 2L;
+    private static final Long SMALLER_LEGAL_BUY_VOLUME = 1 - 1L;
+    private static final Long DEFAULT_LEGAL_SELL_VOLUME = 1L;
+    private static final Long UPDATED_LEGAL_SELL_VOLUME = 2L;
+    private static final Long SMALLER_LEGAL_SELL_VOLUME = 1 - 1L;
 
     @Autowired
     private BoardRepository boardRepository;
