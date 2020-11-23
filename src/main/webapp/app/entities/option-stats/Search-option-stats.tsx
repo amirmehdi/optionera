@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {connect} from 'react-redux';
 import {IRootState} from 'app/shared/reducers';
 import {getEntities, reset} from './../instrument/instrument.reducer';
 import './style.scss';
-import {Radio, Select} from 'antd';
+import {Radio, AutoComplete } from 'antd';
 import axios from 'axios';
 import 'moment/locale/fa';
 import moment from 'moment';
@@ -15,32 +15,41 @@ import {Translate} from "react-jhipster";
 
 moment.locale('fa_IR');
 
-const { Option } = Select;
-
 
 export const SearchOptionStats = (props) => {
-  const [instrument, setInstrument] = useState([]);
+  const [value, setValue] = useState('');
+  const [options, setOptions] = useState<{ value: string }[]>([]);
   const [selectedDayRange, setSelectedDayRange] = useState({
     from:  undefined,
     to: undefined
   });
 
-  function onChange(value, val) {
-    props.instrumentId(val);
-  }
-
   function onChangeRadio(e: any) {
     props.switch(e.target.value === 'undefined' ? undefined : e.target.value);
   }
 
-  function onSearch(val) {
+
+  const onSearch = (val) =>{
     // eslint-disable-next-line no-irregular-whitespace
     const apiUrlSearch = 'api/instruments/search';
     const requestUrl = `${apiUrlSearch}/${val}`;
     axios.get(requestUrl).then((res) => {
-      setInstrument(res.data);
+     const data = res.data?.map((v) => {
+        return {label: v.name , value: v.isin}
+      });
+      return  setOptions(data);
     });
-  }
+  };
+
+  const onChange = (data: string , val) => {
+    setValue(val.label);
+  };
+
+  useEffect(() => {
+    if(props.instrumentValue === undefined){
+      setValue("");
+    }
+  }, [props.instrumentValue])
 
   function onChangeDate(e) {
     setSelectedDayRange(e);
@@ -67,27 +76,23 @@ export const SearchOptionStats = (props) => {
       e.to && props.toDateRange(outDateTO);
     }
   }
-
+  const onSelect = (data: string, val) => {
+    props.instrumentId(val);
+  };
 
   return (
     <>
       <div style={{ marginLeft: 20 }}>
-        <Select
-          showSearch
+
+        <AutoComplete
+          options={options}
           style={{ width: 200 }}
-          placeholder="جستجو"
-          optionFilterProp="children"
-          value={props.instrumentValue?.children}
+          value={value}
           onChange={(e, val) => onChange(e, val)}
-          onSearch={onSearch}
-          filterOption={(input, option) =>
-            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-          }
-        >
-          {instrument.map((i, ix) => {
-            return <Option key={ix} value={i.isin}>{i.name}</Option>;
-          })}
-        </Select>
+          onSelect={(e, val) => onSelect(e, val)}
+          onSearch={(e) => onSearch(e)}
+          placeholder="جستجو"
+        />
         {props.instrumentValue ? <CloseCircleOutlined
           onClick={() => props.instrumentId(undefined)}
           style={{ fontSize: 20, marginLeft: 5 }}/> : null}
