@@ -56,7 +56,7 @@ public class DomainUserDetailsService implements UserDetailsService {
         if (!user.getActivated()) {
             throw new UserNotActivatedException("User was not activated");
         }
-        if (user.getAuthorities().size()==1 && user.getAuthorities().stream().map(Authority::getName).findAny().get().equals(AuthoritiesConstants.USER) && ChronoUnit.DAYS.between(user.getCreatedDate().toInstant(), Instant.now())>3){
+        if (user.getAuthorities().size()==1 && user.getAuthorities().stream().map(Authority::getName).findAny().get().equals(AuthoritiesConstants.USER) && ChronoUnit.DAYS.between(user.getCreatedDate().toInstant(), Instant.now())>=3){
             throw new UserExpiredPlanException("expired plan");
         }
         //TODO expire
