@@ -7,6 +7,8 @@ import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Token;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.repository.TokenRepository;
+import com.gitlab.amirmehdi.service.TelegramMessageSender;
+import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
 import com.gitlab.amirmehdi.service.dto.sahra.*;
 import com.gitlab.amirmehdi.service.dto.sahra.enums.OrderCreditSource;
 import com.gitlab.amirmehdi.service.dto.sahra.enums.OrderType;
@@ -15,6 +17,7 @@ import com.gitlab.amirmehdi.service.dto.sahra.exception.CodeException;
 import com.gitlab.amirmehdi.util.JalaliCalendar;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -47,6 +50,7 @@ public class SahraRequestService implements CommandLineRunner {
     private final TaskScheduler executor;
     private final ObjectMapper objectMapper;
     private final MessageHandler handler;
+    private final TelegramMessageSender telegramMessageSender;
 
     private final SecurityFields securityFields = new SecurityFields();
     private final String connectUrl = "https://firouzex.ephoenix.ir/realtime/connect?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s";
@@ -54,7 +58,10 @@ public class SahraRequestService implements CommandLineRunner {
     private final String sendUrl = "https://firouzex.ephoenix.ir/realtime/send?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s";
     private final String connectionData = "[{\"name\":\"omsclienthub\"}]";
 
-    public SahraRequestService(TokenRepository tokenRepository, RestTemplate restTemplate, NegotiateManager negotiateManager, @Qualifier("longPollRestTemplate") RestTemplate longPollRestTemplate, TaskScheduler executor, ObjectMapper objectMapper, MessageHandler handler) {
+    @Value("${application.telegram.privateChat}")
+    private String privateChannelId;
+
+    public SahraRequestService(TokenRepository tokenRepository, RestTemplate restTemplate, NegotiateManager negotiateManager, @Qualifier("longPollRestTemplate") RestTemplate longPollRestTemplate, TaskScheduler executor, ObjectMapper objectMapper, MessageHandler handler, TelegramMessageSender telegramMessageSender) {
         this.tokenRepository = tokenRepository;
         this.restTemplate = restTemplate;
         this.negotiateManager = negotiateManager;
@@ -62,6 +69,7 @@ public class SahraRequestService implements CommandLineRunner {
         this.executor = executor;
         this.objectMapper = objectMapper;
         this.handler = handler;
+        this.telegramMessageSender = telegramMessageSender;
     }
 
     @Retryable(
@@ -83,6 +91,7 @@ public class SahraRequestService implements CommandLineRunner {
         firstPollResponse.getM().forEach(handler::handle);
 
         executor.scheduleWithFixedDelay(() -> handler.handle(poll()), 100);
+        executor.scheduleWithFixedDelay(this::getTime, 60000);
     }
 
     //"{\"H\":\"omsclienthub\",\"M\":\"GetAssetsReport\",\"A\":[],\"I\":7}"
@@ -106,11 +115,12 @@ public class SahraRequestService implements CommandLineRunner {
         return LocalTime.parse(send(sendRequest).get("R").asText());
     }
 
-//    {"H":"omsclienthub","M":"CancelOrder","A":[1170000000356607],"I":6}
-    public void cancelOrder(Order order){
+    //    {"H":"omsclienthub","M":"CancelOrder","A":[1170000000356607],"I":6}
+    public void cancelOrder(Order order) {
         SendRequest sendRequest = new SendRequest("CancelOrder", Collections.singletonList(Long.valueOf(order.getOmsId())));
         send(sendRequest);
     }
+
     // "{\"H\":\"omsclienthub\",\"M\":\"AddOrder\",\"A\":[[1,\"IRO1MAPN0001\",1481,18950,1,null,null,null,null,null,null,null]],\"I\":1}";
     //{"R":{"ex":{"i":-2006,"m":"اعتبار کافی نیست.(اعتبار مورد نیاز 330,608,884 ریال)"}},"I":"9"}
     public void sendOrder(Order order) {
@@ -149,7 +159,7 @@ public class SahraRequestService implements CommandLineRunner {
 
     private ObjectNode send(SendRequest data) {
         data.setI(securityFields.incAndGet());
-        log.info("send request {}",data);
+        log.info("send request {}", data);
         ResponseEntity<ObjectNode> sendResponse;
         try {
             sendResponse = restTemplate.exchange(
@@ -167,8 +177,8 @@ public class SahraRequestService implements CommandLineRunner {
             long errorCode = node.get("R").get("ex").get("i").asLong();
             String errorDesc = node.get("R").get("ex").get("m").asText();
             if (errorCode == -3005) {
-                securityFields.clear();
-                connectAndStart();
+                clearConnection();
+//                connectAndStart();
                 return send(data);
             }
             throw new CodeException(errorCode, errorDesc);
@@ -204,7 +214,7 @@ public class SahraRequestService implements CommandLineRunner {
             log.debug("poll nochange");
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 401) {
-                securityFields.clear();
+                clearConnection();
                 // message to telegram
             }
         }
@@ -236,11 +246,16 @@ public class SahraRequestService implements CommandLineRunner {
             connectAndStart();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 401) {
-                securityFields.clear();
+                clearConnection();
                 // message to telegram
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void clearConnection() {
+        securityFields.clear();
+        telegramMessageSender.sendMessage(new TelegramMessageDto(privateChannelId, "sahra token is expired"));
     }
 }

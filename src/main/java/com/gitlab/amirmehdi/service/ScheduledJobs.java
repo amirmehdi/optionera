@@ -14,9 +14,6 @@ public class ScheduledJobs {
     private final TelegramMessageSender telegramMessageSender;
     @Value("${application.schedule.timeCheck}")
     private boolean marketTimeCheck;
-
-    @Value("${application.telegram.token}")
-    private String apiToken;
     @Value("${application.telegram.privateChat}")
     private String privateChannelId;
 
@@ -73,7 +70,7 @@ public class ScheduledJobs {
             crawlerJobs.optionCrawler();
             crawlerJobs.openInterestUpdater();
             crawlerJobs.marketUpdater();
-            telegramMessageSender.sendMessage(new TelegramMessageDto(apiToken,privateChannelId,"Why redis is empty!"));
+            telegramMessageSender.sendMessage(new TelegramMessageDto(privateChannelId,"Why redis is empty!"));
         }
     }
 }

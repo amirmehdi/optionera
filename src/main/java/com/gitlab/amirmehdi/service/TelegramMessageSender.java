@@ -3,6 +3,7 @@ package com.gitlab.amirmehdi.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ public class TelegramMessageSender {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final String urlString = "http://51.89.109.222:8080/tg-send";
+    @Value("${application.telegram.token}")
+    private String apiToken;
 
     public TelegramMessageSender(RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
@@ -22,6 +25,7 @@ public class TelegramMessageSender {
     }
 
     public void sendMessage(TelegramMessageDto dto) {
+        dto.setToken(apiToken);
         try {
             LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
             headers.add("Content-Type", "application/json");

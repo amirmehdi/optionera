@@ -28,8 +28,6 @@ public class StrategyService {
     private final HashMap<String, Strategy> strategies = new HashMap<>();
     @Value("${application.schedule.timeCheck}")
     private boolean marketTimeCheck;
-    @Value("${application.telegram.token}")
-    private String apiToken;
     @Value("${application.telegram.privateChat}")
     private String privateChannelId;
 
@@ -82,16 +80,14 @@ public class StrategyService {
                 if (StrategyResponse.SendOrderType.NEED_ALLOW.equals(s.getSendOrderType())) {
                     s.getCallSignals()
                         .stream()
-                        .map(signal -> new TelegramMessageDto(apiToken
-                            , privateChatId
+                        .map(signal -> new TelegramMessageDto(privateChatId
                             , strategy.getMessageTemplateWithOrderLink(signal)))
                         .forEach(telegramMessageSender::sendMessage);
                 }
                 if (s.getPublicChatId() != null && !s.getPublicChatId().isEmpty()) {
                     s.getCallSignals()
                         .stream()
-                        .map(signal -> new TelegramMessageDto(apiToken
-                            , s.getPublicChatId()
+                        .map(signal -> new TelegramMessageDto(s.getPublicChatId()
                             , strategy.getMessageTemplate(signal.getIsin())))
                         .forEach(telegramMessageSender::sendMessage);
                 }
