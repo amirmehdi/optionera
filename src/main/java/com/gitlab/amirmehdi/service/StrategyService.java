@@ -14,10 +14,8 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -77,6 +75,7 @@ public class StrategyService {
         Optional
             .ofNullable(strategy.getSignals())
             .ifPresent(s -> {
+                s.setCallSignals(s.getCallSignals().stream().filter(Objects::nonNull).collect(Collectors.toList()));
                 s.getCallSignals().forEach(signalRepository::save);
                 String privateChatId = s.getPrivateChatId() == null ? privateChannelId : s.getPrivateChatId();
 
