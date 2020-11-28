@@ -1,8 +1,10 @@
 package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.Token;
+import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.repository.TokenRepository;
 import com.gitlab.amirmehdi.security.AuthoritiesConstants;
+import com.gitlab.amirmehdi.service.sahra.SahraRequestService;
 import com.gitlab.amirmehdi.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -41,9 +43,11 @@ public class TokenResource {
     private String applicationName;
 
     private final TokenRepository tokenRepository;
+    private final SahraRequestService sahraRequestService;
 
-    public TokenResource(TokenRepository tokenRepository) {
+    public TokenResource(TokenRepository tokenRepository, SahraRequestService sahraRequestService) {
         this.tokenRepository = tokenRepository;
+        this.sahraRequestService = sahraRequestService;
     }
 
     /**
@@ -60,10 +64,18 @@ public class TokenResource {
         if (token.getId() != null) {
             throw new BadRequestAlertException("A new token cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Token result = tokenRepository.save(token);
+        Token result = save(token);
         return ResponseEntity.created(new URI("/api/tokens/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+
+    private Token save(Token token) {
+        token= tokenRepository.save(token);
+        if (Broker.FIROOZE_ASIA.equals(token.getBroker())){
+            sahraRequestService.connectAndStart();
+        }
+        return token;
     }
 
     /**
@@ -82,7 +94,7 @@ public class TokenResource {
         if (token.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Token result = tokenRepository.save(token);
+        Token result = save(token);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, token.getId().toString()))
             .body(result);

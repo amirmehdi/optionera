@@ -2,6 +2,7 @@ package com.gitlab.amirmehdi.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
+import com.gitlab.amirmehdi.domain.enumeration.OrderState;
 import com.gitlab.amirmehdi.domain.enumeration.Side;
 import com.gitlab.amirmehdi.domain.enumeration.Validity;
 import org.hibernate.annotations.Cache;
@@ -57,6 +58,13 @@ public class Order implements Serializable {
 
     @Column(name = "oms_id")
     private String omsId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "state")
+    private OrderState state;
+
+    @Column(name = "executed")
+    private Integer executed;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -166,9 +174,34 @@ public class Order implements Serializable {
     public void setOmsId(String omsId) {
         this.omsId = omsId;
     }
-
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+    public OrderState getState() {
+        return state;
+    }
+
+    public Order state(OrderState state) {
+        this.state = state;
+        return this;
+    }
+
+    public void setState(OrderState state) {
+        this.state = state;
+    }
+
+    public Integer getExecuted() {
+        return executed;
+    }
+
+    public Order executed(Integer executed) {
+        this.executed = executed;
+        return this;
+    }
+
+    public void setExecuted(Integer executed) {
+        this.executed = executed;
     }
 
     public Signal getSignal() {
@@ -212,6 +245,8 @@ public class Order implements Serializable {
             ", side='" + getSide() + "'" +
             ", broker='" + getBroker() + "'" +
             ", omsId='" + getOmsId() + "'" +
+            ", state='" + getState() + "'" +
+            ", executed=" + getExecuted() +
             "}";
     }
 }

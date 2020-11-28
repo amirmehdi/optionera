@@ -12,11 +12,11 @@ import reducer, {
   deleteEntity,
   getEntities,
   getEntity,
-  reset,
-  updateEntity
+  updateEntity,
+  reset
 } from 'app/entities/order/order.reducer';
-import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
-import { defaultValue, IOrder } from 'app/shared/model/order.model';
+import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
+import { IOrder, defaultValue } from 'app/shared/model/order.model';
 
 describe('Entities reducer tests', () => {
   function isEmpty(element): boolean {

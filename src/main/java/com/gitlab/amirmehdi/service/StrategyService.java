@@ -105,7 +105,7 @@ public class StrategyService {
             if (orders == null) {
                 return Collections.emptyList();
             }
-            orders.forEach(orderService::send);
+            orders.forEach(orderService::sendOrder);
             return orders;
         }
         throw new RuntimeException("Strategy not active");

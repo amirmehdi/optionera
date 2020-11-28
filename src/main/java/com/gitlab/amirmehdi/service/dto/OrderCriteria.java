@@ -1,6 +1,7 @@
 package com.gitlab.amirmehdi.service.dto;
 
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
+import com.gitlab.amirmehdi.domain.enumeration.OrderState;
 import com.gitlab.amirmehdi.domain.enumeration.Side;
 import com.gitlab.amirmehdi.domain.enumeration.Validity;
 import io.github.jhipster.service.Criteria;
@@ -40,7 +41,6 @@ public class OrderCriteria implements Serializable, Criteria {
         }
 
     }
-
     /**
      * Class for filtering Side
      */
@@ -59,7 +59,6 @@ public class OrderCriteria implements Serializable, Criteria {
         }
 
     }
-
     /**
      * Class for filtering Broker
      */
@@ -75,6 +74,24 @@ public class OrderCriteria implements Serializable, Criteria {
         @Override
         public BrokerFilter copy() {
             return new BrokerFilter(this);
+        }
+
+    }
+    /**
+     * Class for filtering State
+     */
+    public static class StateFilter extends Filter<OrderState> {
+
+        public StateFilter() {
+        }
+
+        public StateFilter(StateFilter filter) {
+            super(filter);
+        }
+
+        @Override
+        public StateFilter copy() {
+            return new StateFilter(this);
         }
 
     }
@@ -97,6 +114,10 @@ public class OrderCriteria implements Serializable, Criteria {
 
     private StringFilter omsId;
 
+    private StateFilter state;
+
+    private IntegerFilter executed;
+
     private LongFilter signalId;
 
     public OrderCriteria() {
@@ -111,6 +132,8 @@ public class OrderCriteria implements Serializable, Criteria {
         this.side = other.side == null ? null : other.side.copy();
         this.broker = other.broker == null ? null : other.broker.copy();
         this.omsId = other.omsId == null ? null : other.omsId.copy();
+        this.state = other.state == null ? null : other.state.copy();
+        this.executed = other.executed == null ? null : other.executed.copy();
         this.signalId = other.signalId == null ? null : other.signalId.copy();
     }
 
@@ -183,6 +206,22 @@ public class OrderCriteria implements Serializable, Criteria {
         this.omsId = omsId;
     }
 
+    public StateFilter getState() {
+        return state;
+    }
+
+    public void setState(StateFilter state) {
+        this.state = state;
+    }
+
+    public IntegerFilter getExecuted() {
+        return executed;
+    }
+
+    public void setExecuted(IntegerFilter executed) {
+        this.executed = executed;
+    }
+
     public LongFilter getSignalId() {
         return signalId;
     }
@@ -203,43 +242,49 @@ public class OrderCriteria implements Serializable, Criteria {
         final OrderCriteria that = (OrderCriteria) o;
         return
             Objects.equals(id, that.id) &&
-                Objects.equals(isin, that.isin) &&
-                Objects.equals(price, that.price) &&
-                Objects.equals(quantity, that.quantity) &&
-                Objects.equals(validity, that.validity) &&
-                Objects.equals(side, that.side) &&
-                Objects.equals(broker, that.broker) &&
-                Objects.equals(omsId, that.omsId) &&
-                Objects.equals(signalId, that.signalId);
+            Objects.equals(isin, that.isin) &&
+            Objects.equals(price, that.price) &&
+            Objects.equals(quantity, that.quantity) &&
+            Objects.equals(validity, that.validity) &&
+            Objects.equals(side, that.side) &&
+            Objects.equals(broker, that.broker) &&
+            Objects.equals(omsId, that.omsId) &&
+            Objects.equals(state, that.state) &&
+            Objects.equals(executed, that.executed) &&
+            Objects.equals(signalId, that.signalId);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-            id,
-            isin,
-            price,
-            quantity,
-            validity,
-            side,
-            broker,
-            omsId,
-            signalId
+        id,
+        isin,
+        price,
+        quantity,
+        validity,
+        side,
+        broker,
+        omsId,
+        state,
+        executed,
+        signalId
         );
     }
 
     @Override
     public String toString() {
         return "OrderCriteria{" +
-            (id != null ? "id=" + id + ", " : "") +
-            (isin != null ? "isin=" + isin + ", " : "") +
-            (price != null ? "price=" + price + ", " : "") +
-            (quantity != null ? "quantity=" + quantity + ", " : "") +
-            (validity != null ? "validity=" + validity + ", " : "") +
-            (side != null ? "side=" + side + ", " : "") +
-            (broker != null ? "broker=" + broker + ", " : "") +
-            (omsId != null ? "omsId=" + omsId + ", " : "") +
-            (signalId != null ? "signalId=" + signalId + ", " : "") +
+                (id != null ? "id=" + id + ", " : "") +
+                (isin != null ? "isin=" + isin + ", " : "") +
+                (price != null ? "price=" + price + ", " : "") +
+                (quantity != null ? "quantity=" + quantity + ", " : "") +
+                (validity != null ? "validity=" + validity + ", " : "") +
+                (side != null ? "side=" + side + ", " : "") +
+                (broker != null ? "broker=" + broker + ", " : "") +
+                (omsId != null ? "omsId=" + omsId + ", " : "") +
+                (state != null ? "state=" + state + ", " : "") +
+                (executed != null ? "executed=" + executed + ", " : "") +
+                (signalId != null ? "signalId=" + signalId + ", " : "") +
             "}";
     }
 

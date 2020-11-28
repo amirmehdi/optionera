@@ -1,22 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import {connect} from 'react-redux';
-import {Link, RouteComponentProps} from 'react-router-dom';
-import {Button, Col, Label, Row} from 'reactstrap';
-import {AvField, AvForm, AvGroup, AvInput} from 'availity-reactstrap-validation';
-import {Translate, translate} from 'react-jhipster';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {IRootState} from 'app/shared/reducers';
-import {getEntities as getSignals} from 'app/entities/signal/signal.reducer';
-import {createEntity, getEntity, reset, updateEntity} from './order.reducer';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { Button, Row, Col, Label } from 'reactstrap';
+import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
+import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IRootState } from 'app/shared/reducers';
 
-export interface IOrderUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
-}
+import { ISignal } from 'app/shared/model/signal.model';
+import { getEntities as getSignals } from 'app/entities/signal/signal.reducer';
+import { getEntity, updateEntity, createEntity, reset } from './order.reducer';
+import { IOrder } from 'app/shared/model/order.model';
+import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
+import { mapIdList } from 'app/shared/util/entity-utils';
+
+export interface IOrderUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const OrderUpdate = (props: IOrderUpdateProps) => {
   const [signalId, setSignalId] = useState('0');
   const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
 
-  const {orderEntity, signals, loading, updating} = props;
+  const { orderEntity, signals, loading, updating } = props;
 
   const handleClose = () => {
     props.history.push('/order');
@@ -71,7 +75,7 @@ export const OrderUpdate = (props: IOrderUpdateProps) => {
                   <Label for="order-id">
                     <Translate contentKey="global.field.id">ID</Translate>
                   </Label>
-                  <AvInput id="order-id" type="text" className="form-control" name="id" required readOnly/>
+                  <AvInput id="order-id" type="text" className="form-control" name="id" required readOnly />
                 </AvGroup>
               ) : null}
               <AvGroup>
@@ -83,7 +87,7 @@ export const OrderUpdate = (props: IOrderUpdateProps) => {
                   type="text"
                   name="isin"
                   validate={{
-                    required: {value: true, errorMessage: translate('entity.validation.required')}
+                    required: { value: true, errorMessage: translate('entity.validation.required') }
                   }}
                 />
               </AvGroup>
@@ -97,8 +101,8 @@ export const OrderUpdate = (props: IOrderUpdateProps) => {
                   className="form-control"
                   name="price"
                   validate={{
-                    required: {value: true, errorMessage: translate('entity.validation.required')},
-                    number: {value: true, errorMessage: translate('entity.validation.number')}
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
                   }}
                 />
               </AvGroup>
@@ -112,8 +116,8 @@ export const OrderUpdate = (props: IOrderUpdateProps) => {
                   className="form-control"
                   name="quantity"
                   validate={{
-                    required: {value: true, errorMessage: translate('entity.validation.required')},
-                    number: {value: true, errorMessage: translate('entity.validation.number')}
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                    number: { value: true, errorMessage: translate('entity.validation.number') }
                   }}
                 />
               </AvGroup>
@@ -136,8 +140,7 @@ export const OrderUpdate = (props: IOrderUpdateProps) => {
                 <Label id="sideLabel" for="order-side">
                   <Translate contentKey="eTradeApp.order.side">Side</Translate>
                 </Label>
-                <AvInput id="order-side" type="select" className="form-control" name="side"
-                         value={(!isNew && orderEntity.side) || 'BUY'}>
+                <AvInput id="order-side" type="select" className="form-control" name="side" value={(!isNew && orderEntity.side) || 'BUY'}>
                   <option value="BUY">{translate('eTradeApp.Side.BUY')}</option>
                   <option value="SELL">{translate('eTradeApp.Side.SELL')}</option>
                 </AvInput>
@@ -161,25 +164,50 @@ export const OrderUpdate = (props: IOrderUpdateProps) => {
                 <Label id="omsIdLabel" for="order-omsId">
                   <Translate contentKey="eTradeApp.order.omsId">Oms Id</Translate>
                 </Label>
-                <AvField id="order-omsId" type="text" name="omsId"/>
+                <AvField id="order-omsId" type="text" name="omsId" />
+              </AvGroup>
+              <AvGroup>
+                <Label id="stateLabel" for="order-state">
+                  <Translate contentKey="eTradeApp.order.state">State</Translate>
+                </Label>
+                <AvInput
+                  id="order-state"
+                  type="select"
+                  className="form-control"
+                  name="state"
+                  value={(!isNew && orderEntity.state) || 'NONE'}
+                >
+                  <option value="NONE">{translate('eTradeApp.State.NONE')}</option>
+                  <option value="ACTIVE">{translate('eTradeApp.State.ACTIVE')}</option>
+                  <option value="EXECUTED">{translate('eTradeApp.State.EXECUTED')}</option>
+                  <option value="CANCELLED">{translate('eTradeApp.State.CANCELLED')}</option>
+                  <option value="ERROR">{translate('eTradeApp.State.ERROR')}</option>
+                  <option value="PARTIALLY_EXECUTED">{translate('eTradeApp.State.PARTIALLY_EXECUTED')}</option>
+                </AvInput>
+              </AvGroup>
+              <AvGroup>
+                <Label id="executedLabel" for="order-executed">
+                  <Translate contentKey="eTradeApp.order.executed">Executed</Translate>
+                </Label>
+                <AvField id="order-executed" type="string" className="form-control" name="executed" />
               </AvGroup>
               <AvGroup>
                 <Label for="order-signal">
                   <Translate contentKey="eTradeApp.order.signal">Signal</Translate>
                 </Label>
                 <AvInput id="order-signal" type="select" className="form-control" name="signal.id">
-                  <option value="" key="0"/>
+                  <option value="" key="0" />
                   {signals
                     ? signals.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
+                        <option value={otherEntity.id} key={otherEntity.id}>
+                          {otherEntity.id}
+                        </option>
+                      ))
                     : null}
                 </AvInput>
               </AvGroup>
               <Button tag={Link} id="cancel-save" to="/order" replace color="info">
-                <FontAwesomeIcon icon="arrow-left"/>
+                <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
                   <Translate contentKey="entity.action.back">Back</Translate>
@@ -187,7 +215,7 @@ export const OrderUpdate = (props: IOrderUpdateProps) => {
               </Button>
               &nbsp;
               <Button color="primary" id="save-entity" type="submit" disabled={updating}>
-                <FontAwesomeIcon icon="save"/>
+                <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>

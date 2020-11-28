@@ -23,6 +23,8 @@
       "side": "Side",
       "broker": "Broker",
       "omsId": "Oms Id",
+      "state": "State",
+      "executed": "Executed",
       "signal": "Signal"
     }
   }

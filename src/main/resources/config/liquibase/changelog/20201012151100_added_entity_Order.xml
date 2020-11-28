@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
     <!--
@@ -45,6 +45,18 @@
             <column name="created_at" type="TIMESTAMP"/>
         </addColumn>
     </changeSet>
+    <changeSet id="20201012151100-1-state" author="amirmehdi">
+        <addColumn tableName="orders">
+            <column name="state" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="orders">
+            <column name="executed" type="integer">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
     <changeSet id="20201012151100-1-relations" author="jhipster">
 
     </changeSet>
@@ -60,9 +72,9 @@
     -->
     <changeSet id="20201012151100-1-data" author="jhipster" context="faker">
         <loadData
-                file="config/liquibase/fake-data/orders.csv"
-                separator=";"
-                tableName="orders">
+            file="config/liquibase/fake-data/orders.csv"
+            separator=";"
+            tableName="orders">
             <column name="id" type="numeric"/>
             <column name="isin" type="string"/>
             <column name="price" type="numeric"/>
@@ -71,6 +83,8 @@
             <column name="side" type="string"/>
             <column name="broker" type="string"/>
             <column name="oms_id" type="string"/>
+            <column name="state" type="string"/>
+            <column name="executed" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>
     </changeSet>

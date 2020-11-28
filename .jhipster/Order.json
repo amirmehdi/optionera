@@ -1,74 +1,86 @@
 {
-  "name": "Order",
-  "fields": [
-    {
-      "fieldName": "isin",
-      "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
-    },
-    {
-      "fieldName": "price",
-      "fieldType": "Integer",
-      "fieldValidateRules": [
-        "required"
-      ]
-    },
-    {
-      "fieldName": "quantity",
-      "fieldType": "Integer",
-      "fieldValidateRules": [
-        "required"
-      ]
-    },
-    {
-      "fieldName": "validity",
-      "fieldType": "Validity",
-      "fieldValues": "DAY,FILL_AND_KILL",
-      "fieldValidateRules": [
-        "required"
-      ]
-    },
-    {
-      "fieldName": "side",
-      "fieldType": "Side",
-      "fieldValues": "BUY,SELL",
-      "fieldValidateRules": [
-        "required"
-      ]
-    },
-    {
-      "fieldName": "broker",
-      "fieldType": "Broker",
-      "fieldValues": "REFAH,FIROOZE_ASIA",
-      "fieldValidateRules": [
-        "required"
-      ]
-    },
-    {
-      "fieldName": "omsId",
-      "fieldType": "String"
-    }
-  ],
-  "relationships": [
-    {
-      "relationshipType": "many-to-one",
-      "otherEntityName": "signal",
-      "otherEntityRelationshipName": "order",
-      "relationshipName": "signal",
-      "otherEntityField": "id"
-    }
-  ],
-  "changelogDate": "20201012151100",
-  "entityTableName": "order",
-  "dto": "no",
-  "pagination": "infinite-scroll",
-  "service": "serviceClass",
-  "jpaMetamodelFiltering": true,
-  "fluentMethods": true,
-  "readOnly": false,
-  "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+    "name": "Order",
+    "fields": [
+        {
+            "fieldName": "isin",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "price",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "quantity",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "validity",
+            "fieldType": "Validity",
+            "fieldValues": "DAY,FILL_AND_KILL",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "side",
+            "fieldType": "Side",
+            "fieldValues": "BUY,SELL",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "broker",
+            "fieldType": "Broker",
+            "fieldValues": "REFAH,FIROOZE_ASIA",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "omsId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "state",
+            "fieldType": "State",
+            "fieldValues": "NONE,ACTIVE,EXECUTED,CANCELLED,ERROR,PARTIALLY_EXECUTED",
+            "fieldValidateRules": []
+        },
+        {
+            "fieldName": "executed",
+            "fieldType": "Integer"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "signal",
+            "otherEntityRelationshipName": "order",
+            "relationshipName": "signal",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20201012151100",
+    "entityTableName": "jhi_order",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*",
+    "searchEngine": false,
+    "databaseType": "sql"
 }

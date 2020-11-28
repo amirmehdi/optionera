@@ -33,6 +33,14 @@ public class RestTemplateConfiguration {
             .build());
         return new RestTemplate(httpRequestFactory);
     }
+    @Bean
+    RestTemplate longPollRestTemplate() {
+        HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+        httpRequestFactory.setConnectionRequestTimeout(6000);
+        httpRequestFactory.setConnectTimeout(6000);
+        httpRequestFactory.setReadTimeout(60000);
+        return new RestTemplate(httpRequestFactory);
+    }
 
     @Bean
     RestTemplate trustedRestTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {

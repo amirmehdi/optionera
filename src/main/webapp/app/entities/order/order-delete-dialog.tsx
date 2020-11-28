@@ -1,14 +1,15 @@
-import React, {useEffect} from 'react';
-import {connect} from 'react-redux';
-import {RouteComponentProps} from 'react-router-dom';
-import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
-import {Translate} from 'react-jhipster';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {IRootState} from 'app/shared/reducers';
-import {deleteEntity, getEntity} from './order.reducer';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export interface IOrderDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
-}
+import { IOrder } from 'app/shared/model/order.model';
+import { IRootState } from 'app/shared/reducers';
+import { getEntity, deleteEntity } from './order.reducer';
+
+export interface IOrderDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const OrderDeleteDialog = (props: IOrderDeleteDialogProps) => {
   useEffect(() => {
@@ -29,25 +30,25 @@ export const OrderDeleteDialog = (props: IOrderDeleteDialogProps) => {
     props.deleteEntity(props.orderEntity.id);
   };
 
-  const {orderEntity} = props;
+  const { orderEntity } = props;
   return (
     <Modal isOpen toggle={handleClose}>
       <ModalHeader toggle={handleClose}>
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
       <ModalBody id="eTradeApp.order.delete.question">
-        <Translate contentKey="eTradeApp.order.delete.question" interpolate={{id: orderEntity.id}}>
+        <Translate contentKey="eTradeApp.order.delete.question" interpolate={{ id: orderEntity.id }}>
           Are you sure you want to delete this Order?
         </Translate>
       </ModalBody>
       <ModalFooter>
         <Button color="secondary" onClick={handleClose}>
-          <FontAwesomeIcon icon="ban"/>
+          <FontAwesomeIcon icon="ban" />
           &nbsp;
           <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
         <Button id="jhi-confirm-delete-order" color="danger" onClick={confirmDelete}>
-          <FontAwesomeIcon icon="trash"/>
+          <FontAwesomeIcon icon="trash" />
           &nbsp;
           <Translate contentKey="entity.action.delete">Delete</Translate>
         </Button>
@@ -56,12 +57,12 @@ export const OrderDeleteDialog = (props: IOrderDeleteDialogProps) => {
   );
 };
 
-const mapStateToProps = ({order}: IRootState) => ({
+const mapStateToProps = ({ order }: IRootState) => ({
   orderEntity: order.entity,
   updateSuccess: order.updateSuccess
 });
 
-const mapDispatchToProps = {getEntity, deleteEntity};
+const mapDispatchToProps = { getEntity, deleteEntity };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
