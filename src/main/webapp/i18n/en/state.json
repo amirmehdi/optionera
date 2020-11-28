@@ -1,8 +1,8 @@
 {
   "eTradeApp": {
     "State": {
-      "null": "",
-      "NONE": "NONE",
+      "null": "send to broker",
+      "NONE": "send to engine",
       "ACTIVE": "ACTIVE",
       "EXECUTED": "EXECUTED",
       "CANCELLED": "CANCELLED",
