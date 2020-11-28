@@ -3,6 +3,10 @@ package com.gitlab.amirmehdi.service.dto.sahra;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
+
 @Getter
 @Setter
 public class SecurityFields {
@@ -10,6 +14,7 @@ public class SecurityFields {
     private String messageId;
     private String groupToken;
     private String token;
+    private List<ScheduledFuture<?>> schedules= new ArrayList<>();
     private int i = 0;
 
     public void clear() {
@@ -17,6 +22,8 @@ public class SecurityFields {
         messageId = null;
         groupToken = null;
         token = null;
+        schedules.forEach(scheduledFuture -> scheduledFuture.cancel(true));
+        schedules.clear();
     }
 
     public long incAndGet() {

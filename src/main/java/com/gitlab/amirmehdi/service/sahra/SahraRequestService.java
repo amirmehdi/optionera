@@ -90,8 +90,8 @@ public class SahraRequestService implements CommandLineRunner {
         this.securityFields.setGroupToken(firstPollResponse.getGroupsToken());
         firstPollResponse.getM().forEach(handler::handle);
 
-        executor.scheduleWithFixedDelay(() -> handler.handle(poll()), 100);
-        executor.scheduleWithFixedDelay(this::getTime, 60000);
+        securityFields.getSchedules().add(executor.scheduleWithFixedDelay(() -> handler.handle(poll()), 100));
+        securityFields.getSchedules().add(executor.scheduleWithFixedDelay(this::getTime, 60000));
     }
 
     //"{\"H\":\"omsclienthub\",\"M\":\"GetAssetsReport\",\"A\":[],\"I\":7}"
@@ -158,6 +158,8 @@ public class SahraRequestService implements CommandLineRunner {
     }
 
     private ObjectNode send(SendRequest data) {
+        if (securityFields.getGroupToken() == null)
+            return null;
         data.setI(securityFields.incAndGet());
         log.info("send request {}", data);
         ResponseEntity<ObjectNode> sendResponse;
@@ -178,7 +180,7 @@ public class SahraRequestService implements CommandLineRunner {
             String errorDesc = node.get("R").get("ex").get("m").asText();
             if (errorCode == -3005) {
                 clearConnection();
-//                connectAndStart();
+                connectAndStart();
                 return send(data);
             }
             throw new CodeException(errorCode, errorDesc);
@@ -248,6 +250,10 @@ public class SahraRequestService implements CommandLineRunner {
             if (e.getStatusCode().value() == 401) {
                 clearConnection();
                 // message to telegram
+            }
+        } catch (ResourceAccessException e) {
+            if (securityFields.getGroupToken()==null){
+                clearConnection();
             }
         } catch (Exception e) {
             e.printStackTrace();
