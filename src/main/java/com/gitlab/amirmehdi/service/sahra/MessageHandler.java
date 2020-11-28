@@ -130,7 +130,7 @@ public class MessageHandler {
         }
         Order order = orderOptional.get();
         order.setState(message.getOrderStatus().toOrderState());
-        order.setExecuted(order.getQuantity() - message.getRemain());
+        order.setExecuted(message.getExecutedQuantity());
         orderRepository.save(order);
     }
 
@@ -141,7 +141,7 @@ public class MessageHandler {
             return;
         }
         Order order = orderOptional.get();
-        order.setExecuted(order.getQuantity() - stateChangeData.getRemain());
+//        order.setExecuted(order.getQuantity() - stateChangeData.getRemain());
         order.setState(stateChangeData.getOrderStatus().toOrderState());
         orderRepository.save(order);
     }
