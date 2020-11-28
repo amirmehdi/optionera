@@ -27,7 +27,8 @@ public class OrderExecution {
 
     //PollMessageResponse(hub=OmsClientHub, method=orderExecution, val=[[1170000000364932, 1481, 3, 1, 0, 0, 1481, 18900, 28094805]])
     public OrderExecution(ArrayList<Object> s) {
-        this((String) s.get(0), ((Number) s.get(1)).intValue()
+        this(String.valueOf(((Number) s.get(0)).longValue())
+            , ((Number) s.get(1)).intValue()
             , OrderStatus.get(((Number) s.get(2)).intValue())
             , OrderLockType.get(((Number) s.get(3)).intValue())
             , ((Number) s.get(4)).longValue()
