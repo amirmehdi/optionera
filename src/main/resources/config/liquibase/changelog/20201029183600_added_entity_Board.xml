@@ -77,6 +77,14 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="20201029183600-1-state" author="jhipster">
+        <addColumn tableName="board">
+            <column name="state" type="varchar(3)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
     <changeSet id="20201029183600-1-min-max" author="jhipster">
         <addColumn tableName="board">
             <column name="min" type="integer">
@@ -125,6 +133,7 @@
             <column name="legal_buy_volume" type="numeric"/>
             <column name="legal_sell_volume" type="numeric"/>
             <column name="reference_price" type="numeric"/>
+            <column name="state" type="string"/>
 
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>

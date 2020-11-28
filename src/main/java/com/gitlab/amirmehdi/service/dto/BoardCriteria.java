@@ -1,10 +1,7 @@
 package com.gitlab.amirmehdi.service.dto;
 
 import io.github.jhipster.service.Criteria;
-import io.github.jhipster.service.filter.Filter;
-import io.github.jhipster.service.filter.IntegerFilter;
-import io.github.jhipster.service.filter.LongFilter;
-import io.github.jhipster.service.filter.StringFilter;
+import io.github.jhipster.service.filter.*;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -62,6 +59,8 @@ public class BoardCriteria implements Serializable, Criteria {
 
     private IntegerFilter referencePrice;
 
+    private StringFilter state;
+
     public BoardCriteria() {
     }
 
@@ -86,6 +85,7 @@ public class BoardCriteria implements Serializable, Criteria {
         this.legalBuyVolume = other.legalBuyVolume == null ? null : other.legalBuyVolume.copy();
         this.legalSellVolume = other.legalSellVolume == null ? null : other.legalSellVolume.copy();
         this.referencePrice = other.referencePrice == null ? null : other.referencePrice.copy();
+        this.state = other.state == null ? null : other.state.copy();
     }
 
     @Override
@@ -252,6 +252,14 @@ public class BoardCriteria implements Serializable, Criteria {
         this.referencePrice = referencePrice;
     }
 
+    public StringFilter getState() {
+        return state;
+    }
+
+    public void setState(StringFilter state) {
+        this.state = state;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -279,7 +287,9 @@ public class BoardCriteria implements Serializable, Criteria {
             Objects.equals(individualBuyVolume, that.individualBuyVolume) &&
             Objects.equals(individualSellVolume, that.individualSellVolume) &&
             Objects.equals(legalBuyVolume, that.legalBuyVolume) &&
-            Objects.equals(legalSellVolume, that.legalSellVolume);
+            Objects.equals(legalSellVolume, that.legalSellVolume) &&
+            Objects.equals(referencePrice, that.referencePrice) &&
+            Objects.equals(state, that.state);
     }
 
     @Override
@@ -301,7 +311,9 @@ public class BoardCriteria implements Serializable, Criteria {
         individualBuyVolume,
         individualSellVolume,
         legalBuyVolume,
-        legalSellVolume
+        legalSellVolume,
+        referencePrice,
+        state
         );
     }
 
@@ -325,6 +337,8 @@ public class BoardCriteria implements Serializable, Criteria {
                 (individualSellVolume != null ? "individualSellVolume=" + individualSellVolume + ", " : "") +
                 (legalBuyVolume != null ? "legalBuyVolume=" + legalBuyVolume + ", " : "") +
                 (legalSellVolume != null ? "legalSellVolume=" + legalSellVolume + ", " : "") +
+                (referencePrice != null ? "referencePrice=" + referencePrice + ", " : "") +
+                (state != null ? "state=" + state + ", " : "") +
             "}";
     }
 

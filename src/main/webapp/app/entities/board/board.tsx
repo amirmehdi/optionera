@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {connect} from 'react-redux';
-import {Link, RouteComponentProps} from 'react-router-dom';
-import {Button, Row, Table} from 'reactstrap';
-import {getSortState, JhiItemCount, JhiPagination, TextFormat, Translate} from 'react-jhipster';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { Button, Row, Table } from 'reactstrap';
+import { Translate, TextFormat, getSortState, JhiPagination, JhiItemCount } from 'react-jhipster';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import {IRootState} from 'app/shared/reducers';
-import {getEntities} from './board.reducer';
-import {APP_DATE_FORMAT} from 'app/config/constants';
-import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
+import { IRootState } from 'app/shared/reducers';
+import { getEntities } from './board.reducer';
+import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
 export interface IBoardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -114,6 +114,9 @@ export const Board = (props: IBoardProps) => {
                 <th className="hand" onClick={sort('referencePrice')}>
                   <Translate contentKey="eTradeApp.board.referencePrice">Reference Price</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={sort('state')}>
+                  <Translate contentKey="eTradeApp.board.state">State</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -145,6 +148,7 @@ export const Board = (props: IBoardProps) => {
                   <td>{board.legalBuyVolume}</td>
                   <td>{board.legalSellVolume}</td>
                   <td>{board.referencePrice}</td>
+                  <td>{board.state}</td>
                 </tr>
               ))}
             </tbody>

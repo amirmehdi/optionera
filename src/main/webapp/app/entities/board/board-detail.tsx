@@ -1,13 +1,13 @@
-import React, {useEffect} from 'react';
-import {connect} from 'react-redux';
-import {Link, RouteComponentProps} from 'react-router-dom';
-import {Button, Col, Row} from 'reactstrap';
-import {TextFormat, Translate} from 'react-jhipster';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { Button, Row, Col } from 'reactstrap';
+import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import {IRootState} from 'app/shared/reducers';
-import {getEntity} from './board.reducer';
-import {APP_DATE_FORMAT} from 'app/config/constants';
+import { IRootState } from 'app/shared/reducers';
+import { getEntity } from './board.reducer';
+import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
 export interface IBoardDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -140,6 +140,12 @@ export const BoardDetail = (props: IBoardDetailProps) => {
             </span>
           </dt>
           <dd>{boardEntity.referencePrice}</dd>
+          <dt>
+            <span id="state">
+              <Translate contentKey="eTradeApp.board.state">State</Translate>
+            </span>
+          </dt>
+          <dd>{boardEntity.state}</dd>
         </dl>
         <Button tag={Link} to="/board" replace color="info">
           <FontAwesomeIcon icon="arrow-left" />{' '}

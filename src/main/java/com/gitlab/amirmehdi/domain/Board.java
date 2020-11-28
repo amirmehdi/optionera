@@ -84,6 +84,9 @@ public class Board {
     @Column(name = "legal_sell_volume")
     private Long legalSellVolume;
 
+    @Column(name = "state")
+    private String state;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public String getIsin() {
         return isin;
@@ -353,6 +356,19 @@ public class Board {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+    public String getState() {
+        return state;
+    }
+
+    public Board state(String state) {
+        this.state = state;
+        return this;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -390,6 +406,8 @@ public class Board {
             ", individualSellVolume=" + getIndividualSellVolume() +
             ", legalBuyVolume=" + getLegalBuyVolume() +
             ", legalSellVolume=" + getLegalSellVolume() +
+            ", referencePrice=" + getReferencePrice() +
+            ", state=" + getState() +
             "}";
     }
 }

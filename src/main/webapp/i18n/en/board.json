@@ -34,7 +34,8 @@
       "individualSellVolume": "Individual Sell Volume",
       "legalBuyVolume": "Legal Buy Volume",
       "legalSellVolume": "Legal Sell Volume",
-      "referencePrice": "Reference Price"
+      "referencePrice": "Reference Price",
+      "state": "State"
     }
   }
 }

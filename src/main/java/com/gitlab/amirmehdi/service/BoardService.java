@@ -66,7 +66,8 @@ public class BoardService {
                     .max(stockWatch.getMax())
                     .tradeCount(stockWatch.getTradesCount())
                     .tradeVolume(stockWatch.getTradeVolume())
-                    .tradeValue(stockWatch.getTradeValue());
+                    .tradeValue(stockWatch.getTradeValue())
+                    .state(stockWatch.getState());
 
                 board.askPrice(bidAsk.getAskPrice())
                     .bidPrice(bidAsk.getBidPrice())

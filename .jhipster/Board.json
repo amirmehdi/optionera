@@ -82,6 +82,10 @@
         {
             "fieldName": "referencePrice",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "state",
+            "fieldType": "String"
         }
     ],
     "relationships": [],

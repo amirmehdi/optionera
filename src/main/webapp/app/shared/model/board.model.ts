@@ -1,7 +1,6 @@
 import { Moment } from 'moment';
 
 export interface IBoard {
-  id?: number;
   isin?: string;
   date?: Moment;
   last?: number;
@@ -21,6 +20,7 @@ export interface IBoard {
   legalBuyVolume?: number;
   legalSellVolume?: number;
   referencePrice?: number;
+  state?: string;
 }
 
 export const defaultValue: Readonly<IBoard> = {};

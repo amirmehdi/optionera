@@ -138,7 +138,9 @@ public class BoardQueryService extends QueryService<Board> {
             if (criteria.getReferencePrice() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getReferencePrice(), Board_.referencePrice));
             }
-
+            if (criteria.getState() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getState(), Board_.state));
+            }
         }
         return specification;
     }
