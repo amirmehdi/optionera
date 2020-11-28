@@ -1,0 +1,13 @@
+{
+  "eTradeApp": {
+    "State": {
+      "null": "",
+      "NONE": "NONE",
+      "ACTIVE": "ACTIVE",
+      "EXECUTED": "EXECUTED",
+      "CANCELLED": "CANCELLED",
+      "ERROR": "ERROR",
+      "PARTIALLY_EXECUTED": "PARTIALLY_EXECUTED"
+    }
+  }
+}
