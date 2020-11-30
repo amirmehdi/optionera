@@ -50,7 +50,7 @@ public class OrderService {
 
         log.debug("Request to save Order : {}", order);
         order = orderRepository.save(order);
-        sendOrder(order);
+        order = sendOrder(order);
         return order;
     }
 
@@ -89,7 +89,7 @@ public class OrderService {
         cancelOrder(findOne(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
-    public void sendOrder(Order order) {
+    public Order sendOrder(Order order) {
         if (order.getId() == null || order.getId() == 0) {
             save(order);
         }
@@ -100,10 +100,12 @@ public class OrderService {
                 order.setState(OrderState.ERROR);
                 order.setDescription(e.getCode() + " " + e.getDesc());
                 orderRepository.save(order);
+                return order;
             }
         } else {
             tadbirService.sendOrder(order);
         }
+        return order;
     }
 
     public void cancelOrder(Order order) {
