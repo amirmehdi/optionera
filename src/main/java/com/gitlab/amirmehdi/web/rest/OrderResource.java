@@ -149,7 +149,7 @@ public class OrderResource {
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 
-    @DeleteMapping("/trades/isin")
+    @GetMapping("/trades/isin")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<IsinExecuted>> getExecutedOf() {
         return ResponseEntity.ok(orderService.getIsinExecuted());
