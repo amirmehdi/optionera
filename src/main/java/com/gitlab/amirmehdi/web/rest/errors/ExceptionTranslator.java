@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.web.rest.errors;
 
+import com.gitlab.amirmehdi.service.dto.sahra.exception.CodeException;
 import com.gitlab.amirmehdi.service.errors.UsernameAlreadyUsedException;
 import com.gitlab.amirmehdi.web.rest.vm.ErrorResponse;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.server.ResponseStatusException;
 import org.zalando.problem.DefaultProblem;
 import org.zalando.problem.Problem;
 import org.zalando.problem.ProblemBuilder;
@@ -130,8 +130,8 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleBadRequestAlertException(ResponseStatusException ex, NativeWebRequest request) {
-        return ResponseEntity.status(ex.getStatus()).body(new ErrorResponse(ex.getStatus().name(), ex.getReason()));
+    public ResponseEntity<ErrorResponse> handleBadRequestAlertException(CodeException ex, NativeWebRequest request) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(String.valueOf(ex.getCode()), ex.getDesc()));
     }
 
     @ExceptionHandler
