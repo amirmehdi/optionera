@@ -6,6 +6,7 @@ import com.gitlab.amirmehdi.service.OrderQueryService;
 import com.gitlab.amirmehdi.service.OrderService;
 import com.gitlab.amirmehdi.service.dto.OrderCriteria;
 import com.gitlab.amirmehdi.web.rest.errors.BadRequestAlertException;
+import com.gitlab.amirmehdi.web.rest.vm.IsinExecuted;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -146,5 +147,11 @@ public class OrderResource {
         log.debug("REST request to delete Order : {}", id);
         orderService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+
+    @DeleteMapping("/trades/isin")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<List<IsinExecuted>> getExecutedOf() {
+        return ResponseEntity.ok(orderService.getIsinExecuted());
     }
 }

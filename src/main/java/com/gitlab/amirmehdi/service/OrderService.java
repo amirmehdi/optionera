@@ -6,6 +6,8 @@ import com.gitlab.amirmehdi.domain.enumeration.OrderState;
 import com.gitlab.amirmehdi.repository.OrderRepository;
 import com.gitlab.amirmehdi.service.dto.sahra.exception.CodeException;
 import com.gitlab.amirmehdi.service.sahra.SahraRequestService;
+import com.gitlab.amirmehdi.web.rest.vm.IsinExecuted;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,9 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Order}.
@@ -131,5 +132,14 @@ public class OrderService {
             order.setDescription("سفارش بصورت خودکار لغو شد");
         }
         orderRepository.saveAll(activeOrders);
+    }
+
+    public List<IsinExecuted> getIsinExecuted() {
+        List<IsinExecuted> isinExecuteds = new ArrayList<>();
+        orderRepository.findAllByExecutedGreaterThanAndCreatedAtGreaterThan(0, DateUtils.truncate(new Date(), Calendar.DATE)).stream().collect(Collectors.groupingBy(Order::getIsin))
+            .forEach((s, orders) -> {
+                isinExecuteds.add(new IsinExecuted(s, orders.stream().mapToInt(Order::getExecuted).sum()));
+            });
+        return isinExecuteds;
     }
 }
