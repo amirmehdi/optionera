@@ -86,7 +86,11 @@ public class OrderService {
     public void delete(Long id) {
         log.debug("Request to delete Order : {}", id);
 //        orderRepository.deleteById(id);
-        cancelOrder(findOne(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        try {
+            cancelOrder(findOne(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        } catch (CodeException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getDesc());
+        }
     }
 
     public Order sendOrder(Order order) {
