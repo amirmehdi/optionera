@@ -119,6 +119,9 @@ export const Order = (props: IOrderProps) => {
                   <th className="hand" onClick={sort('executed')}>
                     <Translate contentKey="eTradeApp.order.executed">Executed</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
+                  <th className="hand" onClick={sort('description')}>
+                    <Translate contentKey="eTradeApp.order.description">Description</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
                   <th>
                     <Translate contentKey="eTradeApp.order.signal">Signal</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
@@ -150,6 +153,7 @@ export const Order = (props: IOrderProps) => {
                       <Translate contentKey={`eTradeApp.State.${order.state}`} />
                     </td>
                     <td>{order.executed}</td>
+                    <td>{order.description}</td>
                     <td>{order.signal ? <Link to={`signal/${order.signal.id}`}>{order.signal.id}</Link> : ''}</td>
                     <td className="text-right">
                       <div className="btn-group flex-btn-group-container">

@@ -1,11 +1,11 @@
-id;isin;price;quantity;validity;side;broker;oms_id
-1;portal input;90598;76865;DAY;SELL;FIROOZE_ASIA;virtual Salad
-2;open-source Outdoors;47168;59476;FILL_AND_KILL;BUY;FIROOZE_ASIA;Global multi-tasking Small Soft Salad
-3;generate;19200;67523;FILL_AND_KILL;BUY;REFAH;transitional
-4;Unbranded Steel Table Indian Rupee Ngultrum;79375;89583;DAY;SELL;REFAH;Pennsylvania Uruguay
-5;virtual intuitive;46960;27235;FILL_AND_KILL;BUY;REFAH;Personal Loan Account
-6;hacking;49971;85591;DAY;BUY;REFAH;Denar
-7;Money Market Account;89198;14956;FILL_AND_KILL;SELL;FIROOZE_ASIA;Belarus solid state
-8;monetize software;93467;61390;DAY;SELL;FIROOZE_ASIA;upward-trending schemas deposit
-9;eyeballs;13624;55896;DAY;BUY;REFAH;mobile Stand-alone
-10;Money Market Account process improvement application;51073;49965;FILL_AND_KILL;SELL;REFAH;Officer
+id;isin;price;quantity;validity;side;broker;oms_id;state;executed;description
+1;portal input;90598;76865;DAY;SELL;FIROOZE_ASIA;virtual Salad;EXECUTED;59476;Tools e-markets
+2;feed Investment Account Slovenia;48005;12661;FILL_AND_KILL;BUY;FIROOZE_ASIA;Norwegian Krone;ACTIVE;48932;Corners
+3;Regional;4902;93769;DAY;SELL;FIROOZE_ASIA;application Uganda Shilling Algeria;EXECUTED;56299;Uruguay Auto Loan Account even-keeled
+4;Garden;66155;67223;FILL_AND_KILL;SELL;FIROOZE_ASIA;Refined Granite GB;ACTIVE;35275;Harbors copy red
+5;France Money Market Account Corporate;19737;77345;FILL_AND_KILL;SELL;REFAH;Cambridgeshire quantifying Mexico;EXECUTED;33075;programming
+6;discrete Computers;49892;5145;DAY;SELL;REFAH;schemas deposit Table;CANCELLED;29366;Home Loan Account Universal
+7;Tasty Rubber Shoes;52768;3986;DAY;SELL;FIROOZE_ASIA;Bedfordshire COM;PARTIALLY_EXECUTED;68875;Enhanced
+8;Chicken Global Unbranded;39850;83774;DAY;SELL;FIROOZE_ASIA;Security Awesome Steel Shoes De-engineered;CANCELLED;87705;Small bypassing
+9;Personal Loan Account;90369;5553;DAY;SELL;REFAH;North Korean Won;NONE;78552;Montana invoice UAE Dirham
+10;Licensed bleeding-edge Savings Account;75379;34851;FILL_AND_KILL;SELL;FIROOZE_ASIA;Checking Account;EXECUTED;29434;redefine local

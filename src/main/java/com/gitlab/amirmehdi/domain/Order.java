@@ -71,6 +71,9 @@ public class Order implements Serializable {
     @Column(name = "created_at")
     private Date createdAt;
 
+    @Column(name = "description")
+    private String description;
+
     @ManyToOne
     @JsonIgnoreProperties("orders")
     private Signal signal;
@@ -204,6 +207,19 @@ public class Order implements Serializable {
         this.executed = executed;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public Order description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Signal getSignal() {
         return signal;
     }
@@ -247,6 +263,7 @@ public class Order implements Serializable {
             ", omsId='" + getOmsId() + "'" +
             ", state='" + getState() + "'" +
             ", executed=" + getExecuted() +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }

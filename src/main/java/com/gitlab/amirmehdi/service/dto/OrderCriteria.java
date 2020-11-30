@@ -118,6 +118,8 @@ public class OrderCriteria implements Serializable, Criteria {
 
     private IntegerFilter executed;
 
+    private StringFilter description;
+
     private LongFilter signalId;
 
     public OrderCriteria() {
@@ -134,6 +136,7 @@ public class OrderCriteria implements Serializable, Criteria {
         this.omsId = other.omsId == null ? null : other.omsId.copy();
         this.state = other.state == null ? null : other.state.copy();
         this.executed = other.executed == null ? null : other.executed.copy();
+        this.description = other.description == null ? null : other.description.copy();
         this.signalId = other.signalId == null ? null : other.signalId.copy();
     }
 
@@ -222,6 +225,14 @@ public class OrderCriteria implements Serializable, Criteria {
         this.executed = executed;
     }
 
+    public StringFilter getDescription() {
+        return description;
+    }
+
+    public void setDescription(StringFilter description) {
+        this.description = description;
+    }
+
     public LongFilter getSignalId() {
         return signalId;
     }
@@ -251,6 +262,7 @@ public class OrderCriteria implements Serializable, Criteria {
             Objects.equals(omsId, that.omsId) &&
             Objects.equals(state, that.state) &&
             Objects.equals(executed, that.executed) &&
+            Objects.equals(description, that.description) &&
             Objects.equals(signalId, that.signalId);
     }
 
@@ -267,6 +279,7 @@ public class OrderCriteria implements Serializable, Criteria {
         omsId,
         state,
         executed,
+        description,
         signalId
         );
     }
@@ -284,6 +297,7 @@ public class OrderCriteria implements Serializable, Criteria {
                 (omsId != null ? "omsId=" + omsId + ", " : "") +
                 (state != null ? "state=" + state + ", " : "") +
                 (executed != null ? "executed=" + executed + ", " : "") +
+                (description != null ? "description=" + description + ", " : "") +
                 (signalId != null ? "signalId=" + signalId + ", " : "") +
             "}";
     }

@@ -25,6 +25,7 @@
       "omsId": "Oms Id",
       "state": "State",
       "executed": "Executed",
+      "description": "Description",
       "signal": "Signal"
     }
   }

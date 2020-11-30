@@ -4,16 +4,20 @@ import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.domain.enumeration.OrderState;
 import com.gitlab.amirmehdi.repository.OrderRepository;
+import com.gitlab.amirmehdi.service.dto.sahra.exception.CodeException;
 import com.gitlab.amirmehdi.service.sahra.SahraRequestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,6 +32,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final TadbirService tadbirService;
     private final SahraRequestService sahraRequestService;
+    private final List<OrderState> activeStates = Arrays.asList(OrderState.NONE, OrderState.ACTIVE, OrderState.PARTIALLY_EXECUTED);
 
     public OrderService(OrderRepository orderRepository, TadbirService tadbirService, SahraRequestService sahraRequestService) {
         this.orderRepository = orderRepository;
@@ -88,21 +93,37 @@ public class OrderService {
         if (order.getId() == null || order.getId() == 0) {
             save(order);
         }
-        if (Broker.FIROOZE_ASIA.equals(order.getBroker())){
-            sahraRequestService.sendOrder(order);
-        }else {
+        if (Broker.FIROOZE_ASIA.equals(order.getBroker())) {
+            try {
+                sahraRequestService.sendOrder(order);
+            } catch (CodeException e) {
+                order.setState(OrderState.ERROR);
+                order.setDescription(e.getCode() + " " + e.getDesc());
+                orderRepository.save(order);
+            }
+        } else {
             tadbirService.sendOrder(order);
         }
     }
 
     public void cancelOrder(Order order) {
         if (order.getOmsId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"جواب از سمت کارگزاری نیامده");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "جواب از سمت کارگزاری نیامده");
         } else if (!OrderState.ACTIVE.equals(order.getState()) && !OrderState.NONE.equals(order.getState())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"سفارش فعال نیست");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "سفارش فعال نیست");
         }
-        if (Broker.FIROOZE_ASIA.equals(order.getBroker())){
+        if (Broker.FIROOZE_ASIA.equals(order.getBroker())) {
             sahraRequestService.cancelOrder(order);
         }
+    }
+
+    @Scheduled(cron = "0 0 17-20 * * *")
+    public void cancelDayOrders() {
+        List<Order> activeOrders = orderRepository.findAllByStateIn(activeStates);
+        for (Order order : activeOrders) {
+            order.setState(OrderState.CANCELLED);
+            order.setDescription("سفارش بصورت خودکار لغو شد");
+        }
+        orderRepository.saveAll(activeOrders);
     }
 }

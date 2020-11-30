@@ -15,6 +15,7 @@ export interface IOrder {
   omsId?: string;
   state?: State;
   executed?: number;
+  description?: string;
   signal?: ISignal;
 }
 

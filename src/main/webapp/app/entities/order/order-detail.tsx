@@ -80,6 +80,12 @@ export const OrderDetail = (props: IOrderDetailProps) => {
           </dt>
           <dd>{orderEntity.executed}</dd>
           <dt>
+            <span id="description">
+              <Translate contentKey="eTradeApp.order.description">Description</Translate>
+            </span>
+          </dt>
+          <dd>{orderEntity.description}</dd>
+          <dt>
             <Translate contentKey="eTradeApp.order.signal">Signal</Translate>
           </dt>
           <dd>{orderEntity.signal ? orderEntity.signal.id : ''}</dd>

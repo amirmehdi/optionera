@@ -52,13 +52,17 @@
         },
         {
             "fieldName": "state",
-            "fieldType": "State",
+            "fieldType": "OrderState",
             "fieldValues": "NONE,ACTIVE,EXECUTED,CANCELLED,ERROR,PARTIALLY_EXECUTED",
             "fieldValidateRules": []
         },
         {
             "fieldName": "executed",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
         }
     ],
     "relationships": [

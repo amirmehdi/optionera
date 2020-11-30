@@ -45,6 +45,11 @@
             <column name="created_at" type="TIMESTAMP"/>
         </addColumn>
     </changeSet>
+    <changeSet id="20201012151100-1-desc" author="amirmehdi">
+        <addColumn tableName="orders">
+            <column name="description" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
     <changeSet id="20201012151100-1-state" author="amirmehdi">
         <addColumn tableName="orders">
             <column name="state" type="varchar(255)">
@@ -85,6 +90,7 @@
             <column name="oms_id" type="string"/>
             <column name="state" type="string"/>
             <column name="executed" type="numeric"/>
+            <column name="description" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>
     </changeSet>

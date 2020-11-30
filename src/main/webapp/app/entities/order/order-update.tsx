@@ -192,6 +192,12 @@ export const OrderUpdate = (props: IOrderUpdateProps) => {
                 <AvField id="order-executed" type="string" className="form-control" name="executed" />
               </AvGroup>
               <AvGroup>
+                <Label id="descriptionLabel" for="order-description">
+                  <Translate contentKey="eTradeApp.order.description">Description</Translate>
+                </Label>
+                <AvField id="order-description" type="text" name="description" />
+              </AvGroup>
+              <AvGroup>
                 <Label for="order-signal">
                   <Translate contentKey="eTradeApp.order.signal">Signal</Translate>
                 </Label>

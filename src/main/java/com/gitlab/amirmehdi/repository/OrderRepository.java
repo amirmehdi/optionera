@@ -2,10 +2,12 @@ package com.gitlab.amirmehdi.repository;
 
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
+import com.gitlab.amirmehdi.domain.enumeration.OrderState;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -15,4 +17,6 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
     Optional<Order> findByBrokerAndOmsId(Broker broker,String omsId);
+
+    List<Order> findAllByStateIn(List<OrderState> states);
 }
