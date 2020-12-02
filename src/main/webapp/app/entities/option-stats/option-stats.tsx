@@ -14,6 +14,8 @@ import DateTime from './../../DateTime/DateTime';
 import Number from './../../Framework/Number';
 import { Switch } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
+import {hasAnyAuthority} from "app/shared/auth/private-route";
+import {AUTHORITIES} from "app/config/constants";
 
 const { Column, ColumnGroup } = Table;
 
@@ -215,9 +217,9 @@ export const OptionStats = (props: IOptionStatsProps) => {
 
               <Column
                 title={<Translate contentKey="eTradeApp.optionStats.BlackScholes30"> Black Scholes 30</Translate>}
-                dataIndex="callBS30" key="callBS30" render={(callBS30, row: any) =>
+                dataIndex="callBS" key="callBS" render={(callBS, row: any) =>
                 <div className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                  <Number>{callBS30}</Number>
+                  <Number>{callBS}</Number>
                 </div>
               }/>
               <Column
@@ -227,7 +229,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                   <Number>{callEffectivePrice}</Number></div>
               }/>
-              {account.authorities.includes('GOLDEN') || account.authorities.includes('ROLE_ADMIN') ?
+              {hasAnyAuthority(account.authorities, [AUTHORITIES.ADMIN,AUTHORITIES.GOLDEN]) ?
                 <Column
                   title={<Translate contentKey="eTradeApp.optionStats.FinalPrice">FinalPrice</Translate>}
                   dataIndex="callFinalPrice" key="callFinalPrice" render={(callFinalPrice, row: any) =>
@@ -262,7 +264,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                   <Number>{option.callBreakEven}</Number></div>
               }/>
-              {account.authorities.includes('ROLE_ADMIN') ?
+              {hasAnyAuthority(account.authorities, [AUTHORITIES.ADMIN]) ?
                 <Column
                   width={80}
                   sorter={true}
@@ -290,7 +292,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                   <Number>{option.callIndifference}</Number></div>
               }/>
-              {account.authorities.includes('GOLDEN') || account.authorities.includes('ROLE_ADMIN') ?
+              {hasAnyAuthority(account.authorities, [AUTHORITIES.ADMIN,AUTHORITIES.GOLDEN]) ?
                 <>
                   <Column
                     width={75}
@@ -511,10 +513,10 @@ export const OptionStats = (props: IOptionStatsProps) => {
                   <Number>{putEffectivePrice}</Number></div>
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.BlackScholes30"> Black Scholes 30</Translate>}
-                      dataIndex="putBS30" key="putBS30" render={(putBS30, row: any) =>
+                      dataIndex="putBS" key="putBS" render={(putBS, row: any) =>
                 <div
                   className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                  <Number>{putBS30}</Number></div>
+                  <Number>{putBS}</Number></div>
               }/>
               <Column
                 width={110}

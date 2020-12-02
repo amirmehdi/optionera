@@ -66,6 +66,17 @@ public class OptionStats {
         return option.getId();
     }
 
+    @JsonProperty("callBS")
+    public int getCallBlackScholes() {
+        if (checkForNull()) {
+            return 0;
+        }
+        return (int) (option.getInstrument().getVolatilities()
+            .stream()
+            .mapToDouble(value -> BlackScholes.getBSCall(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, value, ChronoUnit.DAYS.between(LocalDate.now(), option.getExpDate()) / 365.0))
+            .sum() / 3.0);
+    }
+
     @JsonProperty("callBS30")
     public int getCallBlackScholes30() {
         if (checkForNull()) {
@@ -88,6 +99,17 @@ public class OptionStats {
             return 0;
         }
         return (int) BlackScholes.getBSCall(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, option.getInstrument().getVolatility90(), ChronoUnit.DAYS.between(LocalDate.now(), option.getExpDate()) / 365.0);
+    }
+
+    @JsonProperty("putBS")
+    public int getPutBlackScholes() {
+        if (checkForNull()) {
+            return 0;
+        }
+        return (int) (option.getInstrument().getVolatilities()
+            .stream()
+            .mapToDouble(value -> BlackScholes.getBSPut(baseStockWatch.getLast(), option.getStrikePrice(), RISK_FREE, value, ChronoUnit.DAYS.between(LocalDate.now(), option.getExpDate()) / 365.0))
+            .sum() / 3.0);
     }
 
     @JsonProperty("putBS30")

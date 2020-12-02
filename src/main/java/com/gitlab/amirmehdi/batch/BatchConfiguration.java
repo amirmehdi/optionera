@@ -154,8 +154,10 @@ public class BatchConfiguration {
         double var = (logReturn2.stream().limit(n).mapToDouble(Double::doubleValue).sum()) / (n - 1)
             - pow(logReturn.stream().limit(n).mapToDouble(Double::doubleValue).sum(), 2) / (n * (n - 1));
         double volatility = sqrt(var) * sqrt(240);
-        return volatility > 1 ? 0.6 : volatility;
+//        return volatility > 1 ? 0.6 : volatility;
+        return volatility;
     }
+
 
     public enum JOBS {
         DAY_CANDLE

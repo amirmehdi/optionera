@@ -1,6 +1,7 @@
 package com.gitlab.amirmehdi.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -15,6 +16,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A Instrument.
@@ -128,6 +131,11 @@ public class Instrument implements Serializable {
 
     public void setVolatility90(double volatility90) {
         this.volatility90 = volatility90;
+    }
+
+    @JsonIgnore
+    public List<Double> getVolatilities() {
+        return Arrays.asList(volatility30, volatility60, volatility90);
     }
 
     public LocalDate getUpdatedAt() {

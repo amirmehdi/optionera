@@ -151,7 +151,7 @@ public class OrderResource {
 
     @GetMapping("/trades/isin")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<List<IsinExecuted>> getExecutedOf() {
+    public ResponseEntity<List<IsinExecuted>> getTodayTradesOfInstruments() {
         return ResponseEntity.ok(orderService.getIsinExecuted());
     }
 }

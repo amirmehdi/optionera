@@ -4,9 +4,11 @@ import { IBidAskItem } from 'app/shared/model/bid-ask-item.model';
 
 export interface IOptionStats {
   id?: number;
+  callBS?: number;
   callBS30?: number;
   callBS60?: number;
   callBS90?: number;
+  putBS?: number;
   putBS30?: number;
   putBS60?: number;
   putBS90?: number;
