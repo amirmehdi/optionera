@@ -58,8 +58,8 @@ public class SahraRequestService implements CommandLineRunner {
     private final String sendUrl = "https://firouzex.ephoenix.ir/realtime/send?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s";
     private final String connectionData = "[{\"name\":\"omsclienthub\"}]";
 
-    @Value("${application.telegram.privateChat}")
-    private String privateChannelId;
+    @Value("${application.telegram.healthCheckChat}")
+    private String healthCheckChannelId;
 
     public SahraRequestService(TokenRepository tokenRepository, RestTemplate restTemplate, NegotiateManager negotiateManager, @Qualifier("longPollRestTemplate") RestTemplate longPollRestTemplate, TaskScheduler executor, ObjectMapper objectMapper, MessageHandler handler, TelegramMessageSender telegramMessageSender) {
         this.tokenRepository = tokenRepository;
@@ -262,6 +262,6 @@ public class SahraRequestService implements CommandLineRunner {
 
     private void clearConnection() {
         securityFields.clear();
-        telegramMessageSender.sendMessage(new TelegramMessageDto(privateChannelId, "sahra token is expired"));
+        telegramMessageSender.sendMessage(new TelegramMessageDto(healthCheckChannelId, "sahra token is expired"));
     }
 }
