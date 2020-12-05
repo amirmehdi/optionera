@@ -105,23 +105,31 @@ public class MessageHandler {
     }
 
     private void assetChangeHandler(AssetData assetData) {
-        portfolioService.save(Portfolio.builder()
-            .userId(Broker.FIROOZE_ASIA.name())
-            .isin(assetData.getId())
-            .quantity(assetData.getQuantity())
-            .avgPrice(assetData.getAvgPrice())
-            .date(LocalDate.now())
-            .build());
+        try {
+            portfolioService.save(Portfolio.builder()
+                .userId(Broker.FIROOZE_ASIA.name())
+                .isin(assetData.getId())
+                .quantity(assetData.getQuantity())
+                .avgPrice(assetData.getAvgPrice())
+                .date(LocalDate.now())
+                .build());
+        } catch (Exception e) {
+            log.error(e);
+        }
     }
 
     private void positionChangeHandler(PositionData positionData) {
-        openInterestService.save(OpenInterest.builder()
-            .userId(Broker.FIROOZE_ASIA.name())
-            .isin(positionData.getIsin())
-            .date(LocalDate.now())
-            .quantity(positionData.getAsset())
-            .marginAmount(positionData.getMarginAmount())
-            .build());
+        try {
+            openInterestService.save(OpenInterest.builder()
+                .userId(Broker.FIROOZE_ASIA.name())
+                .isin(positionData.getIsin())
+                .date(LocalDate.now())
+                .quantity(positionData.getAsset())
+                .marginAmount(positionData.getMarginAmount())
+                .build());
+        } catch (Exception e) {
+            log.error(e);
+        }
     }
 
     private void orderAddedHandler(OrderData message) {

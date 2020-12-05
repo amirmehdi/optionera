@@ -19,7 +19,7 @@ export const OpenInterest = (props: IOpenInterestProps) => {
   const [sorting, setSorting] = useState(false);
 
   const getAllEntities = () => {
-    props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
+    props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `date,${paginationState.order}`);
   };
 
   const resetAll = () => {
@@ -89,9 +89,6 @@ export const OpenInterest = (props: IOpenInterestProps) => {
             <Table responsive>
               <thead>
                 <tr>
-                  <th className="hand" onClick={sort('id')}>
-                    <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
-                  </th>
                   <th className="hand" onClick={sort('userId')}>
                     <Translate contentKey="eTradeApp.openInterest.userId">User Id</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
@@ -119,11 +116,6 @@ export const OpenInterest = (props: IOpenInterestProps) => {
               <tbody>
                 {openInterestList.map((openInterest, i) => (
                   <tr key={`entity-${i}`}>
-                    <td>
-                      <Button tag={Link} to={`${match.url}/${openInterest.userId + ',' + openInterest.isin + ',' + openInterest.date}`} color="link" size="sm">
-                        detail
-                      </Button>
-                    </td>
                     <td>{openInterest.userId}</td>
                     <td>
                       <TextFormat type="date" value={openInterest.date} format={APP_LOCAL_DATE_FORMAT} />
