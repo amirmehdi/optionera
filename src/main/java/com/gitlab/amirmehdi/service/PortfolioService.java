@@ -3,7 +3,6 @@ package com.gitlab.amirmehdi.service;
 import com.gitlab.amirmehdi.domain.AssetCompositeKey;
 import com.gitlab.amirmehdi.domain.Portfolio;
 import com.gitlab.amirmehdi.repository.PortfolioRepository;
-import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -23,11 +22,9 @@ public class PortfolioService {
     private final Logger log = LoggerFactory.getLogger(PortfolioService.class);
 
     private final PortfolioRepository portfolioRepository;
-    private final Market market;
 
-    public PortfolioService(PortfolioRepository portfolioRepository, Market market) {
+    public PortfolioService(PortfolioRepository portfolioRepository) {
         this.portfolioRepository = portfolioRepository;
-        this.market = market;
     }
 
     /**
@@ -38,9 +35,6 @@ public class PortfolioService {
      */
     public Portfolio save(Portfolio portfolio) {
         log.debug("Request to save Portfolio : {}", portfolio);
-        StockWatch stockWatch = market.getStockWatch(portfolio.getIsin());
-        portfolio.setClosePrice(stockWatch.getClosing());
-        portfolio.setLastPrice(stockWatch.getLast());
         return portfolioRepository.save(portfolio);
     }
 

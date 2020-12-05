@@ -84,6 +84,10 @@ public class MessageHandler {
                 StateChangeData stateChangeData = new StateChangeData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
                 stateChangeDataHandler(stateChangeData);
                 break;
+            case "orderEdited":
+                    OrderEdit orderEdit = new OrderEdit((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                    orderEditHandler(orderEdit);
+                break;
             case "orderExecution":
                 //PollMessageResponse(hub=OmsClientHub, method=orderExecution, val=[[1170000000364932, 1481, 3, 1, 0, 0, 1481, 18900, 28094805]])
                 OrderExecution orderExecution = new OrderExecution((ArrayList<Object>) pollMessageResponse.getVal().get(0));
@@ -100,7 +104,8 @@ public class MessageHandler {
                 positionChangeHandler(positionData);
                 break;
             default:
-                log.warn("Unexpected value: " + pollMessageResponse.getMethod());
+                //InstrumentStateChange
+                log.warn("Unexpected value: {} {}", pollMessageResponse.getMethod(), pollMessageResponse.getVal());
         }
     }
 
@@ -169,6 +174,20 @@ public class MessageHandler {
         Order order = orderOptional.get();
         order.setState(message.getOrderStatus().toOrderState());
         order.setExecuted(message.getExecutedQuantity());
+        orderRepository.save(order);
+    }
+
+    private void orderEditHandler(OrderEdit orderEdit) {
+        Optional<Order> orderOptional = orderRepository.findByBrokerAndOmsId(Broker.FIROOZE_ASIA, orderEdit.getId());
+        if (!orderOptional.isPresent()) {
+            log.info("order not found : {}", orderEdit);
+            return;
+        }
+        Order order = orderOptional.get();
+        order.setQuantity(order.getQuantity());
+        order.setPrice(orderEdit.getPrice());
+        order.setDescription("سفارش ویرایش شد");
+        order.setValidity(orderEdit.getValidity().toValidity());
         orderRepository.save(order);
     }
 

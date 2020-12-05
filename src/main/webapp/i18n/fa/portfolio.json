@@ -20,9 +20,7 @@
       "date": "Date",
       "isin": "Isin",
       "quantity": "Quantity",
-      "avgPrice": "Avg Price",
-      "lastPrice": "Last Price",
-      "closePrice": "Close Price"
+      "avgPrice": "Avg Price"
     }
   }
 }

@@ -5,8 +5,6 @@ export interface IOpenInterest {
   date?: Moment;
   isin?: string;
   quantity?: number;
-  lastPrice?: number;
-  closePrice?: number;
   marginAmount?: number;
 }
 

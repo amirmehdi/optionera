@@ -101,12 +101,6 @@ export const OpenInterest = (props: IOpenInterestProps) => {
                   <th className="hand" onClick={sort('quantity')}>
                     <Translate contentKey="eTradeApp.openInterest.quantity">Quantity</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
-                  <th className="hand" onClick={sort('lastPrice')}>
-                    <Translate contentKey="eTradeApp.openInterest.lastPrice">Last Price</Translate> <FontAwesomeIcon icon="sort" />
-                  </th>
-                  <th className="hand" onClick={sort('closePrice')}>
-                    <Translate contentKey="eTradeApp.openInterest.closePrice">Close Price</Translate> <FontAwesomeIcon icon="sort" />
-                  </th>
                   <th className="hand" onClick={sort('marginAmount')}>
                     <Translate contentKey="eTradeApp.openInterest.marginAmount">Margin Amount</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
@@ -122,8 +116,6 @@ export const OpenInterest = (props: IOpenInterestProps) => {
                     </td>
                     <td>{openInterest.isin}</td>
                     <td>{openInterest.quantity}</td>
-                    <td>{openInterest.lastPrice}</td>
-                    <td>{openInterest.closePrice}</td>
                     <td>{openInterest.marginAmount}</td>
                     <td className="text-right">
                       <div className="btn-group flex-btn-group-container">

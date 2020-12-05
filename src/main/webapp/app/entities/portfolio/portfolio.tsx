@@ -104,12 +104,6 @@ export const Portfolio = (props: IPortfolioProps) => {
                   <th className="hand" onClick={sort('avgPrice')}>
                     <Translate contentKey="eTradeApp.portfolio.avgPrice">Avg Price</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
-                  <th className="hand" onClick={sort('lastPrice')}>
-                    <Translate contentKey="eTradeApp.portfolio.lastPrice">Last Price</Translate> <FontAwesomeIcon icon="sort" />
-                  </th>
-                  <th className="hand" onClick={sort('closePrice')}>
-                    <Translate contentKey="eTradeApp.portfolio.closePrice">Close Price</Translate> <FontAwesomeIcon icon="sort" />
-                  </th>
                   <th />
                 </tr>
               </thead>
@@ -123,8 +117,6 @@ export const Portfolio = (props: IPortfolioProps) => {
                     <td>{portfolio.isin}</td>
                     <td>{portfolio.quantity}</td>
                     <td>{portfolio.avgPrice}</td>
-                    <td>{portfolio.lastPrice}</td>
-                    <td>{portfolio.closePrice}</td>
                     <td className="text-right">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`${match.url}/${portfolio.userId + ',' + portfolio.isin + ',' + portfolio.date}`} color="info" size="sm">

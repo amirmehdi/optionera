@@ -3,16 +3,13 @@ package com.gitlab.amirmehdi.service;
 import com.gitlab.amirmehdi.domain.AssetCompositeKey;
 import com.gitlab.amirmehdi.domain.OpenInterest;
 import com.gitlab.amirmehdi.repository.OpenInterestRepository;
-import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,11 +22,9 @@ public class OpenInterestService {
     private final Logger log = LoggerFactory.getLogger(OpenInterestService.class);
 
     private final OpenInterestRepository openInterestRepository;
-    private final Market market;
 
-    public OpenInterestService(OpenInterestRepository openInterestRepository, Market market) {
+    public OpenInterestService(OpenInterestRepository openInterestRepository) {
         this.openInterestRepository = openInterestRepository;
-        this.market = market;
     }
 
     /**
@@ -40,9 +35,6 @@ public class OpenInterestService {
      */
     public OpenInterest save(OpenInterest openInterest) {
         log.debug("Request to save OpenInterest : {}", openInterest);
-        StockWatch stockWatch= market.getStockWatch(openInterest.getIsin());
-        openInterest.setClosePrice(stockWatch.getClosing());
-        openInterest.setLastPrice(stockWatch.getLast());
         return openInterestRepository.save(openInterest);
     }
 

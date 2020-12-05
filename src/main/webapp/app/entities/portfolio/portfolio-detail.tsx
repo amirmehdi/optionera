@@ -57,18 +57,6 @@ export const PortfolioDetail = (props: IPortfolioDetailProps) => {
             </span>
           </dt>
           <dd>{portfolioEntity.avgPrice}</dd>
-          <dt>
-            <span id="lastPrice">
-              <Translate contentKey="eTradeApp.portfolio.lastPrice">Last Price</Translate>
-            </span>
-          </dt>
-          <dd>{portfolioEntity.lastPrice}</dd>
-          <dt>
-            <span id="closePrice">
-              <Translate contentKey="eTradeApp.portfolio.closePrice">Close Price</Translate>
-            </span>
-          </dt>
-          <dd>{portfolioEntity.closePrice}</dd>
         </dl>
         <Button tag={Link} to="/portfolio" replace color="info">
           <FontAwesomeIcon icon="arrow-left" />{' '}

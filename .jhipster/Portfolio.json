@@ -20,14 +20,6 @@
         {
             "fieldName": "avgPrice",
             "fieldType": "Integer"
-        },
-        {
-            "fieldName": "lastPrice",
-            "fieldType": "Integer"
-        },
-        {
-            "fieldName": "closePrice",
-            "fieldType": "Integer"
         }
     ],
     "relationships": [],
@@ -41,5 +33,7 @@
     "readOnly": false,
     "embedded": false,
     "clientRootFolder": "",
-    "applications": "*"
+    "applications": "*",
+    "searchEngine": false,
+    "databaseType": "sql"
 }

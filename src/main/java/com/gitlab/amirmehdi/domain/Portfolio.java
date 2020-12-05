@@ -57,12 +57,6 @@ public class Portfolio implements Serializable {
     @Column(name = "avg_price")
     private Integer avgPrice;
 
-    @Column(name = "last_price")
-    private Integer lastPrice;
-
-    @Column(name = "close_price")
-    private Integer closePrice;
-
     @JsonIgnore
     public AssetCompositeKey getId() {
         if (userId == null && isin == null && date == null) {

@@ -18,14 +18,6 @@
             "fieldType": "Integer"
         },
         {
-            "fieldName": "lastPrice",
-            "fieldType": "Integer"
-        },
-        {
-            "fieldName": "closePrice",
-            "fieldType": "Integer"
-        },
-        {
             "fieldName": "marginAmount",
             "fieldType": "Long"
         }

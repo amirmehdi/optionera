@@ -54,12 +54,6 @@ public class OpenInterest implements Serializable {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "last_price")
-    private Integer lastPrice;
-
-    @Column(name = "close_price")
-    private Integer closePrice;
-
     @Column(name = "margin_amount")
     private Long marginAmount;
 

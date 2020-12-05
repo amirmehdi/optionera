@@ -52,18 +52,6 @@ export const OpenInterestDetail = (props: IOpenInterestDetailProps) => {
           </dt>
           <dd>{openInterestEntity.quantity}</dd>
           <dt>
-            <span id="lastPrice">
-              <Translate contentKey="eTradeApp.openInterest.lastPrice">Last Price</Translate>
-            </span>
-          </dt>
-          <dd>{openInterestEntity.lastPrice}</dd>
-          <dt>
-            <span id="closePrice">
-              <Translate contentKey="eTradeApp.openInterest.closePrice">Close Price</Translate>
-            </span>
-          </dt>
-          <dd>{openInterestEntity.closePrice}</dd>
-          <dt>
             <span id="marginAmount">
               <Translate contentKey="eTradeApp.openInterest.marginAmount">Margin Amount</Translate>
             </span>

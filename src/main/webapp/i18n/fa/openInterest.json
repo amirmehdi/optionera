@@ -20,8 +20,6 @@
       "date": "Date",
       "isin": "Isin",
       "quantity": "Quantity",
-      "lastPrice": "Last Price",
-      "closePrice": "Close Price",
       "marginAmount": "Margin Amount"
     }
   }

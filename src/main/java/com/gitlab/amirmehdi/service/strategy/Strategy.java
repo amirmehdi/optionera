@@ -89,9 +89,10 @@ public abstract class Strategy {
 
 
     protected final Signal getSignal(String isin) {
-        Option option = optionRepository.findByCallIsinOrPutIsin(isin).orElseThrow(RuntimeException::new);
+        Option option = optionRepository.findByCallIsinOrPutIsin(isin).orElse(null);
+        if (option == null) return null;
         StockWatch stockWatch = market.getStockWatch(isin);
-        if (stockWatch.getState() != null && !stockWatch.getState().equals("A")){
+        if (stockWatch.getState() != null && !stockWatch.getState().equals("A")) {
             return null;
         }
         StockWatch baseStockwatch = market.getStockWatch(option.getInstrument().getIsin());
