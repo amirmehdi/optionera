@@ -29,6 +29,14 @@ import token, {TokenState} from 'app/entities/token/token.reducer';
 // prettier-ignore
 import board, {BoardState} from 'app/entities/board/board.reducer';
 
+// prettier-ignore
+import portfolio, {
+  PortfolioState
+} from 'app/entities/portfolio/portfolio.reducer';
+// prettier-ignore
+import openInterest, {
+  OpenInterestState
+} from 'app/entities/open-interest/open-interest.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -49,6 +57,8 @@ export interface IRootState {
   readonly order: OrderState;
   readonly token: TokenState;
   readonly board: BoardState;
+  readonly portfolio: PortfolioState;
+  readonly openInterest: OpenInterestState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -71,6 +81,8 @@ const rootReducer = combineReducers<IRootState>({
   order,
   token,
   board,
+  portfolio,
+  openInterest,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

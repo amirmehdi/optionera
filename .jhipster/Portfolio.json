@@ -1,0 +1,45 @@
+{
+    "name": "Portfolio",
+    "fields": [
+        {
+            "fieldName": "userId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "date",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "isin",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "quantity",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "avgPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "lastPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "closePrice",
+            "fieldType": "Integer"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20201204232400",
+    "entityTableName": "portfolio",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}

@@ -1,0 +1,23 @@
+entity Portfolio {
+	userId String,
+    date LocalDate,
+
+    isin String,
+    quantity Integer,
+    avgPrice Integer,
+    lastPrice Integer,
+    closePrice Integer
+}
+
+entity OpenInterest {
+	userId String,
+    date LocalDate,
+
+    isin String,
+    quantity Integer,
+    lastPrice Integer,
+    closePrice Integer,
+    MarginAmount Long,
+}
+paginate Portfolio, OpenInterest with infinite-scroll
+service Portfolio, OpenInterest with serviceClass

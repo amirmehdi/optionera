@@ -1,12 +1,17 @@
 package com.gitlab.amirmehdi.service.sahra;
 
+import com.gitlab.amirmehdi.domain.OpenInterest;
 import com.gitlab.amirmehdi.domain.Order;
+import com.gitlab.amirmehdi.domain.Portfolio;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.repository.OrderRepository;
+import com.gitlab.amirmehdi.service.OpenInterestService;
+import com.gitlab.amirmehdi.service.PortfolioService;
 import com.gitlab.amirmehdi.service.dto.sahra.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -14,9 +19,13 @@ import java.util.Optional;
 @Log4j2
 public class MessageHandler {
     private final OrderRepository orderRepository;
+    private final PortfolioService portfolioService;
+    private final OpenInterestService openInterestService;
 
-    public MessageHandler(OrderRepository orderRepository) {
+    public MessageHandler(OrderRepository orderRepository, PortfolioService portfolioService, OpenInterestService openInterestService) {
         this.orderRepository = orderRepository;
+        this.portfolioService = portfolioService;
+        this.openInterestService = openInterestService;
     }
 
     public void handle(PollResponse pollResponse) {
@@ -32,17 +41,14 @@ public class MessageHandler {
                 CreditInfoUpdate creditInfoUpdate1 = new CreditInfoUpdate(credit);
                 // پورتفوی
                 ArrayList<ArrayList> portfo = (ArrayList) ((ArrayList) ((ArrayList) pollMessageResponse.getVal().get(0)).get(1)).get(3);
-                for (ArrayList object : portfo) {
-                    AssetData assetData = new AssetData(object);
-                }
+                portfo.stream()
+                    .forEach(s -> assetChangeHandler(new AssetData(s)));
                 //سفارشات باز
                 //((ArrayList) ((ArrayList) ((ArrayList) ((ArrayList) firstPollResponse.getM().get(0).getVal().get(0)).get(1)).get(2)).get(0)).toString()
                 //    [1170000000364703, IRO1PKLJ0001, 1399/09/05 10:11:34, 4000, 12000, 0, 1, 1, null, 2, 1, 009845, false, 1, 0, 0, true, 48178176, 4000, null, 1, null]
                 //موقعیت باز
                 ArrayList<ArrayList> opens = (ArrayList) ((ArrayList) ((ArrayList) pollMessageResponse.getVal().get(0)).get(1)).get(8);
-                for (ArrayList object : opens) {
-                    PositionData positionData = new PositionData(object);
-                }
+                opens.forEach(s -> positionChangeHandler(new PositionData(s)));
                 break;
             case "marketMessageRecived":
                 break;
@@ -86,12 +92,36 @@ public class MessageHandler {
             case "AssetChange":
                 //PollMessageResponse(hub=OmsClientHub, method=AssetChange, val=[[IRO1MAPN0001, 32582, 19103, 18900]])
                 AssetData assetData = new AssetData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                assetChangeHandler(assetData);
                 break;
             case "PositionChange":
                 //PollMessageResponse(hub=OmsClientHub, method=PositionChange, val=[[IRO9MAPN4141, -1, 0, 0, 0, 0, 9272880, 1399/10/08, 1399/10/09]])
                 PositionData positionData = new PositionData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                positionChangeHandler(positionData);
                 break;
+            default:
+                log.warn("Unexpected value: " + pollMessageResponse.getMethod());
         }
+    }
+
+    private void assetChangeHandler(AssetData assetData) {
+        portfolioService.save(Portfolio.builder()
+            .userId(Broker.FIROOZE_ASIA.name())
+            .isin(assetData.getId())
+            .quantity(assetData.getQuantity())
+            .avgPrice(assetData.getAvgPrice())
+            .date(LocalDate.now())
+            .build());
+    }
+
+    private void positionChangeHandler(PositionData positionData) {
+        openInterestService.save(OpenInterest.builder()
+            .userId(Broker.FIROOZE_ASIA.name())
+            .isin(positionData.getIsin())
+            .date(LocalDate.now())
+            .quantity(positionData.getAsset())
+            .marginAmount(positionData.getMarginAmount())
+            .build());
     }
 
     private void orderAddedHandler(OrderData message) {
@@ -105,9 +135,9 @@ public class MessageHandler {
             order.setPrice(message.getPrice());
             order.setQuantity(message.getQuantity());
             order.setBroker(Broker.FIROOZE_ASIA);
-        }else {
+        } else {
             Optional<Order> optionalOrder = orderRepository.findById(Long.valueOf(message.getExtraData()));
-            if (!optionalOrder.isPresent()){
+            if (!optionalOrder.isPresent()) {
                 log.info("message ( order ) is from other source but have extra: {}", message);
                 return;
             }
@@ -116,8 +146,8 @@ public class MessageHandler {
         order.setOmsId(message.getId());
         order.setExecuted(message.getExecutedQuantity());
         order.setState(message.getOrderStatus().toOrderState());
-        if (message.getError()!=null){
-            log.info("order got error: {} {}",order,message.getError());
+        if (message.getError() != null) {
+            log.info("order got error: {} {}", order, message.getError());
         }
         orderRepository.save(order);
     }

@@ -1,0 +1,45 @@
+{
+    "name": "OpenInterest",
+    "fields": [
+        {
+            "fieldName": "userId",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "date",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "isin",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "quantity",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "lastPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "closePrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "marginAmount",
+            "fieldType": "Long"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20201204232500",
+    "entityTableName": "open_interest",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}

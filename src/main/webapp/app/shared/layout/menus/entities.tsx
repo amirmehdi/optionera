@@ -22,6 +22,12 @@ const adminMenus = (
     <MenuItem icon="asterisk" to="/token">
       <Translate contentKey="global.menu.entities.token" />
     </MenuItem>
+    <MenuItem icon="asterisk" to="/portfolio">
+      <Translate contentKey="global.menu.entities.portfolio" />
+    </MenuItem>
+    <MenuItem icon="asterisk" to="/open-interest">
+      <Translate contentKey="global.menu.entities.openInterest" />
+    </MenuItem>
   </>
 );
 

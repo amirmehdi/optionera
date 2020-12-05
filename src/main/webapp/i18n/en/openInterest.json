@@ -1,0 +1,28 @@
+{
+  "eTradeApp": {
+    "openInterest": {
+      "home": {
+        "title": "Open Interests",
+        "createLabel": "Create a new Open Interest",
+        "createOrEditLabel": "Create or edit a Open Interest",
+        "notFound": "No Open Interests found"
+      },
+      "created": "A new Open Interest is created with identifier {{ param }}",
+      "updated": "A Open Interest is updated with identifier {{ param }}",
+      "deleted": "A Open Interest is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Open Interest {{ id }}?"
+      },
+      "detail": {
+        "title": "Open Interest"
+      },
+      "userId": "User Id",
+      "date": "Date",
+      "isin": "Isin",
+      "quantity": "Quantity",
+      "lastPrice": "Last Price",
+      "closePrice": "Close Price",
+      "marginAmount": "Margin Amount"
+    }
+  }
+}

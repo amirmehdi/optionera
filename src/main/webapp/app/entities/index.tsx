@@ -11,6 +11,8 @@ import Signal from './signal';
 import Order from './order';
 import Token from './token';
 import Board from './board';
+import Portfolio from './portfolio';
+import OpenInterest from './open-interest';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -24,6 +26,8 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}order`} component={Order} />
       <ErrorBoundaryRoute path={`${match.url}token`} component={Token} />
       <ErrorBoundaryRoute path={`${match.url}board`} component={Board} />
+      <ErrorBoundaryRoute path={`${match.url}portfolio`} component={Portfolio} />
+      <ErrorBoundaryRoute path={`${match.url}open-interest`} component={OpenInterest} />
       {/* jhipster-needle-add-route-path - JHipster will add routes here */}
     </Switch>
   </div>

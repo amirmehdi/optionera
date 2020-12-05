@@ -15,7 +15,7 @@ public class PositionData {
 
     private int InitialMarginCount;
     private int InitialMarginAmount;
-    private int MarginAmount;
+    private long MarginAmount;
     String cacheStrikeDate;
     String strikeDate;
 
@@ -27,7 +27,7 @@ public class PositionData {
             , ((Number) s.get(3)).intValue()
             , ((Number) s.get(4)).intValue()
             , ((Number) s.get(5)).intValue()
-            , ((Number) s.get(6)).intValue()
+            , ((Number) s.get(6)).longValue()
             , (String) s.get(7)
             , (String) s.get(8)
         );

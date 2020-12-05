@@ -53,6 +53,8 @@ public class CacheConfiguration {
             createCache(cm, com.gitlab.amirmehdi.domain.Order.class.getName());
             createCache(cm, com.gitlab.amirmehdi.domain.Token.class.getName());
             createCache(cm, com.gitlab.amirmehdi.domain.Board.class.getName());
+            createCache(cm, com.gitlab.amirmehdi.domain.Portfolio.class.getName());
+            createCache(cm, com.gitlab.amirmehdi.domain.OpenInterest.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

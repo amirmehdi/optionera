@@ -14,6 +14,8 @@
         "order": "Order",
         "token": "Token",
         "board": "Board",
+        "portfolio": "Portfolio",
+        "openInterest": "Open Interest",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

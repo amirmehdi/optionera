@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <!--
+        Added the entity Portfolio.
+    -->
+    <changeSet id="20201204232400-1" author="jhipster">
+        <createTable tableName="portfolio">
+            <column name="user_id" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="date" type="date">
+                <constraints nullable="false" />
+            </column>
+            <column name="isin" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="quantity" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="avg_price" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_price" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="close_price" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20201204232400-1-relations" author="jhipster">
+
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+
+    <!--
+        Load sample data generated with Faker.js
+        - This data can be easily edited using a CSV editor (or even MS Excel) and
+          is located in the 'src/main/resources/config/liquibase/fake-data' directory
+        - By default this data is applied when running with the JHipster 'dev' profile.
+          This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
+          Spring Boot configuration key.
+    -->
+    <changeSet author="amirmehdi" id="portfolio-pk">
+        <addPrimaryKey
+            columnNames="isin, date, user_id"
+            constraintName="pk_portfolio"
+            schemaName="public"
+            tableName="portfolio"/>
+    </changeSet>
+    <changeSet id="20201204232400-1-data" author="jhipster" context="faker">
+        <loadData
+                  file="config/liquibase/fake-data/portfolio.csv"
+                  separator=";"
+                  tableName="portfolio">
+            <column name="user_id" type="string"/>
+            <column name="date" type="date"/>
+            <column name="isin" type="string"/>
+            <column name="quantity" type="numeric"/>
+            <column name="avg_price" type="numeric"/>
+            <column name="last_price" type="numeric"/>
+            <column name="close_price" type="numeric"/>
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>
