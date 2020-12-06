@@ -181,6 +181,5 @@ application:
     market: 60000
     interest: 120000
     clientsInfo: 60000
-    board: 60000
   strategy:
     unusual1Threshold: -10

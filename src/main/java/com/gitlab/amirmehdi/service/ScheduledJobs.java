@@ -45,13 +45,6 @@ public class ScheduledJobs {
         crawlerJobs.clientsInfoUpdater();
     }
 
-    @Scheduled(fixedRateString = "${application.schedule.board}")
-    public void boardUpdater() {
-        if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())
-            return;
-        boardService.updateAllBoard();
-    }
-
     @Scheduled(fixedRateString = "${application.schedule.interest}")
     public void openInterestUpdater() {
         if (marketTimeCheck && !MarketTimeUtil.isMarketOpen())

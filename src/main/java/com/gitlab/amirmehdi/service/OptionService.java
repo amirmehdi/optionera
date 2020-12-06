@@ -9,15 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Option}.
@@ -104,19 +103,7 @@ public class OptionService {
         return optionRepository.findByCallIsinAndPutIsin(callIsin, putIsin);
     }
 
-    public void updateParams(List<StockWatch> stockWatches) {
-        log.debug("updateParams for isins :{}", stockWatches.stream().map(StockWatch::getIsin).collect(Collectors.toList()));
-        Map<String, StockWatch> map = stockWatches.stream()
-            .collect(Collectors.toMap(StockWatch::getIsin, stockWatch -> stockWatch));
-
-        List<Option> options = optionRepository.findAll();
-        options
-            .parallelStream()
-            .forEach(option -> {
-                updateParams(option, map.get(option.getInstrument().getIsin()));
-            });
-    }
-
+    @Async
     public void updateParams(String isin) {
         List<Option> options = optionRepository.findAllByInstrumentIsin(isin);
         StockWatch stockWatch = market.getStockWatch(isin);
@@ -176,8 +163,18 @@ public class OptionService {
     }
 
     public List<String> findAllCallAndPutIsins() {
+        List<Object[]> allCallAndPutIsins = getAllCallAndPutIsins();
+        return getCallIsinAndPutIsin(allCallAndPutIsins);
+    }
+
+    public List<String> findAllCallAndPutIsinsByInstrumentIsin(String isin) {
+        List<Object[]> allCallAndPutIsins = getAllCallAndPutIsinsByBaseInstrumentIsin(isin);
+        return getCallIsinAndPutIsin(allCallAndPutIsins);
+    }
+
+    private List<String> getCallIsinAndPutIsin(List<Object[]> allCallAndPutIsins) {
         List<String> isins = new ArrayList<>();
-        for (Object[] isin : optionRepository.findAllCallAndPutIsins()) {
+        for (Object[] isin : allCallAndPutIsins) {
             if (isin[0] == null || !((String) isin[0]).isEmpty()) {
                 isins.add((String) isin[0]);
             }
@@ -186,5 +183,13 @@ public class OptionService {
             }
         }
         return isins;
+    }
+
+    private List<Object[]> getAllCallAndPutIsins() {
+        return optionRepository.findAllCallAndPutIsins();
+    }
+
+    private List<Object[]> getAllCallAndPutIsinsByBaseInstrumentIsin(String isin) {
+        return optionRepository.findAllCallAndPutIsinsByInstrumentIsin(isin);
     }
 }

@@ -37,6 +37,7 @@ public class CrawlerJobs {
     private final StrategyService strategyService;
     private final Market market;
     private final MetricService metricService;
+    private final BoardService boardService;
     private final AtomicLong bidAskSuccessCount = new AtomicLong(0);
     private final AtomicLong bidAskErrorCount = new AtomicLong(0);
     private final AtomicLong stockWatchSuccessCount = new AtomicLong(0);
@@ -49,7 +50,7 @@ public class CrawlerJobs {
     private Date clientsInfoFirstUpdate;
     private Date clientsInfoLastUpdate;
 
-    public CrawlerJobs(@Qualifier("trustedRestTemplate") RestTemplate restTemplate, OptionService optionService, OptionStatsService optionStatsService, InstrumentService instrumentRepository, OmidRLCConsumer omidRLCConsumer, StrategyService strategyService, Market market, MetricService metricService) {
+    public CrawlerJobs(@Qualifier("trustedRestTemplate") RestTemplate restTemplate, OptionService optionService, OptionStatsService optionStatsService, InstrumentService instrumentRepository, OmidRLCConsumer omidRLCConsumer, StrategyService strategyService, Market market, MetricService metricService, BoardService boardService) {
         this.restTemplate = restTemplate;
         this.optionService = optionService;
         this.optionStatsService = optionStatsService;
@@ -58,6 +59,7 @@ public class CrawlerJobs {
         this.strategyService = strategyService;
         this.market = market;
         this.metricService = metricService;
+        this.boardService = boardService;
     }
 
     @SneakyThrows
@@ -140,6 +142,7 @@ public class CrawlerJobs {
                         } else {
                             log.debug("update stockwatch option stat {}", s);
                             market.saveAllStockWatch(stockWatches);
+                            boardService.updateAllBoard(s);
                             optionService.updateParams(s);
                             stockWatchSuccessCount.incrementAndGet();
                             stockWatchLastUpdate = new Date();
@@ -149,29 +152,6 @@ public class CrawlerJobs {
                     log.error(e);
                 }
             });
-    }
-
-    private void updateInstrumentsMarket() {
-        List<String> instruments = instrumentRepository.findAll().stream().map(Instrument::getIsin).collect(Collectors.toList());
-        try {
-            omidRLCConsumer.getBulkStockWatch(instruments).whenCompleteAsync((stockWatches, throwable) -> {
-                if (throwable != null) {
-                    throwable.printStackTrace();
-                } else {
-                    market.saveAllStockWatch(stockWatches);
-                    optionService.updateParams(stockWatches);
-                }
-            });
-            omidRLCConsumer.getBulkBidAsk(instruments).whenCompleteAsync((bidAsks, throwable) -> {
-                if (throwable != null) {
-                    throwable.printStackTrace();
-                } else {
-                    market.saveAllBidAsk(bidAsks);
-                }
-            });
-        } catch (Exception e) {
-            log.error(e);
-        }
     }
 
 

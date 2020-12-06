@@ -11,9 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,49 +42,58 @@ public class BoardService {
         this.instrumentService = instrumentService;
     }
 
+    public void updateAllBoard(String s) {
+        List<String> isins = new ArrayList<>();
+        isins.add(s);
+        isins.addAll(optionService.findAllCallAndPutIsinsByInstrumentIsin(s));
+        updateBoardForIsins(isins);
+    }
+
+    @Async
     public void updateAllBoard() {
         List<String> isins = instrumentService.findAll().stream().map(Instrument::getIsin).collect(Collectors.toList());
         isins.addAll(optionService.findAllCallAndPutIsins());
 
-        Lists.partition(isins, 100).forEach(strings -> {
+        Lists.partition(isins, 100).forEach(this::updateBoardForIsins);
+    }
 
-            List<Board> boards = strings.stream().map(s -> {
-                StockWatch stockWatch = market.getStockWatch(s);
-                if (stockWatch == null) {
-                    return null;
-                }
-                BidAskItem bidAsk = market.getBidAsk(s).getBestBidAsk();
-                ClientsInfo clientsInfo = market.getClientsInfo(s);
-                Board board = new Board()
-                    .isin(s);
+    private void updateBoardForIsins(List<String> strings) {
+        List<Board> boards = strings.stream().map(s -> {
+            StockWatch stockWatch = market.getStockWatch(s);
+            if (stockWatch == null) {
+                return null;
+            }
+            BidAskItem bidAsk = market.getBidAsk(s).getBestBidAsk();
+            ClientsInfo clientsInfo = market.getClientsInfo(s);
+            Board board = new Board()
+                .isin(s);
 
-                board.close(stockWatch.getClosing())
-                    .last(stockWatch.getLast())
-                    .first(stockWatch.getFirst())
-                    .referencePrice(stockWatch.getReferencePrice())
-                    .low(stockWatch.getLow())
-                    .high(stockWatch.getHigh())
-                    .min(stockWatch.getMin())
-                    .max(stockWatch.getMax())
-                    .tradeCount(stockWatch.getTradesCount())
-                    .tradeVolume(stockWatch.getTradeVolume())
-                    .tradeValue(stockWatch.getTradeValue())
-                    .state(stockWatch.getState());
+            board.close(stockWatch.getClosing())
+                .last(stockWatch.getLast())
+                .first(stockWatch.getFirst())
+                .referencePrice(stockWatch.getReferencePrice())
+                .low(stockWatch.getLow())
+                .high(stockWatch.getHigh())
+                .min(stockWatch.getMin())
+                .max(stockWatch.getMax())
+                .tradeCount(stockWatch.getTradesCount())
+                .tradeVolume(stockWatch.getTradeVolume())
+                .tradeValue(stockWatch.getTradeValue())
+                .state(stockWatch.getState());
 
-                board.askPrice(bidAsk.getAskPrice())
-                    .bidPrice(bidAsk.getBidPrice())
-                    .bidVolume(bidAsk.getBidQuantity())
-                    .askVolume(bidAsk.getAskQuantity());
-                if (clientsInfo != null) {
-                    board.legalBuyVolume(clientsInfo.getNaturalBuyVolume())
-                        .legalSellVolume(clientsInfo.getNaturalSellVolume())
-                        .individualBuyVolume(clientsInfo.getIndividualBuyVolume())
-                        .individualSellVolume(clientsInfo.getIndividualSellVolume());
-                }
-                return board;
-            }).filter(Objects::nonNull).collect(Collectors.toList());
-            boardRepository.saveAll(boards);
-        });
+            board.askPrice(bidAsk.getAskPrice())
+                .bidPrice(bidAsk.getBidPrice())
+                .bidVolume(bidAsk.getBidQuantity())
+                .askVolume(bidAsk.getAskQuantity());
+            if (clientsInfo != null) {
+                board.legalBuyVolume(clientsInfo.getNaturalBuyVolume())
+                    .legalSellVolume(clientsInfo.getNaturalSellVolume())
+                    .individualBuyVolume(clientsInfo.getIndividualBuyVolume())
+                    .individualSellVolume(clientsInfo.getIndividualSellVolume());
+            }
+            return board;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+        boardRepository.saveAll(boards);
     }
 
     /**
@@ -119,5 +130,4 @@ public class BoardService {
         log.debug("Request to get Board : {}", id);
         return boardRepository.findById(id);
     }
-
 }
