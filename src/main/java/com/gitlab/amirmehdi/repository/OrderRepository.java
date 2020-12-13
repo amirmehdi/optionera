@@ -21,5 +21,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
 
     List<Order> findAllByStateIn(List<OrderState> states);
 
+    List<Order> findAllByState(OrderState state);
+
     List<Order> findAllByExecutedGreaterThanAndCreatedAtGreaterThan(int executed, Date createdAt);
 }

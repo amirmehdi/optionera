@@ -71,8 +71,8 @@ public class TokenResource {
     }
 
     private Token save(Token token) {
-        token= tokenRepository.save(token);
-        if (Broker.FIROOZE_ASIA.equals(token.getBroker())){
+        token = tokenRepository.save(token);
+        if (Broker.FIROOZE_ASIA.equals(token.getBroker())) {
             sahraRequestService.connectAndStart();
         }
         return token;

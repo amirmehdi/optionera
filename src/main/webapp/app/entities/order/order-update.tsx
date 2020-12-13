@@ -182,6 +182,7 @@ export const OrderUpdate = (props: IOrderUpdateProps) => {
                   <option value="EXECUTED">{translate('eTradeApp.State.EXECUTED')}</option>
                   <option value="CANCELLED">{translate('eTradeApp.State.CANCELLED')}</option>
                   <option value="ERROR">{translate('eTradeApp.State.ERROR')}</option>
+                  <option value="HEADLINE">{translate('eTradeApp.State.HEADLINE')}</option>
                   <option value="PARTIALLY_EXECUTED">{translate('eTradeApp.State.PARTIALLY_EXECUTED')}</option>
                 </AvInput>
               </AvGroup>

@@ -371,6 +371,18 @@
             <artifactId>spring-retry</artifactId>
             <version>1.2.5.RELEASE</version>
         </dependency>
+        <!-- selenium -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.14.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>4.2.2</version>
+        </dependency>
     </dependencies>
 
     <build>

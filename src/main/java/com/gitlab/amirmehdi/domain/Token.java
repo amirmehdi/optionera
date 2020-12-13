@@ -3,6 +3,7 @@ package com.gitlab.amirmehdi.domain;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -34,6 +35,8 @@ public class Token implements Serializable {
     private Broker broker;
 
     @Column(name = "created_at")
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
