@@ -94,17 +94,20 @@ public class OrderService {
         if (order.getId() == null || order.getId() == 0) {
             save(order);
         }
-        if (Broker.FIROOZE_ASIA.equals(order.getBroker())) {
-            try {
-                sahraRequestService.sendOrder(order);
-            } catch (CodeException e) {
-                order.setState(OrderState.ERROR);
-                order.setDescription(e.getCode() + " " + e.getDesc());
-                orderRepository.save(order);
-                return order;
+        if (order.getState() == null || order.getState().equals(OrderState.NONE)) {
+            // send order
+            if (Broker.FIROOZE_ASIA.equals(order.getBroker())) {
+                try {
+                    sahraRequestService.sendOrder(order);
+                } catch (CodeException e) {
+                    order.setState(OrderState.ERROR);
+                    order.setDescription(e.getCode() + " " + e.getDesc());
+                    orderRepository.save(order);
+                    return order;
+                }
+            } else {
+                tadbirService.sendOrder(order);
             }
-        } else {
-            tadbirService.sendOrder(order);
         }
         return order;
     }

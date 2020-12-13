@@ -300,6 +300,9 @@ public class SahraRequestService implements CommandLineRunner {
                     sendOrder(order1);
                 } catch (CodeException e) {
                     log.error(e);
+                    order.setState(OrderState.ERROR);
+                    order.setDescription(e.getCode() + " " + e.getDesc());
+                    orderRepository.save(order);
                 }
             }
             try {
