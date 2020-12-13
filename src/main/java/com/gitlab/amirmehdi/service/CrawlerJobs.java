@@ -32,7 +32,7 @@ public class CrawlerJobs {
     private final RestTemplate restTemplate;
     private final OptionService optionService;
     private final OptionStatsService optionStatsService;
-    private final InstrumentService instrumentRepository;
+    private final InstrumentService instrumentService;
     private final OmidRLCConsumer omidRLCConsumer;
     private final StrategyService strategyService;
     private final Market market;
@@ -50,11 +50,11 @@ public class CrawlerJobs {
     private Date clientsInfoFirstUpdate;
     private Date clientsInfoLastUpdate;
 
-    public CrawlerJobs(@Qualifier("trustedRestTemplate") RestTemplate restTemplate, OptionService optionService, OptionStatsService optionStatsService, InstrumentService instrumentRepository, OmidRLCConsumer omidRLCConsumer, StrategyService strategyService, Market market, MetricService metricService, BoardService boardService) {
+    public CrawlerJobs(@Qualifier("trustedRestTemplate") RestTemplate restTemplate, OptionService optionService, OptionStatsService optionStatsService, InstrumentService instrumentService, OmidRLCConsumer omidRLCConsumer, StrategyService strategyService, Market market, MetricService metricService, BoardService boardService) {
         this.restTemplate = restTemplate;
         this.optionService = optionService;
         this.optionStatsService = optionStatsService;
-        this.instrumentRepository = instrumentRepository;
+        this.instrumentService = instrumentService;
         this.omidRLCConsumer = omidRLCConsumer;
         this.strategyService = strategyService;
         this.market = market;
@@ -100,6 +100,7 @@ public class CrawlerJobs {
         bidAskErrorCount.set(0);
         stockWatchErrorCount.set(0);
         updateOptionsMarket();
+        instrumentUpdater();
     }
 
     private void updateOptionsMarket() {
@@ -154,6 +155,39 @@ public class CrawlerJobs {
             });
     }
 
+    private void instrumentUpdater() {
+        List<String> isins = instrumentService.findAllInstrumentHasNotOption().stream().map(Instrument::getIsin).collect(Collectors.toList());
+        try {
+            omidRLCConsumer.getBulkBidAsk(isins).whenComplete((bidAsks, throwable) -> {
+                if (throwable != null) {
+                    if (!(throwable instanceof ResourceAccessException)) {
+                        throwable.printStackTrace();
+                    }
+                    bidAskErrorCount.incrementAndGet();
+                } else {
+                    log.debug("update bidask instruments {}", isins);
+                    market.saveAllBidAsk(bidAsks);
+                    bidAskSuccessCount.incrementAndGet();
+//                    bidAskLastUpdate = new Date();
+                }
+            });
+            omidRLCConsumer.getBulkStockWatch(isins).whenComplete((stockWatches, throwable) -> {
+                if (throwable != null) {
+                    if (!(throwable instanceof ResourceAccessException)) {
+                        throwable.printStackTrace();
+                    }
+                    stockWatchErrorCount.incrementAndGet();
+                } else {
+                    log.debug("update stockwatch instruments {}", isins);
+                    market.saveAllStockWatch(stockWatches);
+                    stockWatchSuccessCount.incrementAndGet();
+//                    stockWatchLastUpdate = new Date();
+                }
+            });
+        } catch (Exception e) {
+            log.error(e);
+        }
+    }
 
     /**
      * redis initialization or update openInterest and settlementPrice fields
@@ -222,7 +256,7 @@ public class CrawlerJobs {
             .map(bDatum -> {
                 String[] dateInfo = bDatum.getVal().get(1).getV().split("-")[2].split("/");
 
-                Optional<Instrument> instrument = instrumentRepository.findOneByName(bDatum.getDarayi());
+                Optional<Instrument> instrument = instrumentService.findOneByName(bDatum.getDarayi());
                 if (!instrument.isPresent()) {
                     log.warn("instrument {} not found", bDatum.getDarayi());
                     return null;
@@ -339,7 +373,7 @@ public class CrawlerJobs {
         clientsInfoFirstUpdate = new Date();
         clientsInfoSuccessCount.set(0);
         clientsInfoErrorCount.set(0);
-        List<String> isins = instrumentRepository.findAll().stream().map(Instrument::getIsin).collect(Collectors.toList());
+        List<String> isins = instrumentService.findAll().stream().map(Instrument::getIsin).collect(Collectors.toList());
         isins.addAll(optionService.findAllCallAndPutIsins());
 
         List<List<String>> partition = Lists.partition(isins, 50);

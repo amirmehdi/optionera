@@ -53,4 +53,8 @@ public class InstrumentService {
         log.info("instrument save name: {}", instrument.getName());
         instrumentRepository.save(instrument);
     }
+
+    public List<Instrument> findAllInstrumentHasNotOption() {
+        return instrumentRepository.findAllInstrumentHasNotOption();
+    }
 }

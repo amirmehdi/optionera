@@ -31,9 +31,13 @@ public class DayCandleProcessor implements ItemProcessor<Instrument, DayCandleBa
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-        String url = "http://members.tsetmc.com/tsev2/data/InstTradeHistory.aspx?a=0&top=9999999&i=" + item.getTseId();
         DayCandleBatchItem historyBatchItem = new DayCandleBatchItem();
         historyBatchItem.setIsin(item.getIsin());
+        if (item.getTseId() == null) {
+            return historyBatchItem;
+        }
+        String url = "http://members.tsetmc.com/tsev2/data/InstTradeHistory.aspx?a=0&top=9999999&i=" + item.getTseId();
+
 
         StopWatch stopWatch = new StopWatch("get candle for isin: " + item.getIsin());
         stopWatch.start("load data");
@@ -54,10 +58,10 @@ public class DayCandleProcessor implements ItemProcessor<Instrument, DayCandleBa
             for (String s : ohlc) {
                 String[] values = s.split("@");
                 LocalDate date2 = DateUtil.convertToLocalDateViaInstant(simpleDateFormat.parse(values[0]));
-                candles.add(new InstrumentTradeHistory(item.getIsin(),date2, Double.valueOf(values[4]).intValue()
+                candles.add(new InstrumentTradeHistory(item.getIsin(), date2, Double.valueOf(values[4]).intValue()
                     , Double.valueOf(values[3]).intValue(), Double.valueOf(values[5]).intValue()
                     , Double.valueOf(values[6]).intValue(), Double.valueOf(values[2]).intValue()
-                    , Double.valueOf(values[1]).intValue(),  Double.valueOf(values[9]).intValue()
+                    , Double.valueOf(values[1]).intValue(), Double.valueOf(values[9]).intValue()
                     , Double.valueOf(values[8]).longValue(), Double.valueOf(values[7]).longValue()));
             }
         }
