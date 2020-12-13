@@ -282,7 +282,7 @@ public class SahraRequestService implements CommandLineRunner {
 
     @Scheduled(cron = "58,59,0,1,2,3 44,45 8 * * *")
     public void headLineOrder() {
-        if (LocalTime.now().isAfter(LocalTime.parse("09:45:04")) || LocalTime.now().isBefore(LocalTime.parse("09:44:57"))) {
+        if (LocalTime.now().isAfter(LocalTime.parse("08:45:04")) || LocalTime.now().isBefore(LocalTime.parse("08:44:57"))) {
             return;
         }
         log.info("headLineOrder fired");
