@@ -20,7 +20,7 @@ public interface InstrumentRepository extends JpaRepository<Instrument, String> 
     List<Instrument> findAllByNameLike(String name, Pageable pageable);
 
     @Query(nativeQuery = true
-    ,value = "select i " +
+    ,value = "select * " +
         "from instrument i where i.isin not in (select distinct(instrument_id) from option)")
     List<Instrument> findAllInstrumentHasNotOption();
 }
