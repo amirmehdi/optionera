@@ -90,7 +90,7 @@ public class ScheduledJobs {
                         .side(order.getSide()))
                     , new Date()
                         .toInstant()
-                        .plus(i * properties.getHeadline().getSleep(), ChronoUnit.SECONDS));
+                        .plus(i * properties.getHeadline().getSleep(), ChronoUnit.MILLIS));
             }
         }
     }

@@ -32,7 +32,7 @@ public class TelegramMessageSender {
             HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(dto), headers);
             restTemplate.exchange(urlString, HttpMethod.POST, request, String.class);
         } catch (Exception e) {
-            log.error("can't request to telegram");
+            log.error("can't request to telegram: {}", dto.getText());
         }
     }
 }
