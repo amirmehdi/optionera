@@ -183,3 +183,7 @@ application:
     clientsInfo: 60000
   strategy:
     unusual1Threshold: -10
+  headline:
+    cron: 57 44 8 * * *
+    repeat: 40
+    sleep: 150

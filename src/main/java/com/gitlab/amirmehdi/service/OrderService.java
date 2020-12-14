@@ -7,9 +7,8 @@ import com.gitlab.amirmehdi.repository.OrderRepository;
 import com.gitlab.amirmehdi.service.dto.sahra.exception.CodeException;
 import com.gitlab.amirmehdi.service.sahra.SahraRequestService;
 import com.gitlab.amirmehdi.web.rest.vm.IsinExecuted;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -26,9 +25,8 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
+@Log4j2
 public class OrderService {
-
-    private final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderRepository orderRepository;
     private final TadbirService tadbirService;
@@ -92,7 +90,7 @@ public class OrderService {
 
     public Order sendOrder(Order order) {
         if (order.getId() == null || order.getId() == 0) {
-            save(order);
+            orderRepository.save(order);
         }
         if (order.getState() == null || order.getState().equals(OrderState.NONE)) {
             // send order
@@ -140,5 +138,9 @@ public class OrderService {
                 isinExecuteds.add(new IsinExecuted(s, orders.stream().mapToInt(Order::getExecuted).sum()));
             });
         return isinExecuteds;
+    }
+
+    public List<Order> findAllByState(OrderState orderState) {
+        return orderRepository.findAllByState(orderState);
     }
 }

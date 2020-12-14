@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Token;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
-import com.gitlab.amirmehdi.domain.enumeration.OrderState;
-import com.gitlab.amirmehdi.repository.OrderRepository;
 import com.gitlab.amirmehdi.repository.TokenRepository;
 import com.gitlab.amirmehdi.service.TelegramMessageSender;
 import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
@@ -27,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
@@ -56,7 +53,6 @@ public class SahraRequestService implements CommandLineRunner {
     private final ObjectMapper objectMapper;
     private final MessageHandler handler;
     private final TelegramMessageSender telegramMessageSender;
-    private final OrderRepository orderRepository;
 
     private final SecurityFields securityFields = new SecurityFields();
     private final String connectUrl = "https://firouzex.ephoenix.ir/realtime/connect?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s";
@@ -67,7 +63,7 @@ public class SahraRequestService implements CommandLineRunner {
     @Value("${application.telegram.healthCheckChat}")
     private String healthCheckChannelId;
 
-    public SahraRequestService(TokenRepository tokenRepository, RestTemplate restTemplate, NegotiateManager negotiateManager, @Qualifier("longPollRestTemplate") RestTemplate longPollRestTemplate, TaskScheduler executor, ObjectMapper objectMapper, MessageHandler handler, TelegramMessageSender telegramMessageSender, OrderRepository orderRepository) {
+    public SahraRequestService(TokenRepository tokenRepository, RestTemplate restTemplate, NegotiateManager negotiateManager, @Qualifier("longPollRestTemplate") RestTemplate longPollRestTemplate, TaskScheduler executor, ObjectMapper objectMapper, MessageHandler handler, TelegramMessageSender telegramMessageSender) {
         this.tokenRepository = tokenRepository;
         this.restTemplate = restTemplate;
         this.negotiateManager = negotiateManager;
@@ -76,7 +72,6 @@ public class SahraRequestService implements CommandLineRunner {
         this.objectMapper = objectMapper;
         this.handler = handler;
         this.telegramMessageSender = telegramMessageSender;
-        this.orderRepository = orderRepository;
     }
 
     @Retryable(
@@ -278,38 +273,5 @@ public class SahraRequestService implements CommandLineRunner {
     private void clearConnection() {
         securityFields.clear();
         telegramMessageSender.sendMessage(new TelegramMessageDto(healthCheckChannelId, "sahra token is expired"));
-    }
-
-    @Scheduled(cron = "58,59,0,1,2,3 44,45 8 * * *")
-    public void headLineOrder() {
-        if (LocalTime.now().isAfter(LocalTime.parse("08:45:04")) || LocalTime.now().isBefore(LocalTime.parse("08:44:57"))) {
-            return;
-        }
-        log.info("headLineOrder fired");
-        for (int i = 0; i < 3; i++) {
-            for (Order order : orderRepository.findAllByState(OrderState.HEADLINE)) {
-                Order order1 = new Order()
-                    .broker(order.getBroker())
-                    .isin(order.getIsin())
-                    .price(order.getPrice())
-                    .quantity(order.getQuantity())
-                    .validity(order.getValidity())
-                    .side(order.getSide());
-                order1 = orderRepository.save(order1);
-                try {
-                    sendOrder(order1);
-                } catch (CodeException e) {
-                    log.error(e);
-                    order.setState(OrderState.ERROR);
-                    order.setDescription(e.getCode() + " " + e.getDesc());
-                    orderRepository.save(order);
-                }
-            }
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException e) {
-                log.error(e);
-            }
-        }
     }
 }

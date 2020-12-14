@@ -143,6 +143,7 @@ public class NegotiateManager {
         String cookies = driver.manage().getCookies().stream().map(cookie -> cookie.getName() + "=" + cookie.getValue()).collect(Collectors.joining(";"));
         String userAgent = (String) ((JavascriptExecutor) driver).executeScript("return navigator.userAgent;");
         driver.quit();
+        log.info("login succeed, token saved");
         Token token = tokenRepository.findTopByBrokerOrderByIdDesc(Broker.FIROOZE_ASIA).get();
         token.setToken(userAgent + "__" + cookies);
         return tokenRepository.save(token);

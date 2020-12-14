@@ -19,10 +19,11 @@ public class ApplicationProperties {
     private final Schedule schedule = new Schedule();
     private final Telegram telegram = new Telegram();
     private final Strategy strategy = new Strategy();
+    private final Headline headline = new Headline();
 
     @Getter
     @Setter
-    public static class Schedule{
+    public static class Schedule {
         private boolean timeCheck;
         private String arbitrage;
         private String market;
@@ -32,15 +33,24 @@ public class ApplicationProperties {
 
     @Getter
     @Setter
-    public static class Telegram{
+    public static class Telegram {
         private String token;
         private String publicChat;
         private String privateChat;
+        private String healthCheckChat;
     }
 
     @Getter
     @Setter
-    public static class Strategy{
+    public static class Strategy {
         private float unusual1Threshold;
+    }
+
+    @Getter
+    @Setter
+    public static class Headline {
+        private String cron;
+        private int repeat;
+        private long sleep;
     }
 }
