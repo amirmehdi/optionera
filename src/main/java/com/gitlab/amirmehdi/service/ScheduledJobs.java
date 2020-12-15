@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Log4j2
@@ -78,7 +79,9 @@ public class ScheduledJobs {
     @Scheduled(cron = "${application.headline.cron}")
     public void headLineOrder() {
         log.info("headLineOrder fired");
-        for (Order order : orderService.findAllByState(OrderState.HEADLINE)) {
+        List<Order> allByState = orderService.findAllByState(OrderState.HEADLINE);
+        //TODO max price and min price by stockwatch
+        for (Order order : allByState) {
             for (int i = 0; i < properties.getHeadline().getRepeat(); i++) {
                 executor.schedule(() -> orderService.sendOrder(
                     new Order()

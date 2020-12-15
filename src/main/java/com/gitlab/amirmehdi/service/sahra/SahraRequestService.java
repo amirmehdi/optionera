@@ -3,6 +3,7 @@ package com.gitlab.amirmehdi.service.sahra;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Token;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
@@ -17,7 +18,6 @@ import com.gitlab.amirmehdi.service.dto.sahra.exception.CodeException;
 import com.gitlab.amirmehdi.util.JalaliCalendar;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -53,6 +53,7 @@ public class SahraRequestService implements CommandLineRunner {
     private final ObjectMapper objectMapper;
     private final MessageHandler handler;
     private final TelegramMessageSender telegramMessageSender;
+    private final ApplicationProperties applicationProperties;
 
     private final SecurityFields securityFields = new SecurityFields();
     private final String connectUrl = "https://firouzex.ephoenix.ir/realtime/connect?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s";
@@ -60,10 +61,8 @@ public class SahraRequestService implements CommandLineRunner {
     private final String sendUrl = "https://firouzex.ephoenix.ir/realtime/send?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s";
     private final String connectionData = "[{\"name\":\"omsclienthub\"}]";
 
-    @Value("${application.telegram.healthCheckChat}")
-    private String healthCheckChannelId;
 
-    public SahraRequestService(TokenRepository tokenRepository, RestTemplate restTemplate, NegotiateManager negotiateManager, @Qualifier("longPollRestTemplate") RestTemplate longPollRestTemplate, TaskScheduler executor, ObjectMapper objectMapper, MessageHandler handler, TelegramMessageSender telegramMessageSender) {
+    public SahraRequestService(TokenRepository tokenRepository, RestTemplate restTemplate, NegotiateManager negotiateManager, @Qualifier("longPollRestTemplate") RestTemplate longPollRestTemplate, TaskScheduler executor, ObjectMapper objectMapper, MessageHandler handler, TelegramMessageSender telegramMessageSender, ApplicationProperties applicationProperties) {
         this.tokenRepository = tokenRepository;
         this.restTemplate = restTemplate;
         this.negotiateManager = negotiateManager;
@@ -72,6 +71,7 @@ public class SahraRequestService implements CommandLineRunner {
         this.objectMapper = objectMapper;
         this.handler = handler;
         this.telegramMessageSender = telegramMessageSender;
+        this.applicationProperties = applicationProperties;
     }
 
     @Retryable(
@@ -84,7 +84,7 @@ public class SahraRequestService implements CommandLineRunner {
             try {
                 token = negotiateManager.login(3);
             } catch (LoginFailedException e) {
-                telegramMessageSender.sendMessage(new TelegramMessageDto(healthCheckChannelId, "sahra can't login. number of attempts reached"));
+                telegramMessageSender.sendMessage(new TelegramMessageDto(applicationProperties.getTelegram().getHealthCheckChat(), "sahra can't login. number of attempts reached"));
                 return;
             }
         }
@@ -100,8 +100,22 @@ public class SahraRequestService implements CommandLineRunner {
         this.securityFields.setGroupToken(firstPollResponse.getGroupsToken());
         firstPollResponse.getM().forEach(handler::handle);
 
-        securityFields.getSchedules().add(executor.scheduleWithFixedDelay(() -> handler.handle(poll()), 100));
+        securityFields.getSchedules().add(executor.scheduleWithFixedDelay(() -> {
+            if (!isHeadlineTime()) {
+                handler.handle(poll());
+            }
+        }, 500));
         securityFields.getSchedules().add(executor.scheduleWithFixedDelay(this::getTime, 60000));
+    }
+
+    private boolean isHeadlineTime() {
+        String[] cron = applicationProperties.getHeadline().getCron().split(" ");
+        int millis = (int) (applicationProperties.getHeadline().getRepeat() * applicationProperties.getHeadline().getSleep());
+
+        LocalTime from = LocalTime.of(Integer.parseInt(cron[2]), Integer.parseInt(cron[1]), Integer.parseInt(cron[0]));
+        LocalTime to = from.plus(millis, ChronoUnit.MILLIS);
+
+        return !LocalTime.now().isBefore(from) && !LocalTime.now().isAfter(to);
     }
 
     //"{\"H\":\"omsclienthub\",\"M\":\"GetAssetsReport\",\"A\":[],\"I\":7}"
@@ -272,6 +286,6 @@ public class SahraRequestService implements CommandLineRunner {
 
     private void clearConnection() {
         securityFields.clear();
-        telegramMessageSender.sendMessage(new TelegramMessageDto(healthCheckChannelId, "sahra token is expired"));
+        telegramMessageSender.sendMessage(new TelegramMessageDto(applicationProperties.getTelegram().getHealthCheckChat(), "sahra token is expired"));
     }
 }
