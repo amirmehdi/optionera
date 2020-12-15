@@ -367,12 +367,12 @@ export const OptionStats = (props: IOptionStatsProps) => {
                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                   <Number>{callStockWatch?.last}</Number></div>
               }/>
-              <Column title={<Translate contentKey="eTradeApp.optionStats.OpenInterest"> Open Interest</Translate>}
+              { /* <Column title={<Translate contentKey="eTradeApp.optionStats.OpenInterest"> Open Interest</Translate>}
                       dataIndex="callStockWatch" key="callStockWatchOpenInterest" render={(callStockWatch, row: any) =>
                 <div
                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                   <Number>{callStockWatch?.openInterest}</Number></div>
-              }/>
+              }/>*/ }
               <Column title={<Translate contentKey="eTradeApp.optionStats.BidVolume"> Bid Volume</Translate>}
                       dataIndex="callBidAsk" key="callBidAskBidQuantity" render={(callBidAsk, row: any) =>
                 <div
@@ -456,13 +456,13 @@ export const OptionStats = (props: IOptionStatsProps) => {
                   <Number>{putBidAsk.askQuantity}</Number></div>
 
               }/>
-              <Column title={<Translate contentKey="eTradeApp.optionStats.OpenInterest"> Open Interest</Translate>}
+              { /* <Column title={<Translate contentKey="eTradeApp.optionStats.OpenInterest"> Open Interest</Translate>}
                       dataIndex="putStockWatch" key="putStockWatchOpenInterest" render={(putStockWatch, row: any) =>
                 <div
                   className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                   <Number>{putStockWatch?.openInterest}</Number></div>
 
-              }/>
+              }/>*/ }
               <Column title={<Translate contentKey="eTradeApp.optionStats.Last"> Last</Translate>}
                       dataIndex="putStockWatch" key="putStockWatchLast" render={(putStockWatch, row: any) =>
                 <div
@@ -480,7 +480,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
                 title={<Translate contentKey="eTradeApp.optionStats.TradeVolume"> Trade Volume</Translate>}
                 dataIndex="option" key="putTradeVolume" render={(option, row: any) =>
                 <div
-                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                   <Number>{option.putTradeVolume}</Number></div>
               }/>
               <Column sorter={true}
