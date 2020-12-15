@@ -1,15 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import {connect} from 'react-redux';
-import {Link, RouteComponentProps} from 'react-router-dom';
-import {Button, Table} from 'reactstrap';
-import {getSortState, TextFormat, Translate} from 'react-jhipster';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { connect } from 'react-redux';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { Button, Col, Row, Table } from 'reactstrap';
+import { Translate, ICrudGetAllAction, TextFormat, getSortState, IPaginationBaseState } from 'react-jhipster';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import {IRootState} from 'app/shared/reducers';
-import {getEntities, reset} from './option.reducer';
-import {APP_LOCAL_DATE_FORMAT} from 'app/config/constants';
-import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
+import { IRootState } from 'app/shared/reducers';
+import { getEntities, reset } from './option.reducer';
+import { IOption } from 'app/shared/model/option.model';
+import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
 export interface IOptionProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -148,6 +149,12 @@ export const Option = (props: IOptionProps) => {
                   <th className="hand" onClick={sort('putMargin')}>
                     <Translate contentKey="eTradeApp.option.putMargin">Put Margin</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
+                  <th className="hand" onClick={sort('callTradeVolume')}>
+                    <Translate contentKey="eTradeApp.option.callTradeVolume">Call Trade Volume</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('putTradeVolume')}>
+                    <Translate contentKey="eTradeApp.option.putTradeVolume">Put Trade Volume</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
                   <th>
                     <Translate contentKey="eTradeApp.option.instrument">Instrument</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
@@ -183,6 +190,8 @@ export const Option = (props: IOptionProps) => {
                     <td>{option.callGainMonthly}</td>
                     <td>{option.callMargin}</td>
                     <td>{option.putMargin}</td>
+                    <td>{option.callTradeVolume}</td>
+                    <td>{option.putTradeVolume}</td>
                     <td>{option.instrument ? <Link to={`instrument/${option.instrument.isin}`}>{option.instrument.name}</Link> : ''}</td>
                     <td className="text-right">
                       <div className="btn-group flex-btn-group-container">

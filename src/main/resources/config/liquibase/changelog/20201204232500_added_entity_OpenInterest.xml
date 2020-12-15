@@ -11,6 +11,11 @@
         Added the entity OpenInterest.
     -->
     <changeSet id="20201204232500-1" author="jhipster">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="open_interest"/>
+            </not>
+        </preConditions>
         <createTable tableName="open_interest">
             <column name="user_id" type="varchar(255)">
                 <constraints nullable="false" />

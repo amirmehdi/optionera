@@ -334,6 +334,18 @@ export const OptionUpdate = (props: IOptionUpdateProps) => {
                 />
               </AvGroup>
               <AvGroup>
+                <Label id="callTradeVolumeLabel" for="option-callTradeVolume">
+                  <Translate contentKey="eTradeApp.option.callTradeVolume">Call Trade Volume</Translate>
+                </Label>
+                <AvField id="option-callTradeVolume" type="string" className="form-control" name="callTradeVolume" />
+              </AvGroup>
+              <AvGroup>
+                <Label id="putTradeVolumeLabel" for="option-putTradeVolume">
+                  <Translate contentKey="eTradeApp.option.putTradeVolume">Put Trade Volume</Translate>
+                </Label>
+                <AvField id="option-putTradeVolume" type="string" className="form-control" name="putTradeVolume" />
+              </AvGroup>
+              <AvGroup>
                 <Label for="option-instrument">
                   <Translate contentKey="eTradeApp.option.instrument">Instrument</Translate>
                 </Label>

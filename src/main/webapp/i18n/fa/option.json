@@ -35,6 +35,8 @@
       "callGainMonthly": "Call Gain Monthly",
       "callMargin": "Call Margin",
       "putMargin": "Put Margin",
+      "callTradeVolume": "Call Trade Volume",
+      "putTradeVolume": "Put Trade Volume",
       "instrument": "دارایی پایه"
     }
   }

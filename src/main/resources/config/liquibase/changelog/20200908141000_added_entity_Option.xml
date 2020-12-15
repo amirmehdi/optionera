@@ -101,6 +101,17 @@
             <column name="call_gain_monthly" type="${floatType}"/>
         </addColumn>
     </changeSet>
+    <changeSet id="20200908141000-1-tradeVolume" author="amirmehdi">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="option" columnName="call_trade_volume"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="option">
+            <column name="call_trade_volume" type="bigint"/>
+            <column name="put_trade_volume" type="bigint"/>
+        </addColumn>
+    </changeSet>
     <changeSet id="20200908141000-1-relations" author="jhipster">
 
     </changeSet>

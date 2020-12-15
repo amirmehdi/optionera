@@ -130,6 +130,14 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "callTradeVolume",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "putTradeVolume",
+            "fieldType": "Long"
         }
     ],
     "relationships": [

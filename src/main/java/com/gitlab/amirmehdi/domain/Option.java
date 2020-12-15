@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,6 +28,7 @@ import java.util.Date;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Getter
 @Setter
+@ToString
 public class Option implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -120,6 +122,11 @@ public class Option implements Serializable {
     @Column(name = "call_gain_monthly", nullable = false)
     private float callGainMonthly;
 
+    @Column(name = "call_trade_volume")
+    private long callTradeVolume;
+
+    @Column(name = "put_trade_volume")
+    private long putTradeVolume;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -242,6 +249,16 @@ public class Option implements Serializable {
         return this;
     }
 
+    public Option callTradeVolume(long callTradeVolume) {
+        this.callTradeVolume = callTradeVolume;
+        return this;
+    }
+
+    public Option putTradeVolume(long putTradeVolume) {
+        this.putTradeVolume = putTradeVolume;
+        return this;
+    }
+
     public Option instrument(Instrument instrument) {
         this.instrument = instrument;
         return this;
@@ -261,31 +278,5 @@ public class Option implements Serializable {
     @Override
     public int hashCode() {
         return 31;
-    }
-
-    @Override
-    public String toString() {
-        return "Option{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", callIsin='" + getCallIsin() + "'" +
-            ", putIsin='" + getPutIsin() + "'" +
-            ", expDate='" + getExpDate() + "'" +
-            ", strikePrice=" + getStrikePrice() +
-            ", contractSize=" + getContractSize() +
-            ", callInTheMoney='" + isCallInTheMoney() + "'" +
-            ", callBreakEven=" + getCallBreakEven() +
-            ", putBreakEven=" + getPutBreakEven() +
-            ", callAskToBS=" + getCallAskToBS() +
-            ", putAskToBS=" + getPutAskToBS() +
-            ", callLeverage=" + getCallLeverage() +
-            ", putLeverage=" + getPutLeverage() +
-            ", callHedge=" + getCallHedge() +
-            ", callIndifference=" + getCallIndifference() +
-            ", callGain=" + getCallGain() +
-            ", callGainMonthly=" + getCallGainMonthly() +
-            ", callMargin=" + getCallMargin() +
-            ", putMargin=" + getPutMargin() +
-            "}";
     }
 }

@@ -11,6 +11,11 @@
         Added the entity Portfolio.
     -->
     <changeSet id="20201204232400-1" author="jhipster">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="portfolio"/>
+            </not>
+        </preConditions>
         <createTable tableName="portfolio">
             <column name="user_id" type="varchar(255)">
                 <constraints nullable="false" />

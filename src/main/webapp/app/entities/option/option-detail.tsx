@@ -1,13 +1,14 @@
-import React, {useEffect} from 'react';
-import {connect} from 'react-redux';
-import {Link, RouteComponentProps} from 'react-router-dom';
-import {Button, Col, Row} from 'reactstrap';
-import {TextFormat, Translate} from 'react-jhipster';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { Button, Row, Col } from 'reactstrap';
+import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import {IRootState} from 'app/shared/reducers';
-import {getEntity} from './option.reducer';
-import {APP_LOCAL_DATE_FORMAT} from 'app/config/constants';
+import { IRootState } from 'app/shared/reducers';
+import { getEntity } from './option.reducer';
+import { IOption } from 'app/shared/model/option.model';
+import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
 export interface IOptionDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -140,6 +141,18 @@ export const OptionDetail = (props: IOptionDetailProps) => {
             </span>
           </dt>
           <dd>{optionEntity.putMargin}</dd>
+          <dt>
+            <span id="callTradeVolume">
+              <Translate contentKey="eTradeApp.option.callTradeVolume">Call Trade Volume</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.callTradeVolume}</dd>
+          <dt>
+            <span id="putTradeVolume">
+              <Translate contentKey="eTradeApp.option.putTradeVolume">Put Trade Volume</Translate>
+            </span>
+          </dt>
+          <dd>{optionEntity.putTradeVolume}</dd>
           <dt>
             <Translate contentKey="eTradeApp.option.instrument">Instrument</Translate>
           </dt>

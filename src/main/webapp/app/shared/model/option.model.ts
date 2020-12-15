@@ -24,6 +24,8 @@ export interface IOption {
   callGainMonthly?: number;
   callMargin?: number;
   putMargin?: number;
+  callTradeVolume?: number;
+  putTradeVolume?: number;
   instrument?: IInstrument;
 }
 

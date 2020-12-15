@@ -347,13 +347,19 @@ export const OptionStats = (props: IOptionStatsProps) => {
                 <div
                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
                   <Number>{option.callLeverage}</Number></div>
-
               }/>
-              <Column title={<Translate contentKey="eTradeApp.optionStats.TradeVolume"> Trade Volume</Translate>}
-                      dataIndex="callStockWatch" key="callStockWatchTradeVolume" render={(callStockWatch, row: any) =>
+              <Column
+                width={70}
+                sorter={true}
+                sortDirections={['ascend', 'descend']}
+                sortOrder={paginationState.sort === 'callTradeVolume' ?
+                  paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                showSorterTooltip={false}
+                title={<Translate contentKey="eTradeApp.optionStats.TradeVolume"> Trade Volume</Translate>}
+                dataIndex="option" key="callTradeVolume" render={(option, row: any) =>
                 <div
                   className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                  <Number>{callStockWatch?.tradeVolume}</Number></div>
+                  <Number>{option.callTradeVolume}</Number></div>
               }/>
               <Column title={<Translate contentKey="eTradeApp.optionStats.Last"> Last</Translate>}
                       dataIndex="callStockWatch" key="callStockWatchLast" render={(callStockWatch, row: any) =>
@@ -464,11 +470,18 @@ export const OptionStats = (props: IOptionStatsProps) => {
                   <Number>{putStockWatch?.last}</Number></div>
 
               }/>
-              <Column title={<Translate contentKey="eTradeApp.optionStats.TradeVolume"> Trade Volume</Translate>}
-                      dataIndex="putStockWatch" key="putStockWatchTradeVolume" render={(putStockWatch, row: any) =>
+              <Column
+                width={70}
+                sorter={true}
+                sortDirections={['ascend', 'descend']}
+                sortOrder={paginationState.sort === 'putTradeVolume' ?
+                  paginationState.order === 'asc' ? 'descend' : 'ascend' : undefined}
+                showSorterTooltip={false}
+                title={<Translate contentKey="eTradeApp.optionStats.TradeVolume"> Trade Volume</Translate>}
+                dataIndex="option" key="putTradeVolume" render={(option, row: any) =>
                 <div
-                  className={`padding-col ${!row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
-                  <Number>{putStockWatch?.tradeVolume}</Number></div>
+                  className={`padding-col ${row.option.callInTheMoney ? 'bg-blue-table' : ''}`}>
+                  <Number>{option.putTradeVolume}</Number></div>
               }/>
               <Column sorter={true}
                       sortDirections={['ascend', 'descend']}

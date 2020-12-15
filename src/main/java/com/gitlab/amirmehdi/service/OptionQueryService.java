@@ -140,6 +140,12 @@ public class OptionQueryService extends QueryService<Option> {
             if (criteria.getPutMargin() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getPutMargin(), Option_.putMargin));
             }
+            if (criteria.getCallTradeVolume() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCallTradeVolume(), Option_.callTradeVolume));
+            }
+            if (criteria.getPutTradeVolume() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getPutTradeVolume(), Option_.putTradeVolume));
+            }
             if (criteria.getInstrumentId() != null) {
                 specification = specification.and(buildSpecification(criteria.getInstrumentId(),
                     root -> root.join(Option_.instrument, JoinType.LEFT).get(Instrument_.isin)));

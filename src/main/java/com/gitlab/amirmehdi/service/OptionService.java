@@ -136,7 +136,9 @@ public class OptionService {
             .callGain(optionStats.getCallGain())
             .callGainMonthly(optionStats.getCallGainMonthly())
             .callMargin(optionStats.getCallMargin())
-            .putMargin(optionStats.getPutMargin());
+            .putMargin(optionStats.getPutMargin())
+            .callTradeVolume(optionStats.getCallStockWatch().getTradeVolume())
+            .putTradeVolume(optionStats.getPutStockWatch().getTradeVolume());
         optionRepository.save(optionStats.getOption());
     }
 
