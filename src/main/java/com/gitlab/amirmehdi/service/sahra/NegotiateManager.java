@@ -10,8 +10,8 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -105,16 +105,16 @@ public class NegotiateManager {
 
     public Token login(long attemptNumber) {
         WebDriver driver = null;
-        WebDriverManager.chromedriver().setup();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("start-maximized");
+        WebDriverManager.firefoxdriver().setup();
+        FirefoxOptions options = new FirefoxOptions();
+//        options.addArguments("start-maximized");
         options.addArguments("enable-automation");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-infobars");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-browser-side-navigation");
         options.addArguments("--disable-gpu");
-        driver = new ChromeDriver(options);
+        driver = new FirefoxDriver(options);
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
         driver.get("https://firouzex.ephoenix.ir/");
         String captchaNum;
