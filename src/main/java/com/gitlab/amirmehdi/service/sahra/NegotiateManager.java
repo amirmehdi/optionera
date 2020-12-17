@@ -105,7 +105,7 @@ public class NegotiateManager {
 
     public Token login(long attemptNumber) {
         WebDriver driver = null;
-        WebDriverManager.chromedriver().browserVersion("87.0.4280.88").setup();
+        WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("start-maximized");
         options.addArguments("enable-automation");
