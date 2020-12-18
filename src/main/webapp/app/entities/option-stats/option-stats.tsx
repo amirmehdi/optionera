@@ -125,6 +125,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
         sort: sorter.columnKey
       });
       setSorting(true);
+      setCheckAutoRefresh(false);
     } else if (sorter.column === undefined) {
       setPaginationState({
         ...paginationState,
@@ -133,6 +134,7 @@ export const OptionStats = (props: IOptionStatsProps) => {
         sort: sorter.columnKey
       });
       setSorting(true);
+      setCheckAutoRefresh(false);
       props.reset();
     }
   };
