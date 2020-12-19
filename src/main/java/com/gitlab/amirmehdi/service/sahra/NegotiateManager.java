@@ -159,7 +159,9 @@ public class NegotiateManager {
             e.printStackTrace();
             throw new LoginFailedException();
         } finally {
-            driver.quit();
+            if (driver != null) {
+                driver.quit();
+            }
         }
     }
 
