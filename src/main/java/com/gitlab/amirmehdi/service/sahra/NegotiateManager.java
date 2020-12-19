@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.service.sahra;
 
+import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.domain.Token;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.repository.TokenRepository;
@@ -13,7 +14,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +43,8 @@ public class NegotiateManager {
     private final String startUrl = "https://firouzex.ephoenix.ir/realtime/start?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s&_=%s";
     private final String connectionData = "[{\"name\":\"omsclienthub\"}]";
 
-    @Value("${application.selenium-hub-grid}")
-    private String seleniumHubGrid;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
     public NegotiateManager(RestTemplate restTemplate, TokenRepository tokenRepository) {
         this.restTemplate = restTemplate;
@@ -120,7 +121,7 @@ public class NegotiateManager {
         options.addArguments("--disable-gpu");
         WebDriver driver = null;
         try {
-            URL browserAddress = new URL(seleniumHubGrid + "/wd/hub");
+            URL browserAddress = new URL(applicationProperties.getSeleniumHubGrid() + "/wd/hub");
             driver = new RemoteWebDriver(browserAddress, options);
         } catch (MalformedURLException e) {
             e.printStackTrace();

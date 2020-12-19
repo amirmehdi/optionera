@@ -169,8 +169,8 @@ jhipster:
 # ===================================================================
 
 application:
-  oa-base-url: https://api.algo.ir
-  selenium-hub-grid: http://localhost:4444
+  oaBaseUrl: https://api.algo.ir
+  seleniumHubGrid: http://localhost:4444
   telegram:
     token: 1154072624:AAE9byP-2eXRfxZPHeZ92ffjd0LaO4Ys1iA
     publicChat: -1001468700748

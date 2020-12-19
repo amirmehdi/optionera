@@ -15,6 +15,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 public class ApplicationProperties {
     private String oaBaseUrl;
+    private String seleniumHubGrid;
 
     private final Schedule schedule = new Schedule();
     private final Telegram telegram = new Telegram();
