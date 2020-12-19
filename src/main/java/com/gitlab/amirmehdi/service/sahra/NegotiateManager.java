@@ -10,9 +10,10 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -38,6 +41,9 @@ public class NegotiateManager {
     private final String negotiateUrl = "https://firouzex.ephoenix.ir/realtime/negotiate?clientProtocol=1.5&token=&connectionData={connectionData}&_={nano}";
     private final String startUrl = "https://firouzex.ephoenix.ir/realtime/start?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s&_=%s";
     private final String connectionData = "[{\"name\":\"omsclienthub\"}]";
+
+    @Value("${application.selenium-hub-grid}")
+    private String seleniumHubGrid;
 
     public NegotiateManager(RestTemplate restTemplate, TokenRepository tokenRepository) {
         this.restTemplate = restTemplate;
@@ -104,17 +110,22 @@ public class NegotiateManager {
     }
 
     public Token login(long attemptNumber) {
-        WebDriver driver = null;
-        WebDriverManager.firefoxdriver().setup();
-        FirefoxOptions options = new FirefoxOptions();
-//        options.addArguments("start-maximized");
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
         options.addArguments("enable-automation");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-infobars");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-browser-side-navigation");
         options.addArguments("--disable-gpu");
-        driver = new FirefoxDriver(options);
+        WebDriver driver = null;
+        try {
+            URL browserAddress = new URL(seleniumHubGrid + "/wd/hub");
+            driver = new RemoteWebDriver(browserAddress, options);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            throw new LoginFailedException();
+        }
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
         driver.get("https://firouzex.ephoenix.ir/");
         String captchaNum;

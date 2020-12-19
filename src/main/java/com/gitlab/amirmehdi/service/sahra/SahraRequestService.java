@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
@@ -268,6 +269,11 @@ public class SahraRequestService implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        sahraRefreshToken();
+    }
+
+    @Scheduled(cron = "0 1 8 * * *")
+    private void sahraRefreshToken() {
         try {
             connectAndStart();
         } catch (HttpClientErrorException e) {
