@@ -123,42 +123,44 @@ public class NegotiateManager {
         try {
             URL browserAddress = new URL(applicationProperties.getSeleniumHubGrid() + "/wd/hub");
             driver = new RemoteWebDriver(browserAddress, options);
+
+            driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+            driver.get("https://firouzex.ephoenix.ir/");
+            String captchaNum;
+            captchaNum = getCaptcha(driver);
+            WebElement username = driver.findElement(By.id("keyboard-user"));
+            WebElement password = driver.findElement(By.id("keyboard-pass"));
+            WebElement captcha = driver.findElement(By.xpath("//*[@id=\"login-form\"]/div[4]/input"));
+            WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"login-form\"]/div[6]/button"));
+            username.sendKeys("fsdro17580");
+            password.sendKeys("ciBpyg-bodmax-4socmo");
+            captcha.sendKeys(captchaNum);
+            loginButton.click();
+            new WebDriverWait(driver, 20).until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                log.error(e);
+            }
+            if (driver.manage().getCookies().size() < 2) {
+                if (attemptNumber > 0) {
+                    attemptNumber--;
+                    return login(attemptNumber);
+                }
+                throw new LoginFailedException();
+            }
+            String cookies = driver.manage().getCookies().stream().map(cookie -> cookie.getName() + "=" + cookie.getValue()).collect(Collectors.joining(";"));
+            String userAgent = (String) ((JavascriptExecutor) driver).executeScript("return navigator.userAgent;");
+            log.info("login succeed, token saved");
+            Token token = tokenRepository.findTopByBrokerOrderByIdDesc(Broker.FIROOZE_ASIA).get();
+            token.setToken(userAgent + "__" + cookies);
+            return tokenRepository.save(token);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             throw new LoginFailedException();
+        } finally {
+            driver.quit();
         }
-        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-        driver.get("https://firouzex.ephoenix.ir/");
-        String captchaNum;
-        captchaNum = getCaptcha(driver);
-        WebElement username = driver.findElement(By.id("keyboard-user"));
-        WebElement password = driver.findElement(By.id("keyboard-pass"));
-        WebElement captcha = driver.findElement(By.xpath("//*[@id=\"login-form\"]/div[4]/input"));
-        WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"login-form\"]/div[6]/button"));
-        username.sendKeys("fsdro17580");
-        password.sendKeys("ciBpyg-bodmax-4socmo");
-        captcha.sendKeys(captchaNum);
-        loginButton.click();
-        new WebDriverWait(driver, 20).until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            log.error(e);
-        }
-        if (driver.manage().getCookies().size() < 2) {
-            if (attemptNumber > 0) {
-                attemptNumber--;
-                return login(attemptNumber);
-            }
-            throw new LoginFailedException();
-        }
-        String cookies = driver.manage().getCookies().stream().map(cookie -> cookie.getName() + "=" + cookie.getValue()).collect(Collectors.joining(";"));
-        String userAgent = (String) ((JavascriptExecutor) driver).executeScript("return navigator.userAgent;");
-        driver.quit();
-        log.info("login succeed, token saved");
-        Token token = tokenRepository.findTopByBrokerOrderByIdDesc(Broker.FIROOZE_ASIA).get();
-        token.setToken(userAgent + "__" + cookies);
-        return tokenRepository.save(token);
     }
 
     private String getCaptcha(WebDriver driver) {
