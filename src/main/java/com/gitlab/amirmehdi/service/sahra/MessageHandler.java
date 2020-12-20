@@ -88,6 +88,10 @@ public class MessageHandler {
                     OrderEdit orderEdit = new OrderEdit((ArrayList<Object>) pollMessageResponse.getVal().get(0));
                     orderEditHandler(orderEdit);
                 break;
+            case "orderError":
+                    OrderError orderError = new OrderError((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                    orderErrorHandler(orderError);
+                break;
             case "orderExecution":
                 //PollMessageResponse(hub=OmsClientHub, method=orderExecution, val=[[1170000000364932, 1481, 3, 1, 0, 0, 1481, 18900, 28094805]])
                 OrderExecution orderExecution = new OrderExecution((ArrayList<Object>) pollMessageResponse.getVal().get(0));
@@ -200,6 +204,18 @@ public class MessageHandler {
         Order order = orderOptional.get();
 //        order.setExecuted(order.getQuantity() - stateChangeData.getRemain());
         order.setState(stateChangeData.getOrderStatus().toOrderState());
+        orderRepository.save(order);
+    }
+
+    private void orderErrorHandler(OrderError orderError) {
+        Optional<Order> orderOptional = orderRepository.findByBrokerAndOmsId(Broker.FIROOZE_ASIA, orderError.getStateChangeData().getId());
+        if (!orderOptional.isPresent()) {
+            log.info("order not found : {}", orderError);
+            return;
+        }
+        Order order = orderOptional.get();
+        order.setState(orderError.getStateChangeData().getOrderStatus().toOrderState());
+        order.setDescription(orderError.getErrorMessage());
         orderRepository.save(order);
     }
 

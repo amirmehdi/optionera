@@ -43,7 +43,7 @@ public class CaptchaDecoder {
     //for sahra
     public String mode2Captcha(String fileName, String type) throws IOException, InterruptedException {
         Runtime.getRuntime().exec(
-                "convert " + fileName + type + " -colorspace Gray -blur 3x1 -level 20% -channel rgb -auto-level " + fileName + ".png");
+            "convert " + fileName + type + " -colorspace Gray -blur 3x1 -level 20% -channel rgb -auto-level " + fileName + ".png");
         Process process = Runtime.getRuntime().exec("tesseract " + fileName + ".png" + " - --psm 6 digits");
         String captcha = getProcessOutput(process);
         return captcha.replaceAll("\\D+", "");
@@ -52,7 +52,7 @@ public class CaptchaDecoder {
     public String getProcessOutput(Process process) throws IOException, InterruptedException {
         StringBuilder output = new StringBuilder();
         BufferedReader reader = new BufferedReader(
-                new InputStreamReader(process.getInputStream()));
+            new InputStreamReader(process.getInputStream()));
 
         String line;
         while ((line = reader.readLine()) != null) {
@@ -68,10 +68,10 @@ public class CaptchaDecoder {
 
     public String getPopularElement(List<String> a) {
         return a.stream()
-                .collect(Collectors.groupingBy(s -> s, Collectors.counting()))
-                .entrySet()
-                .stream()
-                .max(Map.Entry.comparingByValue())
-                .get().getKey();
+            .collect(Collectors.groupingBy(s -> s, Collectors.counting()))
+            .entrySet()
+            .stream()
+            .max(Map.Entry.comparingByValue())
+            .get().getKey();
     }
 }
