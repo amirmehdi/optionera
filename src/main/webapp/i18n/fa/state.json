@@ -1,0 +1,14 @@
+{
+  "eTradeApp": {
+    "State": {
+      "null": "ارسال به کارگزاری",
+      "NONE": "ارسال به هسته",
+      "ACTIVE": "فعال",
+      "EXECUTED": "معامله شده",
+      "CANCELLED": "لغو شده",
+      "ERROR": "خطا",
+      "HEADLINE": "سرخطی",
+      "PARTIALLY_EXECUTED": "قسمتی معامله شده"
+    }
+  }
+}
