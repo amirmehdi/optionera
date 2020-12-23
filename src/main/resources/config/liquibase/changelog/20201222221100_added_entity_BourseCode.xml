@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <!--
+        Added the entity BourseCode.
+    -->
+    <changeSet id="20201222221100-1" author="jhipster">
+        <createTable tableName="bourse_code">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="broker" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="code" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="username" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="buying_power" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="blocked" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="remain" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="credit" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+    </changeSet>
+    <changeSet id="20201222221100-1-token" author="amirmehdi">
+        <addColumn tableName="bourse_code">
+            <column name="token_id" type="bigint">
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_bourse_code_token_id" />
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20201222221100-1-relations" author="jhipster">
+
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+
+    <!--
+        Load sample data generated with Faker.js
+        - This data can be easily edited using a CSV editor (or even MS Excel) and
+          is located in the 'src/main/resources/config/liquibase/fake-data' directory
+        - By default this data is applied when running with the JHipster 'dev' profile.
+          This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
+          Spring Boot configuration key.
+    -->
+    <changeSet id="20201222221100-1-data" author="jhipster" context="faker">
+        <loadData
+                  file="config/liquibase/fake-data/bourse_code.csv"
+                  separator=";"
+                  tableName="bourse_code">
+            <column name="id" type="numeric"/>
+            <column name="broker" type="string"/>
+            <column name="name" type="string"/>
+            <column name="code" type="string"/>
+            <column name="username" type="string"/>
+            <column name="password" type="string"/>
+            <column name="buying_power" type="numeric"/>
+            <column name="blocked" type="numeric"/>
+            <column name="remain" type="numeric"/>
+            <column name="credit" type="numeric"/>
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>

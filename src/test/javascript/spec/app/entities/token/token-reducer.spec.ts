@@ -11,11 +11,11 @@ import reducer, {
   deleteEntity,
   getEntities,
   getEntity,
-  reset,
-  updateEntity
+  updateEntity,
+  reset
 } from 'app/entities/token/token.reducer';
-import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
-import { defaultValue, IToken } from 'app/shared/model/token.model';
+import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
+import { IToken, defaultValue } from 'app/shared/model/token.model';
 
 describe('Entities reducer tests', () => {
   function isEmpty(element): boolean {

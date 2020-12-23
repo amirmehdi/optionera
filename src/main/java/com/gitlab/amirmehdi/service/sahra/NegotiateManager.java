@@ -1,10 +1,10 @@
 package com.gitlab.amirmehdi.service.sahra;
 
 import com.gitlab.amirmehdi.config.ApplicationProperties;
+import com.gitlab.amirmehdi.domain.BourseCode;
 import com.gitlab.amirmehdi.domain.Token;
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
-import com.gitlab.amirmehdi.repository.TokenRepository;
 import com.gitlab.amirmehdi.service.dto.sahra.NegotiateResponse;
+import com.gitlab.amirmehdi.service.dto.sahra.SecurityFields;
 import com.gitlab.amirmehdi.service.dto.sahra.StartSocketResponse;
 import com.gitlab.amirmehdi.util.CaptchaDecoder;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -38,22 +38,20 @@ import static com.gitlab.amirmehdi.util.UrlEncodingUtil.getEncode;
 @Log4j2
 public class NegotiateManager {
     private final RestTemplate restTemplate;
-    private final TokenRepository tokenRepository;
-    private final String negotiateUrl = "https://firouzex.ephoenix.ir/realtime/negotiate?clientProtocol=1.5&token=&connectionData={connectionData}&_={nano}";
-    private final String startUrl = "https://firouzex.ephoenix.ir/realtime/start?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s&_=%s";
+    private final String negotiateUrl = "%s/realtime/negotiate?clientProtocol=1.5&token=&connectionData={connectionData}&_={nano}";
+    private final String startUrl = "%s/realtime/start?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s&_=%s";
     private final String connectionData = "[{\"name\":\"omsclienthub\"}]";
 
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    public NegotiateManager(RestTemplate restTemplate, TokenRepository tokenRepository) {
+    public NegotiateManager(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        this.tokenRepository = tokenRepository;
     }
 
     public NegotiateResponse negotiate(Token token) {
         ResponseEntity<NegotiateResponse> negotiateResponse =
-            restTemplate.exchange(negotiateUrl
+            restTemplate.exchange(String.format(negotiateUrl,token.getBroker().url)
                 , HttpMethod.GET
                 , new HttpEntity<>(getNegotiateHeaders(token))
                 , NegotiateResponse.class
@@ -62,12 +60,12 @@ public class NegotiateManager {
         return negotiateResponse.getBody();
     }
 
-    public void start(String token, String connectionToken) {
+    public void start(SecurityFields securityFields) {
         ResponseEntity<StartSocketResponse> startResponse =
             restTemplate.exchange(
-                URI.create(String.format(startUrl, getEncode(connectionToken), getEncode(connectionData), System.currentTimeMillis()))
+                URI.create(String.format(startUrl, securityFields.getToken().getBroker().url, getEncode(securityFields.getConnectionToken()), getEncode(connectionData), System.currentTimeMillis()))
                 , HttpMethod.GET
-                , new HttpEntity<>(getStartHeaders(token))
+                , new HttpEntity<>(getStartHeaders(securityFields.getToken().getToken()))
                 , StartSocketResponse.class);
         log.info("start, response:{}", startResponse);
         if (!startResponse.getBody().getResponse().equals("started")) {
@@ -110,7 +108,7 @@ public class NegotiateManager {
         return headers;
     }
 
-    public Token login(long attemptNumber) {
+    public String login(BourseCode bourseCode, long attemptNumber) {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("enable-automation");
@@ -125,15 +123,15 @@ public class NegotiateManager {
             driver = new RemoteWebDriver(browserAddress, options);
 
             driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-            driver.get("https://firouzex.ephoenix.ir/");
+            driver.get(bourseCode.getBroker().url);
             String captchaNum;
             captchaNum = getCaptcha(driver);
             WebElement username = driver.findElement(By.id("keyboard-user"));
             WebElement password = driver.findElement(By.id("keyboard-pass"));
             WebElement captcha = driver.findElement(By.xpath("//*[@id=\"login-form\"]/div[4]/input"));
             WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"login-form\"]/div[6]/button"));
-            username.sendKeys("fsdro17580");
-            password.sendKeys("ciBpyg-bodmax-4socmo");
+            username.sendKeys(bourseCode.getUsername());
+            password.sendKeys(bourseCode.getPassword());
             captcha.sendKeys(captchaNum);
             loginButton.click();
             new WebDriverWait(driver, 20).until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
@@ -145,16 +143,14 @@ public class NegotiateManager {
             if (driver.manage().getCookies().size() < 2) {
                 if (attemptNumber > 0) {
                     attemptNumber--;
-                    return login(attemptNumber);
+                    return login(bourseCode, attemptNumber);
                 }
                 throw new LoginFailedException();
             }
             String cookies = driver.manage().getCookies().stream().map(cookie -> cookie.getName() + "=" + cookie.getValue()).collect(Collectors.joining(";"));
             String userAgent = (String) ((JavascriptExecutor) driver).executeScript("return navigator.userAgent;");
             log.info("login succeed, token saved");
-            Token token = tokenRepository.findTopByBrokerOrderByIdDesc(Broker.FIROOZE_ASIA).get();
-            token.setToken(userAgent + "__" + cookies);
-            return tokenRepository.save(token);
+            return userAgent + "__" + cookies;
         } catch (MalformedURLException e) {
             e.printStackTrace();
             throw new LoginFailedException();

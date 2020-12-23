@@ -89,6 +89,10 @@ export const OrderDetail = (props: IOrderDetailProps) => {
             <Translate contentKey="eTradeApp.order.signal">Signal</Translate>
           </dt>
           <dd>{orderEntity.signal ? orderEntity.signal.id : ''}</dd>
+          <dt>
+            <Translate contentKey="eTradeApp.order.bourseCode">Bourse Code</Translate>
+          </dt>
+          <dd>{orderEntity.bourseCode ? orderEntity.bourseCode.username : ''}</dd>
         </dl>
         <Button tag={Link} to="/order" replace color="info">
           <FontAwesomeIcon icon="arrow-left" />{' '}

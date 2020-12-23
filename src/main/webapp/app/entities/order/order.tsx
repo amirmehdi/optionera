@@ -125,6 +125,9 @@ export const Order = (props: IOrderProps) => {
                   <th>
                     <Translate contentKey="eTradeApp.order.signal">Signal</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
+                  <th>
+                    <Translate contentKey="eTradeApp.order.bourseCode">Bourse Code</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
                   <th />
                 </tr>
               </thead>
@@ -155,6 +158,7 @@ export const Order = (props: IOrderProps) => {
                     <td>{order.executed}</td>
                     <td>{order.description}</td>
                     <td>{order.signal ? <Link to={`signal/${order.signal.id}`}>{order.signal.id}</Link> : ''}</td>
+                    <td>{order.bourseCode ? <Link to={`bourse-code/${order.bourseCode.id}`}>{order.bourseCode.username}</Link> : ''}</td>
                     <td className="text-right">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`${match.url}/${order.id}`} color="info" size="sm">

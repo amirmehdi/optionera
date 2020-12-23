@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @EqualsAndHashCode
 public class AssetCompositeKey implements Serializable {
-    private String userId;
+    private long userId;
     private String isin;
     private LocalDate date;
 }

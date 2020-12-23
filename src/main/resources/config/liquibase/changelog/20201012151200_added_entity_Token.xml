@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-
+    
     <!--
         Added the entity Token.
     -->
@@ -14,13 +16,13 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="token" type="varchar(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
             <column name="broker" type="varchar(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
             <column name="created_at" type="datetime">
-                <constraints nullable="true"/>
+                <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
@@ -42,9 +44,9 @@
     -->
     <changeSet id="20201012151200-1-data" author="jhipster" context="faker">
         <loadData
-                file="config/liquibase/fake-data/token.csv"
-                separator=";"
-                tableName="token">
+                  file="config/liquibase/fake-data/token.csv"
+                  separator=";"
+                  tableName="token">
             <column name="id" type="numeric"/>
             <column name="token" type="string"/>
             <column name="broker" type="string"/>

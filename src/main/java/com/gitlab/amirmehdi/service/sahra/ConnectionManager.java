@@ -2,12 +2,9 @@ package com.gitlab.amirmehdi.service.sahra;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gitlab.amirmehdi.domain.Token;
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.repository.TokenRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpMethod;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.*;
@@ -15,9 +12,6 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.util.concurrent.ExecutionException;
 
 @Service
 @Log4j2
@@ -42,7 +36,7 @@ public class ConnectionManager extends TextWebSocketHandler {
         this.negotiateManager = negotiateManager;
     }
 
-    @Retryable(
+    /*@Retryable(
         value = {Exception.class},
         maxAttempts = 3,
         backoff = @Backoff(value = 3000))
@@ -56,7 +50,7 @@ public class ConnectionManager extends TextWebSocketHandler {
 //        this.session = webSocketClient.doHandshake(this, headers, URI.create(String.format(wsUrl, getEncode(connectionToken), getEncode(connectionData)))).get();
 
         negotiateManager.start(token.getToken(), connectionToken);
-    }
+    }*/
 
     public void sendMessage(Object object) {
         try {

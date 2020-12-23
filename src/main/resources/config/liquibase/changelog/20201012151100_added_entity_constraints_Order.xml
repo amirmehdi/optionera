@@ -15,4 +15,13 @@
                                  referencedTableName="signal"/>
 
     </changeSet>
+    <changeSet id="20201012151100-3" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="bourse_code_id"
+                                 baseTableName="orders"
+                                 constraintName="fk_orders_bourse_code_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="bourse_code"/>
+
+    </changeSet>
 </databaseChangeLog>

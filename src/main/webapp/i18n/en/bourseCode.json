@@ -1,0 +1,31 @@
+{
+  "eTradeApp": {
+    "bourseCode": {
+      "home": {
+        "title": "Bourse Codes",
+        "createLabel": "Create a new Bourse Code",
+        "createOrEditLabel": "Create or edit a Bourse Code",
+        "notFound": "No Bourse Codes found"
+      },
+      "created": "A new Bourse Code is created with identifier {{ param }}",
+      "updated": "A Bourse Code is updated with identifier {{ param }}",
+      "deleted": "A Bourse Code is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Bourse Code {{ id }}?"
+      },
+      "detail": {
+        "title": "Bourse Code"
+      },
+      "broker": "Broker",
+      "name": "Name",
+      "code": "Code",
+      "username": "Username",
+      "password": "Password",
+      "buyingPower": "Buying Power",
+      "blocked": "Blocked",
+      "remain": "Remain",
+      "credit": "Credit",
+      "token": "Token"
+    }
+  }
+}

@@ -1,14 +1,15 @@
-import React, {useEffect} from 'react';
-import {connect} from 'react-redux';
-import {RouteComponentProps} from 'react-router-dom';
-import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
-import {Translate} from 'react-jhipster';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {IRootState} from 'app/shared/reducers';
-import {deleteEntity, getEntity} from './token.reducer';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export interface ITokenDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
-}
+import { IToken } from 'app/shared/model/token.model';
+import { IRootState } from 'app/shared/reducers';
+import { getEntity, deleteEntity } from './token.reducer';
+
+export interface ITokenDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const TokenDeleteDialog = (props: ITokenDeleteDialogProps) => {
   useEffect(() => {
@@ -29,25 +30,25 @@ export const TokenDeleteDialog = (props: ITokenDeleteDialogProps) => {
     props.deleteEntity(props.tokenEntity.id);
   };
 
-  const {tokenEntity} = props;
+  const { tokenEntity } = props;
   return (
     <Modal isOpen toggle={handleClose}>
       <ModalHeader toggle={handleClose}>
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
       <ModalBody id="eTradeApp.token.delete.question">
-        <Translate contentKey="eTradeApp.token.delete.question" interpolate={{id: tokenEntity.id}}>
+        <Translate contentKey="eTradeApp.token.delete.question" interpolate={{ id: tokenEntity.id }}>
           Are you sure you want to delete this Token?
         </Translate>
       </ModalBody>
       <ModalFooter>
         <Button color="secondary" onClick={handleClose}>
-          <FontAwesomeIcon icon="ban"/>
+          <FontAwesomeIcon icon="ban" />
           &nbsp;
           <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
         <Button id="jhi-confirm-delete-token" color="danger" onClick={confirmDelete}>
-          <FontAwesomeIcon icon="trash"/>
+          <FontAwesomeIcon icon="trash" />
           &nbsp;
           <Translate contentKey="entity.action.delete">Delete</Translate>
         </Button>
@@ -56,12 +57,12 @@ export const TokenDeleteDialog = (props: ITokenDeleteDialogProps) => {
   );
 };
 
-const mapStateToProps = ({token}: IRootState) => ({
+const mapStateToProps = ({ token }: IRootState) => ({
   tokenEntity: token.entity,
   updateSuccess: token.updateSuccess
 });
 
-const mapDispatchToProps = {getEntity, deleteEntity};
+const mapDispatchToProps = { getEntity, deleteEntity };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

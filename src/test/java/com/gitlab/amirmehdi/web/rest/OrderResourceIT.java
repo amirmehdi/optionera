@@ -3,12 +3,12 @@ package com.gitlab.amirmehdi.web.rest;
 import com.gitlab.amirmehdi.ETradeApp;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Signal;
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
-import com.gitlab.amirmehdi.domain.enumeration.Side;
-import com.gitlab.amirmehdi.domain.enumeration.Validity;
+import com.gitlab.amirmehdi.domain.BourseCode;
 import com.gitlab.amirmehdi.repository.OrderRepository;
-import com.gitlab.amirmehdi.service.OrderQueryService;
 import com.gitlab.amirmehdi.service.OrderService;
+import com.gitlab.amirmehdi.service.dto.OrderCriteria;
+import com.gitlab.amirmehdi.service.OrderQueryService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -27,6 +26,10 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.gitlab.amirmehdi.domain.enumeration.Validity;
+import com.gitlab.amirmehdi.domain.enumeration.Side;
+import com.gitlab.amirmehdi.domain.enumeration.Broker;
+import com.gitlab.amirmehdi.domain.enumeration.OrderState;
 /**
  * Integration tests for the {@link OrderResource} REST controller.
  */
@@ -59,6 +62,16 @@ public class OrderResourceIT {
     private static final String DEFAULT_OMS_ID = "AAAAAAAAAA";
     private static final String UPDATED_OMS_ID = "BBBBBBBBBB";
 
+    private static final OrderState DEFAULT_STATE = OrderState.NONE;
+    private static final OrderState UPDATED_STATE = OrderState.ACTIVE;
+
+    private static final Integer DEFAULT_EXECUTED = 1;
+    private static final Integer UPDATED_EXECUTED = 2;
+    private static final Integer SMALLER_EXECUTED = 1 - 1;
+
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
     @Autowired
     private OrderRepository orderRepository;
 
@@ -78,7 +91,7 @@ public class OrderResourceIT {
 
     /**
      * Create an entity for this test.
-     * <p>
+     *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -90,13 +103,25 @@ public class OrderResourceIT {
             .validity(DEFAULT_VALIDITY)
             .side(DEFAULT_SIDE)
             .broker(DEFAULT_BROKER)
-            .omsId(DEFAULT_OMS_ID);
+            .omsId(DEFAULT_OMS_ID)
+            .state(DEFAULT_STATE)
+            .executed(DEFAULT_EXECUTED)
+            .description(DEFAULT_DESCRIPTION);
+        // Add required entity
+        BourseCode bourseCode;
+        if (TestUtil.findAll(em, BourseCode.class).isEmpty()) {
+            bourseCode = BourseCodeResourceIT.createEntity(em);
+            em.persist(bourseCode);
+            em.flush();
+        } else {
+            bourseCode = TestUtil.findAll(em, BourseCode.class).get(0);
+        }
+        order.setBourseCode(bourseCode);
         return order;
     }
-
     /**
      * Create an updated entity for this test.
-     * <p>
+     *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -108,7 +133,20 @@ public class OrderResourceIT {
             .validity(UPDATED_VALIDITY)
             .side(UPDATED_SIDE)
             .broker(UPDATED_BROKER)
-            .omsId(UPDATED_OMS_ID);
+            .omsId(UPDATED_OMS_ID)
+            .state(UPDATED_STATE)
+            .executed(UPDATED_EXECUTED)
+            .description(UPDATED_DESCRIPTION);
+        // Add required entity
+        BourseCode bourseCode;
+        if (TestUtil.findAll(em, BourseCode.class).isEmpty()) {
+            bourseCode = BourseCodeResourceIT.createUpdatedEntity(em);
+            em.persist(bourseCode);
+            em.flush();
+        } else {
+            bourseCode = TestUtil.findAll(em, BourseCode.class).get(0);
+        }
+        order.setBourseCode(bourseCode);
         return order;
     }
 
@@ -139,6 +177,9 @@ public class OrderResourceIT {
         assertThat(testOrder.getSide()).isEqualTo(DEFAULT_SIDE);
         assertThat(testOrder.getBroker()).isEqualTo(DEFAULT_BROKER);
         assertThat(testOrder.getOmsId()).isEqualTo(DEFAULT_OMS_ID);
+        assertThat(testOrder.getState()).isEqualTo(DEFAULT_STATE);
+        assertThat(testOrder.getExecuted()).isEqualTo(DEFAULT_EXECUTED);
+        assertThat(testOrder.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
     @Test
@@ -286,9 +327,12 @@ public class OrderResourceIT {
             .andExpect(jsonPath("$.[*].validity").value(hasItem(DEFAULT_VALIDITY.toString())))
             .andExpect(jsonPath("$.[*].side").value(hasItem(DEFAULT_SIDE.toString())))
             .andExpect(jsonPath("$.[*].broker").value(hasItem(DEFAULT_BROKER.toString())))
-            .andExpect(jsonPath("$.[*].omsId").value(hasItem(DEFAULT_OMS_ID)));
+            .andExpect(jsonPath("$.[*].omsId").value(hasItem(DEFAULT_OMS_ID)))
+            .andExpect(jsonPath("$.[*].state").value(hasItem(DEFAULT_STATE.toString())))
+            .andExpect(jsonPath("$.[*].executed").value(hasItem(DEFAULT_EXECUTED)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
     }
-
+    
     @Test
     @Transactional
     public void getOrder() throws Exception {
@@ -306,7 +350,10 @@ public class OrderResourceIT {
             .andExpect(jsonPath("$.validity").value(DEFAULT_VALIDITY.toString()))
             .andExpect(jsonPath("$.side").value(DEFAULT_SIDE.toString()))
             .andExpect(jsonPath("$.broker").value(DEFAULT_BROKER.toString()))
-            .andExpect(jsonPath("$.omsId").value(DEFAULT_OMS_ID));
+            .andExpect(jsonPath("$.omsId").value(DEFAULT_OMS_ID))
+            .andExpect(jsonPath("$.state").value(DEFAULT_STATE.toString()))
+            .andExpect(jsonPath("$.executed").value(DEFAULT_EXECUTED))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
     }
 
 
@@ -380,8 +427,7 @@ public class OrderResourceIT {
         // Get all the orderList where isin is null
         defaultOrderShouldNotBeFound("isin.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
     public void getAllOrdersByIsinContainsSomething() throws Exception {
         // Initialize the database
@@ -825,8 +871,7 @@ public class OrderResourceIT {
         // Get all the orderList where omsId is null
         defaultOrderShouldNotBeFound("omsId.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
     public void getAllOrdersByOmsIdContainsSomething() throws Exception {
         // Initialize the database
@@ -855,6 +900,241 @@ public class OrderResourceIT {
 
     @Test
     @Transactional
+    public void getAllOrdersByStateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where state equals to DEFAULT_STATE
+        defaultOrderShouldBeFound("state.equals=" + DEFAULT_STATE);
+
+        // Get all the orderList where state equals to UPDATED_STATE
+        defaultOrderShouldNotBeFound("state.equals=" + UPDATED_STATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByStateIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where state not equals to DEFAULT_STATE
+        defaultOrderShouldNotBeFound("state.notEquals=" + DEFAULT_STATE);
+
+        // Get all the orderList where state not equals to UPDATED_STATE
+        defaultOrderShouldBeFound("state.notEquals=" + UPDATED_STATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByStateIsInShouldWork() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where state in DEFAULT_STATE or UPDATED_STATE
+        defaultOrderShouldBeFound("state.in=" + DEFAULT_STATE + "," + UPDATED_STATE);
+
+        // Get all the orderList where state equals to UPDATED_STATE
+        defaultOrderShouldNotBeFound("state.in=" + UPDATED_STATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByStateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where state is not null
+        defaultOrderShouldBeFound("state.specified=true");
+
+        // Get all the orderList where state is null
+        defaultOrderShouldNotBeFound("state.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByExecutedIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where executed equals to DEFAULT_EXECUTED
+        defaultOrderShouldBeFound("executed.equals=" + DEFAULT_EXECUTED);
+
+        // Get all the orderList where executed equals to UPDATED_EXECUTED
+        defaultOrderShouldNotBeFound("executed.equals=" + UPDATED_EXECUTED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByExecutedIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where executed not equals to DEFAULT_EXECUTED
+        defaultOrderShouldNotBeFound("executed.notEquals=" + DEFAULT_EXECUTED);
+
+        // Get all the orderList where executed not equals to UPDATED_EXECUTED
+        defaultOrderShouldBeFound("executed.notEquals=" + UPDATED_EXECUTED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByExecutedIsInShouldWork() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where executed in DEFAULT_EXECUTED or UPDATED_EXECUTED
+        defaultOrderShouldBeFound("executed.in=" + DEFAULT_EXECUTED + "," + UPDATED_EXECUTED);
+
+        // Get all the orderList where executed equals to UPDATED_EXECUTED
+        defaultOrderShouldNotBeFound("executed.in=" + UPDATED_EXECUTED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByExecutedIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where executed is not null
+        defaultOrderShouldBeFound("executed.specified=true");
+
+        // Get all the orderList where executed is null
+        defaultOrderShouldNotBeFound("executed.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByExecutedIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where executed is greater than or equal to DEFAULT_EXECUTED
+        defaultOrderShouldBeFound("executed.greaterThanOrEqual=" + DEFAULT_EXECUTED);
+
+        // Get all the orderList where executed is greater than or equal to UPDATED_EXECUTED
+        defaultOrderShouldNotBeFound("executed.greaterThanOrEqual=" + UPDATED_EXECUTED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByExecutedIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where executed is less than or equal to DEFAULT_EXECUTED
+        defaultOrderShouldBeFound("executed.lessThanOrEqual=" + DEFAULT_EXECUTED);
+
+        // Get all the orderList where executed is less than or equal to SMALLER_EXECUTED
+        defaultOrderShouldNotBeFound("executed.lessThanOrEqual=" + SMALLER_EXECUTED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByExecutedIsLessThanSomething() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where executed is less than DEFAULT_EXECUTED
+        defaultOrderShouldNotBeFound("executed.lessThan=" + DEFAULT_EXECUTED);
+
+        // Get all the orderList where executed is less than UPDATED_EXECUTED
+        defaultOrderShouldBeFound("executed.lessThan=" + UPDATED_EXECUTED);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByExecutedIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where executed is greater than DEFAULT_EXECUTED
+        defaultOrderShouldNotBeFound("executed.greaterThan=" + DEFAULT_EXECUTED);
+
+        // Get all the orderList where executed is greater than SMALLER_EXECUTED
+        defaultOrderShouldBeFound("executed.greaterThan=" + SMALLER_EXECUTED);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllOrdersByDescriptionIsEqualToSomething() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where description equals to DEFAULT_DESCRIPTION
+        defaultOrderShouldBeFound("description.equals=" + DEFAULT_DESCRIPTION);
+
+        // Get all the orderList where description equals to UPDATED_DESCRIPTION
+        defaultOrderShouldNotBeFound("description.equals=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByDescriptionIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where description not equals to DEFAULT_DESCRIPTION
+        defaultOrderShouldNotBeFound("description.notEquals=" + DEFAULT_DESCRIPTION);
+
+        // Get all the orderList where description not equals to UPDATED_DESCRIPTION
+        defaultOrderShouldBeFound("description.notEquals=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByDescriptionIsInShouldWork() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where description in DEFAULT_DESCRIPTION or UPDATED_DESCRIPTION
+        defaultOrderShouldBeFound("description.in=" + DEFAULT_DESCRIPTION + "," + UPDATED_DESCRIPTION);
+
+        // Get all the orderList where description equals to UPDATED_DESCRIPTION
+        defaultOrderShouldNotBeFound("description.in=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByDescriptionIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where description is not null
+        defaultOrderShouldBeFound("description.specified=true");
+
+        // Get all the orderList where description is null
+        defaultOrderShouldNotBeFound("description.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllOrdersByDescriptionContainsSomething() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where description contains DEFAULT_DESCRIPTION
+        defaultOrderShouldBeFound("description.contains=" + DEFAULT_DESCRIPTION);
+
+        // Get all the orderList where description contains UPDATED_DESCRIPTION
+        defaultOrderShouldNotBeFound("description.contains=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    public void getAllOrdersByDescriptionNotContainsSomething() throws Exception {
+        // Initialize the database
+        orderRepository.saveAndFlush(order);
+
+        // Get all the orderList where description does not contain DEFAULT_DESCRIPTION
+        defaultOrderShouldNotBeFound("description.doesNotContain=" + DEFAULT_DESCRIPTION);
+
+        // Get all the orderList where description does not contain UPDATED_DESCRIPTION
+        defaultOrderShouldBeFound("description.doesNotContain=" + UPDATED_DESCRIPTION);
+    }
+
+
+    @Test
+    @Transactional
     public void getAllOrdersBySignalIsEqualToSomething() throws Exception {
         // Initialize the database
         orderRepository.saveAndFlush(order);
@@ -872,6 +1152,22 @@ public class OrderResourceIT {
         defaultOrderShouldNotBeFound("signalId.equals=" + (signalId + 1));
     }
 
+
+    @Test
+    @Transactional
+    public void getAllOrdersByBourseCodeIsEqualToSomething() throws Exception {
+        // Get already existing entity
+        BourseCode bourseCode = order.getBourseCode();
+        orderRepository.saveAndFlush(order);
+        Long bourseCodeId = bourseCode.getId();
+
+        // Get all the orderList where bourseCode equals to bourseCodeId
+        defaultOrderShouldBeFound("bourseCodeId.equals=" + bourseCodeId);
+
+        // Get all the orderList where bourseCode equals to bourseCodeId + 1
+        defaultOrderShouldNotBeFound("bourseCodeId.equals=" + (bourseCodeId + 1));
+    }
+
     /**
      * Executes the search, and checks that the default entity is returned.
      */
@@ -886,7 +1182,10 @@ public class OrderResourceIT {
             .andExpect(jsonPath("$.[*].validity").value(hasItem(DEFAULT_VALIDITY.toString())))
             .andExpect(jsonPath("$.[*].side").value(hasItem(DEFAULT_SIDE.toString())))
             .andExpect(jsonPath("$.[*].broker").value(hasItem(DEFAULT_BROKER.toString())))
-            .andExpect(jsonPath("$.[*].omsId").value(hasItem(DEFAULT_OMS_ID)));
+            .andExpect(jsonPath("$.[*].omsId").value(hasItem(DEFAULT_OMS_ID)))
+            .andExpect(jsonPath("$.[*].state").value(hasItem(DEFAULT_STATE.toString())))
+            .andExpect(jsonPath("$.[*].executed").value(hasItem(DEFAULT_EXECUTED)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
 
         // Check, that the count call also returns 1
         restOrderMockMvc.perform(get("/api/orders/count?sort=id,desc&" + filter))
@@ -940,7 +1239,10 @@ public class OrderResourceIT {
             .validity(UPDATED_VALIDITY)
             .side(UPDATED_SIDE)
             .broker(UPDATED_BROKER)
-            .omsId(UPDATED_OMS_ID);
+            .omsId(UPDATED_OMS_ID)
+            .state(UPDATED_STATE)
+            .executed(UPDATED_EXECUTED)
+            .description(UPDATED_DESCRIPTION);
 
         restOrderMockMvc.perform(put("/api/orders")
             .contentType(MediaType.APPLICATION_JSON)
@@ -958,6 +1260,9 @@ public class OrderResourceIT {
         assertThat(testOrder.getSide()).isEqualTo(UPDATED_SIDE);
         assertThat(testOrder.getBroker()).isEqualTo(UPDATED_BROKER);
         assertThat(testOrder.getOmsId()).isEqualTo(UPDATED_OMS_ID);
+        assertThat(testOrder.getState()).isEqualTo(UPDATED_STATE);
+        assertThat(testOrder.getExecuted()).isEqualTo(UPDATED_EXECUTED);
+        assertThat(testOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
     @Test

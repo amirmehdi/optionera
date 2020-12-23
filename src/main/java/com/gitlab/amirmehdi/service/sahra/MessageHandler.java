@@ -1,9 +1,11 @@
 package com.gitlab.amirmehdi.service.sahra;
 
+import com.gitlab.amirmehdi.domain.BourseCode;
 import com.gitlab.amirmehdi.domain.OpenInterest;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Portfolio;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
+import com.gitlab.amirmehdi.repository.BourseCodeRepository;
 import com.gitlab.amirmehdi.repository.OrderRepository;
 import com.gitlab.amirmehdi.service.OpenInterestService;
 import com.gitlab.amirmehdi.service.PortfolioService;
@@ -21,34 +23,37 @@ public class MessageHandler {
     private final OrderRepository orderRepository;
     private final PortfolioService portfolioService;
     private final OpenInterestService openInterestService;
+    private final BourseCodeRepository bourseCodeRepository;
 
-    public MessageHandler(OrderRepository orderRepository, PortfolioService portfolioService, OpenInterestService openInterestService) {
+    public MessageHandler(OrderRepository orderRepository, PortfolioService portfolioService, OpenInterestService openInterestService, BourseCodeRepository bourseCodeRepository) {
         this.orderRepository = orderRepository;
         this.portfolioService = portfolioService;
         this.openInterestService = openInterestService;
+        this.bourseCodeRepository = bourseCodeRepository;
     }
 
-    public void handle(PollResponse pollResponse) {
+    public void handle(BourseCode bourseCode, PollResponse pollResponse) {
         if (pollResponse != null && pollResponse.getM() != null)
-            pollResponse.getM().forEach(this::handle);
+            pollResponse.getM().forEach(pollMessageResponse -> handle(bourseCode, pollMessageResponse));
     }
 
-    public void handle(PollMessageResponse pollMessageResponse) {
+    public void handle(BourseCode bourseCode, PollMessageResponse pollMessageResponse) {
         switch (pollMessageResponse.getMethod()) {
             case "initUI":
                 // قدرت خرید
                 ArrayList credit = (ArrayList) ((ArrayList) ((ArrayList) ((ArrayList) pollMessageResponse.getVal().get(0)).get(1)).get(0)).get(3);
                 CreditInfoUpdate creditInfoUpdate1 = new CreditInfoUpdate(credit);
+                creditInfoUpdateHandler(bourseCode, creditInfoUpdate1);
                 // پورتفوی
                 ArrayList<ArrayList> portfo = (ArrayList) ((ArrayList) ((ArrayList) pollMessageResponse.getVal().get(0)).get(1)).get(3);
                 portfo.stream()
-                    .forEach(s -> assetChangeHandler(new AssetData(s)));
+                    .forEach(s -> assetChangeHandler(bourseCode, new AssetData(s)));
                 //سفارشات باز
                 //((ArrayList) ((ArrayList) ((ArrayList) ((ArrayList) firstPollResponse.getM().get(0).getVal().get(0)).get(1)).get(2)).get(0)).toString()
                 //    [1170000000364703, IRO1PKLJ0001, 1399/09/05 10:11:34, 4000, 12000, 0, 1, 1, null, 2, 1, 009845, false, 1, 0, 0, true, 48178176, 4000, null, 1, null]
                 //موقعیت باز
                 ArrayList<ArrayList> opens = (ArrayList) ((ArrayList) ((ArrayList) pollMessageResponse.getVal().get(0)).get(1)).get(8);
-                opens.forEach(s -> positionChangeHandler(new PositionData(s)));
+                opens.forEach(s -> positionChangeHandler(bourseCode, new PositionData(s)));
                 break;
             case "marketMessageRecived":
                 break;
@@ -73,11 +78,12 @@ public class MessageHandler {
             case "creditInfoUpdate":
                 //PollMessageResponse(hub=OmsClientHub, method=creditInfoUpdate, val=[[8877109, 255205989, 0, 246328880, 1, 1]])
                 CreditInfoUpdate creditInfoUpdate = new CreditInfoUpdate((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                creditInfoUpdateHandler(bourseCode, creditInfoUpdate);
                 break;
             case "orderAdded":
                 //PollMessageResponse(hub=OmsClientHub, method=orderAdded, val=[[1170000000364934, IRO9MAPN4141, 1399/09/05 11:21:55, 1, 2480, 0, 2, 1, null, 1, 1, 000000, false, 2, 0, 0, true, 9276665, 1, null, 1, null]])
                 OrderData orderData = new OrderData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                orderAddedHandler(orderData);
+                orderAddedHandler(bourseCode,orderData);
                 break;
             case "orderStateChange":
                 //PollMessageResponse(hub=OmsClientHub, method=orderStateChange, val=[[1170000000364932, 3, 003078, false, 1, 28169130, 1481, 1]])
@@ -85,12 +91,12 @@ public class MessageHandler {
                 stateChangeDataHandler(stateChangeData);
                 break;
             case "orderEdited":
-                    OrderEdit orderEdit = new OrderEdit((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                    orderEditHandler(orderEdit);
+                OrderEdit orderEdit = new OrderEdit((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                orderEditHandler(orderEdit);
                 break;
             case "orderError":
-                    OrderError orderError = new OrderError((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                    orderErrorHandler(orderError);
+                OrderError orderError = new OrderError((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                orderErrorHandler(orderError);
                 break;
             case "orderExecution":
                 //PollMessageResponse(hub=OmsClientHub, method=orderExecution, val=[[1170000000364932, 1481, 3, 1, 0, 0, 1481, 18900, 28094805]])
@@ -100,12 +106,12 @@ public class MessageHandler {
             case "AssetChange":
                 //PollMessageResponse(hub=OmsClientHub, method=AssetChange, val=[[IRO1MAPN0001, 32582, 19103, 18900]])
                 AssetData assetData = new AssetData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                assetChangeHandler(assetData);
+                assetChangeHandler(bourseCode, assetData);
                 break;
             case "PositionChange":
                 //PollMessageResponse(hub=OmsClientHub, method=PositionChange, val=[[IRO9MAPN4141, -1, 0, 0, 0, 0, 9272880, 1399/10/08, 1399/10/09]])
                 PositionData positionData = new PositionData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                positionChangeHandler(positionData);
+                positionChangeHandler(bourseCode, positionData);
                 break;
             default:
                 //InstrumentStateChange
@@ -113,10 +119,18 @@ public class MessageHandler {
         }
     }
 
-    private void assetChangeHandler(AssetData assetData) {
+    private void creditInfoUpdateHandler(BourseCode bourseCode, CreditInfoUpdate creditInfoUpdate) {
+        bourseCode.buyingPower(creditInfoUpdate.getBuyPower())
+            .blocked(creditInfoUpdate.getBlock())
+            .credit(creditInfoUpdate.getCredit())
+            .remain(creditInfoUpdate.getAccountRemain());
+        bourseCodeRepository.save(bourseCode);
+    }
+
+    private void assetChangeHandler(BourseCode bourseCode, AssetData assetData) {
         try {
             portfolioService.save(Portfolio.builder()
-                .userId(Broker.FIROOZE_ASIA.name())
+                .userId(bourseCode.getId())
                 .isin(assetData.getId())
                 .quantity(assetData.getQuantity())
                 .avgPrice(assetData.getAvgPrice())
@@ -127,10 +141,10 @@ public class MessageHandler {
         }
     }
 
-    private void positionChangeHandler(PositionData positionData) {
+    private void positionChangeHandler(BourseCode bourseCode, PositionData positionData) {
         try {
             openInterestService.save(OpenInterest.builder()
-                .userId(Broker.FIROOZE_ASIA.name())
+                .userId(bourseCode.getId())
                 .isin(positionData.getIsin())
                 .date(LocalDate.now())
                 .quantity(positionData.getAsset())
@@ -141,7 +155,7 @@ public class MessageHandler {
         }
     }
 
-    private void orderAddedHandler(OrderData message) {
+    private void orderAddedHandler(BourseCode bourseCode, OrderData message) {
         Order order;
         if (message.getExtraData() == null || message.getExtraData().equals("null") || message.getExtraData().isEmpty()) {
             log.info("message ( order ) is from other source : {}", message);
@@ -151,7 +165,8 @@ public class MessageHandler {
             order.setIsin(message.getInstrumentId());
             order.setPrice(message.getPrice());
             order.setQuantity(message.getQuantity());
-            order.setBroker(Broker.FIROOZE_ASIA);
+            order.setBroker(bourseCode.getBroker());
+            order.setBourseCode(bourseCode);
         } else {
             Optional<Order> optionalOrder = orderRepository.findById(Long.valueOf(message.getExtraData()));
             if (!optionalOrder.isPresent()) {

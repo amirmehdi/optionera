@@ -1,7 +1,7 @@
 package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.Token;
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
+import com.gitlab.amirmehdi.domain.enumeration.OMS;
 import com.gitlab.amirmehdi.repository.TokenRepository;
 import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.service.sahra.SahraRequestService;
@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing {@link com.gitlab.amirmehdi.domain.Token}.
@@ -72,8 +74,8 @@ public class TokenResource {
 
     private Token save(Token token) {
         token = tokenRepository.save(token);
-        if (Broker.FIROOZE_ASIA.equals(token.getBroker())) {
-            sahraRequestService.connectAndStart();
+        if (OMS.SAHRA.equals(token.getBroker().oms)) {
+            sahraRequestService.connectAndStart(token.getBourseCode());
         }
         return token;
     }
@@ -108,7 +110,13 @@ public class TokenResource {
      */
     @GetMapping("/tokens")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<List<Token>> getAllTokens(Pageable pageable) {
+    public ResponseEntity<List<Token>> getAllTokens(Pageable pageable, @RequestParam(required = false) String filter) {
+        if ("boursecode-is-null".equals(filter)) {
+            log.debug("REST request to get all Tokens where bourseCode is null");
+            return new ResponseEntity<>(tokenRepository.findAll().stream()
+                .filter(token -> token.getBourseCode() == null)
+                .collect(Collectors.toList()), HttpStatus.OK);
+        }
         log.debug("REST request to get a page of Tokens");
         Page<Token> page = tokenRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);

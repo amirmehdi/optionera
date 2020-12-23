@@ -9,6 +9,8 @@ import { IRootState } from 'app/shared/reducers';
 
 import { ISignal } from 'app/shared/model/signal.model';
 import { getEntities as getSignals } from 'app/entities/signal/signal.reducer';
+import { IBourseCode } from 'app/shared/model/bourse-code.model';
+import { getEntities as getBourseCodes } from 'app/entities/bourse-code/bourse-code.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './order.reducer';
 import { IOrder } from 'app/shared/model/order.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -18,9 +20,10 @@ export interface IOrderUpdateProps extends StateProps, DispatchProps, RouteCompo
 
 export const OrderUpdate = (props: IOrderUpdateProps) => {
   const [signalId, setSignalId] = useState('0');
+  const [bourseCodeId, setBourseCodeId] = useState('0');
   const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { orderEntity, signals, loading, updating } = props;
+  const { orderEntity, signals, bourseCodes, loading, updating } = props;
 
   const handleClose = () => {
     props.history.push('/order');
@@ -32,6 +35,7 @@ export const OrderUpdate = (props: IOrderUpdateProps) => {
     }
 
     props.getSignals();
+    props.getBourseCodes();
   }, []);
 
   useEffect(() => {
@@ -213,6 +217,30 @@ export const OrderUpdate = (props: IOrderUpdateProps) => {
                     : null}
                 </AvInput>
               </AvGroup>
+              <AvGroup>
+                <Label for="order-bourseCode">
+                  <Translate contentKey="eTradeApp.order.bourseCode">Bourse Code</Translate>
+                </Label>
+                <AvInput
+                  id="order-bourseCode"
+                  type="select"
+                  className="form-control"
+                  name="bourseCode.id"
+                  value={isNew ? bourseCodes[0] && bourseCodes[0].id : orderEntity.bourseCode.id}
+                  required
+                >
+                  {bourseCodes
+                    ? bourseCodes.map(otherEntity => (
+                        <option value={otherEntity.id} key={otherEntity.id}>
+                          {otherEntity.username}
+                        </option>
+                      ))
+                    : null}
+                </AvInput>
+                <AvFeedback>
+                  <Translate contentKey="entity.validation.required">This field is required.</Translate>
+                </AvFeedback>
+              </AvGroup>
               <Button tag={Link} id="cancel-save" to="/order" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
@@ -236,6 +264,7 @@ export const OrderUpdate = (props: IOrderUpdateProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   signals: storeState.signal.entities,
+  bourseCodes: storeState.bourseCode.entities,
   orderEntity: storeState.order.entity,
   loading: storeState.order.loading,
   updating: storeState.order.updating,
@@ -244,6 +273,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 
 const mapDispatchToProps = {
   getSignals,
+  getBourseCodes,
   getEntity,
   updateEntity,
   createEntity,

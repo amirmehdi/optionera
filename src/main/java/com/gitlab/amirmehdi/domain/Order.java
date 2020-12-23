@@ -78,6 +78,11 @@ public class Order implements Serializable {
     @JsonIgnoreProperties("orders")
     private Signal signal;
 
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties("orders")
+    private BourseCode bourseCode;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -231,6 +236,19 @@ public class Order implements Serializable {
 
     public void setSignal(Signal signal) {
         this.signal = signal;
+    }
+
+    public BourseCode getBourseCode() {
+        return bourseCode;
+    }
+
+    public Order bourseCode(BourseCode bourseCode) {
+        this.bourseCode = bourseCode;
+        return this;
+    }
+
+    public void setBourseCode(BourseCode bourseCode) {
+        this.bourseCode = bourseCode;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

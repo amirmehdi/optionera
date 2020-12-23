@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -38,6 +39,10 @@ public class Token implements Serializable {
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+
+    @OneToOne(mappedBy = "token")
+    @JsonIgnore
+    private BourseCode bourseCode;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -85,6 +90,19 @@ public class Token implements Serializable {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public BourseCode getBourseCode() {
+        return bourseCode;
+    }
+
+    public Token bourseCode(BourseCode bourseCode) {
+        this.bourseCode = bourseCode;
+        return this;
+    }
+
+    public void setBourseCode(BourseCode bourseCode) {
+        this.bourseCode = bourseCode;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

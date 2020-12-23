@@ -1,9 +1,8 @@
 package com.gitlab.amirmehdi.domain;
 
-import com.gitlab.amirmehdi.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import com.gitlab.amirmehdi.web.rest.TestUtil;
 
 public class OrderTest {
 

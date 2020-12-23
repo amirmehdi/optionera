@@ -1,0 +1,11 @@
+id;isin;price;quantity;validity;side;broker;oms_id;state;executed;description;bourse_code_id
+1;portal input;90598;76865;DAY;SELL;FIROOZE_ASIA;virtual Salad;EXECUTED;59476;Tools e-markets;1
+2;feed Investment Account Slovenia;48005;12661;FILL_AND_KILL;BUY;FIROOZE_ASIA;Norwegian Krone;ACTIVE;48932;Corners;2
+3;Regional;4902;93769;DAY;SELL;FIROOZE_ASIA;application Uganda Shilling Algeria;EXECUTED;56299;Uruguay Auto Loan Account even-keeled;3
+4;Garden;66155;67223;FILL_AND_KILL;SELL;FIROOZE_ASIA;Refined Granite GB;ACTIVE;35275;Harbors copy red;4
+5;France Money Market Account Corporate;19737;77345;FILL_AND_KILL;SELL;REFAH;Cambridgeshire quantifying Mexico;EXECUTED;33075;programming;5
+6;discrete Computers;49892;5145;DAY;SELL;REFAH;schemas deposit Table;CANCELLED;29366;Home Loan Account Universal;6
+7;Tasty Rubber Shoes;52768;3986;DAY;SELL;FIROOZE_ASIA;Bedfordshire COM;PARTIALLY_EXECUTED;68875;Enhanced;7
+8;Chicken Global Unbranded;39850;83774;DAY;SELL;FIROOZE_ASIA;Security Awesome Steel Shoes De-engineered;CANCELLED;87705;Small bypassing;8
+9;Personal Loan Account;90369;5553;DAY;SELL;REFAH;North Korean Won;NONE;78552;Montana invoice UAE Dirham;9
+10;Licensed bleeding-edge Savings Account;75379;34851;FILL_AND_KILL;SELL;FIROOZE_ASIA;Checking Account;EXECUTED;29434;redefine local;10

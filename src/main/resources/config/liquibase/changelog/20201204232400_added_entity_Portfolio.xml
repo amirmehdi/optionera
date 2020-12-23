@@ -18,24 +18,29 @@
         </preConditions>
         <createTable tableName="portfolio">
             <column name="user_id" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="date" type="date">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="isin" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="quantity" type="integer">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
             <column name="avg_price" type="integer">
-                <constraints nullable="true" />
+                <constraints nullable="true"/>
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
     </changeSet>
-
+    <changeSet author="amirmehdi" id="20201204232400-2">
+        <modifyDataType
+            columnName="user_id"
+            newDataType="bigint"
+            tableName="portfolio"/>
+    </changeSet>
     <changeSet id="20201204232400-1-relations" author="jhipster">
 
     </changeSet>
@@ -58,10 +63,10 @@
     </changeSet>
     <changeSet id="20201204232400-1-data" author="jhipster" context="faker">
         <loadData
-                  file="config/liquibase/fake-data/portfolio.csv"
-                  separator=";"
-                  tableName="portfolio">
-            <column name="user_id" type="string"/>
+            file="config/liquibase/fake-data/portfolio.csv"
+            separator=";"
+            tableName="portfolio">
+            <column name="user_id" type="numeric"/>
             <column name="date" type="date"/>
             <column name="isin" type="string"/>
             <column name="quantity" type="numeric"/>

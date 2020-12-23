@@ -1,0 +1,27 @@
+enum Broker {
+    REFAH, FIROOZE_ASIA
+}
+entity BourseCode {
+	broker Broker,
+    name String,
+    code String
+    username String,
+    password String,
+    buyingPower Long,
+    blocked Long,
+    remain Long,
+    credit Long
+}
+
+entity Token {
+	token String required,
+    broker Broker required,
+    createdAt Instant
+}
+
+relationship OneToOne {
+  BourseCode{token(id)} to Token{bourseCode(username)}
+}
+
+paginate BourseCode,Token with pagination
+service BourseCode with serviceClass

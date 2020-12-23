@@ -52,7 +52,7 @@
         },
         {
             "fieldName": "state",
-            "fieldType": "OrderState",
+            "fieldType": "State",
             "fieldValues": "NONE,ACTIVE,EXECUTED,CANCELLED,ERROR,PARTIALLY_EXECUTED",
             "fieldValidateRules": []
         },
@@ -72,6 +72,16 @@
             "otherEntityRelationshipName": "order",
             "relationshipName": "signal",
             "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "bourseCode",
+            "otherEntityName": "bourseCode",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "username",
+            "otherEntityRelationshipName": "order"
         }
     ],
     "changelogDate": "20201012151100",

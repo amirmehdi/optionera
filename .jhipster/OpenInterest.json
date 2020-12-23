@@ -3,7 +3,7 @@
     "fields": [
         {
             "fieldName": "userId",
-            "fieldType": "String"
+            "fieldType": "Long"
         },
         {
             "fieldName": "date",

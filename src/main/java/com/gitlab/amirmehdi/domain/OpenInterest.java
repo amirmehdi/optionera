@@ -36,7 +36,8 @@ public class OpenInterest implements Serializable {
     @Id
     @Column(name = "user_id", nullable = false)
     @NotNull
-    private String userId;
+    //TODO should be long
+    private long userId;
 
     @Id
     @Column(name = "date", nullable = false)
@@ -59,7 +60,7 @@ public class OpenInterest implements Serializable {
 
     @JsonIgnore
     public AssetCompositeKey getId() {
-        if (userId == null && isin == null && date == null) {
+        if (isin == null && date == null) {
             return null;
         }
         return new AssetCompositeKey(userId, isin, date);

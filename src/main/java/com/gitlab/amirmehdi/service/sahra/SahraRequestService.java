@@ -4,9 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.gitlab.amirmehdi.config.ApplicationProperties;
+import com.gitlab.amirmehdi.domain.BourseCode;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Token;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
+import com.gitlab.amirmehdi.domain.enumeration.OMS;
+import com.gitlab.amirmehdi.repository.BourseCodeRepository;
 import com.gitlab.amirmehdi.repository.TokenRepository;
 import com.gitlab.amirmehdi.service.TelegramMessageSender;
 import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
@@ -22,8 +25,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -36,9 +37,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 import static com.gitlab.amirmehdi.util.UrlEncodingUtil.getEncode;
 
@@ -47,6 +46,7 @@ import static com.gitlab.amirmehdi.util.UrlEncodingUtil.getEncode;
 public class SahraRequestService implements CommandLineRunner {
     public static final String HUB = "omsclienthub";
     private final TokenRepository tokenRepository;
+    private final BourseCodeRepository bourseCodeRepository;
     private final NegotiateManager negotiateManager;
     private final RestTemplate restTemplate;
     private final RestTemplate longPollRestTemplate;
@@ -55,16 +55,17 @@ public class SahraRequestService implements CommandLineRunner {
     private final MessageHandler handler;
     private final TelegramMessageSender telegramMessageSender;
     private final ApplicationProperties applicationProperties;
+    private final Map<Long, SecurityFields> securityFieldsMap = new HashMap<>();
 
-    private final SecurityFields securityFields = new SecurityFields();
-    private final String connectUrl = "https://firouzex.ephoenix.ir/realtime/connect?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s";
-    private final String pollUrl = "https://firouzex.ephoenix.ir/realtime/poll?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s&_=%s";
-    private final String sendUrl = "https://firouzex.ephoenix.ir/realtime/send?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s";
+    private final String connectUrl = "%s/realtime/connect?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s";
+    private final String pollUrl = "%s/realtime/poll?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s&_=%s";
+    private final String sendUrl = "%s/realtime/send?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s";
     private final String connectionData = "[{\"name\":\"omsclienthub\"}]";
 
 
-    public SahraRequestService(TokenRepository tokenRepository, RestTemplate restTemplate, NegotiateManager negotiateManager, @Qualifier("longPollRestTemplate") RestTemplate longPollRestTemplate, TaskScheduler executor, ObjectMapper objectMapper, MessageHandler handler, TelegramMessageSender telegramMessageSender, ApplicationProperties applicationProperties) {
+    public SahraRequestService(TokenRepository tokenRepository, BourseCodeRepository bourseCodeRepository, RestTemplate restTemplate, NegotiateManager negotiateManager, @Qualifier("longPollRestTemplate") RestTemplate longPollRestTemplate, TaskScheduler executor, ObjectMapper objectMapper, MessageHandler handler, TelegramMessageSender telegramMessageSender, ApplicationProperties applicationProperties) {
         this.tokenRepository = tokenRepository;
+        this.bourseCodeRepository = bourseCodeRepository;
         this.restTemplate = restTemplate;
         this.negotiateManager = negotiateManager;
         this.longPollRestTemplate = longPollRestTemplate;
@@ -75,38 +76,94 @@ public class SahraRequestService implements CommandLineRunner {
         this.applicationProperties = applicationProperties;
     }
 
-    @Retryable(
-        value = {ResourceAccessException.class},
-        maxAttempts = 3,
-        backoff = @Backoff(value = 3000))
+    /*
+        @Retryable(
+            value = {ResourceAccessException.class},
+            maxAttempts = 3,
+            backoff = @Backoff(value = 3000))
+            */
+    @Scheduled(cron = "0 1 8 * * *")
     public void connectAndStart() {
-        Token token = tokenRepository.findTopByBrokerOrderByCreatedAtDesc(Broker.FIROOZE_ASIA).get();
-        if (ChronoUnit.HOURS.between(token.getCreatedAt().toInstant(), new Date().toInstant()) > 6) {
+        List<BourseCode> bourseCodes = bourseCodeRepository.findAllByBrokerIn(Broker.byOms(OMS.SAHRA));
+        for (BourseCode bourseCode : bourseCodes) {
             try {
-                token = negotiateManager.login(3);
-            } catch (LoginFailedException e) {
-                telegramMessageSender.sendMessage(new TelegramMessageDto(applicationProperties.getTelegram().getHealthCheckChat(), "sahra can't login. number of attempts reached"));
-                return;
+                connectAndStart(bourseCode);
+            } catch (HttpClientErrorException e) {
+                if (e.getStatusCode().value() == 401) {
+                    clearConnection(bourseCode);
+                    // message to telegram
+                }
+            } catch (ResourceAccessException e) {
+                if (securityFieldsMap.get(bourseCode.getId()).getGroupToken() == null) {
+                    clearConnection(bourseCode);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        this.securityFields.setToken(token.getToken());
+    }
 
-        NegotiateResponse negotiate = negotiateManager.negotiate(token);
-        this.securityFields.setConnectionToken(negotiate.getConnectionToken());
-        this.securityFields.setMessageId(connect().getMessageId());
-        negotiateManager.start(securityFields.getToken(), securityFields.getConnectionToken());
+    public void connectAndStart(BourseCode bourseCode) {
+        SecurityFields securityFields;
+        if (securityFieldsMap.containsKey(bourseCode.getId())) {
+            securityFields = securityFieldsMap.get(bourseCode.getId());
+            securityFields.clear();
+        } else {
+            securityFields = new SecurityFields();
+        }
+        securityFieldsMap.put(bourseCode.getId(), securityFields);
+        String tokenString;
+        if (bourseCode.getToken()==null){
+            tokenString = login(bourseCode);
+            Token token = new Token()
+                .bourseCode(bourseCode)
+                .broker(bourseCode.getBroker())
+                .token(tokenString);
+            tokenRepository.save(token);
+            bourseCode.setToken(token);
+            bourseCodeRepository.save(bourseCode);
+        }else if (ChronoUnit.HOURS.between(bourseCode.getToken().getCreatedAt().toInstant(), new Date().toInstant()) > 6) {
+            tokenString = login(bourseCode);
+            bourseCode.getToken().setToken(tokenString);
+            tokenRepository.save(bourseCode.getToken());
+        }
+        securityFields.setToken(bourseCode.getToken());
 
-        FirstPollResponse firstPollResponse = firstPoll();
-        this.securityFields.setMessageId(firstPollResponse.getMessageId());
-        this.securityFields.setGroupToken(firstPollResponse.getGroupsToken());
-        firstPollResponse.getM().forEach(handler::handle);
+        NegotiateResponse negotiate = negotiateManager.negotiate(securityFields.getToken());
+        securityFields.setConnectionToken(negotiate.getConnectionToken());
+
+        ConnectResponse connect = connect(securityFields);
+        securityFields.setMessageId(connect.getMessageId());
+
+        negotiateManager.start(securityFields);
+
+        FirstPollResponse firstPollResponse = firstPoll(securityFields);
+        securityFields.setMessageId(firstPollResponse.getMessageId());
+        securityFields.setGroupToken(firstPollResponse.getGroupsToken());
+
+        firstPollResponse.getM().forEach(pollMessageResponse -> {
+            handler.handle(bourseCode, pollMessageResponse);
+        });
 
         securityFields.getSchedules().add(executor.scheduleWithFixedDelay(() -> {
             if (!isHeadlineTime()) {
-                handler.handle(poll());
+                handler.handle(bourseCode, poll(securityFields));
             }
         }, 500));
-        securityFields.getSchedules().add(executor.scheduleWithFixedDelay(this::getTime, 60000));
+        securityFields.getSchedules().add(executor.scheduleWithFixedDelay(() -> {
+            getTime(securityFields.getToken().getBourseCode().getId());
+        }, 60000));
+    }
+
+    private String login(BourseCode bourseCode) {
+        String tokenString;
+        try {
+            tokenString = negotiateManager.login(bourseCode, 3);
+        } catch (LoginFailedException e) {
+            telegramMessageSender.sendMessage(new TelegramMessageDto(applicationProperties.getTelegram().getHealthCheckChat(), "sahra can't login. number of attempts reached"));
+            throw e;
+        }
+        return tokenString;
     }
 
     private boolean isHeadlineTime() {
@@ -120,30 +177,30 @@ public class SahraRequestService implements CommandLineRunner {
     }
 
     //"{\"H\":\"omsclienthub\",\"M\":\"GetAssetsReport\",\"A\":[],\"I\":7}"
-    public ObjectNode getAssetReport() {
+    public ObjectNode getAssetReport(long userId) {
         SendRequest sendRequest = new SendRequest("GetAssetsReport", Collections.emptyList());
-        return send(sendRequest);
+        return send(userId, sendRequest);
     }
 
     // "{\"H\":\"omsclienthub\",\"M\":\"GetAcountRemainReport\",\"A\":[1,1399,9,4,1399,9,4],\"I\":6}"
-    public ObjectNode getAccountRemainReport(LocalDate localDate) {
+    public ObjectNode getAccountRemainReport(long userId, LocalDate localDate) {
         JalaliCalendar j = new JalaliCalendar(localDate);
         SendRequest sendRequest = new SendRequest("GetAcountRemainReport"
             , Arrays.asList(1, j.getYear(), j.getMonth(), j.getDay(), j.getYear(), j.getMonth(), j.getDay()));
-        return send(sendRequest);
+        return send(userId, sendRequest);
     }
 
     //"{\"H\":\"omsclienthub\",\"M\":\"GetTime\",\"A\":[],\"I\":5}";
     //{"R":"19:35:42","I":"7"}
-    public LocalTime getTime() {
+    public LocalTime getTime(long userId) {
         SendRequest sendRequest = new SendRequest("GetTime", Collections.emptyList());
-        return LocalTime.parse(send(sendRequest).get("R").asText());
+        return LocalTime.parse(send(userId, sendRequest).get("R").asText());
     }
 
     //    {"H":"omsclienthub","M":"CancelOrder","A":[1170000000356607],"I":6}
     public void cancelOrder(Order order) {
         SendRequest sendRequest = new SendRequest("CancelOrder", Collections.singletonList(Long.valueOf(order.getOmsId())));
-        send(sendRequest);
+        send(order.getBourseCode().getId(), sendRequest);
     }
 
     // "{\"H\":\"omsclienthub\",\"M\":\"AddOrder\",\"A\":[[1,\"IRO1MAPN0001\",1481,18950,1,null,null,null,null,null,null,null]],\"I\":1}";
@@ -168,21 +225,25 @@ public class SahraRequestService implements CommandLineRunner {
             , String.valueOf(order.getId())
 
         )));
-        send(sendRequest);
+        send(order.getBourseCode().getId(), sendRequest);
     }
 
-    private ConnectResponse connect() {
+    private ConnectResponse connect(SecurityFields securityFields) {
         ResponseEntity<ConnectResponse> connectResponse =
             restTemplate.exchange(
-                URI.create(String.format(connectUrl, getEncode(securityFields.getConnectionToken()), getEncode(connectionData)))
+                URI.create(String.format(connectUrl, securityFields.getToken().getBroker().url, getEncode(securityFields.getConnectionToken()), getEncode(connectionData)))
                 , HttpMethod.POST
-                , new HttpEntity<>(getConnectOrSendHeaders())
+                , new HttpEntity<>(getConnectOrSendHeaders(securityFields))
                 , ConnectResponse.class);
         log.info("connect, response:{}", connectResponse);
         return connectResponse.getBody();
     }
 
-    private ObjectNode send(SendRequest data) {
+    private ObjectNode send(long userId, SendRequest data) {
+        SecurityFields securityFields = securityFieldsMap.get(userId);
+        if (securityFields == null) {
+            return null;
+        }
         if (securityFields.getGroupToken() == null)
             return null;
         data.setI(securityFields.incAndGet());
@@ -190,9 +251,9 @@ public class SahraRequestService implements CommandLineRunner {
         ResponseEntity<ObjectNode> sendResponse;
         try {
             sendResponse = restTemplate.exchange(
-                URI.create(String.format(sendUrl, getEncode(securityFields.getConnectionToken()), getEncode(connectionData)))
+                URI.create(String.format(sendUrl, securityFields.getToken().getBroker().url, getEncode(securityFields.getConnectionToken()), getEncode(connectionData)))
                 , HttpMethod.POST
-                , new HttpEntity<>("data=" + getEncode(objectMapper.writeValueAsString(data)), getConnectOrSendHeaders())
+                , new HttpEntity<>("data=" + getEncode(objectMapper.writeValueAsString(data)), getConnectOrSendHeaders(securityFields))
                 , ObjectNode.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -204,35 +265,36 @@ public class SahraRequestService implements CommandLineRunner {
             long errorCode = node.get("R").get("ex").get("i").asLong();
             String errorDesc = node.get("R").get("ex").get("m").asText();
             if (errorCode == -3005) {
-                clearConnection();
-                connectAndStart();
-                return send(data);
+                BourseCode bourseCode = bourseCodeRepository.findById(userId).get();
+                clearConnection(bourseCode);
+                connectAndStart(bourseCode);
+                return send(userId, data);
             }
             throw new CodeException(errorCode, errorDesc);
         }
         return node;
     }
 
-    public FirstPollResponse firstPoll() {
+    public FirstPollResponse firstPoll(SecurityFields securityFields) {
         ResponseEntity<FirstPollResponse> firstPollResponse =
             longPollRestTemplate.exchange(
-                URI.create(String.format(pollUrl, getEncode(securityFields.getConnectionToken()), getEncode(connectionData), System.currentTimeMillis()))
+                URI.create(String.format(pollUrl, securityFields.getToken().getBroker().url, getEncode(securityFields.getConnectionToken()), getEncode(connectionData), System.currentTimeMillis()))
                 , HttpMethod.POST
-                , new HttpEntity<>("messageId=" + getEncode(securityFields.getMessageId()), getConnectOrSendHeaders())
+                , new HttpEntity<>("messageId=" + getEncode(securityFields.getMessageId()), getConnectOrSendHeaders(securityFields))
                 , FirstPollResponse.class);
         log.info("firstPoll, response:{}", firstPollResponse);
         return firstPollResponse.getBody();
     }
 
-    public PollResponse poll() {
+    public PollResponse poll(SecurityFields securityFields) {
         if (securityFields.getGroupToken() == null)
             return null;
         try {
             ResponseEntity<PollResponse> pollResponse =
                 longPollRestTemplate.exchange(
-                    URI.create(String.format(pollUrl, getEncode(securityFields.getConnectionToken()), getEncode(connectionData), System.currentTimeMillis()))
+                    URI.create(String.format(pollUrl, securityFields.getToken().getBroker().url, getEncode(securityFields.getConnectionToken()), getEncode(connectionData), System.currentTimeMillis()))
                     , HttpMethod.POST
-                    , new HttpEntity<>("messageId=" + getEncode(securityFields.getMessageId()) + "&groupsToken=" + getEncode(securityFields.getGroupToken()), getConnectOrSendHeaders())
+                    , new HttpEntity<>("messageId=" + getEncode(securityFields.getMessageId()) + "&groupsToken=" + getEncode(securityFields.getGroupToken()), getConnectOrSendHeaders(securityFields))
                     , PollResponse.class);
             log.debug("poll, response:{}", pollResponse);
             securityFields.setMessageId(pollResponse.getBody().getMessageId());
@@ -241,16 +303,15 @@ public class SahraRequestService implements CommandLineRunner {
             log.debug("poll nochange");
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().value() == 401) {
-                clearConnection();
-                // message to telegram
+                clearConnection(securityFields.getToken().getBourseCode());
             }
         }
         return null;
     }
 
 
-    private LinkedMultiValueMap<String, String> getConnectOrSendHeaders() {
-        String[] s = securityFields.getToken().split("__");
+    private LinkedMultiValueMap<String, String> getConnectOrSendHeaders(SecurityFields securityFields) {
+        String[] s = securityFields.getToken().getToken().split("__");
         LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Connection", "keep-alive");
         headers.add("Accept", "text/plain, */*; q=0.01");
@@ -269,29 +330,15 @@ public class SahraRequestService implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        sahraRefreshToken();
+        connectAndStart();
     }
 
-    @Scheduled(cron = "0 1 8 * * *")
-    private void sahraRefreshToken() {
-        try {
-            connectAndStart();
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode().value() == 401) {
-                clearConnection();
-                // message to telegram
-            }
-        } catch (ResourceAccessException e) {
-            if (securityFields.getGroupToken() == null) {
-                clearConnection();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void clearConnection(BourseCode bourseCode) {
+        if (securityFieldsMap.containsKey(bourseCode.getId())) {
+            securityFieldsMap.get(bourseCode.getId()).clear();
+            securityFieldsMap.remove(bourseCode.getId());
         }
-    }
-
-    private void clearConnection() {
-        securityFields.clear();
-        telegramMessageSender.sendMessage(new TelegramMessageDto(applicationProperties.getTelegram().getHealthCheckChat(), "sahra token is expired"));
+        telegramMessageSender.sendMessage(new TelegramMessageDto(applicationProperties.getTelegram().getHealthCheckChat(),
+            String.format("%s in %s token is expired", bourseCode.getName(), bourseCode.getBroker())));
     }
 }

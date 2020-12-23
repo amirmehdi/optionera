@@ -1,7 +1,7 @@
 import { Moment } from 'moment';
 
 export interface IOpenInterest {
-  userId?: string;
+  userId?: number;
   date?: Moment;
   isin?: string;
   quantity?: number;

@@ -78,20 +78,20 @@ public class OrderCriteria implements Serializable, Criteria {
 
     }
     /**
-     * Class for filtering State
+     * Class for filtering OrderState
      */
-    public static class StateFilter extends Filter<OrderState> {
+    public static class OrderStateFilter extends Filter<OrderState> {
 
-        public StateFilter() {
+        public OrderStateFilter() {
         }
 
-        public StateFilter(StateFilter filter) {
+        public OrderStateFilter(OrderStateFilter filter) {
             super(filter);
         }
 
         @Override
-        public StateFilter copy() {
-            return new StateFilter(this);
+        public OrderStateFilter copy() {
+            return new OrderStateFilter(this);
         }
 
     }
@@ -114,13 +114,15 @@ public class OrderCriteria implements Serializable, Criteria {
 
     private StringFilter omsId;
 
-    private StateFilter state;
+    private OrderStateFilter state;
 
     private IntegerFilter executed;
 
     private StringFilter description;
 
     private LongFilter signalId;
+
+    private LongFilter bourseCodeId;
 
     public OrderCriteria() {
     }
@@ -138,6 +140,7 @@ public class OrderCriteria implements Serializable, Criteria {
         this.executed = other.executed == null ? null : other.executed.copy();
         this.description = other.description == null ? null : other.description.copy();
         this.signalId = other.signalId == null ? null : other.signalId.copy();
+        this.bourseCodeId = other.bourseCodeId == null ? null : other.bourseCodeId.copy();
     }
 
     @Override
@@ -209,11 +212,11 @@ public class OrderCriteria implements Serializable, Criteria {
         this.omsId = omsId;
     }
 
-    public StateFilter getState() {
+    public OrderStateFilter getState() {
         return state;
     }
 
-    public void setState(StateFilter state) {
+    public void setState(OrderStateFilter state) {
         this.state = state;
     }
 
@@ -241,6 +244,14 @@ public class OrderCriteria implements Serializable, Criteria {
         this.signalId = signalId;
     }
 
+    public LongFilter getBourseCodeId() {
+        return bourseCodeId;
+    }
+
+    public void setBourseCodeId(LongFilter bourseCodeId) {
+        this.bourseCodeId = bourseCodeId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -263,7 +274,8 @@ public class OrderCriteria implements Serializable, Criteria {
             Objects.equals(state, that.state) &&
             Objects.equals(executed, that.executed) &&
             Objects.equals(description, that.description) &&
-            Objects.equals(signalId, that.signalId);
+            Objects.equals(signalId, that.signalId) &&
+            Objects.equals(bourseCodeId, that.bourseCodeId);
     }
 
     @Override
@@ -280,7 +292,8 @@ public class OrderCriteria implements Serializable, Criteria {
         state,
         executed,
         description,
-        signalId
+        signalId,
+        bourseCodeId
         );
     }
 
@@ -299,6 +312,7 @@ public class OrderCriteria implements Serializable, Criteria {
                 (executed != null ? "executed=" + executed + ", " : "") +
                 (description != null ? "description=" + description + ", " : "") +
                 (signalId != null ? "signalId=" + signalId + ", " : "") +
+                (bourseCodeId != null ? "bourseCodeId=" + bourseCodeId + ", " : "") +
             "}";
     }
 

@@ -1,5 +1,5 @@
 entity Portfolio {
-	userId String,
+	userId Long,
     date LocalDate,
 
     isin String,
@@ -10,7 +10,7 @@ entity Portfolio {
 }
 
 entity OpenInterest {
-	userId String,
+	userId Long,
     date LocalDate,
 
     isin String,

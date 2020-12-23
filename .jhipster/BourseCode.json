@@ -1,0 +1,65 @@
+{
+    "name": "BourseCode",
+    "fields": [
+        {
+            "fieldName": "broker",
+            "fieldType": "Broker",
+            "fieldValues": "REFAH,FIROOZE_ASIA"
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "code",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "username",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "password",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "buyingPower",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "blocked",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "remain",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "credit",
+            "fieldType": "Long"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "token",
+            "otherEntityRelationshipName": "bourseCode",
+            "relationshipName": "token",
+            "otherEntityField": "id",
+            "ownerSide": true
+        }
+    ],
+    "changelogDate": "20201222221100",
+    "entityTableName": "bourse_code",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*",
+    "searchEngine": false,
+    "databaseType": "sql"
+}

@@ -1,17 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {connect} from 'react-redux';
-import {Link, RouteComponentProps} from 'react-router-dom';
-import {Button, Row, Table} from 'reactstrap';
-import {getSortState, JhiItemCount, JhiPagination, TextFormat, Translate} from 'react-jhipster';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { Button, Col, Row, Table } from 'reactstrap';
+import { Translate, ICrudGetAllAction, TextFormat, getSortState, IPaginationBaseState, JhiPagination, JhiItemCount } from 'react-jhipster';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import {IRootState} from 'app/shared/reducers';
-import {getEntities} from './token.reducer';
-import {APP_DATE_FORMAT} from 'app/config/constants';
-import {ITEMS_PER_PAGE} from 'app/shared/util/pagination.constants';
+import { IRootState } from 'app/shared/reducers';
+import { getEntities } from './token.reducer';
+import { IToken } from 'app/shared/model/token.model';
+import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
-export interface ITokenProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {
-}
+export interface ITokenProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Token = (props: ITokenProps) => {
   const [paginationState, setPaginationState] = useState(getSortState(props.location, ITEMS_PER_PAGE));
@@ -45,13 +45,13 @@ export const Token = (props: ITokenProps) => {
       activePage: currentPage
     });
 
-  const {tokenList, match, loading, totalItems} = props;
+  const { tokenList, match, loading, totalItems } = props;
   return (
     <div>
       <h2 id="token-heading">
         <Translate contentKey="eTradeApp.token.home.title">Tokens</Translate>
         <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
-          <FontAwesomeIcon icon="plus"/>
+          <FontAwesomeIcon icon="plus" />
           &nbsp;
           <Translate contentKey="eTradeApp.token.home.createLabel">Create new Token</Translate>
         </Link>
@@ -60,71 +60,71 @@ export const Token = (props: ITokenProps) => {
         {tokenList && tokenList.length > 0 ? (
           <Table responsive>
             <thead>
-            <tr>
-              <th className="hand" onClick={sort('id')}>
-                <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort"/>
-              </th>
-              <th className="hand" onClick={sort('token')}>
-                <Translate contentKey="eTradeApp.token.token">Token</Translate> <FontAwesomeIcon icon="sort"/>
-              </th>
-              <th className="hand" onClick={sort('broker')}>
-                <Translate contentKey="eTradeApp.token.broker">Broker</Translate> <FontAwesomeIcon icon="sort"/>
-              </th>
-              <th className="hand" onClick={sort('createdAt')}>
-                <Translate contentKey="eTradeApp.token.createdAt">Created At</Translate> <FontAwesomeIcon icon="sort"/>
-              </th>
-              <th/>
-            </tr>
+              <tr>
+                <th className="hand" onClick={sort('id')}>
+                  <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('token')}>
+                  <Translate contentKey="eTradeApp.token.token">Token</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('broker')}>
+                  <Translate contentKey="eTradeApp.token.broker">Broker</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('createdAt')}>
+                  <Translate contentKey="eTradeApp.token.createdAt">Created At</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th />
+              </tr>
             </thead>
             <tbody>
-            {tokenList.map((token, i) => (
-              <tr key={`entity-${i}`}>
-                <td>
-                  <Button tag={Link} to={`${match.url}/${token.id}`} color="link" size="sm">
-                    {token.id}
-                  </Button>
-                </td>
-                <td>{token.token}</td>
-                <td>
-                  <Translate contentKey={`eTradeApp.Broker.${token.broker}`}/>
-                </td>
-                <td>
-                  <TextFormat type="date" value={token.createdAt} format={APP_DATE_FORMAT}/>
-                </td>
-                <td className="text-right">
-                  <div className="btn-group flex-btn-group-container">
-                    <Button tag={Link} to={`${match.url}/${token.id}`} color="info" size="sm">
-                      <FontAwesomeIcon icon="eye"/>{' '}
-                      <span className="d-none d-md-inline">
+              {tokenList.map((token, i) => (
+                <tr key={`entity-${i}`}>
+                  <td>
+                    <Button tag={Link} to={`${match.url}/${token.id}`} color="link" size="sm">
+                      {token.id}
+                    </Button>
+                  </td>
+                  <td>{token.token}</td>
+                  <td>
+                    <Translate contentKey={`eTradeApp.Broker.${token.broker}`} />
+                  </td>
+                  <td>
+                    <TextFormat type="date" value={token.createdAt} format={APP_DATE_FORMAT} />
+                  </td>
+                  <td className="text-right">
+                    <div className="btn-group flex-btn-group-container">
+                      <Button tag={Link} to={`${match.url}/${token.id}`} color="info" size="sm">
+                        <FontAwesomeIcon icon="eye" />{' '}
+                        <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.view">View</Translate>
                         </span>
-                    </Button>
-                    <Button
-                      tag={Link}
-                      to={`${match.url}/${token.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                      color="primary"
-                      size="sm"
-                    >
-                      <FontAwesomeIcon icon="pencil-alt"/>{' '}
-                      <span className="d-none d-md-inline">
+                      </Button>
+                      <Button
+                        tag={Link}
+                        to={`${match.url}/${token.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                        color="primary"
+                        size="sm"
+                      >
+                        <FontAwesomeIcon icon="pencil-alt" />{' '}
+                        <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.edit">Edit</Translate>
                         </span>
-                    </Button>
-                    <Button
-                      tag={Link}
-                      to={`${match.url}/${token.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                      color="danger"
-                      size="sm"
-                    >
-                      <FontAwesomeIcon icon="trash"/>{' '}
-                      <span className="d-none d-md-inline">
+                      </Button>
+                      <Button
+                        tag={Link}
+                        to={`${match.url}/${token.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                        color="danger"
+                        size="sm"
+                      >
+                        <FontAwesomeIcon icon="trash" />{' '}
+                        <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.delete">Delete</Translate>
                         </span>
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </Table>
         ) : (
@@ -137,8 +137,7 @@ export const Token = (props: ITokenProps) => {
       </div>
       <div className={tokenList && tokenList.length > 0 ? '' : 'd-none'}>
         <Row className="justify-content-center">
-          <JhiItemCount page={paginationState.activePage} total={totalItems} itemsPerPage={paginationState.itemsPerPage}
-                        i18nEnabled/>
+          <JhiItemCount page={paginationState.activePage} total={totalItems} itemsPerPage={paginationState.itemsPerPage} i18nEnabled />
         </Row>
         <Row className="justify-content-center">
           <JhiPagination
@@ -154,7 +153,7 @@ export const Token = (props: ITokenProps) => {
   );
 };
 
-const mapStateToProps = ({token}: IRootState) => ({
+const mapStateToProps = ({ token }: IRootState) => ({
   tokenList: token.entities,
   loading: token.loading,
   totalItems: token.totalItems

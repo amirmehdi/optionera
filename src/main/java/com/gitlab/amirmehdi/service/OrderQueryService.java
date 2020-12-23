@@ -119,6 +119,10 @@ public class OrderQueryService extends QueryService<Order> {
                 specification = specification.and(buildSpecification(criteria.getSignalId(),
                     root -> root.join(Order_.signal, JoinType.LEFT).get(Signal_.id)));
             }
+            if (criteria.getBourseCodeId() != null) {
+                specification = specification.and(buildSpecification(criteria.getBourseCodeId(),
+                    root -> root.join(Order_.bourseCode, JoinType.LEFT).get(BourseCode_.id)));
+            }
         }
         return specification;
     }

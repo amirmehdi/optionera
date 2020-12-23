@@ -62,6 +62,13 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="20201012151100-1-bourse_code" author="amirmehdi">
+        <addColumn tableName="orders">
+            <column name="bourse_code_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
     <changeSet id="20201012151100-1-relations" author="jhipster">
 
     </changeSet>
@@ -91,6 +98,7 @@
             <column name="state" type="string"/>
             <column name="executed" type="numeric"/>
             <column name="description" type="string"/>
+            <column name="bourse_code_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>
     </changeSet>
