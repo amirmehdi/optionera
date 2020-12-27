@@ -57,6 +57,18 @@ export const OpenInterestDetail = (props: IOpenInterestDetailProps) => {
             </span>
           </dt>
           <dd>{openInterestEntity.marginAmount}</dd>
+          <dt>
+            <span id="closingPrice">
+              <Translate contentKey="eTradeApp.openInterest.closingPrice">Closing Price</Translate>
+            </span>
+          </dt>
+          <dd>{openInterestEntity.closingPrice}</dd>
+          <dt>
+            <span id="lastPrice">
+              <Translate contentKey="eTradeApp.openInterest.lastPrice">Last Price</Translate>
+            </span>
+          </dt>
+          <dd>{openInterestEntity.lastPrice}</dd>
         </dl>
         <Button tag={Link} to="/open-interest" replace color="info">
           <FontAwesomeIcon icon="arrow-left" />{' '}

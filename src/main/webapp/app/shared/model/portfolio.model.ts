@@ -6,6 +6,8 @@ export interface IPortfolio {
   isin?: string;
   quantity?: number;
   avgPrice?: number;
+  closingPrice?: number;
+  lastPrice?: number;
 }
 
 export const defaultValue: Readonly<IPortfolio> = {};

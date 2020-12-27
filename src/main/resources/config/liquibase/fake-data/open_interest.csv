@@ -1,11 +1,11 @@
-id;user_id;date;isin;quantity;margin_amount
-1;client-driven black;2020-12-03;enterprise;2452;2179
-2;Texas;2020-12-04;pixel bus back-end;45589;26583
-3;Checking Account Producer;2020-12-04;Intranet quantify;96801;36265
-4;feed Cambridgeshire Berkshire;2020-12-04;e-enable;4160;96641
-5;Home Loan Account;2020-12-04;solution-oriented Buckinghamshire Land;99112;96533
-6;conglomeration parsing;2020-12-04;backing up Rustic Plastic Chicken;96777;25502
-7;Chicken;2020-12-04;deposit;66568;3914
-8;Future;2020-12-04;empower uniform Michigan;48250;11987
-9;Licensed magenta;2020-12-04;primary;71773;4876
-10;Kiribati deposit National;2020-12-04;Frozen Investment Account Programmable;43862;20032
+id;user_id;date;isin;quantity;margin_amount;closing_price;last_price
+1;62813;2020-12-04;black;97598;625;33751;75585
+2;2452;2020-12-04;Intelligent Rubber Pizza Handmade Metal Soap bus;78935;16289;45589;26583
+3;93205;2020-12-04;Checking Account Producer;31111;60433;93274;59321
+4;74646;2020-12-04;cross-platform International feed;51807;87438;51704;41857
+5;88105;2020-12-04;Lead Executive;85881;9456;62157;52672
+6;43112;2020-12-04;indexing;78923;44897;42026;99112
+7;96533;2020-12-04;envisioneer gold;94679;27919;51738;82073
+8;2767;2020-12-04;cross-media;96777;25502;12273;3064
+9;16668;2020-12-04;Steel deposit deposit;57181;83250;7263;89352
+10;24328;2020-12-04;empower uniform Michigan;48250;11987;55284;97589

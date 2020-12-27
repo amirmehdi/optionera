@@ -20,6 +20,14 @@
         {
             "fieldName": "marginAmount",
             "fieldType": "Long"
+        },
+        {
+            "fieldName": "closingPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "lastPrice",
+            "fieldType": "Integer"
         }
     ],
     "relationships": [],
@@ -33,5 +41,7 @@
     "readOnly": false,
     "embedded": false,
     "clientRootFolder": "",
-    "applications": "*"
+    "applications": "*",
+    "searchEngine": false,
+    "databaseType": "sql"
 }

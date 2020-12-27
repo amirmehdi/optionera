@@ -58,6 +58,12 @@ public class OpenInterest implements Serializable {
     @Column(name = "margin_amount")
     private Long marginAmount;
 
+    @Column(name = "closing_price")
+    private Integer closingPrice;
+
+    @Column(name = "last_price")
+    private Integer lastPrice;
+
     @JsonIgnore
     public AssetCompositeKey getId() {
         if (isin == null && date == null) {

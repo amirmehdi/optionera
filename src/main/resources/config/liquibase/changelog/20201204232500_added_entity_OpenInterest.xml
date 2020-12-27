@@ -35,6 +35,16 @@
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
     </changeSet>
+    <changeSet id="20201204232500-2" author="jhipster">
+        <addColumn tableName="open_interest">
+            <column name="closing_price" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="last_price" type="integer">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
     <changeSet author="amirmehdi" id="20201204232500-2">
         <modifyDataType
             columnName="user_id"
@@ -72,6 +82,8 @@
             <column name="isin" type="string"/>
             <column name="quantity" type="numeric"/>
             <column name="margin_amount" type="numeric"/>
+            <column name="closing_price" type="numeric"/>
+            <column name="last_price" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>
     </changeSet>

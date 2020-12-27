@@ -104,6 +104,12 @@ export const OpenInterest = (props: IOpenInterestProps) => {
                   <th className="hand" onClick={sort('marginAmount')}>
                     <Translate contentKey="eTradeApp.openInterest.marginAmount">Margin Amount</Translate> <FontAwesomeIcon icon="sort" />
                   </th>
+                  <th className="hand" onClick={sort('closingPrice')}>
+                    <Translate contentKey="eTradeApp.openInterest.closingPrice">Closing Price</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
+                  <th className="hand" onClick={sort('lastPrice')}>
+                    <Translate contentKey="eTradeApp.openInterest.lastPrice">Last Price</Translate> <FontAwesomeIcon icon="sort" />
+                  </th>
                   <th />
                 </tr>
               </thead>
@@ -117,6 +123,8 @@ export const OpenInterest = (props: IOpenInterestProps) => {
                     <td>{openInterest.isin}</td>
                     <td>{openInterest.quantity}</td>
                     <td>{openInterest.marginAmount}</td>
+                    <td>{openInterest.closingPrice}</td>
+                    <td>{openInterest.lastPrice}</td>
                     <td className="text-right">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`${match.url}/${openInterest.userId + ',' + openInterest.isin + ',' + openInterest.date}`} color="info" size="sm">

@@ -20,6 +20,14 @@
         {
             "fieldName": "avgPrice",
             "fieldType": "Integer"
+        },
+        {
+            "fieldName": "closingPrice",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "lastPrice",
+            "fieldType": "Integer"
         }
     ],
     "relationships": [],

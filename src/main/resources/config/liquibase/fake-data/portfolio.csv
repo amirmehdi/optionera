@@ -1,11 +1,11 @@
-id;user_id;date;isin;quantity;avg_price
-1;71606;2020-12-04;backing up Integration 3rd generation;88468;25409
-2;30588;2020-12-04;payment programming;54039;10207
-3;74087;2020-12-04;Devolved;60118;49659
-4;33080;2020-12-04;Applications Buckinghamshire payment;70282;71988
-5;7987;2020-12-04;SQL Associate Generic Plastic Computer;78080;43
-6;48085;2020-12-04;Minnesota withdrawal monitor;35159;23626
-7;6329;2020-12-04;Bedfordshire;70859;69294
-8;87643;2020-12-04;invoice Handcrafted;10969;12151
-9;570;2020-12-04;Junction niches invoice;56330;23320
-10;2278;2020-12-04;United States Minor Outlying Islands;26975;53417
+id;user_id;date;isin;quantity;avg_price;closing_price;last_price
+1;71606;2020-12-04;backing up Integration 3rd generation;88468;25409;30588;23675
+2;50273;2020-12-04;programming Bhutan;74087;14353;23977;23804
+3;17367;2020-12-04;internet solution Representative;48269;49614;77113;65647
+4;52975;2020-12-04;Refined optical toolset;7243;5108;60672;33771
+5;12359;2020-12-04;Loaf;67895;59083;44409;63551
+6;28593;2020-12-04;24/7 Handmade Plastic Shoes Fish;69294;87643;42924;48530
+7;66216;2020-12-04;deposit;12151;570;7132;67626
+8;47920;2020-12-04;reintermediate Infrastructure;23320;2278;81087;6655
+9;54356;2020-12-04;Cook Islands;36249;58107;86652;83528
+10;23715;2020-12-04;Granite Automotive;63065;5526;18789;53148
