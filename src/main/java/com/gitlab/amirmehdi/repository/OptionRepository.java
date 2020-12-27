@@ -87,6 +87,9 @@ public interface OptionRepository extends JpaRepository<Option, Long>, JpaSpecif
     @Query(value = "SELECT call_isin,put_isin from option ", nativeQuery = true)
     List<Object[]> findAllCallAndPutIsins();
 
+    @Query(value = "SELECT call_isin from option ", nativeQuery = true)
+    List<Object[]> findAllCallIsins();
+
     @Query(value = "SELECT o.call_isin,o.put_isin from option o join instrument i on i.isin = o.instrument_id where i.isin=?1", nativeQuery = true)
     List<Object[]> findAllCallAndPutIsinsByInstrumentIsin(String isin);
 

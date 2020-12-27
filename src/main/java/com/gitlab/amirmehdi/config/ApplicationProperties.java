@@ -25,11 +25,13 @@ public class ApplicationProperties {
     @Getter
     @Setter
     public static class Schedule {
+        private String bestCrawler;
         private boolean timeCheck;
         private String arbitrage;
         private String market;
         private String interest;
         private String clientsInfo;
+        private int tadbirChunk;
     }
 
     @Getter

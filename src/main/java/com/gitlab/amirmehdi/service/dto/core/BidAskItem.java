@@ -1,13 +1,17 @@
 package com.gitlab.amirmehdi.service.dto.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- * File Created by mojtabye on 7/30/17.
- */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BidAskItem {
 
     private int bidNumber;

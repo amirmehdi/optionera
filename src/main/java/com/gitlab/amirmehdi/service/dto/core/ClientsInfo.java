@@ -1,13 +1,14 @@
 package com.gitlab.amirmehdi.service.dto.core;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClientsInfo {
 
     private int individualBuyCount;

@@ -104,11 +104,17 @@ public class OptionService {
     }
 
     @Async
-    public void updateParams(String isin) {
-        List<Option> options = optionRepository.findAllByInstrumentIsin(isin);
-        StockWatch stockWatch = market.getStockWatch(isin);
+    public void updateParams(String baseInstrumentId) {
+        List<Option> options = optionRepository.findAllByInstrumentIsin(baseInstrumentId);
+        StockWatch stockWatch = market.getStockWatch(baseInstrumentId);
         options
             .forEach(option -> updateParams(option, stockWatch));
+    }
+
+    public void updateOption(String optionIsin) {
+        Option option = findByCallIsinOrPutIsin(optionIsin).orElseThrow(RuntimeException::new);
+        StockWatch stockWatch = market.getStockWatch(option.getInstrument().getIsin());
+        updateParams(option, stockWatch);
     }
 
     private void updateParams(Option option, StockWatch stockWatch) {
@@ -165,33 +171,30 @@ public class OptionService {
     }
 
     public List<String> findAllCallAndPutIsins() {
-        List<Object[]> allCallAndPutIsins = getAllCallAndPutIsins();
+        List<Object[]> allCallAndPutIsins = optionRepository.findAllCallAndPutIsins();
+        return getCallIsinAndPutIsin(allCallAndPutIsins);
+    }
+    public List<String> findAllCallIsins() {
+        List<Object[]> allCallAndPutIsins = optionRepository.findAllCallIsins();
         return getCallIsinAndPutIsin(allCallAndPutIsins);
     }
 
     public List<String> findAllCallAndPutIsinsByInstrumentIsin(String isin) {
-        List<Object[]> allCallAndPutIsins = getAllCallAndPutIsinsByBaseInstrumentIsin(isin);
+        List<Object[]> allCallAndPutIsins = optionRepository.findAllCallAndPutIsinsByInstrumentIsin(isin);
         return getCallIsinAndPutIsin(allCallAndPutIsins);
     }
 
     private List<String> getCallIsinAndPutIsin(List<Object[]> allCallAndPutIsins) {
         List<String> isins = new ArrayList<>();
         for (Object[] isin : allCallAndPutIsins) {
-            if (isin[0] == null || !((String) isin[0]).isEmpty()) {
+            if (isin.length > 0 && !((String) isin[0]).isEmpty()) {
                 isins.add((String) isin[0]);
             }
-            if (isin[1] == null || !((String) isin[1]).isEmpty()) {
+            if (isin.length > 1 && !((String) isin[1]).isEmpty()) {
                 isins.add((String) isin[1]);
             }
         }
         return isins;
     }
 
-    private List<Object[]> getAllCallAndPutIsins() {
-        return optionRepository.findAllCallAndPutIsins();
-    }
-
-    private List<Object[]> getAllCallAndPutIsinsByBaseInstrumentIsin(String isin) {
-        return optionRepository.findAllCallAndPutIsinsByInstrumentIsin(isin);
-    }
 }

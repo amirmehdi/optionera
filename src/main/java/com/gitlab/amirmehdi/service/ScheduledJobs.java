@@ -3,6 +3,8 @@ package com.gitlab.amirmehdi.service;
 import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.enumeration.OrderState;
+import com.gitlab.amirmehdi.service.crawler.CrawlerBox;
+import com.gitlab.amirmehdi.service.crawler.TseCrawler;
 import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
 import com.gitlab.amirmehdi.util.MarketTimeUtil;
 import lombok.extern.log4j.Log4j2;
@@ -17,15 +19,17 @@ import java.util.List;
 @Service
 @Log4j2
 public class ScheduledJobs {
-    private final CrawlerJobs crawlerJobs;
+    private final TseCrawler tseCrawler;
+    private final CrawlerBox crawlerBox;
     private final OrderService orderService;
     private final TaskScheduler executor;
     private final Market market;
     private final TelegramMessageSender telegramMessageSender;
     private final ApplicationProperties properties;
 
-    public ScheduledJobs(CrawlerJobs crawlerJobs, OrderService orderService, TaskScheduler executor, Market market, TelegramMessageSender telegramMessageSender, ApplicationProperties applicationProperties) {
-        this.crawlerJobs = crawlerJobs;
+    public ScheduledJobs(TseCrawler tseCrawler, CrawlerBox crawlerBox, OrderService orderService, TaskScheduler executor, Market market, TelegramMessageSender telegramMessageSender, ApplicationProperties applicationProperties) {
+        this.tseCrawler = tseCrawler;
+        this.crawlerBox = crawlerBox;
         this.orderService = orderService;
         this.executor = executor;
         this.market = market;
@@ -37,41 +41,43 @@ public class ScheduledJobs {
     public void updateImportantOptions() {
         if (properties.getSchedule().isTimeCheck() && !MarketTimeUtil.isMarketOpen())
             return;
-        crawlerJobs.arbitrageOptionsUpdater();
+        crawlerBox.getBestMarketUpdater().arbitrageOptionsUpdater();
     }
 
     @Scheduled(fixedRateString = "${application.schedule.market}")
     public void marketUpdater() {
         if (properties.getSchedule().isTimeCheck() && !MarketTimeUtil.isMarketOpen())
             return;
-        crawlerJobs.marketUpdater();
+        crawlerBox.getBestMarketUpdater().boardUpdater();
     }
 
     @Scheduled(fixedRateString = "${application.schedule.clientsInfo}")
     public void clientsInfoUpdater() {
         if (properties.getSchedule().isTimeCheck() && !MarketTimeUtil.isMarketOpen())
             return;
-        crawlerJobs.clientsInfoUpdater();
+        crawlerBox.getBestMarketUpdater().clientsInfoUpdater();
     }
 
     @Scheduled(fixedRateString = "${application.schedule.interest}")
     public void openInterestUpdater() {
         if (properties.getSchedule().isTimeCheck() && !MarketTimeUtil.isMarketOpen())
             return;
-        crawlerJobs.openInterestUpdater();
+        tseCrawler.openInterestUpdater();
     }
 
     @Scheduled(cron = "0 0 8 * * *")
     public void optionCrawler() {
-        crawlerJobs.optionCrawler();
+        tseCrawler.optionCrawler();
+        crawlerBox.getBestMarketUpdater().instrumentUpdater();
     }
 
     @Scheduled(fixedDelay = 30 * 60 * 1000)
     public void checkNullStockWatch() {
         if (market.getStockWatch("IRO1FOLD0001") == null) {
-            crawlerJobs.optionCrawler();
-            crawlerJobs.openInterestUpdater();
-            crawlerJobs.marketUpdater();
+            tseCrawler.optionCrawler();
+            tseCrawler.openInterestUpdater();
+            crawlerBox.getBestMarketUpdater().boardUpdater();
+            crawlerBox.getBestMarketUpdater().instrumentUpdater();
             telegramMessageSender.sendMessage(new TelegramMessageDto(properties.getTelegram().getHealthCheckChat(), "Why redis is empty!"));
         }
     }

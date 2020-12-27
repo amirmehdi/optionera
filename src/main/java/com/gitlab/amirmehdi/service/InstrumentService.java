@@ -2,6 +2,7 @@ package com.gitlab.amirmehdi.service;
 
 import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.repository.InstrumentRepository;
+import com.gitlab.amirmehdi.service.crawler.OmidRLCConsumer;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 

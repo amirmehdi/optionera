@@ -1,4 +1,4 @@
-package com.gitlab.amirmehdi.service;
+package com.gitlab.amirmehdi.service.crawler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

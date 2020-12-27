@@ -58,42 +58,47 @@ public class BoardService {
     }
 
     private void updateBoardForIsins(List<String> strings) {
-        List<Board> boards = strings.stream().map(s -> {
-            StockWatch stockWatch = market.getStockWatch(s);
-            if (stockWatch == null) {
-                return null;
-            }
-            BidAskItem bidAsk = market.getBidAsk(s).getBestBidAsk();
-            ClientsInfo clientsInfo = market.getClientsInfo(s);
-            Board board = new Board()
-                .isin(s);
-
-            board.close(stockWatch.getClosing())
-                .last(stockWatch.getLast())
-                .first(stockWatch.getFirst())
-                .referencePrice(stockWatch.getReferencePrice())
-                .low(stockWatch.getLow())
-                .high(stockWatch.getHigh())
-                .min(stockWatch.getMin())
-                .max(stockWatch.getMax())
-                .tradeCount(stockWatch.getTradesCount())
-                .tradeVolume(stockWatch.getTradeVolume())
-                .tradeValue(stockWatch.getTradeValue())
-                .state(stockWatch.getState());
-
-            board.askPrice(bidAsk.getAskPrice())
-                .bidPrice(bidAsk.getBidPrice())
-                .bidVolume(bidAsk.getBidQuantity())
-                .askVolume(bidAsk.getAskQuantity());
-            if (clientsInfo != null) {
-                board.legalBuyVolume(clientsInfo.getNaturalBuyVolume())
-                    .legalSellVolume(clientsInfo.getNaturalSellVolume())
-                    .individualBuyVolume(clientsInfo.getIndividualBuyVolume())
-                    .individualSellVolume(clientsInfo.getIndividualSellVolume());
-            }
-            return board;
-        }).filter(Objects::nonNull).collect(Collectors.toList());
+        List<Board> boards = strings.stream()
+            .map(this::getBoard)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
         boardRepository.saveAll(boards);
+    }
+
+    private Board getBoard(String isin) {
+        StockWatch stockWatch = market.getStockWatch(isin);
+        if (stockWatch == null) {
+            return null;
+        }
+        BidAskItem bidAsk = market.getBidAsk(isin).getBestBidAsk();
+        ClientsInfo clientsInfo = market.getClientsInfo(isin);
+        Board board = new Board()
+            .isin(isin);
+
+        board.close(stockWatch.getClosing())
+            .last(stockWatch.getLast())
+            .first(stockWatch.getFirst())
+            .referencePrice(stockWatch.getReferencePrice())
+            .low(stockWatch.getLow())
+            .high(stockWatch.getHigh())
+            .min(stockWatch.getMin())
+            .max(stockWatch.getMax())
+            .tradeCount(stockWatch.getTradesCount())
+            .tradeVolume(stockWatch.getTradeVolume())
+            .tradeValue(stockWatch.getTradeValue())
+            .state(stockWatch.getState());
+
+        board.askPrice(bidAsk.getAskPrice())
+            .bidPrice(bidAsk.getBidPrice())
+            .bidVolume(bidAsk.getBidQuantity())
+            .askVolume(bidAsk.getAskQuantity());
+        if (clientsInfo != null) {
+            board.legalBuyVolume(clientsInfo.getNaturalBuyVolume())
+                .legalSellVolume(clientsInfo.getNaturalSellVolume())
+                .individualBuyVolume(clientsInfo.getIndividualBuyVolume())
+                .individualSellVolume(clientsInfo.getIndividualSellVolume());
+        }
+        return board;
     }
 
     /**
@@ -105,6 +110,15 @@ public class BoardService {
     public Board save(Board board) {
         log.debug("Request to save Board : {}", board);
         return boardRepository.save(board);
+    }
+
+    public void save(String isin) {
+        log.debug("Request to save Board for isin : {}", isin);
+        Board board = getBoard(isin);
+        if (board == null) {
+            return;
+        }
+        boardRepository.save(board);
     }
 
     /**

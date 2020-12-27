@@ -177,11 +177,13 @@ application:
     privateChat: -1001468700748
     healthCheckChat: -1001468700748
   schedule:
+    bestCrawler: TadbirCrawler
     timeCheck: true
     arbitrage: 30000
     market: 60000
-    interest: 120000
+    interest: 60000
     clientsInfo: 60000
+    tadbirChunk: 30
   strategy:
     unusual1Threshold: -10
   headline:

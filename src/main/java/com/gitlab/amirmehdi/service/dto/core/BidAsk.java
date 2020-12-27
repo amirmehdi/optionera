@@ -9,7 +9,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,12 +20,25 @@ import java.util.Date;
 public class BidAsk {
 
     private String isin;
-    private ArrayList<BidAskItem> items = new ArrayList<>();
+    private List<BidAskItem> items;
     @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Tehran")
     private Date dateTime;
 
     @JsonIgnore
     public BidAskItem getBestBidAsk() {
         return items.get(0);
+    }
+
+    public void setItems(List<BidAskItem> items) {
+        if (items == null || items.isEmpty()) {
+            items = new ArrayList<>(Arrays.asList(
+                new BidAskItem(),
+                new BidAskItem(),
+                new BidAskItem(),
+                new BidAskItem(),
+                new BidAskItem()
+            ));
+        }
+        this.items = items;
     }
 }

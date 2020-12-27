@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Arrays;
 
-/**
- * File Created by mojtabye on 4/24/18.
- */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Instrument {
 

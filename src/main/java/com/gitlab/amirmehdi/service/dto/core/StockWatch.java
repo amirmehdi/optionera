@@ -11,9 +11,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-/**
- * File Created by mojtabye on 4/24/18.
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @Builder
