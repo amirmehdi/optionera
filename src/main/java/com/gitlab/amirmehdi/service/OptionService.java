@@ -112,7 +112,8 @@ public class OptionService {
     }
 
     public void updateOption(String optionIsin) {
-        Option option = findByCallIsinOrPutIsin(optionIsin).orElseThrow(RuntimeException::new);
+        Option option = findByCallIsinOrPutIsin(optionIsin).orElse(null);
+        if (option == null) return;
         StockWatch stockWatch = market.getStockWatch(option.getInstrument().getIsin());
         updateParams(option, stockWatch);
     }
@@ -174,6 +175,7 @@ public class OptionService {
         List<Object[]> allCallAndPutIsins = optionRepository.findAllCallAndPutIsins();
         return getCallIsinAndPutIsin(allCallAndPutIsins);
     }
+
     public List<String> findAllCallIsins() {
         List<Object[]> allCallAndPutIsins = optionRepository.findAllCallIsins();
         return getCallIsinAndPutIsin(allCallAndPutIsins);

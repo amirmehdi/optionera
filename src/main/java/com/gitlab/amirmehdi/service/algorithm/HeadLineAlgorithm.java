@@ -37,8 +37,8 @@ public class HeadLineAlgorithm {
         List<Order> allByState = orderService.findAllByState(OrderState.HEADLINE);
         for (Order order : allByState) {
             StockWatch stockWatch = market.getStockWatch(order.getIsin());
-            int price = stockWatch==null?order.getPrice():stockWatch.getMax();
-            int quantity = (int) (order.getBourseCode().getBuyingPower()/(2*price));
+            int price = stockWatch == null ? order.getPrice() : stockWatch.getMax();
+            int quantity = (int) (order.getBourseCode().getBuyingPower() / (2 * price));
             for (int i = 0; i < properties.getHeadline().getRepeat(); i++) {
                 executor.schedule(() -> orderService.sendOrder(
                     new Order()
@@ -47,7 +47,8 @@ public class HeadLineAlgorithm {
                         .price(price)
                         .quantity(quantity)
                         .validity(order.getValidity())
-                        .side(order.getSide()))
+                        .side(order.getSide())
+                        .bourseCode(order.getBourseCode()))
                     , new Date()
                         .toInstant()
                         .plus(i * properties.getHeadline().getSleep(), ChronoUnit.MILLIS));

@@ -2,6 +2,7 @@ package com.gitlab.amirmehdi.service;
 
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
+import com.gitlab.amirmehdi.domain.enumeration.OMS;
 import com.gitlab.amirmehdi.domain.enumeration.OrderState;
 import com.gitlab.amirmehdi.repository.OrderRepository;
 import com.gitlab.amirmehdi.service.dto.sahra.exception.CodeException;
@@ -94,7 +95,7 @@ public class OrderService {
         }
         if (order.getState() == null || order.getState().equals(OrderState.NONE)) {
             // send order
-            if (Broker.FIROOZE_ASIA.equals(order.getBroker())) {
+            if (OMS.SAHRA.equals(order.getBroker().oms)) {
                 try {
                     sahraRequestService.sendOrder(order);
                 } catch (CodeException e) {

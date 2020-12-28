@@ -115,6 +115,7 @@ public class MessageHandler {
                 break;
             default:
                 //InstrumentStateChange
+                //Unexpected value: Logout []
                 log.warn("Unexpected value: {} {}", pollMessageResponse.getMethod(), pollMessageResponse.getVal());
         }
     }
