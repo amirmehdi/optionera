@@ -38,85 +38,89 @@ public class MessageHandler {
     }
 
     public void handle(BourseCode bourseCode, PollMessageResponse pollMessageResponse) {
-        switch (pollMessageResponse.getMethod()) {
-            case "initUI":
-                // قدرت خرید
-                ArrayList credit = (ArrayList) ((ArrayList) ((ArrayList) ((ArrayList) pollMessageResponse.getVal().get(0)).get(1)).get(0)).get(3);
-                CreditInfoUpdate creditInfoUpdate1 = new CreditInfoUpdate(credit);
-                creditInfoUpdateHandler(bourseCode, creditInfoUpdate1);
-                // پورتفوی
-                ArrayList<ArrayList> portfo = (ArrayList) ((ArrayList) ((ArrayList) pollMessageResponse.getVal().get(0)).get(1)).get(3);
-                portfo.stream()
-                    .forEach(s -> assetChangeHandler(bourseCode, new AssetData(s)));
-                //سفارشات باز
-                //((ArrayList) ((ArrayList) ((ArrayList) ((ArrayList) firstPollResponse.getM().get(0).getVal().get(0)).get(1)).get(2)).get(0)).toString()
-                //    [1170000000364703, IRO1PKLJ0001, 1399/09/05 10:11:34, 4000, 12000, 0, 1, 1, null, 2, 1, 009845, false, 1, 0, 0, true, 48178176, 4000, null, 1, null]
-                //موقعیت باز
-                ArrayList<ArrayList> opens = (ArrayList) ((ArrayList) ((ArrayList) pollMessageResponse.getVal().get(0)).get(1)).get(8);
-                opens.forEach(s -> positionChangeHandler(bourseCode, new PositionData(s)));
-                break;
-            case "marketMessageRecived":
-                break;
-            case "InstrumentFirstBestLimitChange":
-                //val=[[IRO1BMLT0001, [1, 74, 5310, 3508475, 41, 5310, 2073603]]]
-                break;
-            case "InstrumentClosingPriceChange":
-                //PollMessageResponse(hub=OmsClientHub, method=InstrumentClosingPriceChange, val=[[IRO9MAPN4141, 18, 130, 0.0, 2602, 3510, 3510, 0]])
-                break;
-            case "InstrumentTradePercentChage":
-                //PollMessageResponse(hub=OmsClientHub, method=InstrumentTradePercentChage, val=[[IRO1MAPN0001, 1359, [492, 3730230, 645, 4543423, 4, 1285703, 3, 472510]]])
-                break;
-            case "InstrumentTrade":
-                //[[IRO1PTAP0001, 14000, 12960, 0, 13620, 10:42:57, 6287, 35885122]]
-                break;
-            case "AssetPriceChange":
-                //PollMessageResponse(hub=OmsClientHub, method=AssetPriceChange, val=[[IRO1PKOD0001, 7970]])
-                break;
-            case "OverallStatisticsChange":
-                //[[1363271.6, 6162.63, 984040.0, 9.3223558858793E13, 9.229306083E9, 66]]
-                break;
-            case "creditInfoUpdate":
-                //PollMessageResponse(hub=OmsClientHub, method=creditInfoUpdate, val=[[8877109, 255205989, 0, 246328880, 1, 1]])
-                CreditInfoUpdate creditInfoUpdate = new CreditInfoUpdate((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                creditInfoUpdateHandler(bourseCode, creditInfoUpdate);
-                break;
-            case "orderAdded":
-                //PollMessageResponse(hub=OmsClientHub, method=orderAdded, val=[[1170000000364934, IRO9MAPN4141, 1399/09/05 11:21:55, 1, 2480, 0, 2, 1, null, 1, 1, 000000, false, 2, 0, 0, true, 9276665, 1, null, 1, null]])
-                OrderData orderData = new OrderData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                orderAddedHandler(bourseCode,orderData);
-                break;
-            case "orderStateChange":
-                //PollMessageResponse(hub=OmsClientHub, method=orderStateChange, val=[[1170000000364932, 3, 003078, false, 1, 28169130, 1481, 1]])
-                StateChangeData stateChangeData = new StateChangeData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                stateChangeDataHandler(stateChangeData);
-                break;
-            case "orderEdited":
-                OrderEdit orderEdit = new OrderEdit((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                orderEditHandler(orderEdit);
-                break;
-            case "orderError":
-                OrderError orderError = new OrderError((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                orderErrorHandler(orderError);
-                break;
-            case "orderExecution":
-                //PollMessageResponse(hub=OmsClientHub, method=orderExecution, val=[[1170000000364932, 1481, 3, 1, 0, 0, 1481, 18900, 28094805]])
-                OrderExecution orderExecution = new OrderExecution((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                orderExecutionHandler(orderExecution);
-                break;
-            case "AssetChange":
-                //PollMessageResponse(hub=OmsClientHub, method=AssetChange, val=[[IRO1MAPN0001, 32582, 19103, 18900]])
-                AssetData assetData = new AssetData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                assetChangeHandler(bourseCode, assetData);
-                break;
-            case "PositionChange":
-                //PollMessageResponse(hub=OmsClientHub, method=PositionChange, val=[[IRO9MAPN4141, -1, 0, 0, 0, 0, 9272880, 1399/10/08, 1399/10/09]])
-                PositionData positionData = new PositionData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                positionChangeHandler(bourseCode, positionData);
-                break;
-            default:
-                //InstrumentStateChange
-                //Unexpected value: Logout []
-                log.warn("Unexpected value: {} {}", pollMessageResponse.getMethod(), pollMessageResponse.getVal());
+        try {
+            switch (pollMessageResponse.getMethod()) {
+                case "initUI":
+                    // قدرت خرید
+                    ArrayList credit = (ArrayList) ((ArrayList) ((ArrayList) ((ArrayList) pollMessageResponse.getVal().get(0)).get(1)).get(0)).get(3);
+                    CreditInfoUpdate creditInfoUpdate1 = new CreditInfoUpdate(credit);
+                    creditInfoUpdateHandler(bourseCode, creditInfoUpdate1);
+                    // پورتفوی
+                    ArrayList<ArrayList> portfo = (ArrayList) ((ArrayList) ((ArrayList) pollMessageResponse.getVal().get(0)).get(1)).get(3);
+                    portfo.stream()
+                        .forEach(s -> assetChangeHandler(bourseCode, new AssetData(s)));
+                    //سفارشات باز
+                    //((ArrayList) ((ArrayList) ((ArrayList) ((ArrayList) firstPollResponse.getM().get(0).getVal().get(0)).get(1)).get(2)).get(0)).toString()
+                    //    [1170000000364703, IRO1PKLJ0001, 1399/09/05 10:11:34, 4000, 12000, 0, 1, 1, null, 2, 1, 009845, false, 1, 0, 0, true, 48178176, 4000, null, 1, null]
+                    //موقعیت باز
+                    ArrayList<ArrayList> opens = (ArrayList) ((ArrayList) ((ArrayList) pollMessageResponse.getVal().get(0)).get(1)).get(8);
+                    opens.forEach(s -> positionChangeHandler(bourseCode, new PositionData(s)));
+                    break;
+                case "marketMessageRecived":
+                    break;
+                case "InstrumentFirstBestLimitChange":
+                    //val=[[IRO1BMLT0001, [1, 74, 5310, 3508475, 41, 5310, 2073603]]]
+                    break;
+                case "InstrumentClosingPriceChange":
+                    //PollMessageResponse(hub=OmsClientHub, method=InstrumentClosingPriceChange, val=[[IRO9MAPN4141, 18, 130, 0.0, 2602, 3510, 3510, 0]])
+                    break;
+                case "InstrumentTradePercentChage":
+                    //PollMessageResponse(hub=OmsClientHub, method=InstrumentTradePercentChage, val=[[IRO1MAPN0001, 1359, [492, 3730230, 645, 4543423, 4, 1285703, 3, 472510]]])
+                    break;
+                case "InstrumentTrade":
+                    //[[IRO1PTAP0001, 14000, 12960, 0, 13620, 10:42:57, 6287, 35885122]]
+                    break;
+                case "AssetPriceChange":
+                    //PollMessageResponse(hub=OmsClientHub, method=AssetPriceChange, val=[[IRO1PKOD0001, 7970]])
+                    break;
+                case "OverallStatisticsChange":
+                    //[[1363271.6, 6162.63, 984040.0, 9.3223558858793E13, 9.229306083E9, 66]]
+                    break;
+                case "creditInfoUpdate":
+                    //PollMessageResponse(hub=OmsClientHub, method=creditInfoUpdate, val=[[8877109, 255205989, 0, 246328880, 1, 1]])
+                    CreditInfoUpdate creditInfoUpdate = new CreditInfoUpdate((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                    creditInfoUpdateHandler(bourseCode, creditInfoUpdate);
+                    break;
+                case "orderAdded":
+                    //PollMessageResponse(hub=OmsClientHub, method=orderAdded, val=[[1170000000364934, IRO9MAPN4141, 1399/09/05 11:21:55, 1, 2480, 0, 2, 1, null, 1, 1, 000000, false, 2, 0, 0, true, 9276665, 1, null, 1, null]])
+                    OrderData orderData = new OrderData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                    orderAddedHandler(bourseCode, orderData);
+                    break;
+                case "orderStateChange":
+                    //PollMessageResponse(hub=OmsClientHub, method=orderStateChange, val=[[1170000000364932, 3, 003078, false, 1, 28169130, 1481, 1]])
+                    StateChangeData stateChangeData = new StateChangeData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                    stateChangeDataHandler(stateChangeData);
+                    break;
+                case "orderEdited":
+                    OrderEdit orderEdit = new OrderEdit((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                    orderEditHandler(orderEdit);
+                    break;
+                case "orderError":
+                    OrderError orderError = new OrderError((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                    orderErrorHandler(orderError);
+                    break;
+                case "orderExecution":
+                    //PollMessageResponse(hub=OmsClientHub, method=orderExecution, val=[[1170000000364932, 1481, 3, 1, 0, 0, 1481, 18900, 28094805]])
+                    OrderExecution orderExecution = new OrderExecution((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                    orderExecutionHandler(orderExecution);
+                    break;
+                case "AssetChange":
+                    //PollMessageResponse(hub=OmsClientHub, method=AssetChange, val=[[IRO1MAPN0001, 32582, 19103, 18900]])
+                    AssetData assetData = new AssetData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                    assetChangeHandler(bourseCode, assetData);
+                    break;
+                case "PositionChange":
+                    //PollMessageResponse(hub=OmsClientHub, method=PositionChange, val=[[IRO9MAPN4141, -1, 0, 0, 0, 0, 9272880, 1399/10/08, 1399/10/09]])
+                    PositionData positionData = new PositionData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
+                    positionChangeHandler(bourseCode, positionData);
+                    break;
+                default:
+                    //InstrumentStateChange
+                    //Unexpected value: Logout []
+                    log.warn("Unexpected value: {} {}", pollMessageResponse.getMethod(), pollMessageResponse.getVal());
+            }
+        } catch (Exception e) {
+            log.error("sahra message got error {} {}", pollMessageResponse.getMethod(), pollMessageResponse.getVal(), e);
         }
     }
 
