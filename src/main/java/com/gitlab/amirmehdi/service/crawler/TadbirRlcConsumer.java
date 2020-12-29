@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -50,7 +51,8 @@ public class TadbirRlcConsumer {
 
     @Async
     public CompletableFuture<LightSymbolInfoAndQueue> stockFutureInfoHandler(String isin) {
-        log.debug("stockFutureInfoHandler for isin {}", isin);
+        StopWatch watch = new StopWatch("stockFutureInfoHandler");
+        watch.start();
         SymbolInfoRequestBody body = new SymbolInfoRequestBody();
         body.setLa("fa");
         body.setType("getLightSymbolInfoAndQueue");
@@ -62,6 +64,8 @@ public class TadbirRlcConsumer {
                 , null
                 , String.class)
                 .getBody(), LightSymbolInfoAndQueue.class);
+            watch.stop();
+            log.debug(watch.shortSummary());
             return CompletableFuture.completedFuture(response);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

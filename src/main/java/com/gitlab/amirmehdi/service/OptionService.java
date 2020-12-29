@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.service;
 
+import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.domain.OptionStats;
 import com.gitlab.amirmehdi.repository.BoardRepository;
@@ -9,14 +10,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Option}.
@@ -30,11 +33,13 @@ public class OptionService {
 
     private final OptionRepository optionRepository;
     private final BoardRepository boardRepository;
+    private final InstrumentService instrumentService;
     private final Market market;
 
-    public OptionService(OptionRepository optionRepository, BoardRepository boardRepository, Market market) {
+    public OptionService(OptionRepository optionRepository, BoardRepository boardRepository, InstrumentService instrumentService, Market market) {
         this.optionRepository = optionRepository;
         this.boardRepository = boardRepository;
+        this.instrumentService = instrumentService;
         this.market = market;
     }
 
@@ -103,12 +108,8 @@ public class OptionService {
         return optionRepository.findByCallIsinAndPutIsin(callIsin, putIsin);
     }
 
-    @Async
-    public void updateParams(String baseInstrumentId) {
-        List<Option> options = optionRepository.findAllByInstrumentIsin(baseInstrumentId);
-        StockWatch stockWatch = market.getStockWatch(baseInstrumentId);
-        options
-            .forEach(option -> updateParams(option, stockWatch));
+    public void updateOption(List<String> isins) {
+        isins.forEach(this::updateOption);
     }
 
     public void updateOption(String optionIsin) {
@@ -198,5 +199,26 @@ public class OptionService {
         }
         return isins;
     }
+
+    public List<String> getCallAndBaseIsins() {
+        List<String> isins = findAllCallIsins();
+        List<Instrument> instruments = instrumentService.findAll();
+        isins.addAll(instruments.stream().map(Instrument::getIsin).collect(Collectors.toList()));
+        return isins;
+    }
+
+    public List<List<String>> getPartitionedOptions() {
+        List<Option> options = optionRepository.findAll(Sort.by(Sort.Order.desc("instrument.isin"), Sort.Order.desc("id")));
+        List<List<String>> lists = new ArrayList<>();
+        options.stream().collect(Collectors.groupingBy(option -> option.getInstrument().getIsin()))
+            .forEach((s, options1) -> {
+                List<String> isins = new ArrayList<>();
+                isins.add(s);
+                isins.addAll(options1.stream().map(Option::getCallIsin).collect(Collectors.toList()));
+                lists.add(isins);
+            });
+        return lists;
+    }
+
 
 }

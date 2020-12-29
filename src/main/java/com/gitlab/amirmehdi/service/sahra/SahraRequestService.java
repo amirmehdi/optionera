@@ -84,6 +84,9 @@ public class SahraRequestService implements CommandLineRunner {
             */
     @Scheduled(cron = "0 1 8 * * *")
     public void connectAndStart() {
+        if (!applicationProperties.getBrokers().isSahraEnable()){
+            return;
+        }
         List<BourseCode> bourseCodes = bourseCodeRepository.findAllByBrokerIn(Broker.byOms(OMS.SAHRA));
         for (BourseCode bourseCode : bourseCodes) {
             try {

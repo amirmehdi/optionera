@@ -15,4 +15,6 @@ import java.util.List;
 @Repository
 public interface BourseCodeRepository extends JpaRepository<BourseCode, Long> {
     List<BourseCode> findAllByBrokerIn(List<Broker>brokers);
+
+    List<BourseCode> findAllByBroker(Broker broker);
 }

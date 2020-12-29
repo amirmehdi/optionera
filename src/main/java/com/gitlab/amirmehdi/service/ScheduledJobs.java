@@ -37,7 +37,7 @@ public class ScheduledJobs {
     public void marketUpdater() {
         if (properties.getSchedule().isTimeCheck() && !MarketTimeUtil.isMarketOpen())
             return;
-        crawlerBox.getBestMarketUpdater().boardUpdater();
+        crawlerBox.highAvailableBoardUpdater();
     }
 
     @Scheduled(fixedRateString = "${application.schedule.clientsInfo}")
@@ -65,7 +65,7 @@ public class ScheduledJobs {
         if (market.getStockWatch("IRO1FOLD0001") == null) {
             tseCrawler.optionCrawler();
             tseCrawler.openInterestUpdater();
-            crawlerBox.getBestMarketUpdater().boardUpdater();
+            crawlerBox.getBestMarketUpdater().boardUpdater(null);
             crawlerBox.getBestMarketUpdater().instrumentUpdater();
             telegramMessageSender.sendMessage(new TelegramMessageDto(properties.getTelegram().getHealthCheckChat(), "Why redis is empty!"));
         }

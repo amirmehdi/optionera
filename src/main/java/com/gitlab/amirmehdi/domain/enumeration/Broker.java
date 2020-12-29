@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.gitlab.amirmehdi.domain.enumeration.OMS.SAHRA;
-import static com.gitlab.amirmehdi.domain.enumeration.OMS.TADBIR;
+import static com.gitlab.amirmehdi.domain.enumeration.OMS.*;
 
 /**
  * The Broker enumeration.
  */
 public enum Broker {
     REFAH(TADBIR, "https://silver.refahbroker.ir/Account/Login"),
+    AGAH(ASA, "https://online.agah.com"),
     FIROOZE_ASIA(SAHRA, "https://firouzex.ephoenix.ir"),
     HAFEZ(SAHRA, "https://hafez.ephoenix.ir"),
     GANJINE(SAHRA, "https://gs.ephoenix.ir");

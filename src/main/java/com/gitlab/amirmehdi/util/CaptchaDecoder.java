@@ -1,6 +1,12 @@
 package com.gitlab.amirmehdi.util;
 
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -16,6 +22,19 @@ public class CaptchaDecoder {
     }
 
     private CaptchaDecoder() {
+    }
+
+
+    public void saveCaptcha(WebElement logo, String fileName, String type) throws IOException {
+        WrapsDriver wrapsDriver = (WrapsDriver) logo;
+        File screenshot = ((TakesScreenshot) wrapsDriver.getWrappedDriver()).getScreenshotAs(OutputType.FILE);
+        BufferedImage bufferedImage = ImageIO.read(screenshot);
+        java.awt.Rectangle rectangle = new java.awt.Rectangle(logo.getSize().width, logo.getSize().height, logo.getSize().width, logo.getSize().height);
+        Point location = logo.getLocation();
+        BufferedImage destImage = bufferedImage.getSubimage(location.x, location.y, rectangle.width, rectangle.height);
+        ImageIO.write(destImage, type, screenshot);
+        File file = new File(fileName + "." + type);
+        FileUtils.copyFile(screenshot, file);
     }
 
     //for tadbir
@@ -45,6 +64,13 @@ public class CaptchaDecoder {
         Runtime.getRuntime().exec(
             "convert " + fileName + type + " -colorspace Gray -blur 3x1 -level 20% -channel rgb -auto-level " + fileName + ".png");
         Process process = Runtime.getRuntime().exec("tesseract " + fileName + ".png" + " - --psm 6 digits");
+        String captcha = getProcessOutput(process);
+        return captcha.replaceAll("\\D+", "");
+    }
+
+    //for agah
+    public String mode3Captcha(String fileName, String type) throws IOException, InterruptedException {
+        Process process = Runtime.getRuntime().exec("tesseract " + fileName + "." + type + " - --psm 6 digits");
         String captcha = getProcessOutput(process);
         return captcha.replaceAll("\\D+", "");
     }

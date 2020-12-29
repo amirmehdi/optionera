@@ -7,13 +7,11 @@ import com.gitlab.amirmehdi.service.dto.sahra.NegotiateResponse;
 import com.gitlab.amirmehdi.service.dto.sahra.SecurityFields;
 import com.gitlab.amirmehdi.service.dto.sahra.StartSocketResponse;
 import com.gitlab.amirmehdi.util.CaptchaDecoder;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -22,16 +20,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.gitlab.amirmehdi.util.SeleniumDriver.getWebDriver;
 import static com.gitlab.amirmehdi.util.UrlEncodingUtil.getEncode;
 
 @Service
@@ -51,7 +45,7 @@ public class NegotiateManager {
 
     public NegotiateResponse negotiate(Token token) {
         ResponseEntity<NegotiateResponse> negotiateResponse =
-            restTemplate.exchange(String.format(negotiateUrl,token.getBroker().url)
+            restTemplate.exchange(String.format(negotiateUrl, token.getBroker().url)
                 , HttpMethod.GET
                 , new HttpEntity<>(getNegotiateHeaders(token))
                 , NegotiateResponse.class
@@ -109,20 +103,9 @@ public class NegotiateManager {
     }
 
     public String login(BourseCode bourseCode, long attemptNumber) {
-        WebDriverManager.chromedriver().setup();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("enable-automation");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-infobars");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--disable-browser-side-navigation");
-        options.addArguments("--disable-gpu");
         WebDriver driver = null;
         try {
-            URL browserAddress = new URL(applicationProperties.getSeleniumHubGrid() + "/wd/hub");
-            driver = new RemoteWebDriver(browserAddress, options);
-
-            driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+            driver = getWebDriver(applicationProperties.getSeleniumHubGrid());
             driver.get(bourseCode.getBroker().url);
             String captchaNum;
             captchaNum = getCaptcha(driver);
@@ -134,7 +117,6 @@ public class NegotiateManager {
             password.sendKeys(bourseCode.getPassword());
             captcha.sendKeys(captchaNum);
             loginButton.click();
-            new WebDriverWait(driver, 20).until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -166,15 +148,7 @@ public class NegotiateManager {
         while (true) {
             try {
                 WebElement logo = driver.findElement(By.xpath("//*[@id=\"login-form\"]/div[4]/img"));
-                WrapsDriver wrapsDriver = (WrapsDriver) logo;
-                File screenshot = ((TakesScreenshot) wrapsDriver.getWrappedDriver()).getScreenshotAs(OutputType.FILE);
-                BufferedImage bufferedImage = ImageIO.read(screenshot);
-                java.awt.Rectangle rectangle = new java.awt.Rectangle(logo.getSize().width, logo.getSize().height, logo.getSize().width, logo.getSize().height);
-                Point location = logo.getLocation();
-                BufferedImage destImage = bufferedImage.getSubimage(location.x, location.y, rectangle.width, rectangle.height);
-                ImageIO.write(destImage, "png", screenshot);
-                File file = new File("sahra.png");
-                FileUtils.copyFile(screenshot, file);
+                CaptchaDecoder.getInstance().saveCaptcha(logo, "sahra", "png");
                 captchaNum = CaptchaDecoder.getInstance().mode2Captcha("sahra", ".png");
                 if (captchaNum.length() == 6) {
                     System.out.print("Success!");

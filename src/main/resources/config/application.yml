@@ -171,19 +171,25 @@ jhipster:
 application:
   oaBaseUrl: https://api.algo.ir
   seleniumHubGrid: http://localhost:4444
+  brokers:
+    sahraEnable: false
+  crawler:
+    bestCrawler: AsaCrawler
+    availableCrawler: OmidCrawler;0;160,TadbirCrawler;160;240,AsaCrawler;240;300
+    tadbirChunk: 40
+    asaChunk: 30
+    omidChunk: 40
   telegram:
     token: 1154072624:AAE9byP-2eXRfxZPHeZ92ffjd0LaO4Ys1iA
     publicChat: -1001468700748
     privateChat: -1001468700748
     healthCheckChat: -1001468700748
   schedule:
-    bestCrawler: TadbirCrawler
     timeCheck: true
     arbitrage: 30000
     market: 60000
     interest: 60000
     clientsInfo: 60000
-    tadbirChunk: 30
   strategy:
     unusual1Threshold: -10
   headline:

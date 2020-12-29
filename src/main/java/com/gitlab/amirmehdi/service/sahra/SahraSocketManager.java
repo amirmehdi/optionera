@@ -5,7 +5,6 @@ import com.gitlab.amirmehdi.domain.Token;
 import com.gitlab.amirmehdi.repository.TokenRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
@@ -13,9 +12,9 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
 
-@Service
+//@Service
 @Log4j2
-public class ConnectionManager extends TextWebSocketHandler {
+public class SahraSocketManager extends TextWebSocketHandler {
     private final TokenRepository tokenRepository;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
@@ -29,7 +28,7 @@ public class ConnectionManager extends TextWebSocketHandler {
     //can be hashmap for keep all sessions for other users
     private WebSocketSession session;
 
-    public ConnectionManager(TokenRepository tokenRepository, RestTemplate restTemplate, ObjectMapper objectMapper, NegotiateManager negotiateManager) {
+    public SahraSocketManager(TokenRepository tokenRepository, RestTemplate restTemplate, ObjectMapper objectMapper, NegotiateManager negotiateManager) {
         this.tokenRepository = tokenRepository;
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;

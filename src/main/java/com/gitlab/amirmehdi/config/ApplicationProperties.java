@@ -17,6 +17,8 @@ public class ApplicationProperties {
     private String oaBaseUrl;
     private String seleniumHubGrid;
 
+    private final Brokers brokers = new Brokers();
+    private final Crawler crawler = new Crawler();
     private final Schedule schedule = new Schedule();
     private final Telegram telegram = new Telegram();
     private final Strategy strategy = new Strategy();
@@ -24,15 +26,30 @@ public class ApplicationProperties {
 
     @Getter
     @Setter
-    public static class Schedule {
+    public static class Brokers {
+        private boolean sahraEnable;
+    }
+
+    @Getter
+    @Setter
+    public static class Crawler {
         private String bestCrawler;
+        private String availableCrawler; //OmidCrawler:0:150,AsaCrawler:150:225,TadbirCrawler:225:400
+        private int tadbirChunk;
+        private int asaChunk;
+        private int omidChunk;
+    }
+
+
+    @Getter
+    @Setter
+    public static class Schedule {
         private boolean timeCheck;
         private String arbitrage;
         private String market;
         private String interest;
         private String clientsInfo;
-        private int tadbirChunk;
-    }
+}
 
     @Getter
     @Setter

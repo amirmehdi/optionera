@@ -47,7 +47,7 @@ public class ManualJobResource {
     @PostMapping(value = "market")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Object> marketUpdater() {
-        crawlerBox.getBestMarketUpdater().boardUpdater();
+        crawlerBox.highAvailableBoardUpdater();
         return ResponseEntity.ok().build();
     }
 

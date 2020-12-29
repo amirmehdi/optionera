@@ -15,7 +15,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -42,22 +41,14 @@ public class BoardService {
         this.instrumentService = instrumentService;
     }
 
-    public void updateAllBoard(String s) {
-        List<String> isins = new ArrayList<>();
-        isins.add(s);
-        isins.addAll(optionService.findAllCallAndPutIsinsByInstrumentIsin(s));
-        updateBoardForIsins(isins);
-    }
-
     @Async
     public void updateAllBoard() {
         List<String> isins = instrumentService.findAll().stream().map(Instrument::getIsin).collect(Collectors.toList());
         isins.addAll(optionService.findAllCallAndPutIsins());
-
         Lists.partition(isins, 100).forEach(this::updateBoardForIsins);
     }
 
-    private void updateBoardForIsins(List<String> strings) {
+    public void updateBoardForIsins(List<String> strings) {
         List<Board> boards = strings.stream()
             .map(this::getBoard)
             .filter(Objects::nonNull)

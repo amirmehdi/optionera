@@ -1,13 +1,12 @@
 package com.gitlab.amirmehdi.service.crawler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.service.*;
 import com.gitlab.amirmehdi.service.dto.core.BidAsk;
-import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import com.google.common.collect.Lists;
-import io.micrometer.core.instrument.ImmutableTag;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,12 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 import org.springframework.web.client.ResourceAccessException;
 
+import javax.annotation.Nullable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,33 +27,21 @@ public class OmidCrawler implements MarketUpdater {
     private final Market market;
     private final OptionService optionService;
     private final OmidRLCConsumer omidRLCConsumer;
-    private final MetricService metricService;
     private final BoardService boardService;
     private final InstrumentService instrumentService;
     private final OptionStatsService optionStatsService;
     private final StrategyService strategyService;
+    private final ApplicationProperties properties;
 
-    private final AtomicLong bidAskSuccessCount = new AtomicLong(0);
-    private final AtomicLong bidAskErrorCount = new AtomicLong(0);
-    private final AtomicLong stockWatchSuccessCount = new AtomicLong(0);
-    private final AtomicLong stockWatchErrorCount = new AtomicLong(0);
-    private final AtomicLong clientsInfoSuccessCount = new AtomicLong(0);
-    private final AtomicLong clientsInfoErrorCount = new AtomicLong(0);
-    private Date firstUpdate;
-    private Date bidAskLastUpdate;
-    private Date stockWatchLastUpdate;
-    private Date clientsInfoFirstUpdate;
-    private Date clientsInfoLastUpdate;
-
-    public OmidCrawler(Market market, OptionService optionService, OmidRLCConsumer omidRLCConsumer, MetricService metricService, BoardService boardService, InstrumentService instrumentService, OptionStatsService optionStatsService, StrategyService strategyService) {
+    public OmidCrawler(Market market, OptionService optionService, OmidRLCConsumer omidRLCConsumer, BoardService boardService, InstrumentService instrumentService, OptionStatsService optionStatsService, StrategyService strategyService, ApplicationProperties properties) {
         this.market = market;
         this.optionService = optionService;
         this.omidRLCConsumer = omidRLCConsumer;
-        this.metricService = metricService;
         this.boardService = boardService;
         this.instrumentService = instrumentService;
         this.optionStatsService = optionStatsService;
         this.strategyService = strategyService;
+        this.properties = properties;
     }
 
 
@@ -85,135 +71,48 @@ public class OmidCrawler implements MarketUpdater {
     }
 
     @Override
-    public void boardUpdater() {
-        if (bidAskLastUpdate != null && stockWatchLastUpdate != null) {
-            metricService.reportMetric("crawler.updater.bidask.seconds", new ImmutableTag("status", "all"), (bidAskLastUpdate.getTime() - firstUpdate.getTime()) / 1000);
-            metricService.reportMetric("crawler.updater.bidask.count", new ImmutableTag("status", "success"), bidAskSuccessCount.get());
-            metricService.reportMetric("crawler.updater.bidask.count", new ImmutableTag("status", "error"), bidAskErrorCount.get());
-            metricService.reportMetric("crawler.updater.stockwatch.seconds", new ImmutableTag("status", "all"), (stockWatchLastUpdate.getTime() - firstUpdate.getTime()) / 1000);
-            metricService.reportMetric("crawler.updater.stockwatch.count", new ImmutableTag("status", "success"), stockWatchSuccessCount.get());
-            metricService.reportMetric("crawler.updater.stockwatch.count", new ImmutableTag("status", "error"), stockWatchErrorCount.get());
-
+    public void boardUpdater(@Nullable List<String> isins) {
+        if (isins ==null){
+            isins = optionService.getCallAndBaseIsins();
         }
-        firstUpdate = new Date();
-        bidAskSuccessCount.set(0);
-        stockWatchSuccessCount.set(0);
-        bidAskErrorCount.set(0);
-        stockWatchErrorCount.set(0);
-        updateOptionsMarket();
-        instrumentHasNotOptionUpdater();
-    }
-
-    private void updateOptionsMarket() {
-        optionService.findAll()
-            .stream()
-            .collect(Collectors.groupingBy(option -> option.getInstrument().getIsin()))
-            .forEach((s, optionStats) -> {
-                StockWatch stockWatch = market.getStockWatch(s);
-                if (stockWatch != null && stockWatch.getState() != null && !stockWatch.getState().equals("A")) {
-                    if (Math.abs((new Date().getTime() - stockWatch.getDateTime().getTime()) / 1000) < 60) {
-                        return;
-                    }
-                }
-                List<String> optionsIsin = new ArrayList<>();
-                optionsIsin.add(s);
-                for (Option option : optionStats) {
-                    optionsIsin.add(option.getCallIsin());
-                    optionsIsin.add(option.getPutIsin());
-                }
-                try {
-                    omidRLCConsumer.getBulkBidAsk(optionsIsin).whenComplete((bidAsks, throwable) -> {
-                        if (throwable != null) {
-                            if (!(throwable instanceof ResourceAccessException)) {
-                                throwable.printStackTrace();
-                            }
-                            bidAskErrorCount.incrementAndGet();
-                        } else {
-                            log.debug("update bidask option stat {}", s);
-                            market.saveAllBidAsk(bidAsks);
-                            bidAskSuccessCount.incrementAndGet();
-                            bidAskLastUpdate = new Date();
+        List<List<String>> partition = Lists.partition(isins, properties.getCrawler().getOmidChunk());
+        for (List<String> instruments : partition) {
+            try {
+                omidRLCConsumer.getBulkBidAsk(instruments).whenComplete((bidAsks, throwable) -> {
+                    if (throwable != null) {
+                        log.error("omid get bidask got error {}",throwable.toString());
+                        if (!(throwable instanceof ResourceAccessException)) {
+                            throwable.printStackTrace();
                         }
-                    });
-                    omidRLCConsumer.getBulkStockWatch(optionsIsin).whenComplete((stockWatches, throwable) -> {
-                        if (throwable != null) {
-                            if (!(throwable instanceof ResourceAccessException)) {
-                                throwable.printStackTrace();
-                            }
-                            stockWatchErrorCount.incrementAndGet();
-                        } else {
-                            log.debug("update stockwatch option stat {}", s);
-                            market.saveAllStockWatch(stockWatches);
-                            boardService.updateAllBoard(s);
-                            optionService.updateParams(s);
-                            stockWatchSuccessCount.incrementAndGet();
-                            stockWatchLastUpdate = new Date();
+                    } else {
+                        log.debug("update bidask option stat {}", instruments);
+                        market.saveAllBidAsk(bidAsks);
+                    }
+                });
+                omidRLCConsumer.getBulkStockWatch(instruments).whenComplete((stockWatches, throwable) -> {
+                    if (throwable != null) {
+                        log.error("omid get stockwatch got error {}",throwable.toString());
+                        if (!(throwable instanceof ResourceAccessException)) {
+                            throwable.printStackTrace();
                         }
-                    });
-                } catch (Exception e) {
-                    log.error(e);
-                }
-            });
-    }
-
-    public void instrumentHasNotOptionUpdater() {
-        List<String> isins = instrumentService.findAllInstrumentHasNotOption().stream().map(Instrument::getIsin).collect(Collectors.toList());
-        try {
-            omidRLCConsumer.getBulkBidAsk(isins).whenComplete((bidAsks, throwable) -> {
-                if (throwable != null) {
-                    if (!(throwable instanceof ResourceAccessException)) {
-                        throwable.printStackTrace();
+                    } else {
+                        log.debug("update stockwatch option stat {}", instruments);
+                        market.saveAllStockWatch(stockWatches);
+                        boardService.updateBoardForIsins(instruments);
+                        optionService.updateOption(instruments);
                     }
-                    bidAskErrorCount.incrementAndGet();
-                } else {
-                    log.debug("update bidask instruments {}", isins);
-                    market.saveAllBidAsk(bidAsks);
-                    bidAskSuccessCount.incrementAndGet();
-//                    bidAskLastUpdate = new Date();
-                }
-            });
-            omidRLCConsumer.getBulkStockWatch(isins).whenComplete((stockWatches, throwable) -> {
-                if (throwable != null) {
-                    if (!(throwable instanceof ResourceAccessException)) {
-                        throwable.printStackTrace();
-                    }
-                    stockWatchErrorCount.incrementAndGet();
-                } else {
-                    log.debug("update stockwatch instruments {}", isins);
-                    market.saveAllStockWatch(stockWatches);
-                    stockWatchSuccessCount.incrementAndGet();
-//                    stockWatchLastUpdate = new Date();
-                }
-            });
-        } catch (Exception e) {
-            log.error(e);
+                });
+            } catch (Exception e) {
+                log.error(e);
+            }
         }
     }
 
 
     public void clientsInfoUpdater() {
-        if (clientsInfoLastUpdate != null) {
-            metricService.reportMetric("crawler.updater.clientsInfo.seconds", new ImmutableTag("status", "all"), (clientsInfoLastUpdate.getTime() - clientsInfoFirstUpdate.getTime()) / 1000);
-            metricService.reportMetric("crawler.updater.clientsInfo.count", new ImmutableTag("status", "success"), clientsInfoSuccessCount.get());
-            metricService.reportMetric("crawler.updater.clientsInfo.count", new ImmutableTag("status", "error"), clientsInfoErrorCount.get());
-
-        }
-        clientsInfoFirstUpdate = new Date();
-        clientsInfoSuccessCount.set(0);
-        clientsInfoErrorCount.set(0);
         List<String> isins = instrumentService.findAll().stream().map(Instrument::getIsin).collect(Collectors.toList());
         isins.addAll(optionService.findAllCallAndPutIsins());
-
         List<List<String>> partition = Lists.partition(isins, 50);
-        updateClientsInfos(partition);
-    }
-
-    @Override
-    public void instrumentUpdater() {
-
-    }
-
-    private void updateClientsInfos(List<List<String>> partition) {
         for (List<String> strings : partition) {
             try {
                 omidRLCConsumer.getBulkClientsInfo(strings).whenComplete((clientsInfos, throwable) -> {
@@ -221,18 +120,20 @@ public class OmidCrawler implements MarketUpdater {
                         if (!(throwable instanceof ResourceAccessException)) {
                             throwable.printStackTrace();
                         }
-                        clientsInfoErrorCount.incrementAndGet();
                     } else {
                         log.debug("update clientsInfos option stat {}", strings.size());
                         market.saveAllClientsInfo(clientsInfos);
-                        clientsInfoSuccessCount.incrementAndGet();
-                        clientsInfoLastUpdate = new Date();
                     }
                 });
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-        }
+        }    }
+
+
+    @Override
+    public void instrumentUpdater() {
+
     }
 
 
