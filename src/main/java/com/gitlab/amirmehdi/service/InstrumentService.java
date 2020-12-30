@@ -4,6 +4,7 @@ import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.repository.InstrumentRepository;
 import com.gitlab.amirmehdi.service.crawler.OmidRLCConsumer;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ public class InstrumentService {
     private final InstrumentRepository instrumentRepository;
     private final OmidRLCConsumer omidRLCConsumer;
 
-    public InstrumentService(InstrumentRepository instrumentRepository, OmidRLCConsumer omidRLCConsumer) {
+    public InstrumentService(InstrumentRepository instrumentRepository, @Lazy OmidRLCConsumer omidRLCConsumer) {
         this.instrumentRepository = instrumentRepository;
         this.omidRLCConsumer = omidRLCConsumer;
     }

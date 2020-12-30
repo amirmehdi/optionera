@@ -78,9 +78,7 @@ public class OmidCrawler implements MarketUpdater {
         List<List<String>> partition = Lists.partition(isins, properties.getCrawler().getOmidChunk());
         for (List<String> instruments : partition) {
             try {
-                omidRLCConsumer.getBulkBidAsk(instruments).thenAccept(bidAsks -> {
-                    System.out.println("chert");
-                });
+                omidRLCConsumer.getBulkBidAsk(instruments);
                 omidRLCConsumer.getBulkStockWatch(instruments);
             } catch (Exception e) {
                 log.error(e);
