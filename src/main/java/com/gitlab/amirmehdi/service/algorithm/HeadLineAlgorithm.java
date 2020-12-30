@@ -33,7 +33,6 @@ public class HeadLineAlgorithm {
     }
 
 
-    @PostConstruct
     @Scheduled(cron = "55 44 8 * * *")
     public void headLineOrder() {
         log.info("headLineOrder fired");
