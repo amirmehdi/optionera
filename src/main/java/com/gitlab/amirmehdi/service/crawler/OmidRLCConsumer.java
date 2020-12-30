@@ -106,9 +106,13 @@ public class OmidRLCConsumer {
                 new ParameterizedTypeReference<List<StockWatch>>() {
                 });
             watch.stop();
-            watch.start("saving");
+            watch.start("redis");
             market.saveAllStockWatch(response.getBody());
+            watch.stop();
+            watch.start("board");
             boardService.updateBoardForIsins(isins);
+            watch.stop();
+            watch.start("updateOption");
             optionService.updateOption(isins);
             watch.stop();
             log.debug(watch.prettyPrint());

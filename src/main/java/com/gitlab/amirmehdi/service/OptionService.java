@@ -14,7 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +145,7 @@ public class OptionService {
             .callMargin(optionStats.getCallMargin())
             .putMargin(optionStats.getPutMargin())
             .callTradeVolume(optionStats.getCallStockWatch().getTradeVolume())
-            .putTradeVolume(optionStats.getPutStockWatch().getTradeVolume());
+            .putTradeVolume(optionStats.getPutStockWatch() == null ? 0 : optionStats.getPutStockWatch().getTradeVolume());
         optionRepository.save(optionStats.getOption());
     }
 
