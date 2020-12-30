@@ -11,6 +11,8 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -31,9 +33,17 @@ public class HeadLineAlgorithm {
     }
 
 
-    @Scheduled(cron = "${application.headline.cron}")
+    @PostConstruct
+    @Scheduled(cron = "55 44 8 * * *")
     public void headLineOrder() {
         log.info("headLineOrder fired");
+        while (!LocalTime.of(8, 44, 57).isBefore(LocalTime.now())) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         List<Order> allByState = orderService.findAllByState(OrderState.HEADLINE);
         for (Order order : allByState) {
             StockWatch stockWatch = market.getStockWatch(order.getIsin());
