@@ -82,8 +82,8 @@ public class TadbirCrawler implements MarketUpdater {
                     market.saveStockWatch(stockWatch);
                     watch.stop();
                     watch.start("db");
-                    optionService.updateOption(isin);
                     boardService.save(isin);
+                    optionService.updateOption(isin);
                     watch.stop();
                     log.debug("{} finish {}", isin, watch.shortSummary());
                 });

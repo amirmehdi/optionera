@@ -93,8 +93,8 @@ public class AsaCrawler implements MarketUpdater {
                     market.saveBidAsk(bidAsk);
                     watch.stop();
                     watch.start("db");
-                    optionService.updateOption(isin);
                     boardService.save(isin);
+                    optionService.updateOption(isin);
                     watch.stop();
                     log.debug("{} finish {}", isin, watch.shortSummary());
                 });

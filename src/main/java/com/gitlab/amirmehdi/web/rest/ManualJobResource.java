@@ -2,8 +2,11 @@ package com.gitlab.amirmehdi.web.rest;
 
 
 import com.gitlab.amirmehdi.batch.BatchConfiguration;
+import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.service.BoardService;
+import com.gitlab.amirmehdi.service.InstrumentService;
+import com.gitlab.amirmehdi.service.OptionService;
 import com.gitlab.amirmehdi.service.crawler.CrawlerBox;
 import com.gitlab.amirmehdi.service.crawler.TseCrawler;
 import com.gitlab.amirmehdi.service.StrategyService;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("api/job")
 public class ManualJobResource {
@@ -21,13 +26,17 @@ public class ManualJobResource {
     private final CrawlerBox crawlerBox;
     private final BoardService boardService;
     private final StrategyService strategyService;
+    private final OptionService optionService;
+    private final InstrumentService instrumentService;
 
-    public ManualJobResource(BatchConfiguration batchConfiguration, TseCrawler tseCrawler, CrawlerBox crawlerBox, BoardService boardService, StrategyService strategyService) {
+    public ManualJobResource(BatchConfiguration batchConfiguration, TseCrawler tseCrawler, CrawlerBox crawlerBox, BoardService boardService, StrategyService strategyService, OptionService optionService, InstrumentService instrumentService) {
         this.batchConfiguration = batchConfiguration;
         this.tseCrawler = tseCrawler;
         this.crawlerBox = crawlerBox;
         this.boardService = boardService;
         this.strategyService = strategyService;
+        this.optionService = optionService;
+        this.instrumentService = instrumentService;
     }
 
     @PostMapping(value = "volatility")
@@ -48,6 +57,14 @@ public class ManualJobResource {
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Object> marketUpdater() {
         crawlerBox.highAvailableBoardUpdater();
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "whole-market")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<Object> wholeMarketUpdater(String marketUpdater) {
+        crawlerBox.getMarketUpdater(marketUpdater).boardUpdater(optionService.findAllCallAndPutIsins());
+        crawlerBox.getMarketUpdater(marketUpdater).boardUpdater(instrumentService.findAll().stream().map(Instrument::getIsin).collect(Collectors.toList()));
         return ResponseEntity.ok().build();
     }
 

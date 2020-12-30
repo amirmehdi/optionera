@@ -32,6 +32,10 @@ public class CrawlerBox {
         }
     }
 
+    public MarketUpdater getMarketUpdater(String marketUpdater) {
+        return marketUpdaters.get(marketUpdater);
+    }
+
     public MarketUpdater getBestMarketUpdater() {
         return marketUpdaters.get(applicationProperties.getCrawler().getBestCrawler());
     }

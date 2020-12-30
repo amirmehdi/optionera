@@ -72,7 +72,7 @@ public class OmidCrawler implements MarketUpdater {
 
     @Override
     public void boardUpdater(@Nullable List<String> isins) {
-        if (isins ==null){
+        if (isins == null) {
             isins = optionService.getCallAndBaseIsins();
         }
         List<List<String>> partition = Lists.partition(isins, properties.getCrawler().getOmidChunk());
@@ -80,26 +80,28 @@ public class OmidCrawler implements MarketUpdater {
             try {
                 omidRLCConsumer.getBulkBidAsk(instruments).whenComplete((bidAsks, throwable) -> {
                     if (throwable != null) {
-                        log.error("omid get bidask got error {}",throwable.toString());
+                        log.error("omid get bidask got error {}", throwable.toString());
                         if (!(throwable instanceof ResourceAccessException)) {
                             throwable.printStackTrace();
                         }
                     } else {
-                        log.debug("update bidask option stat {}", instruments);
                         market.saveAllBidAsk(bidAsks);
                     }
                 });
                 omidRLCConsumer.getBulkStockWatch(instruments).whenComplete((stockWatches, throwable) -> {
                     if (throwable != null) {
-                        log.error("omid get stockwatch got error {}",throwable.toString());
+                        log.error("omid get stockwatch got error {}", throwable.toString());
                         if (!(throwable instanceof ResourceAccessException)) {
                             throwable.printStackTrace();
                         }
                     } else {
-                        log.debug("update stockwatch option stat {}", instruments);
+                        StopWatch watch = new StopWatch("save omid response");
+                        watch.start();
                         market.saveAllStockWatch(stockWatches);
                         boardService.updateBoardForIsins(instruments);
                         optionService.updateOption(instruments);
+                        watch.stop();
+                        log.debug("omid stockWatch {}", watch.shortSummary());
                     }
                 });
             } catch (Exception e) {
@@ -128,7 +130,8 @@ public class OmidCrawler implements MarketUpdater {
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-        }    }
+        }
+    }
 
 
     @Override

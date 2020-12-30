@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.StopWatch;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
@@ -61,7 +62,8 @@ public class OmidRLCConsumer {
 
     @Async
     public CompletableFuture<List<BidAsk>> getBulkBidAsk(List<String> isins) throws JsonProcessingException {
-        log.debug("getBulkBidAsk for isins :{}", isins);
+        StopWatch watch = new StopWatch("getBulkBidAsk");
+        watch.start();
         try {
             ResponseEntity<List<BidAsk>> response = restTemplate.exchange(
                 applicationProperties.getOaBaseUrl() + "/core/bidask-bulk",
@@ -69,6 +71,8 @@ public class OmidRLCConsumer {
                 getRequestBodyForBulkRequest(isins),
                 new ParameterizedTypeReference<List<BidAsk>>() {
                 });
+            watch.stop();
+            log.debug(watch.shortSummary());
             return CompletableFuture.completedFuture(response.getBody());
         } catch (ResourceAccessException e) {
             log.error("getBulkBidAsk got error isinsCount:{} error:{}", isins.size(), e.toString());
@@ -78,7 +82,8 @@ public class OmidRLCConsumer {
 
     @Async
     public CompletableFuture<List<StockWatch>> getBulkStockWatch(List<String> isins) throws JsonProcessingException {
-        log.debug("getBulkStockWatch for isins :{}", isins);
+        StopWatch watch = new StopWatch("getBulkStockWatch");
+        watch.start();
         try {
             ResponseEntity<List<StockWatch>> response = restTemplate.exchange(
                 applicationProperties.getOaBaseUrl() + "/core/stockwatch-bulk",
@@ -86,6 +91,8 @@ public class OmidRLCConsumer {
                 getRequestBodyForBulkRequest(isins),
                 new ParameterizedTypeReference<List<StockWatch>>() {
                 });
+            watch.stop();
+            log.debug(watch.shortSummary());
             return CompletableFuture.completedFuture(response.getBody());
         } catch (ResourceAccessException e) {
             log.error("getBulkStockWatch got error isinsCount:{} error:{}", isins.size(), e.toString());
@@ -95,7 +102,8 @@ public class OmidRLCConsumer {
 
     @Async
     public CompletableFuture<List<ClientsInfo>> getBulkClientsInfo(List<String> isins) throws JsonProcessingException {
-        log.debug("getBulkClientsInfo for isins :{}", isins);
+        StopWatch watch = new StopWatch("getBulkClientsInfo");
+        watch.start();
         try {
             ResponseEntity<List<ClientsInfo>> response = restTemplate.exchange(
                 applicationProperties.getOaBaseUrl() + "/core/clientsinfo-bulk",
@@ -103,6 +111,8 @@ public class OmidRLCConsumer {
                 getRequestBodyForBulkRequest(isins),
                 new ParameterizedTypeReference<List<ClientsInfo>>() {
                 });
+            watch.stop();
+            log.debug(watch.shortSummary());
             return CompletableFuture.completedFuture(response.getBody());
         } catch (ResourceAccessException e) {
             log.error("getBulkClientsInfo got error isinsCount:{} error:{}", isins.size(), e.toString());
