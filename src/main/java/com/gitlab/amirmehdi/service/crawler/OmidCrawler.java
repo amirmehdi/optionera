@@ -78,8 +78,37 @@ public class OmidCrawler implements MarketUpdater {
         List<List<String>> partition = Lists.partition(isins, properties.getCrawler().getOmidChunk());
         for (List<String> instruments : partition) {
             try {
-                omidRLCConsumer.getBulkBidAsk(instruments);
-                omidRLCConsumer.getBulkStockWatch(instruments);
+                omidRLCConsumer.getBulkBidAsk(instruments).whenComplete((bidAsks, throwable) -> {
+                    if (throwable != null) {
+                        log.error("omid get bidask got error {}", throwable.toString());
+                        if (!(throwable instanceof ResourceAccessException)) {
+                            throwable.printStackTrace();
+                        }
+                    } else {
+                        log.debug("update bidask option stat {}", instruments);
+                        market.saveAllBidAsk(bidAsks);
+                    }
+                });
+                omidRLCConsumer.getBulkStockWatch(instruments).whenComplete((stockWatches, throwable) -> {
+                    if (throwable != null) {
+                        log.error("omid get stockwatch got error {}", throwable.toString());
+                        if (!(throwable instanceof ResourceAccessException)) {
+                            throwable.printStackTrace();
+                        }
+                    } else {
+                        StopWatch watch = new StopWatch("save omid response");
+                        watch.start("redis");
+                        market.saveAllStockWatch(stockWatches);
+                        watch.stop();
+                        watch.start("board");
+                        boardService.updateBoardForIsins(instruments);
+                        watch.stop();
+                        watch.start("updateOption");
+                        optionService.updateOption(instruments);
+                        watch.stop();
+                        log.debug(watch.prettyPrint());
+                    }
+                });
             } catch (Exception e) {
                 log.error(e);
             }

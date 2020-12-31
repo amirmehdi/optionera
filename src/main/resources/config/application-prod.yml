@@ -48,6 +48,7 @@ spring:
     enabled: false
   redis:
     host: 37.152.176.175
+    password: password
     port: 6379
   data:
     redis:

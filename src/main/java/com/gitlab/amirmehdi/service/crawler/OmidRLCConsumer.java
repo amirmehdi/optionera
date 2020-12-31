@@ -3,9 +3,6 @@ package com.gitlab.amirmehdi.service.crawler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gitlab.amirmehdi.config.ApplicationProperties;
-import com.gitlab.amirmehdi.service.BoardService;
-import com.gitlab.amirmehdi.service.Market;
-import com.gitlab.amirmehdi.service.OptionService;
 import com.gitlab.amirmehdi.service.dto.core.BidAsk;
 import com.gitlab.amirmehdi.service.dto.core.ClientsInfo;
 import com.gitlab.amirmehdi.service.dto.core.Instrument;
@@ -34,17 +31,11 @@ public class OmidRLCConsumer {
 
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
-    private final BoardService boardService;
-    private final Market market;
-    private final OptionService optionService;
     private final ApplicationProperties applicationProperties;
 
-    public OmidRLCConsumer(ObjectMapper objectMapper, RestTemplate restTemplate, BoardService boardService, Market market, OptionService optionService, ApplicationProperties applicationProperties) {
+    public OmidRLCConsumer(ObjectMapper objectMapper, RestTemplate restTemplate, ApplicationProperties applicationProperties) {
         this.objectMapper = objectMapper;
         this.restTemplate = restTemplate;
-        this.boardService = boardService;
-        this.market = market;
-        this.optionService = optionService;
         this.applicationProperties = applicationProperties;
     }
 
@@ -80,24 +71,19 @@ public class OmidRLCConsumer {
                 getRequestBodyForBulkRequest(isins),
                 new ParameterizedTypeReference<List<BidAsk>>() {
                 });
-            market.saveAllBidAsk(response.getBody());
             watch.stop();
             log.debug(watch.shortSummary());
             return CompletableFuture.completedFuture(response.getBody());
         } catch (ResourceAccessException e) {
             log.error("getBulkBidAsk got error isinsCount:{} error:{}", isins.size(), e.toString());
-//            log.error("omid get bidask got error {}", throwable.toString());
-            if (!(e instanceof ResourceAccessException)) {
-                e.printStackTrace();
-            }
-            return null;
+            throw e;
         }
     }
 
     @Async
     public CompletableFuture<List<StockWatch>> getBulkStockWatch(List<String> isins) throws JsonProcessingException {
         StopWatch watch = new StopWatch("getBulkStockWatch");
-        watch.start("request");
+        watch.start();
         try {
             ResponseEntity<List<StockWatch>> response = restTemplate.exchange(
                 applicationProperties.getOaBaseUrl() + "/core/stockwatch-bulk",
@@ -106,24 +92,11 @@ public class OmidRLCConsumer {
                 new ParameterizedTypeReference<List<StockWatch>>() {
                 });
             watch.stop();
-            watch.start("redis");
-            market.saveAllStockWatch(response.getBody());
-            watch.stop();
-            watch.start("board");
-            boardService.updateBoardForIsins(isins);
-            watch.stop();
-            watch.start("updateOption");
-            optionService.updateOption(isins);
-            watch.stop();
-            log.debug(watch.prettyPrint());
+            log.debug(watch.shortSummary());
             return CompletableFuture.completedFuture(response.getBody());
-        } catch (Throwable e) {
+        } catch (ResourceAccessException e) {
             log.error("getBulkStockWatch got error isinsCount:{} error:{}", isins.size(), e.toString());
-//            log.error("omid get stockwatch got error {}", throwable.toString());
-            if (!(e instanceof ResourceAccessException)) {
-                e.printStackTrace();
-            }
-            return null;
+            throw e;
         }
     }
 
