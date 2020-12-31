@@ -85,7 +85,6 @@ public class OmidCrawler implements MarketUpdater {
                             throwable.printStackTrace();
                         }
                     } else {
-                        log.debug("update bidask option stat {}", instruments);
                         market.saveAllBidAsk(bidAsks);
                     }
                 });

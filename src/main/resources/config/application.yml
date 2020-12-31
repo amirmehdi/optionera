@@ -174,7 +174,7 @@ application:
   brokers:
     sahraEnable: false
   crawler:
-    bestCrawler: AsaCrawler
+    bestCrawler: TadbirCrawler
     availableCrawler: OmidCrawler;0;160,TadbirCrawler;160;240,AsaCrawler;240;300
     tadbirChunk: 40
     asaChunk: 30
