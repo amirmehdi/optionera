@@ -6,13 +6,16 @@ import com.gitlab.amirmehdi.domain.OptionStats;
 import com.gitlab.amirmehdi.repository.BoardRepository;
 import com.gitlab.amirmehdi.repository.OptionRepository;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
+import com.gitlab.amirmehdi.util.MarketTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -114,22 +117,18 @@ public class OptionService {
     public void updateOption(String optionIsin) {
         Option option = findByCallIsinOrPutIsin(optionIsin).orElse(null);
         if (option == null) return;
-        StockWatch stockWatch = market.getStockWatch(option.getInstrument().getIsin());
-        updateParams(option, stockWatch);
+        updateParams(option);
     }
 
-    private void updateParams(Option option, StockWatch stockWatch) {
+    private void updateParams(Option option) {
+        StockWatch baseStockWatch = market.getStockWatch(option.getInstrument().getIsin());
         OptionStats optionStats = new OptionStats()
             .option(option)
-            .baseStockWatch(stockWatch)
+            .baseStockWatch(baseStockWatch)
             .callBidAsk(market.getBidAsk(option.getCallIsin()).getBestBidAsk())
             .putBidAsk(market.getBidAsk(option.getPutIsin()).getBestBidAsk())
             .callStockWatch(market.getStockWatch(option.getCallIsin()))
             .putStockWatch(market.getStockWatch(option.getPutIsin()));
-        updateOption(optionStats);
-    }
-
-    public void updateOption(OptionStats optionStats) {
         optionStats.getOption()
             .callAskToBS(optionStats.getCallAskPriceToBS())
             .putAskToBS(optionStats.getPutAskPriceToBS())
@@ -219,5 +218,20 @@ public class OptionService {
         return lists;
     }
 
-
+    @Scheduled(fixedRateString = "${jhipster.clientApp.name}")
+    public void updateOptionTable() {
+        if (!MarketTimeUtil.isMarketOpen()) {
+            return;
+        }
+        StopWatch watch = new StopWatch("updateOptionTable");
+        watch.start("get all");
+        List<Option> options = findAll();
+        watch.stop();
+        watch.start("update params");
+        for (Option option : options) {
+            updateParams(option);
+        }
+        watch.stop();
+        log.debug(watch.prettyPrint());
+    }
 }

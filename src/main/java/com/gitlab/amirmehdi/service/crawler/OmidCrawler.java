@@ -59,7 +59,7 @@ public class OmidCrawler implements MarketUpdater {
                             log.debug("update bidask in arbitrageOptionsUpdater");
                             market.saveAllBidAsk(bidAsks);
                             for (BidAsk bidAsk : bidAsks) {
-                                optionStatsService.findOne(callIsins.get(bidAsk.getIsin())).ifPresent(optionService::updateOption);
+                                optionService.updateOption(bidAsk.getIsin());
                             }
                             strategyService.run("ExerciseOptionsStrategy");
                         }
@@ -102,9 +102,9 @@ public class OmidCrawler implements MarketUpdater {
                         watch.start("board");
                         boardService.updateBoardForIsins(instruments);
                         watch.stop();
-                        watch.start("updateOption");
+                        /*watch.start("updateOption");
                         optionService.updateOption(instruments);
-                        watch.stop();
+                        watch.stop();*/
                         log.debug(watch.prettyPrint());
                     }
                 });

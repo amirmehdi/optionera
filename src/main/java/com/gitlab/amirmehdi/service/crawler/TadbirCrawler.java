@@ -83,7 +83,7 @@ public class TadbirCrawler implements MarketUpdater {
                     watch.stop();
                     watch.start("db");
                     boardService.save(isin);
-                    optionService.updateOption(isin);
+                    // optionService.updateOption(isin);
                     watch.stop();
                     log.debug("{} finish {}", isin, watch.shortSummary());
                 });
