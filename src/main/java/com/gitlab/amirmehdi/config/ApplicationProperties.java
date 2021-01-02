@@ -49,7 +49,8 @@ public class ApplicationProperties {
         private String market;
         private String interest;
         private String clientsInfo;
-}
+        private String optionTable;
+    }
 
     @Getter
     @Setter

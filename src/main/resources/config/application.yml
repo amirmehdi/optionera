@@ -190,6 +190,7 @@ application:
     market: 60000
     interest: 60000
     clientsInfo: 60000
+    optionTable: 6000
   strategy:
     unusual1Threshold: -10
   headline:

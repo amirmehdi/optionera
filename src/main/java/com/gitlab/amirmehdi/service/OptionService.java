@@ -218,7 +218,7 @@ public class OptionService {
         return lists;
     }
 
-    @Scheduled(fixedRateString = "${jhipster.clientApp.name}")
+    @Scheduled(fixedRateString = "${application.schedule.optionTable}")
     public void updateOptionTable() {
         if (!MarketTimeUtil.isMarketOpen()) {
             return;
