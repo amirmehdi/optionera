@@ -8,3 +8,4 @@ nohup java -jar ../patent-0.0.1.jar 0 1000 &
 
 mvn clean package -Pprod -DskipTests verify jib:dockerBuild
 docker run -d --restart always -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
+docker run -d -p 4444:4444 selenium/standalone-chrome:87.0

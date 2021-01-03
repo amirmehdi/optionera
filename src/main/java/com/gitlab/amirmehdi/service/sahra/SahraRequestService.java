@@ -82,7 +82,7 @@ public class SahraRequestService implements CommandLineRunner {
             maxAttempts = 3,
             backoff = @Backoff(value = 3000))
             */
-    @Scheduled(cron = "0 1 8 * * *")
+    @Scheduled(cron = "0 31 8 * * *")
     public void connectAndStart() {
         if (!applicationProperties.getBrokers().isSahraEnable()){
             return;

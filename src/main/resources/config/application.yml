@@ -186,10 +186,10 @@ application:
     healthCheckChat: -1001468700748
   schedule:
     timeCheck: true
-    arbitrage: 30000
-    market: 60000
-    interest: 60000
-    clientsInfo: 60000
+    arbitrage: '*/15 * * * * *'
+    market: '*/30 * * * * *'
+    interest: '*/60 * * * * *'
+    clientsInfo: '*/60 * * * * *'
     optionTable: 6000
   strategy:
     unusual1Threshold: -10

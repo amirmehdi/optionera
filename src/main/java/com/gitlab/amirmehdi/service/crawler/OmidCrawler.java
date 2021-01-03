@@ -140,7 +140,7 @@ public class OmidCrawler implements MarketUpdater {
 
     @Override
     public void instrumentUpdater() {
-
+        //TODO get instrument and update tseIds
     }
 
 

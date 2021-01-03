@@ -202,7 +202,7 @@ public class MessageHandler {
     }
 
     private void orderEditHandler(OrderEdit orderEdit) {
-        Optional<Order> orderOptional = orderRepository.findByBrokerAndOmsId(Broker.FIROOZE_ASIA, orderEdit.getId());
+        Optional<Order> orderOptional = orderRepository.findByBrokerAndOmsId(Broker.FIROOZE_ASIA, orderEdit.getStateChangeData().getId());
         if (!orderOptional.isPresent()) {
             log.info("order not found : {}", orderEdit);
             return;

@@ -26,48 +26,51 @@ public class ScheduledJobs {
         this.properties = applicationProperties;
     }
 
-    @Scheduled(fixedDelayString = "${application.schedule.arbitrage}")
-    public void updateImportantOptions() {
-        if (properties.getSchedule().isTimeCheck() && !MarketTimeUtil.isMarketOpen())
-            return;
-        crawlerBox.getBestMarketUpdater().arbitrageOptionsUpdater();
-    }
+//    @Scheduled(fixedDelayString = "${application.schedule.arbitrage}")
+//    public void updateImportantOptions() {
+//        if (properties.getSchedule().isTimeCheck() && !MarketTimeUtil.isMarketOpen())
+//            return;
+//        crawlerBox.getBestMarketUpdater().arbitrageOptionsUpdater();
+//    }
 
-    @Scheduled(fixedRateString = "${application.schedule.market}")
+    @Scheduled(cron = "${application.schedule.market}")
     public void marketUpdater() {
         if (properties.getSchedule().isTimeCheck() && !MarketTimeUtil.isMarketOpen())
             return;
         crawlerBox.highAvailableBoardUpdater();
     }
 
-    @Scheduled(fixedRateString = "${application.schedule.clientsInfo}")
+    @Scheduled(cron = "${application.schedule.clientsInfo}")
     public void clientsInfoUpdater() {
         if (properties.getSchedule().isTimeCheck() && !MarketTimeUtil.isMarketOpen())
             return;
         crawlerBox.getBestMarketUpdater().clientsInfoUpdater();
     }
 
-    @Scheduled(fixedRateString = "${application.schedule.interest}")
+    @Scheduled(cron = "${application.schedule.interest}")
     public void openInterestUpdater() {
         if (properties.getSchedule().isTimeCheck() && !MarketTimeUtil.isMarketOpen())
             return;
         tseCrawler.openInterestUpdater();
     }
 
-    @Scheduled(cron = "0 0 8 * * *")
+    @Scheduled(cron = "0 0-30 8 * * *")
     public void optionCrawler() {
-        tseCrawler.optionCrawler();
-        crawlerBox.getBestMarketUpdater().instrumentUpdater();
+        wholeUpdater();
     }
 
     @Scheduled(fixedDelay = 30 * 60 * 1000)
     public void checkNullStockWatch() {
         if (market.getStockWatch("IRO1FOLD0001") == null) {
-            tseCrawler.optionCrawler();
-            tseCrawler.openInterestUpdater();
-            crawlerBox.getBestMarketUpdater().boardUpdater(null);
-            crawlerBox.getBestMarketUpdater().instrumentUpdater();
+            wholeUpdater();
             telegramMessageSender.sendMessage(new TelegramMessageDto(properties.getTelegram().getHealthCheckChat(), "Why redis is empty!"));
         }
+    }
+
+    private void wholeUpdater() {
+        tseCrawler.optionCrawler();
+        tseCrawler.openInterestUpdater();
+        crawlerBox.getBestMarketUpdater().boardUpdater(null);
+        crawlerBox.getBestMarketUpdater().instrumentUpdater();
     }
 }
