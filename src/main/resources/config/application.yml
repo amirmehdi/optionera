@@ -109,9 +109,9 @@ spring:
         max-size: 50
         queue-capacity: 1000
     scheduling:
-      thread-name-prefix: e-trade-scheduling-
+      thread-name-prefix: scheduling-
       pool:
-        size: 2
+        size: 8
   thymeleaf:
     mode: HTML
   output:

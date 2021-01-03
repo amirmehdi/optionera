@@ -54,7 +54,7 @@ public class ScheduledJobs {
         tseCrawler.openInterestUpdater();
     }
 
-    @Scheduled(cron = "0 0-30 8 * * *")
+    @Scheduled(cron = "0 0,30 8 * * *")
     public void optionCrawler() {
         wholeUpdater();
     }
