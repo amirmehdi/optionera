@@ -21,7 +21,7 @@ public class LightSymbolInfoAndQueue {
 
     public StockWatch toStockWatch() {
         return StockWatch.builder()
-            .dateTime(new Date())
+            .lastTrade(new Date())
             .isin(symbolinfo.getNc())
             .last((int) symbolinfo.getLtp())
             .closing((int) symbolinfo.getCp())

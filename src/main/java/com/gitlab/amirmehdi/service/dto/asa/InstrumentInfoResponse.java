@@ -150,7 +150,7 @@ public class InstrumentInfoResponse {
             .referencePrice((int) previousDayPrice)
             .state(stateTitle)
             .isin(isin)
-            .dateTime(new Date()).build();
+            .lastTrade(new Date()).build();
     }
 
     public BidAsk toBidAsk() {

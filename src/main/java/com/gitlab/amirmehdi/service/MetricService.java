@@ -37,8 +37,11 @@ public class MetricService {
         instrumentRepository.findAll().forEach(instrument -> {
             StockWatch stockWatch = market.getStockWatch(instrument.getIsin());
             if (stockWatch != null) {
-                long value = (new Date().getTime() - stockWatch.getDateTime().getTime()) / 1000;
+                long value = (new Date().getTime() - stockWatch.getLastTrade().getTime()) / 1000;
                 reportMetric("omid.rlc.stockwatch", new ImmutableTag("isin", stockWatch.getIsin()), value);
+
+                value = (new Date().getTime() - stockWatch.getCrawledDate().getTime()) / 1000;
+                reportMetric("omid.rlc.crawled", new ImmutableTag("isin", stockWatch.getIsin()), value);
             }
             BidAsk bidAsk = market.getBidAsk(instrument.getIsin());
             if (bidAsk != null) {
