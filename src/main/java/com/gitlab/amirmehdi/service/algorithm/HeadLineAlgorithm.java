@@ -42,8 +42,9 @@ public class HeadLineAlgorithm {
                 e.printStackTrace();
             }
         }
-        List<Order> allByState = orderService.findAllByState(OrderState.HEADLINE);
-        for (Order order : allByState) {
+        List<Order> orders = orderService.findAllByState(OrderState.HEADLINE);
+        for (int j = 0, ordersSize = orders.size(); j < ordersSize; j++) {
+            Order order = orders.get(j);
             StockWatch stockWatch = market.getStockWatch(order.getIsin());
             int price = stockWatch == null ? order.getPrice() : stockWatch.getMax();
             int quantity = (int) (order.getBourseCode().getBuyingPower() * 0.45) / price;
@@ -62,7 +63,7 @@ public class HeadLineAlgorithm {
                     }
                     , new Date()
                         .toInstant()
-                        .plus(i * properties.getHeadline().getSleep(), ChronoUnit.MILLIS));
+                        .plus((i * properties.getHeadline().getSleep()) + (j * properties.getHeadline().getSleep() / ordersSize), ChronoUnit.MILLIS));
             }
         }
     }
