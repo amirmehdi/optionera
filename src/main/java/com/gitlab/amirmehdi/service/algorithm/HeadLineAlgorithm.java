@@ -11,10 +11,14 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -32,39 +36,52 @@ public class HeadLineAlgorithm {
     }
 
 
-    @Scheduled(cron = "55 44 8 * * *")
+    @Scheduled(cron = "57 44 8 * * *")
     public void headLineOrder() {
         log.info("headLineOrder fired");
-        while (!LocalTime.of(8, 44, 57).isBefore(LocalTime.now())) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
         List<Order> orders = orderService.findAllByState(OrderState.HEADLINE);
+        orders.stream()
+            .collect(Collectors.groupingBy(order -> order.getBourseCode().getId()))
+            .forEach((aLong, orders1) -> {
+            sendHeadLineOrdersPerBourseCode(orders1);
+        });
+    }
+
+    private void sendHeadLineOrdersPerBourseCode(List<Order> orders) {
         for (int j = 0, ordersSize = orders.size(); j < ordersSize; j++) {
             Order order = orders.get(j);
             StockWatch stockWatch = market.getStockWatch(order.getIsin());
             int price = stockWatch == null ? order.getPrice() : stockWatch.getMax();
-            int quantity = (int) (order.getBourseCode().getBuyingPower() * 0.45) / price;
+            int quantity = (int) (order.getBourseCode().getBuyingPower() * 0.99 / (ordersSize * price));
+            List<String> sentIsins = new ArrayList<>();
+            scheduleOrder(order, price, quantity, sentIsins, Instant.from(LocalTime.of(8, 45, 0).atDate(LocalDate.now())));
             for (int i = 0; i < properties.getHeadline().getRepeat(); i++) {
-                executor.schedule(() -> {
-                        Order res = orderService.sendOrder(
-                            new Order()
-                                .broker(order.getBroker())
-                                .isin(order.getIsin())
-                                .price(price)
-                                .quantity(quantity)
-                                .validity(order.getValidity())
-                                .side(order.getSide())
-                                .bourseCode(order.getBourseCode()));
-                        log.info(res);
-                    }
-                    , new Date()
-                        .toInstant()
-                        .plus((i * properties.getHeadline().getSleep()) + (j * properties.getHeadline().getSleep() / ordersSize), ChronoUnit.MILLIS));
+                scheduleOrder(order, price, quantity, sentIsins, new Date()
+                    .toInstant()
+                    .plus((i * properties.getHeadline().getSleep()) + (j * properties.getHeadline().getSleep() / ordersSize), ChronoUnit.MILLIS));
             }
         }
+    }
+
+    private void scheduleOrder(Order order, int price, int quantity, List<String> sentIsins, Instant instant) {
+        executor.schedule(() -> {
+            if (sentIsins.contains(order.getIsin())) {
+                log.info("order is sent before: {}", order);
+                return;
+            }
+            Order res = orderService.sendOrder(
+                new Order()
+                    .broker(order.getBroker())
+                    .isin(order.getIsin())
+                    .price(price)
+                    .quantity(quantity)
+                    .validity(order.getValidity())
+                    .side(order.getSide())
+                    .bourseCode(order.getBourseCode()));
+            log.info(res);
+            if (order.getDescription().contains("-2006") && order.getState().equals(OrderState.ERROR)) {
+                sentIsins.add(order.getIsin());
+            }
+        }, instant);
     }
 }
