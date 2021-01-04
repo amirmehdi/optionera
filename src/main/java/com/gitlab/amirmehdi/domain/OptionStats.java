@@ -161,11 +161,11 @@ public class OptionStats {
         if (checkForNull()) {
             return 0;
         }
-        int callBlackScholes30 = getCallBlackScholes30();
-        if (callBidAsk.getAskPrice() == 0 || callBlackScholes30 == 0) {
+        int blackScholes = getCallBlackScholes();
+        if (callBidAsk.getAskPrice() == 0 || blackScholes == 0) {
             return Integer.MAX_VALUE;
         }
-        return (float) (Math.round((callBidAsk.getAskPrice() * 1.0 / callBlackScholes30 - 1) * 10000.0) / 100.0);
+        return (float) (Math.round((callBidAsk.getAskPrice() * 1.0 / blackScholes - 1) * 10000.0) / 100.0);
     }
 
     @JsonIgnore
@@ -173,11 +173,11 @@ public class OptionStats {
         if (checkForNull()) {
             return 0;
         }
-        int putBlackScholes30 = getPutBlackScholes30();
-        if (putBidAsk.getAskPrice() == 0 || putBlackScholes30 == 0) {
+        int blackScholes = getPutBlackScholes();
+        if (putBidAsk.getAskPrice() == 0 || blackScholes == 0) {
             return Integer.MAX_VALUE;
         }
-        return (float) (Math.round((putBidAsk.getAskPrice() * 1.0 / putBlackScholes30 - 1) * 10000.0) / 100.0);
+        return (float) (Math.round((putBidAsk.getAskPrice() * 1.0 / blackScholes - 1) * 10000.0) / 100.0);
     }
 
     @JsonIgnore

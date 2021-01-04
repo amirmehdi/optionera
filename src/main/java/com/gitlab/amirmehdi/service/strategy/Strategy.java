@@ -72,7 +72,7 @@ public abstract class Strategy {
             , optionStats.getCallStockWatch().getLow() + " - " + optionStats.getCallStockWatch().getHigh()
             , optionStats.getCallBidAsk().getAskPrice()
             , optionStats.getCallBidAsk().getAskQuantity()
-            , optionStats.getCallBlackScholes30()
+            , optionStats.getCallBlackScholes()
             , optionStats.getCallBreakEven()
             , optionStats.getCallLeverage()
             , getStrategyDesc()
