@@ -60,6 +60,7 @@ public class HeadLineAlgorithm {
             Instant marketOpen = new Date().toInstant().atZone(ZoneId.systemDefault()).withHour(8)
                 .withMinute(45)
                 .withSecond(0).toInstant();
+            log.info("market open is {}", marketOpen);
             scheduleOrder(order, price, quantity, sentIsins, marketOpen);
             for (int i = 0; i < repeat; i++) {
                 scheduleOrder(order, price, quantity, sentIsins, new Date()
@@ -85,7 +86,7 @@ public class HeadLineAlgorithm {
                     .side(order.getSide())
                     .bourseCode(order.getBourseCode()));
             log.info(res);
-            if (order.getDescription().contains("-2006") && order.getState().equals(OrderState.ERROR)) {
+            if (res.getDescription() != null && res.getDescription().contains("-2006") && res.getState().equals(OrderState.ERROR)) {
                 sentIsins.add(order.getIsin());
             }
         }, instant);
