@@ -2,6 +2,7 @@ package com.gitlab.amirmehdi.service.strategy;
 
 import com.gitlab.amirmehdi.repository.BoardRepository;
 import com.gitlab.amirmehdi.repository.OptionRepository;
+import com.gitlab.amirmehdi.service.BourseCodeService;
 import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OptionStatsService;
 import com.gitlab.amirmehdi.service.dto.StrategyResponse;
@@ -20,8 +21,8 @@ public class LegalSupplyStrategy extends Strategy {
         .expiration(90, TimeUnit.MINUTES)
         .build();
 
-    protected LegalSupplyStrategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market, BoardRepository boardRepository) {
-        super(optionRepository, optionStatsService, market);
+    protected LegalSupplyStrategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market, BourseCodeService bourseCodeService, BoardRepository boardRepository) {
+        super(optionRepository, optionStatsService, market, bourseCodeService);
         this.boardRepository = boardRepository;
     }
 

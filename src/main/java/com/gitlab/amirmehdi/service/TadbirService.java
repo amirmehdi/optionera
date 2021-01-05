@@ -56,7 +56,7 @@ public class TadbirService {
             ResponseEntity<SendOrderResponse> response =
                 restTemplate.exchange("https://api.refahbroker.ir/Web/V1/Order/Post"
                     , HttpMethod.POST
-                    , new HttpEntity<>(objectMapper.writeValueAsString(sendOrderRequest), getHeaders(order.getBroker()))
+                    , new HttpEntity<>(objectMapper.writeValueAsString(sendOrderRequest), getHeaders(order.getBourseCode().getBroker()))
                     , SendOrderResponse.class);
             log.info("order:{} response:{}", order, response);
             return response.getBody().getMessageDesc();

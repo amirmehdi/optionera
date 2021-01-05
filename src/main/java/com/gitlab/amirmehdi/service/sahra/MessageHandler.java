@@ -4,7 +4,6 @@ import com.gitlab.amirmehdi.domain.BourseCode;
 import com.gitlab.amirmehdi.domain.OpenInterest;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Portfolio;
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.repository.BourseCodeRepository;
 import com.gitlab.amirmehdi.repository.OrderRepository;
 import com.gitlab.amirmehdi.service.OpenInterestService;
@@ -89,20 +88,20 @@ public class MessageHandler {
                 case "orderStateChange":
                     //PollMessageResponse(hub=OmsClientHub, method=orderStateChange, val=[[1170000000364932, 3, 003078, false, 1, 28169130, 1481, 1]])
                     StateChangeData stateChangeData = new StateChangeData((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                    stateChangeDataHandler(stateChangeData);
+                    stateChangeDataHandler(bourseCode, stateChangeData);
                     break;
                 case "orderEdited":
                     OrderEdit orderEdit = new OrderEdit((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                    orderEditHandler(orderEdit);
+                    orderEditHandler(bourseCode, orderEdit);
                     break;
                 case "orderError":
                     OrderError orderError = new OrderError((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                    orderErrorHandler(orderError);
+                    orderErrorHandler(bourseCode, orderError);
                     break;
                 case "orderExecution":
                     //PollMessageResponse(hub=OmsClientHub, method=orderExecution, val=[[1170000000364932, 1481, 3, 1, 0, 0, 1481, 18900, 28094805]])
                     OrderExecution orderExecution = new OrderExecution((ArrayList<Object>) pollMessageResponse.getVal().get(0));
-                    orderExecutionHandler(orderExecution);
+                    orderExecutionHandler(bourseCode, orderExecution);
                     break;
                 case "AssetChange":
                     //PollMessageResponse(hub=OmsClientHub, method=AssetChange, val=[[IRO1MAPN0001, 32582, 19103, 18900]])
@@ -170,7 +169,6 @@ public class MessageHandler {
             order.setIsin(message.getInstrumentId());
             order.setPrice(message.getPrice());
             order.setQuantity(message.getQuantity());
-            order.setBroker(bourseCode.getBroker());
             order.setBourseCode(bourseCode);
         } else {
             Optional<Order> optionalOrder = orderRepository.findById(Long.valueOf(message.getExtraData()));
@@ -189,8 +187,8 @@ public class MessageHandler {
         orderRepository.save(order);
     }
 
-    private void orderExecutionHandler(OrderExecution message) {
-        Optional<Order> orderOptional = orderRepository.findByBrokerAndOmsId(Broker.FIROOZE_ASIA, message.getId());
+    private void orderExecutionHandler(BourseCode bourseCode, OrderExecution message) {
+        Optional<Order> orderOptional = orderRepository.findByBourseCode_BrokerAndOmsId(bourseCode.getBroker(), message.getId());
         if (!orderOptional.isPresent()) {
             log.info("order not found : {}", message);
             return;
@@ -201,8 +199,8 @@ public class MessageHandler {
         orderRepository.save(order);
     }
 
-    private void orderEditHandler(OrderEdit orderEdit) {
-        Optional<Order> orderOptional = orderRepository.findByBrokerAndOmsId(Broker.FIROOZE_ASIA, orderEdit.getStateChangeData().getId());
+    private void orderEditHandler(BourseCode bourseCode, OrderEdit orderEdit) {
+        Optional<Order> orderOptional = orderRepository.findByBourseCode_BrokerAndOmsId(bourseCode.getBroker(), orderEdit.getStateChangeData().getId());
         if (!orderOptional.isPresent()) {
             log.info("order not found : {}", orderEdit);
             return;
@@ -215,8 +213,8 @@ public class MessageHandler {
         orderRepository.save(order);
     }
 
-    private void stateChangeDataHandler(StateChangeData stateChangeData) {
-        Optional<Order> orderOptional = orderRepository.findByBrokerAndOmsId(Broker.FIROOZE_ASIA, stateChangeData.getId());
+    private void stateChangeDataHandler(BourseCode bourseCode, StateChangeData stateChangeData) {
+        Optional<Order> orderOptional = orderRepository.findByBourseCode_BrokerAndOmsId(bourseCode.getBroker(), stateChangeData.getId());
         if (!orderOptional.isPresent()) {
             log.info("order not found : {}", stateChangeData);
             return;
@@ -227,8 +225,8 @@ public class MessageHandler {
         orderRepository.save(order);
     }
 
-    private void orderErrorHandler(OrderError orderError) {
-        Optional<Order> orderOptional = orderRepository.findByBrokerAndOmsId(Broker.FIROOZE_ASIA, orderError.getStateChangeData().getId());
+    private void orderErrorHandler(BourseCode bourseCode, OrderError orderError) {
+        Optional<Order> orderOptional = orderRepository.findByBourseCode_BrokerAndOmsId(bourseCode.getBroker(), orderError.getStateChangeData().getId());
         if (!orderOptional.isPresent()) {
             log.info("order not found : {}", orderError);
             return;

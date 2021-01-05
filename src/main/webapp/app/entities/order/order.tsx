@@ -149,7 +149,7 @@ export const Order = (props: IOrderProps) => {
                       <Translate contentKey={`eTradeApp.Side.${order.side}`} />
                     </td>
                     <td>
-                      <Translate contentKey={`eTradeApp.Broker.${order.broker}`} />
+                      <Translate contentKey={`eTradeApp.Broker.${order.bourseCode.broker}`} />
                     </td>
                     <td>{order.omsId}</td>
                     <td>

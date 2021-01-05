@@ -69,6 +69,11 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="20201012151100-1-broker" author="amirmehdi">
+        <dropColumn tableName="orders">
+            <column name="broker"/>
+        </dropColumn>
+    </changeSet>
     <changeSet id="20201012151100-1-relations" author="jhipster">
 
     </changeSet>

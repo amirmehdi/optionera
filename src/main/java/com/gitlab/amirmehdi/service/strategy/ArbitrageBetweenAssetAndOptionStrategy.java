@@ -2,6 +2,7 @@ package com.gitlab.amirmehdi.service.strategy;
 
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.repository.OptionRepository;
+import com.gitlab.amirmehdi.service.BourseCodeService;
 import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OptionStatsService;
 import com.gitlab.amirmehdi.service.dto.StrategyResponse;
@@ -15,8 +16,8 @@ import java.util.Collections;
 @Service
 public class ArbitrageBetweenAssetAndOptionStrategy extends Strategy {
 
-    protected ArbitrageBetweenAssetAndOptionStrategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market) {
-        super(optionRepository, optionStatsService, market);
+    protected ArbitrageBetweenAssetAndOptionStrategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market, BourseCodeService bourseCodeService) {
+        super(optionRepository, optionStatsService, market, bourseCodeService);
     }
 
     @Override

@@ -12,7 +12,6 @@ export interface IOrder {
   quantity?: number;
   validity?: Validity;
   side?: Side;
-  broker?: Broker;
   omsId?: string;
   state?: State;
   executed?: number;

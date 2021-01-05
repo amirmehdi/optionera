@@ -3,10 +3,10 @@ package com.gitlab.amirmehdi.service.strategy;
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Signal;
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.domain.enumeration.Side;
 import com.gitlab.amirmehdi.domain.enumeration.Validity;
 import com.gitlab.amirmehdi.repository.OptionRepository;
+import com.gitlab.amirmehdi.service.BourseCodeService;
 import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OptionStatsService;
 import com.gitlab.amirmehdi.service.calculator.ValuablePrice;
@@ -32,8 +32,8 @@ public class ExerciseOptionsStrategy extends Strategy {
         .expiration(5, TimeUnit.MINUTES)
         .build();
 
-    protected ExerciseOptionsStrategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market) {
-        super(optionRepository, optionStatsService, market);
+    protected ExerciseOptionsStrategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market, BourseCodeService bourseCodeService) {
+        super(optionRepository, optionStatsService, market, bourseCodeService);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class ExerciseOptionsStrategy extends Strategy {
             .validity(Validity.FILL_AND_KILL)
             .price(signal.getAskPrice())
             .quantity(quantity)
-            .broker(Broker.REFAH)
+            .bourseCode(bourseCodeService.findOne(318401L).get())
             .signal(signal));
     }
 

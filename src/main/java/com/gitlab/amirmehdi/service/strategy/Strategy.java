@@ -5,6 +5,7 @@ import com.gitlab.amirmehdi.domain.OptionStats;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Signal;
 import com.gitlab.amirmehdi.repository.OptionRepository;
+import com.gitlab.amirmehdi.service.BourseCodeService;
 import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OptionStatsService;
 import com.gitlab.amirmehdi.service.dto.StrategyResponse;
@@ -26,15 +27,16 @@ public abstract class Strategy {
     protected final OptionRepository optionRepository;
     protected final OptionStatsService optionStatsService;
     protected final Market market;
-
+    protected final BourseCodeService bourseCodeService;
     @Value("${application.telegram.publicChat}")
     protected String optionEraChatId;
 
 
-    protected Strategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market) {
+    protected Strategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market, BourseCodeService bourseCodeService) {
         this.optionRepository = optionRepository;
         this.optionStatsService = optionStatsService;
         this.market = market;
+        this.bourseCodeService = bourseCodeService;
     }
 
     public abstract StrategyResponse getSignals();

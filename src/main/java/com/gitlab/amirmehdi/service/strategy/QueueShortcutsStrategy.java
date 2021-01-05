@@ -4,6 +4,7 @@ import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.repository.InstrumentRepository;
 import com.gitlab.amirmehdi.repository.OptionRepository;
+import com.gitlab.amirmehdi.service.BourseCodeService;
 import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OptionStatsService;
 import com.gitlab.amirmehdi.service.dto.StrategyResponse;
@@ -27,8 +28,8 @@ public class QueueShortcutsStrategy extends Strategy {
         .expiration(60, TimeUnit.MINUTES)
         .build();
 
-    protected QueueShortcutsStrategy(OptionRepository optionRepository, OptionStatsService optionStatsService, InstrumentRepository instrumentRepository, Market market) {
-        super(optionRepository, optionStatsService, market);
+    protected QueueShortcutsStrategy(OptionRepository optionRepository, OptionStatsService optionStatsService, BourseCodeService bourseCodeService, InstrumentRepository instrumentRepository, Market market) {
+        super(optionRepository, optionStatsService, market, bourseCodeService);
         this.instrumentRepository = instrumentRepository;
         this.market = market;
     }

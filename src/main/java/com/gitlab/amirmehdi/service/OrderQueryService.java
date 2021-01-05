@@ -1,9 +1,12 @@
 package com.gitlab.amirmehdi.service;
 
-import java.util.List;
-
-import javax.persistence.criteria.JoinType;
-
+import com.gitlab.amirmehdi.domain.BourseCode_;
+import com.gitlab.amirmehdi.domain.Order;
+import com.gitlab.amirmehdi.domain.Order_;
+import com.gitlab.amirmehdi.domain.Signal_;
+import com.gitlab.amirmehdi.repository.OrderRepository;
+import com.gitlab.amirmehdi.service.dto.OrderCriteria;
+import io.github.jhipster.service.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -12,12 +15,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.jhipster.service.QueryService;
-
-import com.gitlab.amirmehdi.domain.Order;
-import com.gitlab.amirmehdi.domain.*; // for static metamodels
-import com.gitlab.amirmehdi.repository.OrderRepository;
-import com.gitlab.amirmehdi.service.dto.OrderCriteria;
+import javax.persistence.criteria.JoinType;
+import java.util.List;
 
 /**
  * Service for executing complex queries for {@link Order} entities in the database.
@@ -99,9 +98,6 @@ public class OrderQueryService extends QueryService<Order> {
             }
             if (criteria.getSide() != null) {
                 specification = specification.and(buildSpecification(criteria.getSide(), Order_.side));
-            }
-            if (criteria.getBroker() != null) {
-                specification = specification.and(buildSpecification(criteria.getBroker(), Order_.broker));
             }
             if (criteria.getOmsId() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getOmsId(), Order_.omsId));

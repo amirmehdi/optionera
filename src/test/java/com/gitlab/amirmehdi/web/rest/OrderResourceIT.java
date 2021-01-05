@@ -1,14 +1,15 @@
 package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.ETradeApp;
+import com.gitlab.amirmehdi.domain.BourseCode;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Signal;
-import com.gitlab.amirmehdi.domain.BourseCode;
+import com.gitlab.amirmehdi.domain.enumeration.OrderState;
+import com.gitlab.amirmehdi.domain.enumeration.Side;
+import com.gitlab.amirmehdi.domain.enumeration.Validity;
 import com.gitlab.amirmehdi.repository.OrderRepository;
-import com.gitlab.amirmehdi.service.OrderService;
-import com.gitlab.amirmehdi.service.dto.OrderCriteria;
 import com.gitlab.amirmehdi.service.OrderQueryService;
-
+import com.gitlab.amirmehdi.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -25,11 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.gitlab.amirmehdi.domain.enumeration.Validity;
-import com.gitlab.amirmehdi.domain.enumeration.Side;
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
-import com.gitlab.amirmehdi.domain.enumeration.OrderState;
 /**
  * Integration tests for the {@link OrderResource} REST controller.
  */
@@ -55,9 +52,6 @@ public class OrderResourceIT {
 
     private static final Side DEFAULT_SIDE = Side.BUY;
     private static final Side UPDATED_SIDE = Side.SELL;
-
-    private static final Broker DEFAULT_BROKER = Broker.REFAH;
-    private static final Broker UPDATED_BROKER = Broker.FIROOZE_ASIA;
 
     private static final String DEFAULT_OMS_ID = "AAAAAAAAAA";
     private static final String UPDATED_OMS_ID = "BBBBBBBBBB";
@@ -102,7 +96,6 @@ public class OrderResourceIT {
             .quantity(DEFAULT_QUANTITY)
             .validity(DEFAULT_VALIDITY)
             .side(DEFAULT_SIDE)
-            .broker(DEFAULT_BROKER)
             .omsId(DEFAULT_OMS_ID)
             .state(DEFAULT_STATE)
             .executed(DEFAULT_EXECUTED)
@@ -132,7 +125,6 @@ public class OrderResourceIT {
             .quantity(UPDATED_QUANTITY)
             .validity(UPDATED_VALIDITY)
             .side(UPDATED_SIDE)
-            .broker(UPDATED_BROKER)
             .omsId(UPDATED_OMS_ID)
             .state(UPDATED_STATE)
             .executed(UPDATED_EXECUTED)
@@ -175,7 +167,6 @@ public class OrderResourceIT {
         assertThat(testOrder.getQuantity()).isEqualTo(DEFAULT_QUANTITY);
         assertThat(testOrder.getValidity()).isEqualTo(DEFAULT_VALIDITY);
         assertThat(testOrder.getSide()).isEqualTo(DEFAULT_SIDE);
-        assertThat(testOrder.getBroker()).isEqualTo(DEFAULT_BROKER);
         assertThat(testOrder.getOmsId()).isEqualTo(DEFAULT_OMS_ID);
         assertThat(testOrder.getState()).isEqualTo(DEFAULT_STATE);
         assertThat(testOrder.getExecuted()).isEqualTo(DEFAULT_EXECUTED);
@@ -294,24 +285,6 @@ public class OrderResourceIT {
 
     @Test
     @Transactional
-    public void checkBrokerIsRequired() throws Exception {
-        int databaseSizeBeforeTest = orderRepository.findAll().size();
-        // set the field null
-        order.setBroker(null);
-
-        // Create the Order, which fails.
-
-        restOrderMockMvc.perform(post("/api/orders")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(order)))
-            .andExpect(status().isBadRequest());
-
-        List<Order> orderList = orderRepository.findAll();
-        assertThat(orderList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllOrders() throws Exception {
         // Initialize the database
         orderRepository.saveAndFlush(order);
@@ -326,13 +299,12 @@ public class OrderResourceIT {
             .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)))
             .andExpect(jsonPath("$.[*].validity").value(hasItem(DEFAULT_VALIDITY.toString())))
             .andExpect(jsonPath("$.[*].side").value(hasItem(DEFAULT_SIDE.toString())))
-            .andExpect(jsonPath("$.[*].broker").value(hasItem(DEFAULT_BROKER.toString())))
             .andExpect(jsonPath("$.[*].omsId").value(hasItem(DEFAULT_OMS_ID)))
             .andExpect(jsonPath("$.[*].state").value(hasItem(DEFAULT_STATE.toString())))
             .andExpect(jsonPath("$.[*].executed").value(hasItem(DEFAULT_EXECUTED)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
     }
-    
+
     @Test
     @Transactional
     public void getOrder() throws Exception {
@@ -349,7 +321,6 @@ public class OrderResourceIT {
             .andExpect(jsonPath("$.quantity").value(DEFAULT_QUANTITY))
             .andExpect(jsonPath("$.validity").value(DEFAULT_VALIDITY.toString()))
             .andExpect(jsonPath("$.side").value(DEFAULT_SIDE.toString()))
-            .andExpect(jsonPath("$.broker").value(DEFAULT_BROKER.toString()))
             .andExpect(jsonPath("$.omsId").value(DEFAULT_OMS_ID))
             .andExpect(jsonPath("$.state").value(DEFAULT_STATE.toString()))
             .andExpect(jsonPath("$.executed").value(DEFAULT_EXECUTED))
@@ -770,45 +741,6 @@ public class OrderResourceIT {
 
     @Test
     @Transactional
-    public void getAllOrdersByBrokerIsEqualToSomething() throws Exception {
-        // Initialize the database
-        orderRepository.saveAndFlush(order);
-
-        // Get all the orderList where broker equals to DEFAULT_BROKER
-        defaultOrderShouldBeFound("broker.equals=" + DEFAULT_BROKER);
-
-        // Get all the orderList where broker equals to UPDATED_BROKER
-        defaultOrderShouldNotBeFound("broker.equals=" + UPDATED_BROKER);
-    }
-
-    @Test
-    @Transactional
-    public void getAllOrdersByBrokerIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        orderRepository.saveAndFlush(order);
-
-        // Get all the orderList where broker not equals to DEFAULT_BROKER
-        defaultOrderShouldNotBeFound("broker.notEquals=" + DEFAULT_BROKER);
-
-        // Get all the orderList where broker not equals to UPDATED_BROKER
-        defaultOrderShouldBeFound("broker.notEquals=" + UPDATED_BROKER);
-    }
-
-    @Test
-    @Transactional
-    public void getAllOrdersByBrokerIsInShouldWork() throws Exception {
-        // Initialize the database
-        orderRepository.saveAndFlush(order);
-
-        // Get all the orderList where broker in DEFAULT_BROKER or UPDATED_BROKER
-        defaultOrderShouldBeFound("broker.in=" + DEFAULT_BROKER + "," + UPDATED_BROKER);
-
-        // Get all the orderList where broker equals to UPDATED_BROKER
-        defaultOrderShouldNotBeFound("broker.in=" + UPDATED_BROKER);
-    }
-
-    @Test
-    @Transactional
     public void getAllOrdersByBrokerIsNullOrNotNull() throws Exception {
         // Initialize the database
         orderRepository.saveAndFlush(order);
@@ -1181,7 +1113,6 @@ public class OrderResourceIT {
             .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)))
             .andExpect(jsonPath("$.[*].validity").value(hasItem(DEFAULT_VALIDITY.toString())))
             .andExpect(jsonPath("$.[*].side").value(hasItem(DEFAULT_SIDE.toString())))
-            .andExpect(jsonPath("$.[*].broker").value(hasItem(DEFAULT_BROKER.toString())))
             .andExpect(jsonPath("$.[*].omsId").value(hasItem(DEFAULT_OMS_ID)))
             .andExpect(jsonPath("$.[*].state").value(hasItem(DEFAULT_STATE.toString())))
             .andExpect(jsonPath("$.[*].executed").value(hasItem(DEFAULT_EXECUTED)))
@@ -1238,7 +1169,6 @@ public class OrderResourceIT {
             .quantity(UPDATED_QUANTITY)
             .validity(UPDATED_VALIDITY)
             .side(UPDATED_SIDE)
-            .broker(UPDATED_BROKER)
             .omsId(UPDATED_OMS_ID)
             .state(UPDATED_STATE)
             .executed(UPDATED_EXECUTED)
@@ -1258,7 +1188,6 @@ public class OrderResourceIT {
         assertThat(testOrder.getQuantity()).isEqualTo(UPDATED_QUANTITY);
         assertThat(testOrder.getValidity()).isEqualTo(UPDATED_VALIDITY);
         assertThat(testOrder.getSide()).isEqualTo(UPDATED_SIDE);
-        assertThat(testOrder.getBroker()).isEqualTo(UPDATED_BROKER);
         assertThat(testOrder.getOmsId()).isEqualTo(UPDATED_OMS_ID);
         assertThat(testOrder.getState()).isEqualTo(UPDATED_STATE);
         assertThat(testOrder.getExecuted()).isEqualTo(UPDATED_EXECUTED);

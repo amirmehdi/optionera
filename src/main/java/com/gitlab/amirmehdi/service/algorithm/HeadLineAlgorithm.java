@@ -78,7 +78,6 @@ public class HeadLineAlgorithm {
             }
             Order res = orderService.sendOrder(
                 new Order()
-                    .broker(order.getBroker())
                     .isin(order.getIsin())
                     .price(price)
                     .quantity(quantity)

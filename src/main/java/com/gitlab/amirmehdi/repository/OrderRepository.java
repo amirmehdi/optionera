@@ -17,7 +17,7 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
-    Optional<Order> findByBrokerAndOmsId(Broker broker,String omsId);
+    Optional<Order> findByBourseCode_BrokerAndOmsId(Broker broker, String omsId);
 
     List<Order> findAllByStateIn(List<OrderState> states);
 

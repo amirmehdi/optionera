@@ -1,6 +1,7 @@
 package com.gitlab.amirmehdi.service.strategy;
 
 import com.gitlab.amirmehdi.repository.OptionRepository;
+import com.gitlab.amirmehdi.service.BourseCodeService;
 import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OptionStatsService;
 import com.gitlab.amirmehdi.service.dto.StrategyResponse;
@@ -19,8 +20,8 @@ public class UnusualPrices2Strategy extends Strategy {
         .expiration(30, TimeUnit.MINUTES)
         .build();
 
-    protected UnusualPrices2Strategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market) {
-        super(optionRepository, optionStatsService, market);
+    protected UnusualPrices2Strategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market, BourseCodeService bourseCodeService) {
+        super(optionRepository, optionStatsService, market, bourseCodeService);
     }
 
     @Override

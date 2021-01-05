@@ -1,19 +1,18 @@
 package com.gitlab.amirmehdi.web.rest;
 
 
-import com.gitlab.amirmehdi.domain.Order;
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.service.OrderService;
 import com.gitlab.amirmehdi.service.TadbirService;
-import com.gitlab.amirmehdi.service.dto.OrderDto;
 import com.gitlab.amirmehdi.service.dto.tadbir.DailyPortfolioResponse;
 import com.gitlab.amirmehdi.service.dto.tadbir.OpenOrderResponse;
 import com.gitlab.amirmehdi.service.dto.tadbir.RemainResponse;
 import com.gitlab.amirmehdi.service.dto.tadbir.UserOpenInterestResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/tadbir")
@@ -25,20 +24,6 @@ public class TadbirResource {
     public TadbirResource(TadbirService tadbirService, OrderService orderService) {
         this.tadbirService = tadbirService;
         this.orderService = orderService;
-    }
-
-    @PostMapping(value = "orders")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<String> sendOrder(@RequestBody OrderDto dto) {
-        Order order = new Order()
-            .isin(dto.getIsin())
-            .validity(dto.getValidity())
-            .side(dto.getSide())
-            .price(dto.getPrice())
-            .quantity(dto.getQuantity())
-            .broker(Broker.REFAH);
-        orderService.save(order);
-        return ResponseEntity.ok(tadbirService.sendOrder(order));
     }
 
     @GetMapping(value = "portfo")

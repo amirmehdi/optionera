@@ -4,10 +4,10 @@ import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.Signal;
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.domain.enumeration.Side;
 import com.gitlab.amirmehdi.domain.enumeration.Validity;
 import com.gitlab.amirmehdi.repository.OptionRepository;
+import com.gitlab.amirmehdi.service.BourseCodeService;
 import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OptionStatsService;
 import com.gitlab.amirmehdi.service.dto.StrategyResponse;
@@ -32,8 +32,8 @@ public class UnusualPrices1Strategy extends Strategy {
     @Autowired
     private ApplicationProperties properties;
 
-    protected UnusualPrices1Strategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market) {
-        super(optionRepository, optionStatsService, market);
+    protected UnusualPrices1Strategy(OptionRepository optionRepository, OptionStatsService optionStatsService, Market market, BourseCodeService bourseCodeService) {
+        super(optionRepository, optionStatsService, market, bourseCodeService);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class UnusualPrices1Strategy extends Strategy {
             .validity(Validity.DAY)
             .price(signal.getAskPrice())
             .quantity(quantity)
-            .broker(Broker.REFAH)
+            .bourseCode(bourseCodeService.findOne(318401L).get())
             .signal(signal));
     }
 }

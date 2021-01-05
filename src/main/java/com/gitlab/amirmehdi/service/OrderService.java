@@ -1,7 +1,6 @@
 package com.gitlab.amirmehdi.service;
 
 import com.gitlab.amirmehdi.domain.Order;
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.domain.enumeration.OMS;
 import com.gitlab.amirmehdi.domain.enumeration.OrderState;
 import com.gitlab.amirmehdi.repository.OrderRepository;
@@ -95,7 +94,7 @@ public class OrderService {
         }
         if (order.getState() == null || order.getState().equals(OrderState.NONE)) {
             // send order
-            if (OMS.SAHRA.equals(order.getBroker().oms)) {
+            if (OMS.SAHRA.equals(order.getBourseCode().getBroker().oms)) {
                 try {
                     sahraRequestService.sendOrder(order);
                 } catch (CodeException e) {
@@ -117,7 +116,7 @@ public class OrderService {
         } else if (!OrderState.ACTIVE.equals(order.getState()) && !OrderState.NONE.equals(order.getState())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "سفارش فعال نیست");
         }
-        if (Broker.FIROOZE_ASIA.equals(order.getBroker())) {
+        if (OMS.SAHRA.equals(order.getBourseCode().getBroker().oms)) {
             sahraRequestService.cancelOrder(order);
         }
     }

@@ -1,7 +1,6 @@
 package com.gitlab.amirmehdi.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.domain.enumeration.OrderState;
 import com.gitlab.amirmehdi.domain.enumeration.Side;
 import com.gitlab.amirmehdi.domain.enumeration.Validity;
@@ -50,11 +49,6 @@ public class Order implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "side", nullable = false)
     private Side side;
-
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "broker", nullable = false)
-    private Broker broker;
 
     @Column(name = "oms_id")
     private String omsId;
@@ -155,19 +149,6 @@ public class Order implements Serializable {
 
     public void setSide(Side side) {
         this.side = side;
-    }
-
-    public Broker getBroker() {
-        return broker;
-    }
-
-    public Order broker(Broker broker) {
-        this.broker = broker;
-        return this;
-    }
-
-    public void setBroker(Broker broker) {
-        this.broker = broker;
     }
 
     public String getOmsId() {
@@ -277,7 +258,6 @@ public class Order implements Serializable {
             ", quantity=" + getQuantity() +
             ", validity='" + getValidity() + "'" +
             ", side='" + getSide() + "'" +
-            ", broker='" + getBroker() + "'" +
             ", omsId='" + getOmsId() + "'" +
             ", state='" + getState() + "'" +
             ", executed=" + getExecuted() +
