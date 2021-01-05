@@ -150,21 +150,6 @@ export const OrderUpdate = (props: IOrderUpdateProps) => {
                 </AvInput>
               </AvGroup>
               <AvGroup>
-                <Label id="brokerLabel" for="order-broker">
-                  <Translate contentKey="eTradeApp.order.broker">Broker</Translate>
-                </Label>
-                <AvInput
-                  id="order-broker"
-                  type="select"
-                  className="form-control"
-                  name="broker"
-                  value={(!isNew && orderEntity.broker) || 'REFAH'}
-                >
-                  <option value="REFAH">{translate('eTradeApp.Broker.REFAH')}</option>
-                  <option value="FIROOZE_ASIA">{translate('eTradeApp.Broker.FIROOZE_ASIA')}</option>
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
                 <Label id="omsIdLabel" for="order-omsId">
                   <Translate contentKey="eTradeApp.order.omsId">Oms Id</Translate>
                 </Label>
