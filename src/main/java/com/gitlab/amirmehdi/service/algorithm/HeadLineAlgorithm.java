@@ -57,7 +57,7 @@ public class HeadLineAlgorithm {
             int price = stockWatch == null ? order.getPrice() : stockWatch.getMax();
             int quantity = (int) (order.getBourseCode().getBuyingPower() * 0.99 / (ordersSize * price));
             List<String> sentIsins = new ArrayList<>();
-            Instant marketOpen = new Date().toInstant().atZone(ZoneId.systemDefault()).withHour(8)
+            Instant marketOpen = new Date().toInstant().atZone(ZoneId.of("Asia/Tehran")).withHour(8)
                 .withMinute(45)
                 .withSecond(0).toInstant();
             log.info("market open is {}", marketOpen);
