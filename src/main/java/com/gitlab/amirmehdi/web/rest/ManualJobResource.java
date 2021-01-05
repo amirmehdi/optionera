@@ -7,11 +7,13 @@ import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.service.BoardService;
 import com.gitlab.amirmehdi.service.InstrumentService;
 import com.gitlab.amirmehdi.service.OptionService;
+import com.gitlab.amirmehdi.service.algorithm.HeadLineAlgorithm;
 import com.gitlab.amirmehdi.service.crawler.CrawlerBox;
 import com.gitlab.amirmehdi.service.crawler.TseCrawler;
 import com.gitlab.amirmehdi.service.StrategyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,8 +30,9 @@ public class ManualJobResource {
     private final StrategyService strategyService;
     private final OptionService optionService;
     private final InstrumentService instrumentService;
+    private final HeadLineAlgorithm algorithm;
 
-    public ManualJobResource(BatchConfiguration batchConfiguration, TseCrawler tseCrawler, CrawlerBox crawlerBox, BoardService boardService, StrategyService strategyService, OptionService optionService, InstrumentService instrumentService) {
+    public ManualJobResource(BatchConfiguration batchConfiguration, TseCrawler tseCrawler, CrawlerBox crawlerBox, BoardService boardService, StrategyService strategyService, OptionService optionService, InstrumentService instrumentService, HeadLineAlgorithm algorithm) {
         this.batchConfiguration = batchConfiguration;
         this.tseCrawler = tseCrawler;
         this.crawlerBox = crawlerBox;
@@ -37,6 +40,7 @@ public class ManualJobResource {
         this.strategyService = strategyService;
         this.optionService = optionService;
         this.instrumentService = instrumentService;
+        this.algorithm = algorithm;
     }
 
     @PostMapping(value = "volatility")
@@ -107,6 +111,13 @@ public class ManualJobResource {
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Object> strategyRunner() {
         strategyService.run();
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "headline-algorithm/{sleep}/{limit}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<Object> headlineAlgorithm(@PathVariable long sleep, @PathVariable int limit) {
+        algorithm.retrieveHeadLineOrdersAndSend(sleep, limit);
         return ResponseEntity.ok().build();
     }
 }

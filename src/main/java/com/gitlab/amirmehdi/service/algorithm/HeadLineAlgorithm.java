@@ -12,8 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,26 +38,33 @@ public class HeadLineAlgorithm {
     @Scheduled(cron = "57 44 8 * * *")
     public void headLineOrder() {
         log.info("headLineOrder fired");
+        retrieveHeadLineOrdersAndSend(properties.getHeadline().getSleep(), properties.getHeadline().getRepeat());
+    }
+
+    public void retrieveHeadLineOrdersAndSend(long sleep, int repeat) {
         List<Order> orders = orderService.findAllByState(OrderState.HEADLINE);
         orders.stream()
             .collect(Collectors.groupingBy(order -> order.getBourseCode().getId()))
             .forEach((aLong, orders1) -> {
-            sendHeadLineOrdersPerBourseCode(orders1);
-        });
+                sendHeadLineOrdersPerBourseCode(orders1, sleep, repeat);
+            });
     }
 
-    private void sendHeadLineOrdersPerBourseCode(List<Order> orders) {
+    private void sendHeadLineOrdersPerBourseCode(List<Order> orders, long sleep, int repeat) {
         for (int j = 0, ordersSize = orders.size(); j < ordersSize; j++) {
             Order order = orders.get(j);
             StockWatch stockWatch = market.getStockWatch(order.getIsin());
             int price = stockWatch == null ? order.getPrice() : stockWatch.getMax();
             int quantity = (int) (order.getBourseCode().getBuyingPower() * 0.99 / (ordersSize * price));
             List<String> sentIsins = new ArrayList<>();
-            scheduleOrder(order, price, quantity, sentIsins, Instant.from(LocalTime.of(8, 45, 0).atDate(LocalDate.now())));
-            for (int i = 0; i < properties.getHeadline().getRepeat(); i++) {
+            Instant marketOpen = new Date().toInstant().atZone(ZoneId.systemDefault()).withHour(8)
+                .withMinute(45)
+                .withSecond(0).toInstant();
+            scheduleOrder(order, price, quantity, sentIsins, marketOpen);
+            for (int i = 0; i < repeat; i++) {
                 scheduleOrder(order, price, quantity, sentIsins, new Date()
                     .toInstant()
-                    .plus((i * properties.getHeadline().getSleep()) + (j * properties.getHeadline().getSleep() / ordersSize), ChronoUnit.MILLIS));
+                    .plus((i * sleep) + (j * sleep / ordersSize), ChronoUnit.MILLIS));
             }
         }
     }

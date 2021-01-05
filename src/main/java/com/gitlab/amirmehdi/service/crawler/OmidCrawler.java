@@ -6,6 +6,7 @@ import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.service.*;
 import com.gitlab.amirmehdi.service.dto.core.BidAsk;
+import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import com.google.common.collect.Lists;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.web.client.ResourceAccessException;
 import javax.annotation.Nullable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -97,7 +99,10 @@ public class OmidCrawler implements MarketUpdater {
                     } else {
                         StopWatch watch = new StopWatch("save omid response");
                         watch.start("redis");
-                        market.saveAllStockWatch(stockWatches);
+                        for (StockWatch stockWatch : stockWatches) {
+                            stockWatch.setCrawledDate(new Date());
+                            market.saveStockWatch(stockWatch);
+                        }
                         watch.stop();
                         watch.start("board");
                         boardService.updateBoardForIsins(instruments);

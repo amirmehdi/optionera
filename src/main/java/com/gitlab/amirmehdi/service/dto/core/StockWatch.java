@@ -37,7 +37,7 @@ public class StockWatch {
     @JsonProperty("lastTrade")
     private Date lastTrade;
     @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Tehran")
-    private Date crawledDate = new Date();
+    private Date crawledDate;
 
     private int openInterest;
     private int settlementPrice;

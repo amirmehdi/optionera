@@ -97,11 +97,6 @@ public class Market {
         }
     }
 
-    public void saveAllStockWatch(List<StockWatch> stockWatches) {
-        for (StockWatch stockWatch : stockWatches) {
-            saveStockWatch(stockWatch);
-        }
-    }
     public void saveAllClientsInfo(List<ClientsInfo> clientsInfos) {
         for (ClientsInfo clientsInfo : clientsInfos) {
             saveClientsInfo(clientsInfo);

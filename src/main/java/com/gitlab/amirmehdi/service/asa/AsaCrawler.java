@@ -86,6 +86,7 @@ public class AsaCrawler implements MarketUpdater {
                     StopWatch watch = new StopWatch("save asa response");
                     watch.start("redis");
                     StockWatch stockWatch = res.toStockWatch();
+                    stockWatch.setCrawledDate(new Date());
                     BidAsk bidAsk = res.toBidAsk();
                     ClientsInfo clientsInfo = res.toClientsInfo();
                     market.saveStockWatch(stockWatch);

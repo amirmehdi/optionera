@@ -77,6 +77,7 @@ public class TadbirCrawler implements MarketUpdater {
                     StopWatch watch = new StopWatch("save tadbir response");
                     watch.start("redis");
                     StockWatch stockWatch = res.toStockWatch();
+                    stockWatch.setCrawledDate(new Date());
                     BidAsk bidAsk = res.toBidAsk();
                     market.saveBidAsk(bidAsk);
                     market.saveStockWatch(stockWatch);
