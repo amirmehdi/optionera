@@ -114,10 +114,10 @@ public class ManualJobResource {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "headline-algorithm/{sleep}/{limit}")
+    @PostMapping(value = "headline-algorithm/{sleep}/{repeat}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<Object> headlineAlgorithm(@PathVariable long sleep, @PathVariable int limit) {
-        algorithm.retrieveHeadLineOrdersAndSend(sleep, limit);
+    public ResponseEntity<Object> headlineAlgorithm(@PathVariable long sleep, @PathVariable int repeat) {
+        algorithm.retrieveHeadLineOrdersAndSend(sleep, repeat);
         return ResponseEntity.ok().build();
     }
 }

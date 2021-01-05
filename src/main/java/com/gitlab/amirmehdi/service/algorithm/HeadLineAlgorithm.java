@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -76,6 +77,8 @@ public class HeadLineAlgorithm {
                 log.info("order is sent before: {}", order);
                 return;
             }
+            StopWatch stopWatch = new StopWatch("send order");
+            stopWatch.start();
             Order res = orderService.sendOrder(
                 new Order()
                     .isin(order.getIsin())
@@ -84,6 +87,8 @@ public class HeadLineAlgorithm {
                     .validity(order.getValidity())
                     .side(order.getSide())
                     .bourseCode(order.getBourseCode()));
+            stopWatch.stop();
+            log.debug(stopWatch.shortSummary());
             log.info(res);
             if (res.getDescription() != null && res.getDescription().contains("-2006") && res.getState().equals(OrderState.ERROR)) {
                 sentIsins.add(order.getIsin());

@@ -3,6 +3,7 @@ package com.gitlab.amirmehdi.service;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.enumeration.OMS;
 import com.gitlab.amirmehdi.domain.enumeration.OrderState;
+import com.gitlab.amirmehdi.repository.BourseCodeRepository;
 import com.gitlab.amirmehdi.repository.OrderRepository;
 import com.gitlab.amirmehdi.service.dto.sahra.exception.CodeException;
 import com.gitlab.amirmehdi.service.sahra.SahraRequestService;
@@ -29,12 +30,14 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final BourseCodeRepository bourseCodeRepository;
     private final TadbirService tadbirService;
     private final SahraRequestService sahraRequestService;
     private final List<OrderState> activeStates = Arrays.asList(OrderState.NONE, OrderState.ACTIVE, OrderState.PARTIALLY_EXECUTED);
 
-    public OrderService(OrderRepository orderRepository, TadbirService tadbirService, SahraRequestService sahraRequestService) {
+    public OrderService(OrderRepository orderRepository, BourseCodeRepository bourseCodeRepository, TadbirService tadbirService, SahraRequestService sahraRequestService) {
         this.orderRepository = orderRepository;
+        this.bourseCodeRepository = bourseCodeRepository;
         this.tadbirService = tadbirService;
         this.sahraRequestService = sahraRequestService;
     }
@@ -90,10 +93,13 @@ public class OrderService {
 
     public Order sendOrder(Order order) {
         if (order.getId() == null || order.getId() == 0) {
-            orderRepository.save(order);
+            order = orderRepository.save(order);
         }
         if (order.getState() == null || order.getState().equals(OrderState.NONE)) {
             // send order
+            if (order.getBourseCode().getBroker() == null) {
+                order.setBourseCode(bourseCodeRepository.findById(order.getBourseCode().getId()).get());
+            }
             if (OMS.SAHRA.equals(order.getBourseCode().getBroker().oms)) {
                 try {
                     sahraRequestService.sendOrder(order);
@@ -115,6 +121,9 @@ public class OrderService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "جواب از سمت کارگزاری نیامده");
         } else if (!OrderState.ACTIVE.equals(order.getState()) && !OrderState.NONE.equals(order.getState())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "سفارش فعال نیست");
+        }
+        if (order.getBourseCode().getBroker() == null) {
+            order.setBourseCode(bourseCodeRepository.findById(order.getBourseCode().getId()).get());
         }
         if (OMS.SAHRA.equals(order.getBourseCode().getBroker().oms)) {
             sahraRequestService.cancelOrder(order);
