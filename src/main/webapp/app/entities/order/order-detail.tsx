@@ -60,7 +60,7 @@ export const OrderDetail = (props: IOrderDetailProps) => {
               <Translate contentKey="eTradeApp.order.broker">Broker</Translate>
             </span>
           </dt>
-          <dd>{orderEntity.broker}</dd>
+          <dd>{orderEntity.bourseCode.broker}</dd>
           <dt>
             <span id="omsId">
               <Translate contentKey="eTradeApp.order.omsId">Oms Id</Translate>
