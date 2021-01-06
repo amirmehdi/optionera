@@ -688,7 +688,10 @@
                             </volumes>
                         </container>
                         <extraDirectories>
-                            <paths>src/main/jib</paths>
+                            <paths>
+                                <path>src/main/jib</path>
+                                <path>proxy-setting</path>
+                            </paths>
                             <permissions>
                                 <permission>
                                     <file>/entrypoint.sh</file>

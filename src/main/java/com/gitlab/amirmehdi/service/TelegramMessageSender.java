@@ -29,7 +29,7 @@ public class TelegramMessageSender {
     @PostConstruct
     public void fillRestTemplates() {
         try {
-            FileUtils.readLines(new File("valid_proxies.txt"), "UTF-8")
+            FileUtils.readLines(new File("proxy-setting/valid_proxies.txt"), "UTF-8")
                 .forEach(s -> {
                     RestTemplate restTemplate = getRestTemplate(s);
                     restTemplates.add(new RestTemplateTuple(restTemplate));
@@ -68,7 +68,7 @@ public class TelegramMessageSender {
     public void refreshValidProxies() {
         try {
             List<String> validProxies = new ArrayList<>();
-            FileUtils.readLines(new File("valid_proxies.txt"), "UTF-8")
+            FileUtils.readLines(new File("proxy-setting/valid_proxies.txt"), "UTF-8")
                 .forEach(s -> {
                     try {
                         RestTemplate restTemplate = getRestTemplate(s);
@@ -80,7 +80,7 @@ public class TelegramMessageSender {
                         log.error("invalid proxy {}", s);
                     }
                 });
-            FileUtils.writeLines(new File("valid_proxies.txt"), validProxies);
+            FileUtils.writeLines(new File("proxy-setting/valid_proxies.txt"), validProxies);
         } catch (IOException e) {
             e.printStackTrace();
         }

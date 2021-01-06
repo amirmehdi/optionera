@@ -25,10 +25,10 @@ public class OrderEdit {
         this(new StateChangeData((ArrayList<Object>) s.get(0))
             , ((Number) s.get(1)).intValue(), ((Number) s.get(2)).intValue()
             , ((Number) s.get(3)).intValue()
-            , OrderValidity.get(((Number) s.get(5)).intValue())
+            , OrderValidity.get(((Number) s.get(4)).intValue())
             , null
-            , ((Number) s.get(1)).intValue(), ((Number) s.get(2)).intValue()
-            , ((Number) s.get(3)).intValue()
+            , ((Number) s.get(6)).intValue(), ((Number) s.get(7)).intValue()
+            , ((Number) s.get(8)).intValue()
         );
     }
 }
