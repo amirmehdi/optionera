@@ -690,7 +690,10 @@
                         <extraDirectories>
                             <paths>
                                 <path>src/main/jib</path>
-                                <path>proxy-setting</path>
+                                <path>
+                                    <from>proxy-setting</from>
+                                    <into>/proxy-setting</into>
+                                </path>
                             </paths>
                             <permissions>
                                 <permission>
