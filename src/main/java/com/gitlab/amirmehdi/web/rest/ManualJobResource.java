@@ -4,19 +4,14 @@ package com.gitlab.amirmehdi.web.rest;
 import com.gitlab.amirmehdi.batch.BatchConfiguration;
 import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.security.AuthoritiesConstants;
-import com.gitlab.amirmehdi.service.BoardService;
-import com.gitlab.amirmehdi.service.InstrumentService;
-import com.gitlab.amirmehdi.service.OptionService;
+import com.gitlab.amirmehdi.service.*;
 import com.gitlab.amirmehdi.service.algorithm.HeadLineAlgorithm;
 import com.gitlab.amirmehdi.service.crawler.CrawlerBox;
 import com.gitlab.amirmehdi.service.crawler.TseCrawler;
-import com.gitlab.amirmehdi.service.StrategyService;
+import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
 
@@ -31,8 +26,9 @@ public class ManualJobResource {
     private final OptionService optionService;
     private final InstrumentService instrumentService;
     private final HeadLineAlgorithm algorithm;
+    private final TelegramMessageSender telegramMessageSender;
 
-    public ManualJobResource(BatchConfiguration batchConfiguration, TseCrawler tseCrawler, CrawlerBox crawlerBox, BoardService boardService, StrategyService strategyService, OptionService optionService, InstrumentService instrumentService, HeadLineAlgorithm algorithm) {
+    public ManualJobResource(BatchConfiguration batchConfiguration, TseCrawler tseCrawler, CrawlerBox crawlerBox, BoardService boardService, StrategyService strategyService, OptionService optionService, InstrumentService instrumentService, HeadLineAlgorithm algorithm, TelegramMessageSender telegramMessageSender) {
         this.batchConfiguration = batchConfiguration;
         this.tseCrawler = tseCrawler;
         this.crawlerBox = crawlerBox;
@@ -41,6 +37,7 @@ public class ManualJobResource {
         this.optionService = optionService;
         this.instrumentService = instrumentService;
         this.algorithm = algorithm;
+        this.telegramMessageSender = telegramMessageSender;
     }
 
     @PostMapping(value = "volatility")
@@ -118,6 +115,13 @@ public class ManualJobResource {
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Object> headlineAlgorithm(@PathVariable long sleep, @PathVariable int repeat) {
         algorithm.retrieveHeadLineOrdersAndSend(sleep, repeat);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "tg-send")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<Object> telegramSender(@RequestBody TelegramMessageDto dto) {
+        telegramMessageSender.sendMessage(dto);
         return ResponseEntity.ok().build();
     }
 }

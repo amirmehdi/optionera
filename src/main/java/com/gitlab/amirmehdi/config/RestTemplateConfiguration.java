@@ -33,6 +33,7 @@ public class RestTemplateConfiguration {
             .build());
         return new RestTemplate(httpRequestFactory);
     }
+
     @Bean
     RestTemplate longPollRestTemplate() {
         HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
