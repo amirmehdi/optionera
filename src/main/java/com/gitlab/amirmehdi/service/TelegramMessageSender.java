@@ -3,6 +3,7 @@ package com.gitlab.amirmehdi.service;
 import com.gitlab.amirmehdi.service.dto.RestTemplateTuple;
 import com.gitlab.amirmehdi.service.dto.TelegramMessageDto;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -10,15 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Stream;
 
 @Service
 @Log4j2
@@ -29,11 +28,12 @@ public class TelegramMessageSender {
 
     @PostConstruct
     public void fillRestTemplates() {
-        try (Stream<String> lines = Files.lines(Paths.get("valid_proxies.txt"))) {
-            lines.forEach(s -> {
-                RestTemplate restTemplate = getRestTemplate(s);
-                restTemplates.add(new RestTemplateTuple(restTemplate));
-            });
+        try {
+            FileUtils.readLines(new File("valid_proxies.txt"), "UTF-8")
+                .forEach(s -> {
+                    RestTemplate restTemplate = getRestTemplate(s);
+                    restTemplates.add(new RestTemplateTuple(restTemplate));
+                });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,20 +66,21 @@ public class TelegramMessageSender {
     }
 
     public void refreshValidProxies() {
-        try (Stream<String> lines = Files.lines(Paths.get("http_proxies.txt"))) {
+        try {
             List<String> validProxies = new ArrayList<>();
-            lines.forEach(s -> {
-                try {
-                    RestTemplate restTemplate = getRestTemplate(s);
-                    //RestTemplate restTemplate = new RestTemplateBuilder(new ProxyCustomizer(hostName, port)).build();
-                    requestToTelegram(restTemplate, "-1001468700748", String.format("%s is valid", s));
-                    log.info("yes boy! valid proxy {}", s);
-                    validProxies.add(s);
-                } catch (Exception e) {
-                    log.error("invalid proxy {}", s);
-                }
-            });
-            Files.write(Paths.get("valid_proxies.txt"), validProxies);
+            FileUtils.readLines(new File("valid_proxies.txt"), "UTF-8")
+                .forEach(s -> {
+                    try {
+                        RestTemplate restTemplate = getRestTemplate(s);
+                        //RestTemplate restTemplate = new RestTemplateBuilder(new ProxyCustomizer(hostName, port)).build();
+                        requestToTelegram(restTemplate, "-1001468700748", String.format("%s is valid", s));
+                        log.info("yes boy! valid proxy {}", s);
+                        validProxies.add(s);
+                    } catch (Exception e) {
+                        log.error("invalid proxy {}", s);
+                    }
+                });
+            FileUtils.writeLines(new File("valid_proxies.txt"), validProxies);
         } catch (IOException e) {
             e.printStackTrace();
         }
