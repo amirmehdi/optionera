@@ -55,6 +55,7 @@ public class TelegramMessageSender {
         RestTemplateTuple tuple = restTemplates.get(ThreadLocalRandom.current().nextInt(restTemplates.size()));
         try {
             requestToTelegram(tuple.getRestTemplate(), dto.getChatId(), dto.getText());
+            tuple.setErrorCount(0);
         } catch (Exception e) {
             tuple.setErrorCount(tuple.getErrorCount() + 1);
             if (tuple.getErrorCount() > 5) {
