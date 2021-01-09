@@ -194,6 +194,6 @@ application:
   strategy:
     unusual1Threshold: -10
   headline:
-    cron: 57 44 8 * * *
+    cron: 59 44 8 * * *
     repeat: 40
     sleep: 150

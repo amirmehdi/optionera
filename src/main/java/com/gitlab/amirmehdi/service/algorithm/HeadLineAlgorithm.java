@@ -36,7 +36,7 @@ public class HeadLineAlgorithm {
     }
 
 
-    @Scheduled(cron = "57 44 8 * * *")
+    @Scheduled(cron = "${application.headline.cron}")
     public void headLineOrder() {
         log.info("headLineOrder fired");
         retrieveHeadLineOrdersAndSend(properties.getHeadline().getSleep(), properties.getHeadline().getRepeat());
