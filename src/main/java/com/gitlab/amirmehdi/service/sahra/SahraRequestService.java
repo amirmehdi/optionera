@@ -265,7 +265,7 @@ public class SahraRequestService implements CommandLineRunner {
         }
         LocalTime requestFinish = LocalTime.now();
         log.info("send request startTime: {} endTime: {} userId: {} data: {} response: {}"
-            , requestStart, requestFinish, userId, data, sendResponse);
+            , requestStart, requestFinish, userId, data, sendResponse.getBody());
         ObjectNode node = sendResponse.getBody();
         if (node != null && node.has("R") && node.get("R").has("ex")) {
             long errorCode = node.get("R").get("ex").get("i").asLong();

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,11 +57,11 @@ public class HeadLineAlgorithm {
             int price = stockWatch == null ? order.getPrice() : stockWatch.getMax();
             int quantity = (int) (order.getBourseCode().getBuyingPower() * 0.99 / (ordersSize * price));
             List<String> sentIsins = new ArrayList<>();
-            Instant marketOpen = new Date().toInstant().atZone(ZoneId.of("Asia/Tehran")).withHour(8)
-                .withMinute(45)
-                .withSecond(0).toInstant();
-            log.info("market open is {}", marketOpen);
-            scheduleOrder(order, price, quantity, sentIsins, marketOpen);
+//            Instant marketOpen = new Date().toInstant().atZone(ZoneId.of("Asia/Tehran")).withHour(8)
+//                .withMinute(45)
+//                .withSecond(0).toInstant();
+//            log.info("market open is {}", marketOpen);
+//            scheduleOrder(order, price, quantity, sentIsins, marketOpen);
             for (int i = 0; i < repeat; i++) {
                 scheduleOrder(order, price, quantity, sentIsins, new Date()
                     .toInstant()
