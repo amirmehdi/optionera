@@ -1,6 +1,5 @@
 package com.gitlab.amirmehdi.service.asa;
 
-import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.domain.BourseCode;
 import com.gitlab.amirmehdi.domain.Token;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
@@ -8,6 +7,7 @@ import com.gitlab.amirmehdi.repository.BourseCodeRepository;
 import com.gitlab.amirmehdi.repository.TokenRepository;
 import com.gitlab.amirmehdi.service.sahra.LoginFailedException;
 import com.gitlab.amirmehdi.util.CaptchaDecoder;
+import com.gitlab.amirmehdi.util.SeleniumDriver;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -24,18 +24,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.gitlab.amirmehdi.util.SeleniumDriver.getWebDriver;
-
 @Service
 @Log4j2
 public class ConnectionManager implements CommandLineRunner {
     private final BourseCodeRepository bourseCodeRepository;
-    private final ApplicationProperties properties;
     private final TokenRepository tokenRepository;
+    private final SeleniumDriver seleniumDriver;
 
-    public ConnectionManager(BourseCodeRepository bourseCodeRepository, ApplicationProperties properties, TokenRepository tokenRepository) {
+    public ConnectionManager(BourseCodeRepository bourseCodeRepository, TokenRepository tokenRepository, SeleniumDriver seleniumDriver) {
         this.bourseCodeRepository = bourseCodeRepository;
-        this.properties = properties;
+        this.seleniumDriver = seleniumDriver;
         this.tokenRepository = tokenRepository;
     }
 
@@ -74,7 +72,7 @@ public class ConnectionManager implements CommandLineRunner {
     private String login(BourseCode bourseCode, int attemptNumber) {
         WebDriver driver = null;
         try {
-            driver = getWebDriver(properties.getSeleniumHubGrid());
+            driver = seleniumDriver.getWebDriver();
             driver.get(bourseCode.getBroker().url);
             String captchaNum;
             captchaNum = getCaptcha(driver);

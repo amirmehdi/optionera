@@ -50,6 +50,9 @@ public class BourseCode implements Serializable {
     @Column(name = "credit")
     private Long credit;
 
+    @Column(name = "conditions")
+    private String conditions;
+
     @OneToOne
     @JoinColumn(unique = true)
     private Token token;
@@ -180,6 +183,22 @@ public class BourseCode implements Serializable {
         this.credit = credit;
     }
 
+    public String getConditions() {
+        if (conditions == null) {
+            return "";
+        }
+        return conditions;
+    }
+
+    public BourseCode conditions(String conditions) {
+        this.conditions = conditions;
+        return this;
+    }
+
+    public void setConditions(String conditions) {
+        this.conditions = conditions;
+    }
+
     public Token getToken() {
         return token;
     }
@@ -223,6 +242,7 @@ public class BourseCode implements Serializable {
             ", blocked=" + getBlocked() +
             ", remain=" + getRemain() +
             ", credit=" + getCredit() +
+            ", conditions='" + getConditions() + "'" +
             "}";
     }
 }

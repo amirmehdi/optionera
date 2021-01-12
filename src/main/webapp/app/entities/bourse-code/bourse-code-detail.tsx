@@ -80,6 +80,12 @@ export const BourseCodeDetail = (props: IBourseCodeDetailProps) => {
           </dt>
           <dd>{bourseCodeEntity.credit}</dd>
           <dt>
+            <span id="conditions">
+              <Translate contentKey="eTradeApp.bourseCode.conditions">Conditions</Translate>
+            </span>
+          </dt>
+          <dd>{bourseCodeEntity.conditions}</dd>
+          <dt>
             <Translate contentKey="eTradeApp.bourseCode.token">Token</Translate>
           </dt>
           <dd>{bourseCodeEntity.token ? bourseCodeEntity.token.id : ''}</dd>

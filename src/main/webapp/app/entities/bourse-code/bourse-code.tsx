@@ -91,6 +91,9 @@ export const BourseCode = (props: IBourseCodeProps) => {
                 <th className="hand" onClick={sort('credit')}>
                   <Translate contentKey="eTradeApp.bourseCode.credit">Credit</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th className="hand" onClick={sort('conditions')}>
+                  <Translate contentKey="eTradeApp.bourseCode.conditions">Conditions</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th>
                   <Translate contentKey="eTradeApp.bourseCode.token">Token</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -116,6 +119,7 @@ export const BourseCode = (props: IBourseCodeProps) => {
                   <td>{bourseCode.blocked}</td>
                   <td>{bourseCode.remain}</td>
                   <td>{bourseCode.credit}</td>
+                  <td>{bourseCode.conditions}</td>
                   <td>{bourseCode.token ? <Link to={`token/${bourseCode.token.id}`}>{bourseCode.token.id}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">

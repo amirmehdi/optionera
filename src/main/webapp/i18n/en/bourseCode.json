@@ -25,6 +25,7 @@
       "blocked": "Blocked",
       "remain": "Remain",
       "credit": "Credit",
+      "conditions": "Conditions",
       "token": "Token"
     }
   }

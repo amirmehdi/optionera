@@ -52,6 +52,13 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="20201222221100-1-conditions" author="amirmehdi">
+        <addColumn tableName="bourse_code">
+            <column name="conditions" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
 
     <changeSet id="20201222221100-1-relations" author="jhipster">
 
@@ -81,6 +88,7 @@
             <column name="blocked" type="numeric"/>
             <column name="remain" type="numeric"/>
             <column name="credit" type="numeric"/>
+            <column name="conditions" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>
     </changeSet>

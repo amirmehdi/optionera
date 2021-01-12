@@ -12,6 +12,7 @@ export interface IBourseCode {
   blocked?: number;
   remain?: number;
   credit?: number;
+  conditions?: string;
   token?: IToken;
 }
 

@@ -38,6 +38,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static com.gitlab.amirmehdi.util.UrlEncodingUtil.getEncode;
 
@@ -89,6 +90,7 @@ public class SahraRequestService implements CommandLineRunner {
         }
         List<BourseCode> bourseCodes = bourseCodeRepository.findAllByBrokerIn(Broker.byOms(OMS.SAHRA));
         for (BourseCode bourseCode : bourseCodes) {
+            if (!bourseCode.getConditions().contains("login")) continue;
             try {
                 connectAndStart(bourseCode);
             } catch (HttpClientErrorException e) {
@@ -148,14 +150,19 @@ public class SahraRequestService implements CommandLineRunner {
             handler.handle(bourseCode, pollMessageResponse);
         });
 
-        securityFields.getSchedules().add(executor.scheduleWithFixedDelay(() -> {
-            if (!isHeadlineTime()) {
-                handler.handle(bourseCode, poll(securityFields));
-            }
-        }, 500));
-        securityFields.getSchedules().add(executor.scheduleWithFixedDelay(() -> {
-            getTime(securityFields.getToken().getBourseCode().getId());
-        }, 60000));
+        if (bourseCode.getConditions().contains("poll")) {
+            securityFields.getSchedules().add(executor.scheduleWithFixedDelay(() -> {
+                if (!isHeadlineTime()) {
+                    handler.handle(bourseCode, poll(securityFields));
+                }
+            }, 500 + ThreadLocalRandom.current().nextInt(250)));
+        }
+        if (bourseCode.getConditions().contains("health")) {
+            securityFields.getSchedules().add(executor.scheduleWithFixedDelay(() -> {
+                getTime(securityFields.getToken().getBourseCode().getId());
+            }, Integer.parseInt(bourseCode.getConditions().substring(bourseCode.getConditions().lastIndexOf("health") + 6))
+                * 60000 + ThreadLocalRandom.current().nextInt(2000)));
+        }
     }
 
     private String login(BourseCode bourseCode) {

@@ -93,6 +93,7 @@ export const BourseCodeUpdate = (props: IBourseCodeUpdateProps) => {
                 >
                   <option value="REFAH">{translate('eTradeApp.Broker.REFAH')}</option>
                   <option value="HAFEZ">{translate('eTradeApp.Broker.HAFEZ')}</option>
+                  <option value="AGAH">{translate('eTradeApp.Broker.AGAH')}</option>
                   <option value="GANJINE">{translate('eTradeApp.Broker.GANJINE')}</option>
                   <option value="FIROOZE_ASIA">{translate('eTradeApp.Broker.FIROOZE_ASIA')}</option>
                 </AvInput>
@@ -144,6 +145,12 @@ export const BourseCodeUpdate = (props: IBourseCodeUpdateProps) => {
                   <Translate contentKey="eTradeApp.bourseCode.credit">Credit</Translate>
                 </Label>
                 <AvField id="bourse-code-credit" type="string" className="form-control" name="credit" />
+              </AvGroup>
+              <AvGroup>
+                <Label id="conditionsLabel" for="bourse-code-conditions">
+                  <Translate contentKey="eTradeApp.bourseCode.conditions">Conditions</Translate>
+                </Label>
+                <AvField id="bourse-code-conditions" type="text" name="conditions" />
               </AvGroup>
               <AvGroup>
                 <Label for="bourse-code-token">

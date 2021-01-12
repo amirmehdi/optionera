@@ -15,6 +15,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 public class ApplicationProperties {
     private String oaBaseUrl;
+    private boolean remoteDriverEnable;
     private String seleniumHubGrid;
 
     private final Brokers brokers = new Brokers();

@@ -2,9 +2,9 @@ package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.ETradeApp;
 import com.gitlab.amirmehdi.domain.BourseCode;
+import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.repository.BourseCodeRepository;
 import com.gitlab.amirmehdi.service.BourseCodeService;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -21,8 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
 /**
  * Integration tests for the {@link BourseCodeResource} REST controller.
  */
@@ -59,6 +58,9 @@ public class BourseCodeResourceIT {
     private static final Long DEFAULT_CREDIT = 1L;
     private static final Long UPDATED_CREDIT = 2L;
 
+    private static final String DEFAULT_CONDITIONS = "AAAAAAAAAA";
+    private static final String UPDATED_CONDITIONS = "BBBBBBBBBB";
+
     @Autowired
     private BourseCodeRepository bourseCodeRepository;
 
@@ -89,7 +91,8 @@ public class BourseCodeResourceIT {
             .buyingPower(DEFAULT_BUYING_POWER)
             .blocked(DEFAULT_BLOCKED)
             .remain(DEFAULT_REMAIN)
-            .credit(DEFAULT_CREDIT);
+            .credit(DEFAULT_CREDIT)
+            .conditions(DEFAULT_CONDITIONS);
         return bourseCode;
     }
     /**
@@ -108,7 +111,8 @@ public class BourseCodeResourceIT {
             .buyingPower(UPDATED_BUYING_POWER)
             .blocked(UPDATED_BLOCKED)
             .remain(UPDATED_REMAIN)
-            .credit(UPDATED_CREDIT);
+            .credit(UPDATED_CREDIT)
+            .conditions(UPDATED_CONDITIONS);
         return bourseCode;
     }
 
@@ -141,6 +145,7 @@ public class BourseCodeResourceIT {
         assertThat(testBourseCode.getBlocked()).isEqualTo(DEFAULT_BLOCKED);
         assertThat(testBourseCode.getRemain()).isEqualTo(DEFAULT_REMAIN);
         assertThat(testBourseCode.getCredit()).isEqualTo(DEFAULT_CREDIT);
+        assertThat(testBourseCode.getConditions()).isEqualTo(DEFAULT_CONDITIONS);
     }
 
     @Test
@@ -182,9 +187,10 @@ public class BourseCodeResourceIT {
             .andExpect(jsonPath("$.[*].buyingPower").value(hasItem(DEFAULT_BUYING_POWER.intValue())))
             .andExpect(jsonPath("$.[*].blocked").value(hasItem(DEFAULT_BLOCKED.intValue())))
             .andExpect(jsonPath("$.[*].remain").value(hasItem(DEFAULT_REMAIN.intValue())))
-            .andExpect(jsonPath("$.[*].credit").value(hasItem(DEFAULT_CREDIT.intValue())));
+            .andExpect(jsonPath("$.[*].credit").value(hasItem(DEFAULT_CREDIT.intValue())))
+            .andExpect(jsonPath("$.[*].conditions").value(hasItem(DEFAULT_CONDITIONS)));
     }
-    
+
     @Test
     @Transactional
     public void getBourseCode() throws Exception {
@@ -204,7 +210,8 @@ public class BourseCodeResourceIT {
             .andExpect(jsonPath("$.buyingPower").value(DEFAULT_BUYING_POWER.intValue()))
             .andExpect(jsonPath("$.blocked").value(DEFAULT_BLOCKED.intValue()))
             .andExpect(jsonPath("$.remain").value(DEFAULT_REMAIN.intValue()))
-            .andExpect(jsonPath("$.credit").value(DEFAULT_CREDIT.intValue()));
+            .andExpect(jsonPath("$.credit").value(DEFAULT_CREDIT.intValue()))
+            .andExpect(jsonPath("$.conditions").value(DEFAULT_CONDITIONS));
     }
 
     @Test
@@ -236,7 +243,8 @@ public class BourseCodeResourceIT {
             .buyingPower(UPDATED_BUYING_POWER)
             .blocked(UPDATED_BLOCKED)
             .remain(UPDATED_REMAIN)
-            .credit(UPDATED_CREDIT);
+            .credit(UPDATED_CREDIT)
+            .conditions(UPDATED_CONDITIONS);
 
         restBourseCodeMockMvc.perform(put("/api/bourse-codes")
             .contentType(MediaType.APPLICATION_JSON)
@@ -256,6 +264,7 @@ public class BourseCodeResourceIT {
         assertThat(testBourseCode.getBlocked()).isEqualTo(UPDATED_BLOCKED);
         assertThat(testBourseCode.getRemain()).isEqualTo(UPDATED_REMAIN);
         assertThat(testBourseCode.getCredit()).isEqualTo(UPDATED_CREDIT);
+        assertThat(testBourseCode.getConditions()).isEqualTo(UPDATED_CONDITIONS);
     }
 
     @Test

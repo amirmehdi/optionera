@@ -1,18 +1,17 @@
 package com.gitlab.amirmehdi.service.sahra;
 
-import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.domain.BourseCode;
 import com.gitlab.amirmehdi.domain.Token;
 import com.gitlab.amirmehdi.service.dto.sahra.NegotiateResponse;
 import com.gitlab.amirmehdi.service.dto.sahra.SecurityFields;
 import com.gitlab.amirmehdi.service.dto.sahra.StartSocketResponse;
 import com.gitlab.amirmehdi.util.CaptchaDecoder;
+import com.gitlab.amirmehdi.util.SeleniumDriver;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.stream.Collectors;
 
-import static com.gitlab.amirmehdi.util.SeleniumDriver.getWebDriver;
 import static com.gitlab.amirmehdi.util.UrlEncodingUtil.getEncode;
 
 @Service
@@ -35,12 +33,11 @@ public class NegotiateManager {
     private final String negotiateUrl = "%s/realtime/negotiate?clientProtocol=1.5&token=&connectionData={connectionData}&_={nano}";
     private final String startUrl = "%s/realtime/start?transport=longPolling&clientProtocol=1.5&token=&connectionToken=%s&connectionData=%s&_=%s";
     private final String connectionData = "[{\"name\":\"omsclienthub\"}]";
+    private final SeleniumDriver seleniumDriver;
 
-    @Autowired
-    private ApplicationProperties applicationProperties;
-
-    public NegotiateManager(RestTemplate restTemplate) {
+    public NegotiateManager(RestTemplate restTemplate, SeleniumDriver seleniumDriver) {
         this.restTemplate = restTemplate;
+        this.seleniumDriver = seleniumDriver;
     }
 
     public NegotiateResponse negotiate(Token token) {
@@ -105,7 +102,7 @@ public class NegotiateManager {
     public String login(BourseCode bourseCode, long attemptNumber) {
         WebDriver driver = null;
         try {
-            driver = getWebDriver(applicationProperties.getSeleniumHubGrid());
+            driver = seleniumDriver.getWebDriver();
             driver.get(bourseCode.getBroker().url);
             String captchaNum;
             captchaNum = getCaptcha(driver);

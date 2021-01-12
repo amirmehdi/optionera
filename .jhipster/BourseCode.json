@@ -37,6 +37,10 @@
         {
             "fieldName": "credit",
             "fieldType": "Long"
+        },
+        {
+            "fieldName": "conditions",
+            "fieldType": "String"
         }
     ],
     "relationships": [

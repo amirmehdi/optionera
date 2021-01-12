@@ -170,6 +170,7 @@ jhipster:
 
 application:
   oaBaseUrl: https://api.algo.ir
+  remoteDriverEnable: false
   seleniumHubGrid: http://localhost:4444
   brokers:
     sahraEnable: false
