@@ -250,7 +250,7 @@ public class SahraRequestService implements CommandLineRunner {
         if (securityFields.getGroupToken() == null)
             return null;
         data.setI(securityFields.incAndGet());
-        log.info("send request userId: {} {}", userId, data);
+        LocalTime requestStart = LocalTime.now();
         ResponseEntity<ObjectNode> sendResponse;
         try {
             sendResponse = restTemplate.exchange(
@@ -259,10 +259,13 @@ public class SahraRequestService implements CommandLineRunner {
                 , new HttpEntity<>("data=" + getEncode(objectMapper.writeValueAsString(data)), getConnectOrSendHeaders(securityFields))
                 , ObjectNode.class);
         } catch (JsonProcessingException e) {
+            log.error("send request startTime: {} userId: {} data: {}", requestStart, userId, data);
             e.printStackTrace();
             return null;
         }
-        log.info("send, response:{}", sendResponse);
+        LocalTime requestFinish = LocalTime.now();
+        log.info("send request startTime: {} endTime: {} userId: {} data: {} response: {}"
+            , requestStart, requestFinish, userId, data, sendResponse);
         ObjectNode node = sendResponse.getBody();
         if (node != null && node.has("R") && node.get("R").has("ex")) {
             long errorCode = node.get("R").get("ex").get("i").asLong();

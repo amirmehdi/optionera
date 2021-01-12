@@ -108,7 +108,7 @@ public class TadbirCrawler implements MarketUpdater {
             }
         });
         stopWatch.stop();
-        log.info(stopWatch.prettyPrint());
+        log.debug(stopWatch.prettyPrint());
     }
 
     @Override

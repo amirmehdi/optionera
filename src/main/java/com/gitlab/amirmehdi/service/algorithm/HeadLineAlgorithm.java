@@ -88,8 +88,8 @@ public class HeadLineAlgorithm {
                     .side(order.getSide())
                     .bourseCode(order.getBourseCode()));
             stopWatch.stop();
-            log.debug(stopWatch.shortSummary());
-            log.info(res);
+            log.info(stopWatch.shortSummary());
+            log.debug(res);
             if (res.getDescription() != null && res.getDescription().contains("-2006") && res.getState().equals(OrderState.ERROR)) {
                 sentIsins.add(order.getIsin());
             }
