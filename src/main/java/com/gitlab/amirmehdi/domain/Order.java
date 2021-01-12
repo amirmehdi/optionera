@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gitlab.amirmehdi.domain.enumeration.OrderState;
 import com.gitlab.amirmehdi.domain.enumeration.Side;
 import com.gitlab.amirmehdi.domain.enumeration.Validity;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,6 +22,8 @@ import java.util.Date;
 @Entity
 @Table(name = "orders")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Getter
+@Setter
 public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -62,8 +67,13 @@ public class Order implements Serializable {
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private Date createdAt = new Date();
+    @Column(name = "created_at", updatable = false)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_at")
+    private Date updatedAt;
 
     @Column(name = "description")
     private String description;
@@ -78,29 +88,9 @@ public class Order implements Serializable {
     private BourseCode bourseCode;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getIsin() {
-        return isin;
-    }
-
     public Order isin(String isin) {
         this.isin = isin;
         return this;
-    }
-
-    public void setIsin(String isin) {
-        this.isin = isin;
-    }
-
-    public Integer getPrice() {
-        return price;
     }
 
     public Order price(Integer price) {
@@ -108,25 +98,9 @@ public class Order implements Serializable {
         return this;
     }
 
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
     public Order quantity(Integer quantity) {
         this.quantity = quantity;
         return this;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Validity getValidity() {
-        return validity;
     }
 
     public Order validity(Validity validity) {
@@ -134,25 +108,9 @@ public class Order implements Serializable {
         return this;
     }
 
-    public void setValidity(Validity validity) {
-        this.validity = validity;
-    }
-
-    public Side getSide() {
-        return side;
-    }
-
     public Order side(Side side) {
         this.side = side;
         return this;
-    }
-
-    public void setSide(Side side) {
-        this.side = side;
-    }
-
-    public String getOmsId() {
-        return omsId;
     }
 
     public Order omsId(String omsId) {
@@ -160,28 +118,9 @@ public class Order implements Serializable {
         return this;
     }
 
-    public void setOmsId(String omsId) {
-        this.omsId = omsId;
-    }
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public OrderState getState() {
-        return state;
-    }
-
     public Order state(OrderState state) {
         this.state = state;
         return this;
-    }
-
-    public void setState(OrderState state) {
-        this.state = state;
-    }
-
-    public Integer getExecuted() {
-        return executed;
     }
 
     public Order executed(Integer executed) {
@@ -189,25 +128,9 @@ public class Order implements Serializable {
         return this;
     }
 
-    public void setExecuted(Integer executed) {
-        this.executed = executed;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
     public Order description(String description) {
         this.description = description;
         return this;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Signal getSignal() {
-        return signal;
     }
 
     public Order signal(Signal signal) {
@@ -215,22 +138,11 @@ public class Order implements Serializable {
         return this;
     }
 
-    public void setSignal(Signal signal) {
-        this.signal = signal;
-    }
-
-    public BourseCode getBourseCode() {
-        return bourseCode;
-    }
-
     public Order bourseCode(BourseCode bourseCode) {
         this.bourseCode = bourseCode;
         return this;
     }
 
-    public void setBourseCode(BourseCode bourseCode) {
-        this.bourseCode = bourseCode;
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override

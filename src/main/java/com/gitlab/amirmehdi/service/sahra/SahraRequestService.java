@@ -84,7 +84,7 @@ public class SahraRequestService implements CommandLineRunner {
             */
     @Scheduled(cron = "0 31 8 * * *")
     public void connectAndStart() {
-        if (!applicationProperties.getBrokers().isSahraEnable()){
+        if (!applicationProperties.getBrokers().isSahraEnable()) {
             return;
         }
         List<BourseCode> bourseCodes = bourseCodeRepository.findAllByBrokerIn(Broker.byOms(OMS.SAHRA));
@@ -116,7 +116,7 @@ public class SahraRequestService implements CommandLineRunner {
         }
         securityFieldsMap.put(bourseCode.getId(), securityFields);
         String tokenString;
-        if (bourseCode.getToken()==null){
+        if (bourseCode.getToken() == null) {
             tokenString = login(bourseCode);
             Token token = new Token()
                 .bourseCode(bourseCode)
@@ -125,7 +125,7 @@ public class SahraRequestService implements CommandLineRunner {
             tokenRepository.save(token);
             bourseCode.setToken(token);
             bourseCodeRepository.save(bourseCode);
-        }else if (ChronoUnit.HOURS.between(bourseCode.getToken().getCreatedAt().toInstant(), new Date().toInstant()) > 6) {
+        } else if (ChronoUnit.HOURS.between(bourseCode.getToken().getCreatedAt().toInstant(), new Date().toInstant()) > 6) {
             tokenString = login(bourseCode);
             bourseCode.getToken().setToken(tokenString);
             tokenRepository.save(bourseCode.getToken());
@@ -250,7 +250,7 @@ public class SahraRequestService implements CommandLineRunner {
         if (securityFields.getGroupToken() == null)
             return null;
         data.setI(securityFields.incAndGet());
-        log.info("send request {}", data);
+        log.info("send request userId: {} {}", userId, data);
         ResponseEntity<ObjectNode> sendResponse;
         try {
             sendResponse = restTemplate.exchange(

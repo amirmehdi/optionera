@@ -45,6 +45,11 @@
             <column name="created_at" type="TIMESTAMP"/>
         </addColumn>
     </changeSet>
+    <changeSet id="20201012151100-1-updated_at" author="amirmehdi">
+        <addColumn tableName="orders">
+            <column name="updated_at" type="TIMESTAMP"/>
+        </addColumn>
+    </changeSet>
     <changeSet id="20201012151100-1-desc" author="amirmehdi">
         <addColumn tableName="orders">
             <column name="description" type="varchar(255)"/>
