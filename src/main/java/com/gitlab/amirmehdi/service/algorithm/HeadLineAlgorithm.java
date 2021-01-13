@@ -44,7 +44,7 @@ public class HeadLineAlgorithm {
     public void retrieveHeadLineOrdersAndSend(long sleep, int repeat) {
         List<Order> orders = orderService.findAllByState(OrderState.HEADLINE);
         orders.stream()
-            .collect(Collectors.groupingBy(order -> order.getBourseCode().getId()))
+            .collect(Collectors.groupingBy(order -> order.getBourseCode().getUsername()))
             .forEach((aLong, orders1) -> {
                 sendHeadLineOrdersPerBourseCode(orders1, sleep, repeat);
             });
