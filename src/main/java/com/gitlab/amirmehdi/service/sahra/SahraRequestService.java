@@ -106,6 +106,7 @@ public class SahraRequestService implements CommandLineRunner {
                 e.printStackTrace();
             }
         }
+        log.info("finish initial sahra tokens, connectAndStart");
     }
 
     public void connectAndStart(BourseCode bourseCode) {
