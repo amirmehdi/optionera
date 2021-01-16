@@ -128,7 +128,7 @@ public class NegotiateManager {
             }
             String cookies = driver.manage().getCookies().stream().map(cookie -> cookie.getName() + "=" + cookie.getValue()).collect(Collectors.joining(";"));
             String userAgent = (String) ((JavascriptExecutor) driver).executeScript("return navigator.userAgent;");
-            log.info("login succeed, token saved");
+            log.info("login succeed for bourse Code:{}, username: {} token saved", bourseCode.getId(), bourseCode.getName());
             return userAgent + "__" + cookies;
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -148,8 +148,6 @@ public class NegotiateManager {
                 CaptchaDecoder.getInstance().saveCaptcha(logo, "sahra", "png");
                 captchaNum = CaptchaDecoder.getInstance().mode2Captcha("sahra", ".png");
                 if (captchaNum.length() == 6) {
-                    System.out.print("Success!");
-                    System.out.println(captchaNum);
                     break;
                 } else {
                     logo.click();
