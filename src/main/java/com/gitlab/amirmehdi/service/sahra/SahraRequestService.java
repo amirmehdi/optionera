@@ -90,7 +90,6 @@ public class SahraRequestService implements CommandLineRunner {
         }
         List<BourseCode> bourseCodes = bourseCodeRepository.findAllByBrokerIn(Broker.byOms(OMS.SAHRA));
         for (BourseCode bourseCode : bourseCodes) {
-            if (!bourseCode.getConditions().contains("login")) continue;
             try {
                 connectAndStart(bourseCode);
             } catch (HttpClientErrorException e) {
@@ -110,6 +109,7 @@ public class SahraRequestService implements CommandLineRunner {
     }
 
     public void connectAndStart(BourseCode bourseCode) {
+        if (!bourseCode.getConditions().contains("login")) return;
         SecurityFields securityFields;
         if (securityFieldsMap.containsKey(bourseCode.getId())) {
             securityFields = securityFieldsMap.get(bourseCode.getId());

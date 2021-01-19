@@ -3,6 +3,7 @@ package com.gitlab.amirmehdi.service.algorithm;
 import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.domain.Order;
 import com.gitlab.amirmehdi.domain.enumeration.OrderState;
+import com.gitlab.amirmehdi.domain.enumeration.Side;
 import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OrderService;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
@@ -54,7 +55,16 @@ public class HeadLineAlgorithm {
         for (int j = 0, ordersSize = orders.size(); j < ordersSize; j++) {
             Order order = orders.get(j);
             StockWatch stockWatch = market.getStockWatch(order.getIsin());
-            int price = stockWatch == null ? order.getPrice() : stockWatch.getMax();
+            if (stockWatch == null) {
+                log.error("stockWatch for isin {} not found", order.getIsin());
+                continue;
+            }
+            int price;
+            if (Side.BUY.equals(order.getSide())) {
+                price = stockWatch.getMax();
+            } else {
+                price = stockWatch.getMin();
+            }
             int quantity = (int) (order.getBourseCode().getBuyingPower() * 0.99 / (ordersSize * price));
             List<String> sentIsins = new ArrayList<>();
 //            Instant marketOpen = new Date().toInstant().atZone(ZoneId.of("Asia/Tehran")).withHour(8)
