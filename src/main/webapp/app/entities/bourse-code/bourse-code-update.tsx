@@ -92,6 +92,7 @@ export const BourseCodeUpdate = (props: IBourseCodeUpdateProps) => {
                   value={(!isNew && bourseCodeEntity.broker) || 'REFAH'}
                 >
                   <option value="REFAH">{translate('eTradeApp.Broker.REFAH')}</option>
+                  <option value="KHOBREGAN">{translate('eTradeApp.Broker.KHOBREGAN')}</option>
                   <option value="HAFEZ">{translate('eTradeApp.Broker.HAFEZ')}</option>
                   <option value="AGAH">{translate('eTradeApp.Broker.AGAH')}</option>
                   <option value="GANJINE">{translate('eTradeApp.Broker.GANJINE')}</option>

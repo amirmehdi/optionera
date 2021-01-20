@@ -15,6 +15,7 @@ public enum Broker {
     AGAH(ASA, "https://online.agah.com"),
     FIROOZE_ASIA(SAHRA, "https://firouzex.ephoenix.ir"),
     HAFEZ(SAHRA, "https://hafez.ephoenix.ir"),
+    KHOBREGAN(SAHRA, "https://khobregan.ephoenix.ir"),
     GANJINE(SAHRA, "https://gs.ephoenix.ir");
     private static final Map<OMS, List<Broker>> BY_OMS = new HashMap<>();
 
