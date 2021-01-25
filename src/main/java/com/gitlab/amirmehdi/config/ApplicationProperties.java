@@ -29,6 +29,8 @@ public class ApplicationProperties {
     @Setter
     public static class Brokers {
         private boolean sahraEnable;
+        private boolean tadbirEnable;
+        private boolean asaEnable;
     }
 
     @Getter

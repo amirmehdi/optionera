@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.service.asa;
 
+import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.domain.BourseCode;
 import com.gitlab.amirmehdi.domain.Token;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
@@ -26,19 +27,24 @@ import java.util.stream.Collectors;
 
 @Service
 @Log4j2
-public class ConnectionManager implements CommandLineRunner {
+public class AsaConnectionManager implements CommandLineRunner {
     private final BourseCodeRepository bourseCodeRepository;
     private final TokenRepository tokenRepository;
     private final SeleniumDriver seleniumDriver;
+    private final ApplicationProperties applicationProperties;
 
-    public ConnectionManager(BourseCodeRepository bourseCodeRepository, TokenRepository tokenRepository, SeleniumDriver seleniumDriver) {
+    public AsaConnectionManager(BourseCodeRepository bourseCodeRepository, TokenRepository tokenRepository, SeleniumDriver seleniumDriver, ApplicationProperties applicationProperties) {
         this.bourseCodeRepository = bourseCodeRepository;
         this.seleniumDriver = seleniumDriver;
         this.tokenRepository = tokenRepository;
+        this.applicationProperties = applicationProperties;
     }
 
     @Override
     public void run(String... args) throws Exception {
+        if (!applicationProperties.getBrokers().isAsaEnable()) {
+            return;
+        }
         List<BourseCode> bourseCodes = bourseCodeRepository.findAllByBroker(Broker.AGAH);
         for (BourseCode bourseCode : bourseCodes) {
             if (bourseCode.getToken() != null && ChronoUnit.HOURS.between(bourseCode.getToken().getCreatedAt().toInstant(), new Date().toInstant()) < 6) {

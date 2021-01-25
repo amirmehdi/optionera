@@ -4,9 +4,9 @@ import com.gitlab.amirmehdi.domain.BourseCode;
 import com.gitlab.amirmehdi.domain.enumeration.OMS;
 import com.gitlab.amirmehdi.repository.BourseCodeRepository;
 import com.gitlab.amirmehdi.service.sahra.SahraRequestService;
+import com.gitlab.amirmehdi.service.tadbir.TadbirBourseCodeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,13 +21,15 @@ import java.util.Optional;
 @Transactional
 public class BourseCodeService {
     private final SahraRequestService sahraRequestService;
+    private final TadbirBourseCodeManager tadbirBourseCodeManager;
 
     private final Logger log = LoggerFactory.getLogger(BourseCodeService.class);
 
     private final BourseCodeRepository bourseCodeRepository;
 
-    public BourseCodeService(SahraRequestService sahraRequestService, BourseCodeRepository bourseCodeRepository) {
+    public BourseCodeService(SahraRequestService sahraRequestService, TadbirBourseCodeManager tadbirBourseCodeManager, BourseCodeRepository bourseCodeRepository) {
         this.sahraRequestService = sahraRequestService;
+        this.tadbirBourseCodeManager = tadbirBourseCodeManager;
         this.bourseCodeRepository = bourseCodeRepository;
     }
 
@@ -40,8 +42,10 @@ public class BourseCodeService {
     public BourseCode save(BourseCode bourseCode) {
         log.debug("Request to save BourseCode : {}", bourseCode);
         bourseCode = bourseCodeRepository.save(bourseCode);
-        if (OMS.SAHRA.equals(bourseCode.getBroker().oms)){
+        if (OMS.SAHRA.equals(bourseCode.getBroker().oms)) {
             sahraRequestService.connectAndStart(bourseCode);
+        } else if (OMS.TADBIR.equals(bourseCode.getBroker().oms)) {
+            tadbirBourseCodeManager.updateToken(bourseCode);
         }
         return bourseCode;
     }

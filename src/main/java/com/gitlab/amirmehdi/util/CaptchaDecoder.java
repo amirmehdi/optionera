@@ -39,7 +39,7 @@ public class CaptchaDecoder {
 
     //for tadbir
     public String mode1Captcha(final String fileName, final String type) throws IOException, InterruptedException {
-        Runtime.getRuntime().exec("convert " + fileName + type + " -crop 190x60+0+0 -colorspace Gray -blur 3x1  -morphology Erode Diamond  -level 20%  -channel rgb -auto-level  -crop 4x1-2-2@ +repage +adjoin " + fileName + "_%d.png");
+        Runtime.getRuntime().exec("convert " + fileName + type + " -resize 168x60! -crop 150x60+0+0 -colorspace Gray -blur 3x1  -morphology Erode Diamond  -level 20%  -channel rgb -auto-level  -crop 4x1-2-2@ +repage +adjoin " + fileName + "_%d.png");
         String captcha = "";
         for (int i = 0; i < 4; i++) {
             List<String> repeat = new ArrayList<>();
@@ -52,7 +52,7 @@ public class CaptchaDecoder {
                 }
             }
             if (repeat.isEmpty()) {
-                throw new RuntimeException();
+                return "";
             }
             captcha += getPopularElement(repeat);
         }

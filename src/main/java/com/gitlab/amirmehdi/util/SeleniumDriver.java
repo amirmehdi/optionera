@@ -44,4 +44,13 @@ public class SeleniumDriver {
         new WebDriverWait(driver, 20).until(webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
         return driver;
     }
+
+    public String getLocalStorage(WebDriver driver, String key) {
+        return (String) ((JavascriptExecutor) driver).executeScript(String.format(
+            "return window.localStorage.getItem('%s');", key));
+    }
+
+    public String getUserAgent(WebDriver driver) {
+        return (String) ((JavascriptExecutor) driver).executeScript("return navigator.userAgent;");
+    }
 }

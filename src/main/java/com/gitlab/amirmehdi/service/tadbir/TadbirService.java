@@ -1,12 +1,11 @@
-package com.gitlab.amirmehdi.service;
+package com.gitlab.amirmehdi.service.tadbir;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gitlab.amirmehdi.domain.BourseCode;
 import com.gitlab.amirmehdi.domain.Order;
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
 import com.gitlab.amirmehdi.domain.enumeration.Side;
 import com.gitlab.amirmehdi.domain.enumeration.Validity;
-import com.gitlab.amirmehdi.repository.TokenRepository;
 import com.gitlab.amirmehdi.service.dto.tadbir.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,12 +23,10 @@ public class TadbirService {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
-    private final TokenRepository tokenRepository;
 
-    public TadbirService(@Qualifier("trustedRestTemplate") RestTemplate restTemplate, ObjectMapper objectMapper, TokenRepository tokenRepository) {
+    public TadbirService(@Qualifier("trustedRestTemplate") RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
-        this.tokenRepository = tokenRepository;
     }
 
     public String sendOrder(Order order) {
@@ -54,9 +51,9 @@ public class TadbirService {
 
         try {
             ResponseEntity<SendOrderResponse> response =
-                restTemplate.exchange("https://api.refahbroker.ir/Web/V1/Order/Post"
+                restTemplate.exchange(order.getBourseCode().getBroker().url + "/Order/Post"
                     , HttpMethod.POST
-                    , new HttpEntity<>(objectMapper.writeValueAsString(sendOrderRequest), getHeaders(order.getBourseCode().getBroker()))
+                    , new HttpEntity<>(objectMapper.writeValueAsString(sendOrderRequest), getHeaders(order.getBourseCode()))
                     , SendOrderResponse.class);
             log.info("order:{} response:{}", order, response);
             return response.getBody().getMessageDesc();
@@ -69,12 +66,12 @@ public class TadbirService {
         }
     }
 
-    public UserOpenInterestResponse getUserOpenInterest() {
+    public UserOpenInterestResponse getUserOpenInterest(BourseCode bourseCode) {
         try {
             ResponseEntity<UserOpenInterestResponse> response =
-                restTemplate.exchange("https://silver.refahbroker.ir/Customer/GetCustomerSummaryList"
+                restTemplate.exchange(bourseCode.getBroker().url + "/Customer/GetCustomerSummaryList"
                     , HttpMethod.POST
-                    , new HttpEntity<>("{}", getHeaders2(Broker.REFAH))
+                    , new HttpEntity<>("{}", getHeaders2(bourseCode))
                     , UserOpenInterestResponse.class);
             log.debug("getUserOpenInterest response {}", response);
             return response.getBody();
@@ -84,12 +81,12 @@ public class TadbirService {
         }
     }
 
-    public DailyPortfolioResponse getDailyPortfolio() {
+    public DailyPortfolioResponse getDailyPortfolio(BourseCode bourseCode) {
         try {
             ResponseEntity<DailyPortfolioResponse> response =
-                restTemplate.exchange("https://api.refahbroker.ir/Web/V1/DailyPortfolio/Get/DailyPortfolio?symbolIsin="
+                restTemplate.exchange(String.format("%s/DailyPortfolio/Get/DailyPortfolio?symbolIsin=", bourseCode.getBroker().apiUrl)
                     , HttpMethod.GET
-                    , new HttpEntity<>(getHeaders(Broker.REFAH))
+                    , new HttpEntity<>(getHeaders(bourseCode))
                     , DailyPortfolioResponse.class);
             log.debug("getDailyPortfolio response {}", response);
             return response.getBody();
@@ -99,12 +96,12 @@ public class TadbirService {
         }
     }
 
-    public RemainResponse getRemain() {
+    public RemainResponse getRemain(BourseCode bourseCode) {
         try {
             ResponseEntity<RemainResponse> response =
-                restTemplate.exchange("https://api.refahbroker.ir/Web/V1/Accounting/Remain"
+                restTemplate.exchange(String.format("%s/Accounting/Remain", bourseCode.getBroker().apiUrl)
                     , HttpMethod.GET
-                    , new HttpEntity<>(getHeaders(Broker.REFAH))
+                    , new HttpEntity<>(getHeaders(bourseCode))
                     , RemainResponse.class);
             log.debug("getRemain response {}", response);
             return response.getBody();
@@ -114,12 +111,12 @@ public class TadbirService {
         }
     }
 
-    public OpenOrderResponse getOpenOrders() {
+    public OpenOrderResponse getOpenOrders(BourseCode bourseCode) {
         try {
             ResponseEntity<OpenOrderResponse> response =
-                restTemplate.exchange("https://api.refahbroker.ir/Web/V1/Order/GetOpenOrder/OpenOrder"
+                restTemplate.exchange(String.format("%s/Order/GetOpenOrder/OpenOrder", bourseCode.getBroker().apiUrl)
                     , HttpMethod.GET
-                    , new HttpEntity<>(getHeaders(Broker.REFAH))
+                    , new HttpEntity<>(getHeaders(bourseCode))
                     , OpenOrderResponse.class);
             log.debug("getOpenOrders response {}", response);
             return response.getBody();
@@ -129,12 +126,12 @@ public class TadbirService {
         }
     }
 
-    public OpenOrderResponse getTodayOrder() {
+    public OpenOrderResponse getTodayOrder(BourseCode bourseCode) {
         try {
             ResponseEntity<OpenOrderResponse> response =
-                restTemplate.exchange("https://api.refahbroker.ir/Web/V1/Order/GetTodayOrders/Customer/GetCustomerTodayOrders"
+                restTemplate.exchange(String.format("%s/Order/GetTodayOrders/Customer/GetCustomerTodayOrders", bourseCode.getBroker().apiUrl)
                     , HttpMethod.GET
-                    , new HttpEntity<>(getHeaders(Broker.REFAH))
+                    , new HttpEntity<>(getHeaders(bourseCode))
                     , OpenOrderResponse.class);
             log.debug("getTodayOrder response {}", response);
             return response.getBody();
@@ -144,26 +141,24 @@ public class TadbirService {
         }
     }
 
-    protected LinkedMultiValueMap<String, String> getHeaders(Broker broker) {
+    protected LinkedMultiValueMap<String, String> getHeaders(BourseCode bourseCode) {
         LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        String[] token = tokenRepository.findTopByBrokerOrderByIdDesc(broker)
-            .orElseThrow(RuntimeException::new)
-            .getToken().split("__");
-        addCommonHeader(headers, token[1]);
-        headers.add("Authorization", "BasicAuthentication " + token[0]);
-        headers.add("Referer", "https://silver.refahbroker.ir/");
+        String[] tokenStrings = bourseCode.getToken().getToken().split("__");
+        addCommonHeader(headers, tokenStrings[1]);
+        headers.add("Authorization", "BasicAuthentication " + tokenStrings[0]);
+        headers.add("Referer", bourseCode.getBroker().url);
+        headers.add("Origin", bourseCode.getBroker().url);
         return headers;
     }
 
-    protected LinkedMultiValueMap<String, String> getHeaders2(Broker broker) {
+    protected LinkedMultiValueMap<String, String> getHeaders2(BourseCode bourseCode) {
         LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        String[] token = tokenRepository.findTopByBrokerOrderByIdDesc(broker)
-            .orElseThrow(RuntimeException::new)
-            .getToken().split("__");
-        addCommonHeader(headers, token[1]);
-        headers.add("Referer", "https://silver.refahbroker.ir/Home/Default/page-1");
+        String[] tokenStrings = bourseCode.getToken().getToken().split("__");
+        addCommonHeader(headers, tokenStrings[1]);
+        headers.add("Referer", bourseCode.getBroker().url + "/Home/Default/page-1");
         headers.add("X-Requested-With", "XMLHttpRequest");
-        headers.add("Cookie", token[2]);
+        headers.add("Cookie", tokenStrings[2]);
+        headers.add("Origin", bourseCode.getBroker().url);
         return headers;
     }
 
@@ -174,7 +169,6 @@ public class TadbirService {
         headers.add("sec-ch-ua-mobile", "?0");
         headers.add("User-Agent", userAgent);
         headers.add("Accept", "*/*");
-        headers.add("Origin", "https://silver.refahbroker.ir");
         headers.add("Sec-Fetch-Site", "same-site");
         headers.add("Sec-Fetch-Mode", "cors");
         headers.add("Sec-Fetch-Dest", "empty");

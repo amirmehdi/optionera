@@ -2,6 +2,7 @@ export const enum Broker {
   REFAH = 'REFAH',
   AGAH = 'AGAH',
   GANJINE = 'GANJINE',
+  MOBIN = 'MOBIN',
   KHOBREGAN = 'KHOBREGAN',
   HAFEZ = 'HAFEZ',
   FIROOZE_ASIA = 'FIROOZE_ASIA'

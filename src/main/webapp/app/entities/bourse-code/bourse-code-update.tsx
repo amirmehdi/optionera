@@ -96,6 +96,7 @@ export const BourseCodeUpdate = (props: IBourseCodeUpdateProps) => {
                   <option value="HAFEZ">{translate('eTradeApp.Broker.HAFEZ')}</option>
                   <option value="AGAH">{translate('eTradeApp.Broker.AGAH')}</option>
                   <option value="GANJINE">{translate('eTradeApp.Broker.GANJINE')}</option>
+                  <option value="MOBIN">{translate('eTradeApp.Broker.MOBIN')}</option>
                   <option value="FIROOZE_ASIA">{translate('eTradeApp.Broker.FIROOZE_ASIA')}</option>
                 </AvInput>
               </AvGroup>
