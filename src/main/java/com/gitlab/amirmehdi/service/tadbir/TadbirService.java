@@ -51,7 +51,7 @@ public class TadbirService {
 
         try {
             ResponseEntity<SendOrderResponse> response =
-                restTemplate.exchange(order.getBourseCode().getBroker().url + "/Order/Post"
+                restTemplate.exchange(order.getBourseCode().getBroker().apiUrl + "/Order/Post"
                     , HttpMethod.POST
                     , new HttpEntity<>(objectMapper.writeValueAsString(sendOrderRequest), getHeaders(order.getBourseCode()))
                     , SendOrderResponse.class);

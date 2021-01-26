@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,8 +57,9 @@ public class TadbirBourseCodeManager implements CommandLineRunner {
         List<BourseCode> bourseCodes = bourseCodeRepository.findAllByBrokerIn(Broker.byOms(OMS.TADBIR));
         for (BourseCode bourseCode : bourseCodes) {
             try {
-                updateToken(bourseCode);
-
+                if (ChronoUnit.HOURS.between(bourseCode.getToken().getCreatedAt().toInstant(), new Date().toInstant()) > 6) {
+                    updateToken(bourseCode);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
