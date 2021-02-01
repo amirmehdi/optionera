@@ -57,6 +57,7 @@ public class CacheConfiguration {
             createCache(cm, com.gitlab.amirmehdi.domain.OpenInterest.class.getName());
             createCache(cm, com.gitlab.amirmehdi.domain.BourseCode.class.getName());
             createCache(cm, "tokenByBroker");
+            createCache(cm, com.gitlab.amirmehdi.domain.EmbeddedOption.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

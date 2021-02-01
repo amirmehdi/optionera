@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <!--
+        Added the constraints for entity EmbeddedOption.
+    -->
+    <changeSet id="20210201112400-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="underlying_instrument_id"
+                                 baseTableName="embedded_option"
+                                 constraintName="fk_embedded_option_underlying_instrument_id"
+                                 referencedColumnNames="isin"
+                                 referencedTableName="instrument"/>
+
+    </changeSet>
+</databaseChangeLog>

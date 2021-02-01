@@ -50,6 +50,9 @@ export const EntitiesMenu = ({ authorities }) => (
       </MenuItem>
     ) : null}
     {hasAnyAuthority(authorities, [AUTHORITIES.ADMIN]) && adminMenus}
+    <MenuItem icon="asterisk" to="/embedded-option">
+      <Translate contentKey="global.menu.entities.embeddedOption" />
+    </MenuItem>
     {/* jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here */}
   </NavDropdown>
 );

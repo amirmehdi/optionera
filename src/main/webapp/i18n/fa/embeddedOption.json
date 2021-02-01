@@ -1,0 +1,27 @@
+{
+  "eTradeApp": {
+    "embeddedOption": {
+      "home": {
+        "title": "Embedded Options",
+        "createLabel": "Create a new Embedded Option",
+        "createOrEditLabel": "Create or edit a Embedded Option",
+        "notFound": "No Embedded Options found"
+      },
+      "created": "A new Embedded Option is created with identifier {{ param }}",
+      "updated": "A Embedded Option is updated with identifier {{ param }}",
+      "deleted": "A Embedded Option is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Embedded Option {{ id }}?"
+      },
+      "detail": {
+        "title": "Embedded Option"
+      },
+      "name": "Name",
+      "isin": "Isin",
+      "expDate": "Exp Date",
+      "strikePrice": "Strike Price",
+      "tseId": "Tse Id",
+      "underlyingInstrument": "Underlying Instrument"
+    }
+  }
+}

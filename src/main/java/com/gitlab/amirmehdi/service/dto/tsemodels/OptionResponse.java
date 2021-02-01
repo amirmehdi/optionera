@@ -21,7 +21,7 @@ public class OptionResponse {
     @JsonProperty("sum")
     private List<Sum> sum = null;
     @JsonProperty("bData")
-    private List<BDatum> bData = null;
+    private List<OptionData> bData = null;
     @JsonProperty("sresid")
     private List<Sresid> sresid = null;
     @JsonProperty("darayis")
@@ -48,12 +48,12 @@ public class OptionResponse {
     }
 
     @JsonProperty("bData")
-    public List<BDatum> getBData() {
+    public List<OptionData> getBData() {
         return bData;
     }
 
     @JsonProperty("bData")
-    public void setBData(List<BDatum> bData) {
+    public void setBData(List<OptionData> bData) {
         this.bData = bData;
     }
 

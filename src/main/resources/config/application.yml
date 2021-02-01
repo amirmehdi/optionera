@@ -178,7 +178,8 @@ application:
     asaEnable: false
   crawler:
     bestCrawler: TadbirCrawler
-    availableCrawler: OmidCrawler;0;160,TadbirCrawler;160;240,AsaCrawler;240;300
+    #    availableCrawler: OmidCrawler;0;160,TadbirCrawler;160;240,AsaCrawler;240;300
+    availableCrawler: OmidCrawler;0;1
     tadbirChunk: 40
     asaChunk: 30
     omidChunk: 40

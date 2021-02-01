@@ -26,12 +26,14 @@
     <include file="config/liquibase/changelog/20201204232400_added_entity_Portfolio.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201204232500_added_entity_OpenInterest.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201222221100_added_entity_BourseCode.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210201112400_added_entity_EmbeddedOption.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20200908141000_added_entity_constraints_Option.xml"
              relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201012151100_added_entity_constraints_Order.xml"
              relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201222221100_added_entity_constraints_BourseCode.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210201112400_added_entity_constraints_EmbeddedOption.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <include file="config/liquibase/changelog/20200926141000_batch-schema.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

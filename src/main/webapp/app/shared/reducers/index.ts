@@ -42,6 +42,10 @@ import bourseCode, {
   BourseCodeState
 } from 'app/entities/bourse-code/bourse-code.reducer';
 
+// prettier-ignore
+import embeddedOption, {
+  EmbeddedOptionState
+} from 'app/entities/embedded-option/embedded-option.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -65,6 +69,7 @@ export interface IRootState {
   readonly portfolio: PortfolioState;
   readonly openInterest: OpenInterestState;
   readonly bourseCode: BourseCodeState;
+  readonly embeddedOption: EmbeddedOptionState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -90,6 +95,7 @@ const rootReducer = combineReducers<IRootState>({
   portfolio,
   openInterest,
   bourseCode,
+  embeddedOption,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

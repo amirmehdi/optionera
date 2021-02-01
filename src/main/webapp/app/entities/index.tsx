@@ -14,6 +14,7 @@ import Board from './board';
 import Portfolio from './portfolio';
 import OpenInterest from './open-interest';
 import BourseCode from './bourse-code';
+import EmbeddedOption from './embedded-option';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -30,6 +31,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}portfolio`} component={Portfolio} />
       <ErrorBoundaryRoute path={`${match.url}open-interest`} component={OpenInterest} />
       <ErrorBoundaryRoute path={`${match.url}bourse-code`} component={BourseCode} />
+      <ErrorBoundaryRoute path={`${match.url}embedded-option`} component={EmbeddedOption} />
       {/* jhipster-needle-add-route-path - JHipster will add routes here */}
     </Switch>
   </div>

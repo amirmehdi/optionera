@@ -1,0 +1,16 @@
+
+entity EmbeddedOption {
+	name String required,
+	isin String required,
+    expDate LocalDate required,
+    strikePrice Integer required,
+    tseId String,
+}
+
+//relationship ManyToOne {
+//	EmbeddedOption{instrument required} to Instrument ,
+//}
+
+paginate EmbeddedOption with infinite-scroll
+service EmbeddedOption with serviceClass
+filter EmbeddedOption

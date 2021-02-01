@@ -17,6 +17,7 @@
         "portfolio": "Portfolio",
         "openInterest": "Open Interest",
         "bourseCode": "Bourse Code",
+        "embeddedOption": "Embedded Option",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
