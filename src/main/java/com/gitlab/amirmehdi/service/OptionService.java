@@ -1,5 +1,6 @@
 package com.gitlab.amirmehdi.service;
 
+import com.gitlab.amirmehdi.domain.EmbeddedOption;
 import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.domain.Option;
 import com.gitlab.amirmehdi.domain.OptionStats;
@@ -35,12 +36,15 @@ public class OptionService {
 
     private final OptionRepository optionRepository;
     private final BoardRepository boardRepository;
+    //TODO move this shit
+    private final EmbeddedOptionService embeddedOptionService;
     private final InstrumentService instrumentService;
     private final Market market;
 
-    public OptionService(OptionRepository optionRepository, BoardRepository boardRepository, InstrumentService instrumentService, Market market) {
+    public OptionService(OptionRepository optionRepository, BoardRepository boardRepository, EmbeddedOptionService embeddedOptionService, InstrumentService instrumentService, Market market) {
         this.optionRepository = optionRepository;
         this.boardRepository = boardRepository;
+        this.embeddedOptionService = embeddedOptionService;
         this.instrumentService = instrumentService;
         this.market = market;
     }
@@ -198,10 +202,12 @@ public class OptionService {
         return isins;
     }
 
+    //TODO move this shit
     public List<String> getCallAndBaseIsins() {
         List<String> isins = findAllCallIsins();
         List<Instrument> instruments = instrumentService.findAll();
         isins.addAll(instruments.stream().map(Instrument::getIsin).collect(Collectors.toList()));
+        isins.addAll(embeddedOptionService.findAll(Pageable.unpaged()).stream().map(EmbeddedOption::getIsin).collect(Collectors.toList()));
         return isins;
     }
 

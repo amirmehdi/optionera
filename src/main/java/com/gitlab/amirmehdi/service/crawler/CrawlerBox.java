@@ -1,10 +1,13 @@
 package com.gitlab.amirmehdi.service.crawler;
 
 import com.gitlab.amirmehdi.config.ApplicationProperties;
+import com.gitlab.amirmehdi.domain.EmbeddedOption;
 import com.gitlab.amirmehdi.domain.Instrument;
+import com.gitlab.amirmehdi.service.EmbeddedOptionService;
 import com.gitlab.amirmehdi.service.InstrumentService;
 import com.gitlab.amirmehdi.service.OptionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -17,12 +20,14 @@ public class CrawlerBox {
     private final ApplicationProperties applicationProperties;
     private final InstrumentService instrumentService;
     private final OptionService optionService;
+    private final EmbeddedOptionService embeddedOptionService;
     private final HashMap<String, MarketUpdater> marketUpdaters = new HashMap<>();
 
-    public CrawlerBox(ApplicationProperties applicationProperties, InstrumentService instrumentService, OptionService optionService) {
+    public CrawlerBox(ApplicationProperties applicationProperties, InstrumentService instrumentService, OptionService optionService, EmbeddedOptionService embeddedOptionService) {
         this.applicationProperties = applicationProperties;
         this.instrumentService = instrumentService;
         this.optionService = optionService;
+        this.embeddedOptionService = embeddedOptionService;
     }
 
     @Autowired
@@ -42,6 +47,7 @@ public class CrawlerBox {
 
     public void highAvailableBoardUpdater() {
         List<String> isins = optionService.findAllCallIsins();
+        isins.addAll(embeddedOptionService.findAll(Pageable.unpaged()).stream().map(EmbeddedOption::getIsin).collect(Collectors.toList()));
         List<String> instrumentIds = instrumentService.findAll().stream().map(Instrument::getIsin).collect(Collectors.toList());
 
         //TODO if market.getStockWatch(isin).state is not active -> not get options

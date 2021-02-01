@@ -19,7 +19,7 @@
                 <constraints nullable="false" />
             </column>
             <column name="isin" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints unique="true" nullable="false" uniqueConstraintName="ux_em_option_isin"/>
             </column>
             <column name="exp_date" type="date">
                 <constraints nullable="false" />

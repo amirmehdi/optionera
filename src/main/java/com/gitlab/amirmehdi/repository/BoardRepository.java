@@ -27,4 +27,10 @@ public interface BoardRepository extends JpaRepository<Board, String>, JpaSpecif
         "from board b using option o where (o.call_isin = b.isin or o.put_isin=b.isin) and o.exp_date<now()")
     @Modifying
     void deleteAllByExpDateBefore();
+
+    @Query(nativeQuery = true,
+    value = "delete " +
+        "from board b using embedded_option o where (o.isin = b.isin) and o.exp_date<now()")
+    @Modifying
+    void deleteAllEmbeddedOptionsByExpDateBefore();
 }

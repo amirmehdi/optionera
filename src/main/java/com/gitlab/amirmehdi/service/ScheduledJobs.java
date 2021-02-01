@@ -72,5 +72,6 @@ public class ScheduledJobs {
         tseCrawler.openInterestUpdater();
         crawlerBox.getBestMarketUpdater().boardUpdater(null);
         crawlerBox.getBestMarketUpdater().instrumentUpdater();
+        tseCrawler.embeddedOptionCrawler();
     }
 }

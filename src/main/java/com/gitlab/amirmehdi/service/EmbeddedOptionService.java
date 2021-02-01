@@ -1,6 +1,7 @@
 package com.gitlab.amirmehdi.service;
 
 import com.gitlab.amirmehdi.domain.EmbeddedOption;
+import com.gitlab.amirmehdi.repository.BoardRepository;
 import com.gitlab.amirmehdi.repository.EmbeddedOptionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -22,9 +24,11 @@ public class EmbeddedOptionService {
     private final Logger log = LoggerFactory.getLogger(EmbeddedOptionService.class);
 
     private final EmbeddedOptionRepository embeddedOptionRepository;
+    private final BoardRepository boardRepository;
 
-    public EmbeddedOptionService(EmbeddedOptionRepository embeddedOptionRepository) {
+    public EmbeddedOptionService(EmbeddedOptionRepository embeddedOptionRepository, BoardRepository boardRepository) {
         this.embeddedOptionRepository = embeddedOptionRepository;
+        this.boardRepository = boardRepository;
     }
 
     /**
@@ -70,5 +74,18 @@ public class EmbeddedOptionService {
     public void delete(Long id) {
         log.debug("Request to delete EmbeddedOption : {}", id);
         embeddedOptionRepository.deleteById(id);
+    }
+
+    public void deleteAllExpiredOption() {
+        boardRepository.deleteAllEmbeddedOptionsByExpDateBefore();
+        embeddedOptionRepository.deleteAllByExpDateBefore();
+    }
+
+    public void saveAll(List<EmbeddedOption> embeddedOptions) {
+        embeddedOptionRepository.saveAll(embeddedOptions);
+    }
+
+    public Optional<EmbeddedOption> findByIsin(String isin) {
+        return embeddedOptionRepository.findByIsin(isin);
     }
 }

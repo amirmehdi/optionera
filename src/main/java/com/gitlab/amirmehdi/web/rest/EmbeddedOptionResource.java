@@ -1,6 +1,7 @@
 package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.EmbeddedOption;
+import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.service.EmbeddedOptionQueryService;
 import com.gitlab.amirmehdi.service.EmbeddedOptionService;
 import com.gitlab.amirmehdi.service.dto.EmbeddedOptionCriteria;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -55,6 +57,7 @@ public class EmbeddedOptionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/embedded-options")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<EmbeddedOption> createEmbeddedOption(@Valid @RequestBody EmbeddedOption embeddedOption) throws URISyntaxException {
         log.debug("REST request to save EmbeddedOption : {}", embeddedOption);
         if (embeddedOption.getId() != null) {
@@ -76,6 +79,7 @@ public class EmbeddedOptionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/embedded-options")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<EmbeddedOption> updateEmbeddedOption(@Valid @RequestBody EmbeddedOption embeddedOption) throws URISyntaxException {
         log.debug("REST request to update EmbeddedOption : {}", embeddedOption);
         if (embeddedOption.getId() == null) {
@@ -95,6 +99,7 @@ public class EmbeddedOptionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of embeddedOptions in body.
      */
     @GetMapping("/embedded-options")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<EmbeddedOption>> getAllEmbeddedOptions(EmbeddedOptionCriteria criteria, Pageable pageable) {
         log.debug("REST request to get EmbeddedOptions by criteria: {}", criteria);
         Page<EmbeddedOption> page = embeddedOptionQueryService.findByCriteria(criteria, pageable);
@@ -109,6 +114,7 @@ public class EmbeddedOptionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/embedded-options/count")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Long> countEmbeddedOptions(EmbeddedOptionCriteria criteria) {
         log.debug("REST request to count EmbeddedOptions by criteria: {}", criteria);
         return ResponseEntity.ok().body(embeddedOptionQueryService.countByCriteria(criteria));
@@ -121,6 +127,7 @@ public class EmbeddedOptionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the embeddedOption, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/embedded-options/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<EmbeddedOption> getEmbeddedOption(@PathVariable Long id) {
         log.debug("REST request to get EmbeddedOption : {}", id);
         Optional<EmbeddedOption> embeddedOption = embeddedOptionService.findOne(id);
@@ -134,6 +141,7 @@ public class EmbeddedOptionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/embedded-options/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteEmbeddedOption(@PathVariable Long id) {
         log.debug("REST request to delete EmbeddedOption : {}", id);
         embeddedOptionService.delete(id);

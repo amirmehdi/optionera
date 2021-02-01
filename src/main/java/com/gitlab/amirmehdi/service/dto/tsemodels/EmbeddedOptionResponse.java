@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class EmbeddedOption {
+public class EmbeddedOptionResponse {
 
     @JsonProperty("time")
     private Time time;

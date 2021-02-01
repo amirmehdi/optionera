@@ -94,6 +94,7 @@ public class ManualJobResource {
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Object> optionCrawler() {
         tseCrawler.optionCrawler();
+        tseCrawler.embeddedOptionCrawler();
         return ResponseEntity.ok().build();
     }
 

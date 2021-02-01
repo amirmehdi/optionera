@@ -1,12 +1,11 @@
 package com.gitlab.amirmehdi.service.crawler;
 
+import com.gitlab.amirmehdi.domain.EmbeddedOption;
 import com.gitlab.amirmehdi.domain.Instrument;
 import com.gitlab.amirmehdi.domain.Option;
-import com.gitlab.amirmehdi.service.InstrumentService;
-import com.gitlab.amirmehdi.service.Market;
-import com.gitlab.amirmehdi.service.OptionService;
-import com.gitlab.amirmehdi.service.OptionStatsService;
+import com.gitlab.amirmehdi.service.*;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
+import com.gitlab.amirmehdi.service.dto.tsemodels.EmbeddedOptionResponse;
 import com.gitlab.amirmehdi.service.dto.tsemodels.OptionData;
 import com.gitlab.amirmehdi.service.dto.tsemodels.OptionResponse;
 import com.gitlab.amirmehdi.util.DateUtil;
@@ -28,13 +27,15 @@ import java.util.stream.Collectors;
 public class TseCrawler {
     private final RestTemplate restTemplate;
     private final OptionService optionService;
+    private final EmbeddedOptionService embeddedOptionService;
     private final InstrumentService instrumentService;
     private final Market market;
 
 
-    public TseCrawler(@Qualifier("trustedRestTemplate") RestTemplate restTemplate, OptionService optionService, OptionStatsService optionStatsService, InstrumentService instrumentService, Market market) {
+    public TseCrawler(@Qualifier("trustedRestTemplate") RestTemplate restTemplate, OptionService optionService, OptionStatsService optionStatsService, EmbeddedOptionService embeddedOptionService, InstrumentService instrumentService, Market market) {
         this.restTemplate = restTemplate;
         this.optionService = optionService;
+        this.embeddedOptionService = embeddedOptionService;
         this.instrumentService = instrumentService;
         this.market = market;
     }
@@ -84,6 +85,47 @@ public class TseCrawler {
             callStockWatch.setOpenInterest(Integer.parseInt(numberNormalizer(optionData.getVal().get(i2).getV())));
         }
         market.saveStockWatch(callStockWatch);
+    }
+
+    public void embeddedOptionCrawler() {
+        embeddedOptionService.deleteAllExpiredOption();
+
+        EmbeddedOptionResponse response = null;
+        try {
+            response = restTemplate.getForEntity("https://tse.ir/json/MarketWatch/data_3.json?1612183632060?1612183632060", EmbeddedOptionResponse.class).getBody();
+        } catch (Exception e) {
+            log.error("req to tse.ir for embedded options got error, ", e);
+            return;
+        }
+
+        List<EmbeddedOption> embeddedOptions = response
+            .getBData().stream()
+            .map(data -> {
+                String[] fullName = data.getName().split("-");
+                String[] dateInfo;
+                dateInfo = fullName[fullName.length - 1].split("/");
+                String underlyingAssetName = fullName[0].replace("اختيارف ت ", "").replaceAll("\\d", "");
+                LocalDate expDate = DateUtil.convertToLocalDateViaInstant(DateUtil.jalaliToGregorian(Integer.parseInt(yearNormalizer(dateInfo[0])), Integer.parseInt(dateInfo[1]), Integer.parseInt(dateInfo[2])));
+                Optional<Instrument> instrument = instrumentService.findOneByName(underlyingAssetName);
+                if (!instrument.isPresent()) {
+                    log.warn("instrument {} not found", underlyingAssetName);
+                    return null;
+                }
+                Optional<EmbeddedOption> embeddedOptionOptional = embeddedOptionService.findByIsin(data.getI());
+                EmbeddedOption embeddedOption;
+                embeddedOption = embeddedOptionOptional.orElseGet(EmbeddedOption::new);
+                embeddedOption
+                    .isin(data.getI())
+                    .name(data.getNamad())
+                    .strikePrice(Integer.parseInt(numberNormalizer(data.getVal().get(3).getV())))
+                    .underlyingInstrument(instrument.get())
+                    .expDate(expDate);
+                return embeddedOption;
+            })
+            .filter(Objects::nonNull)
+            .filter(option -> !option.getExpDate().isBefore(LocalDate.now()))
+            .collect(Collectors.toList());
+        embeddedOptionService.saveAll(embeddedOptions);
     }
 
     public void optionCrawler() {
@@ -143,6 +185,7 @@ public class TseCrawler {
         stopWatch.stop();
         log.info(stopWatch.prettyPrint());
     }
+
     private String numberNormalizer(String number) {
         if (number == null) {
             return "0";
