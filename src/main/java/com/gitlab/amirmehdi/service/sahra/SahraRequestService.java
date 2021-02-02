@@ -102,9 +102,16 @@ public class SahraRequestService implements TokenUpdater {
         if (!loginCount.isEmpty()) {
             tokenNeeded = Integer.parseInt(loginCount);
         }
+        if (tokenNeeded <= bourseCode.getTokens().size()) {
+            return;
+        }
         tokenNeeded -= bourseCode.getTokens().size();
         for (int i = 0; i < tokenNeeded; i++) {
-            getNewToken(bourseCode);
+            try {
+                getNewToken(bourseCode);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -157,7 +164,7 @@ public class SahraRequestService implements TokenUpdater {
     //"{\"H\":\"omsclienthub\",\"M\":\"GetAssetsReport\",\"A\":[],\"I\":7}"
     public ObjectNode getAssetReport(BourseCode bourseCode) {
         SendRequest sendRequest = new SendRequest("GetAssetsReport", Collections.emptyList());
-        return send(bourseCode, sendRequest);
+        return send(bourseCode, sendRequest, false);
     }
 
     // "{\"H\":\"omsclienthub\",\"M\":\"GetAcountRemainReport\",\"A\":[1,1399,9,4,1399,9,4],\"I\":6}"
@@ -165,20 +172,20 @@ public class SahraRequestService implements TokenUpdater {
         JalaliCalendar j = new JalaliCalendar(localDate);
         SendRequest sendRequest = new SendRequest("GetAcountRemainReport"
             , Arrays.asList(1, j.getYear(), j.getMonth(), j.getDay(), j.getYear(), j.getMonth(), j.getDay()));
-        return send(bourseCode, sendRequest);
+        return send(bourseCode, sendRequest, false);
     }
 
     //"{\"H\":\"omsclienthub\",\"M\":\"GetTime\",\"A\":[],\"I\":5}";
     //{"R":"19:35:42","I":"7"}
     public LocalTime getTime(BourseCode bourseCode) {
         SendRequest sendRequest = new SendRequest("GetTime", Collections.emptyList());
-        return LocalTime.parse(send(bourseCode, sendRequest).get("R").asText());
+        return LocalTime.parse(send(bourseCode, sendRequest, false).get("R").asText());
     }
 
     //    {"H":"omsclienthub","M":"CancelOrder","A":[1170000000356607],"I":6}
     public void cancelOrder(Order order) {
         SendRequest sendRequest = new SendRequest("CancelOrder", Collections.singletonList(Long.valueOf(order.getOmsId())));
-        send(order.getBourseCode(), sendRequest);
+        send(order.getBourseCode(), sendRequest, true);
     }
 
     // "{\"H\":\"omsclienthub\",\"M\":\"AddOrder\",\"A\":[[1,\"IRO1MAPN0001\",1481,18950,1,null,null,null,null,null,null,null]],\"I\":1}";
@@ -203,7 +210,7 @@ public class SahraRequestService implements TokenUpdater {
             , String.valueOf(order.getId())
 
         )));
-        send(order.getBourseCode(), sendRequest);
+        send(order.getBourseCode(), sendRequest, true);
     }
 
     private ConnectResponse connect(Token token, String connectionToken) {
@@ -217,7 +224,7 @@ public class SahraRequestService implements TokenUpdater {
         return connectResponse.getBody();
     }
 
-    private ObjectNode send(BourseCode bourseCode, SendRequest data) {
+    private ObjectNode send(BourseCode bourseCode, SendRequest data, boolean retry) {
         Optional<Token> tokenOptional = bourseCode.getRandomToken();
         if (!tokenOptional.isPresent()) {
             updateToken(bourseCode);
@@ -252,8 +259,9 @@ public class SahraRequestService implements TokenUpdater {
             String errorDesc = node.get("R").get("ex").get("m").asText();
             if (errorCode == -3005) {
                 clearConnection(token);
-                updateToken(bourseCode);
-                return send(bourseCode, data);
+                if (retry) {
+                    return send(bourseCode, data, false);
+                }
             }
             throw new CodeException(errorCode, errorDesc);
         }
