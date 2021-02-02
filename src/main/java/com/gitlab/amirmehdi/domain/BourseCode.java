@@ -57,7 +57,7 @@ public class BourseCode implements Serializable {
     @Column(name = "conditions")
     private String conditions;
 
-    @OneToMany(mappedBy = "bourseCode",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "bourseCode", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private List<Token> tokens = new ArrayList<>();
 
@@ -206,13 +206,15 @@ public class BourseCode implements Serializable {
     public List<Token> getTokens() {
         return tokens;
     }
+
     public Optional<Token> getRandomToken() {
-        if (tokens.isEmpty()){
+        if (tokens.isEmpty()) {
             return Optional.empty();
         }
         Random rand = new Random();
-       return Optional.of(tokens.get(rand.nextInt(tokens.size())));
+        return Optional.of(tokens.get(rand.nextInt(tokens.size())));
     }
+
     public BourseCode tokens(List<Token> tokens) {
         this.tokens = tokens;
         return this;

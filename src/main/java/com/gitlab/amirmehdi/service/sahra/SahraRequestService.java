@@ -229,7 +229,7 @@ public class SahraRequestService implements TokenUpdater {
         if (!tokenOptional.isPresent()) {
             updateToken(bourseCode);
         }
-        Token token = bourseCode.getRandomToken().get();
+        Token token = bourseCode.getRandomToken().orElseThrow(LoginFailedException::new);
         SahraSecurityObject securityFields = token.toSecurityFields();
         if (securityFields == null) {
             return null;
@@ -328,8 +328,10 @@ public class SahraRequestService implements TokenUpdater {
     }
 
     private void clearConnection(Token token) {
+        BourseCode bourseCode = token.getBourseCode();
+        bourseCode.removeToken(token);
+        bourseCodeRepository.save(bourseCode);
         tokenRepository.delete(token);
-        BourseCode bourseCode = bourseCodeRepository.findById(token.getBourseCode().getId()).get();
         if (bourseCode.getTokens().isEmpty()) {
             updateToken(bourseCode);
         }
