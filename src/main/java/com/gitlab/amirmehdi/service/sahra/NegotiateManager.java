@@ -3,7 +3,6 @@ package com.gitlab.amirmehdi.service.sahra;
 import com.gitlab.amirmehdi.domain.BourseCode;
 import com.gitlab.amirmehdi.domain.Token;
 import com.gitlab.amirmehdi.service.dto.sahra.NegotiateResponse;
-import com.gitlab.amirmehdi.service.dto.sahra.SecurityFields;
 import com.gitlab.amirmehdi.service.dto.sahra.StartSocketResponse;
 import com.gitlab.amirmehdi.util.CaptchaDecoder;
 import com.gitlab.amirmehdi.util.SeleniumDriver;
@@ -42,7 +41,7 @@ public class NegotiateManager {
 
     public NegotiateResponse negotiate(Token token) {
         ResponseEntity<NegotiateResponse> negotiateResponse =
-            restTemplate.exchange(String.format(negotiateUrl, token.getBroker().url)
+            restTemplate.exchange(String.format(negotiateUrl, token.getBourseCode().getBroker().url)
                 , HttpMethod.GET
                 , new HttpEntity<>(getNegotiateHeaders(token))
                 , NegotiateResponse.class
@@ -51,12 +50,12 @@ public class NegotiateManager {
         return negotiateResponse.getBody();
     }
 
-    public void start(SecurityFields securityFields) {
+    public void start(Token token,String connectionToken) {
         ResponseEntity<StartSocketResponse> startResponse =
             restTemplate.exchange(
-                URI.create(String.format(startUrl, securityFields.getToken().getBroker().url, getEncode(securityFields.getConnectionToken()), getEncode(connectionData), System.currentTimeMillis()))
+                URI.create(String.format(startUrl, token.getBourseCode().getBroker().url, getEncode(connectionToken), getEncode(connectionData), System.currentTimeMillis()))
                 , HttpMethod.GET
-                , new HttpEntity<>(getStartHeaders(securityFields.getToken().getToken()))
+                , new HttpEntity<>(getStartHeaders(token.getToken()))
                 , StartSocketResponse.class);
         log.info("start, response:{}", startResponse);
         if (!startResponse.getBody().getResponse().equals("started")) {

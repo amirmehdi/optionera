@@ -143,7 +143,7 @@ public class TadbirService {
 
     protected LinkedMultiValueMap<String, String> getHeaders(BourseCode bourseCode) {
         LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        String[] tokenStrings = bourseCode.getToken().getToken().split("__");
+        String[] tokenStrings = bourseCode.getRandomToken().get().getToken().split("__");
         addCommonHeader(headers, tokenStrings[1]);
         headers.add("Authorization", "BasicAuthentication " + tokenStrings[0]);
         headers.add("Referer", bourseCode.getBroker().url);
@@ -153,7 +153,7 @@ public class TadbirService {
 
     protected LinkedMultiValueMap<String, String> getHeaders2(BourseCode bourseCode) {
         LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        String[] tokenStrings = bourseCode.getToken().getToken().split("__");
+        String[] tokenStrings = bourseCode.getRandomToken().get().getToken().split("__");
         addCommonHeader(headers, tokenStrings[1]);
         headers.add("Referer", bourseCode.getBroker().url + "/Home/Default/page-1");
         headers.add("X-Requested-With", "XMLHttpRequest");

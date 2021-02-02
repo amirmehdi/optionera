@@ -7,8 +7,6 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
-import { IToken } from 'app/shared/model/token.model';
-import { getEntities as getTokens } from 'app/entities/token/token.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './bourse-code.reducer';
 import { IBourseCode } from 'app/shared/model/bourse-code.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -17,10 +15,9 @@ import { mapIdList } from 'app/shared/util/entity-utils';
 export interface IBourseCodeUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const BourseCodeUpdate = (props: IBourseCodeUpdateProps) => {
-  const [tokenId, setTokenId] = useState('0');
   const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { bourseCodeEntity, tokens, loading, updating } = props;
+  const { bourseCodeEntity, loading, updating } = props;
 
   const handleClose = () => {
     props.history.push('/bourse-code' + props.location.search);
@@ -32,8 +29,6 @@ export const BourseCodeUpdate = (props: IBourseCodeUpdateProps) => {
     } else {
       props.getEntity(props.match.params.id);
     }
-
-    props.getTokens();
   }, []);
 
   useEffect(() => {
@@ -92,12 +87,12 @@ export const BourseCodeUpdate = (props: IBourseCodeUpdateProps) => {
                   value={(!isNew && bourseCodeEntity.broker) || 'REFAH'}
                 >
                   <option value="REFAH">{translate('eTradeApp.Broker.REFAH')}</option>
+                  <option value="FIROOZE_ASIA">{translate('eTradeApp.Broker.FIROOZE_ASIA')}</option>
+                  <option value="AGAH">{translate('eTradeApp.Broker.AGAH')}</option>
+                  <option value="MOBIN">{translate('eTradeApp.Broker.MOBIN')}</option>
                   <option value="KHOBREGAN">{translate('eTradeApp.Broker.KHOBREGAN')}</option>
                   <option value="HAFEZ">{translate('eTradeApp.Broker.HAFEZ')}</option>
-                  <option value="AGAH">{translate('eTradeApp.Broker.AGAH')}</option>
                   <option value="GANJINE">{translate('eTradeApp.Broker.GANJINE')}</option>
-                  <option value="MOBIN">{translate('eTradeApp.Broker.MOBIN')}</option>
-                  <option value="FIROOZE_ASIA">{translate('eTradeApp.Broker.FIROOZE_ASIA')}</option>
                 </AvInput>
               </AvGroup>
               <AvGroup>
@@ -154,21 +149,6 @@ export const BourseCodeUpdate = (props: IBourseCodeUpdateProps) => {
                 </Label>
                 <AvField id="bourse-code-conditions" type="text" name="conditions" />
               </AvGroup>
-              <AvGroup>
-                <Label for="bourse-code-token">
-                  <Translate contentKey="eTradeApp.bourseCode.token">Token</Translate>
-                </Label>
-                <AvInput id="bourse-code-token" type="select" className="form-control" name="token.id">
-                  <option value="" key="0" />
-                  {tokens
-                    ? tokens.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.id}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
               <Button tag={Link} id="cancel-save" to="/bourse-code" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
@@ -191,7 +171,6 @@ export const BourseCodeUpdate = (props: IBourseCodeUpdateProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  tokens: storeState.token.entities,
   bourseCodeEntity: storeState.bourseCode.entity,
   loading: storeState.bourseCode.loading,
   updating: storeState.bourseCode.updating,
@@ -199,7 +178,6 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-  getTokens,
   getEntity,
   updateEntity,
   createEntity,

@@ -67,11 +67,14 @@ export const Token = (props: ITokenProps) => {
                 <th className="hand" onClick={sort('token')}>
                   <Translate contentKey="eTradeApp.token.token">Token</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th className="hand" onClick={sort('broker')}>
-                  <Translate contentKey="eTradeApp.token.broker">Broker</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
                 <th className="hand" onClick={sort('createdAt')}>
                   <Translate contentKey="eTradeApp.token.createdAt">Created At</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('securityFields')}>
+                  <Translate contentKey="eTradeApp.token.securityFields">Security Fields</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="eTradeApp.token.bourseCode">Bourse Code</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -86,11 +89,10 @@ export const Token = (props: ITokenProps) => {
                   </td>
                   <td>{token.token}</td>
                   <td>
-                    <Translate contentKey={`eTradeApp.Broker.${token.broker}`} />
-                  </td>
-                  <td>
                     <TextFormat type="date" value={token.createdAt} format={APP_DATE_FORMAT} />
                   </td>
+                  <td>{token.securityFields}</td>
+                  <td>{token.bourseCode ? <Link to={`bourse-code/${token.bourseCode.id}`}>{token.bourseCode.name}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${token.id}`} color="info" size="sm">

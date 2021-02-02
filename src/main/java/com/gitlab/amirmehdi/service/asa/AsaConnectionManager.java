@@ -4,8 +4,10 @@ import com.gitlab.amirmehdi.config.ApplicationProperties;
 import com.gitlab.amirmehdi.domain.BourseCode;
 import com.gitlab.amirmehdi.domain.Token;
 import com.gitlab.amirmehdi.domain.enumeration.Broker;
+import com.gitlab.amirmehdi.domain.enumeration.OMS;
 import com.gitlab.amirmehdi.repository.BourseCodeRepository;
 import com.gitlab.amirmehdi.repository.TokenRepository;
+import com.gitlab.amirmehdi.service.TokenUpdater;
 import com.gitlab.amirmehdi.service.sahra.LoginFailedException;
 import com.gitlab.amirmehdi.util.CaptchaDecoder;
 import com.gitlab.amirmehdi.util.SeleniumDriver;
@@ -14,20 +16,16 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Log4j2
-public class AsaConnectionManager implements CommandLineRunner {
+public class AsaConnectionManager implements TokenUpdater {
     private final BourseCodeRepository bourseCodeRepository;
     private final TokenRepository tokenRepository;
     private final SeleniumDriver seleniumDriver;
@@ -41,38 +39,32 @@ public class AsaConnectionManager implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public OMS getOMS() {
+        return OMS.ASA;
+    }
+
+    @Override
+    public void updateAllTokens() {
         if (!applicationProperties.getBrokers().isAsaEnable()) {
             return;
         }
         List<BourseCode> bourseCodes = bourseCodeRepository.findAllByBroker(Broker.AGAH);
         for (BourseCode bourseCode : bourseCodes) {
-            if (bourseCode.getToken() != null && ChronoUnit.HOURS.between(bourseCode.getToken().getCreatedAt().toInstant(), new Date().toInstant()) < 6) {
-                continue;
+            if (bourseCode.getConditions().contains("login") && bourseCode.getTokens().isEmpty()) {
+                updateToken(bourseCode);
             }
-            refreshToken(bourseCode);
         }
     }
 
-    @Scheduled(cron = "0 0 8 * * *")
-    public void refreshAsaToken() {
-        bourseCodeRepository.findAllByBroker(Broker.AGAH).forEach(this::refreshToken);
-    }
-
-    private void refreshToken(BourseCode bourseCode) {
+    @Override
+    public void updateToken(BourseCode bourseCode) {
         String tokenString = login(bourseCode, 3);
-        if (bourseCode.getToken() == null) {
-            Token token = new Token()
-                .bourseCode(bourseCode)
-                .broker(bourseCode.getBroker())
-                .token(tokenString);
-            tokenRepository.save(token);
-            bourseCode.setToken(token);
-            bourseCodeRepository.save(bourseCode);
-        } else {
-            bourseCode.getToken().setToken(tokenString);
-            tokenRepository.save(bourseCode.getToken());
-        }
+        Token token = new Token()
+            .bourseCode(bourseCode)
+            .token(tokenString);
+        bourseCode.addToken(token);
+        tokenRepository.save(token);
+        bourseCodeRepository.save(bourseCode);
     }
 
     private String login(BourseCode bourseCode, int attemptNumber) {

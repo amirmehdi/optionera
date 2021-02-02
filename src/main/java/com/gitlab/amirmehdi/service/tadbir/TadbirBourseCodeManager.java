@@ -9,6 +9,7 @@ import com.gitlab.amirmehdi.domain.enumeration.OMS;
 import com.gitlab.amirmehdi.repository.BourseCodeRepository;
 import com.gitlab.amirmehdi.repository.PortfolioRepository;
 import com.gitlab.amirmehdi.repository.TokenRepository;
+import com.gitlab.amirmehdi.service.TokenUpdater;
 import com.gitlab.amirmehdi.service.dto.tadbir.DailyPortfolioResponse;
 import com.gitlab.amirmehdi.service.dto.tadbir.RemainResponse;
 import com.gitlab.amirmehdi.service.sahra.LoginFailedException;
@@ -18,21 +19,17 @@ import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Log4j2
-public class TadbirBourseCodeManager implements CommandLineRunner {
+public class TadbirBourseCodeManager implements TokenUpdater {
     private final BourseCodeRepository bourseCodeRepository;
     private final TokenRepository tokenRepository;
     private final SeleniumDriver seleniumDriver;
@@ -49,15 +46,20 @@ public class TadbirBourseCodeManager implements CommandLineRunner {
         this.portfolioRepository = portfolioRepository;
     }
 
-    @Scheduled(cron = "0 28 8 * * *")
-    public void updateTokens() {
+    @Override
+    public OMS getOMS() {
+        return OMS.TADBIR;
+    }
+
+    @Override
+    public void updateAllTokens() {
         if (!applicationProperties.getBrokers().isTadbirEnable()) {
             return;
         }
         List<BourseCode> bourseCodes = bourseCodeRepository.findAllByBrokerIn(Broker.byOms(OMS.TADBIR));
         for (BourseCode bourseCode : bourseCodes) {
             try {
-                if (ChronoUnit.HOURS.between(bourseCode.getToken().getCreatedAt().toInstant(), new Date().toInstant()) > 6) {
+                if (bourseCode.getConditions().contains("login") && bourseCode.getTokens().isEmpty()) {
                     updateToken(bourseCode);
                 }
             } catch (Exception e) {
@@ -67,19 +69,14 @@ public class TadbirBourseCodeManager implements CommandLineRunner {
         log.info("finish initial tadbir tokens");
     }
 
+    @Override
     public void updateToken(BourseCode bourseCode) {
         String tokenString = login(bourseCode, 3);
-        if (bourseCode.getToken() == null) {
-            Token token = new Token()
-                .bourseCode(bourseCode)
-                .broker(bourseCode.getBroker())
-                .token(tokenString);
-            tokenRepository.save(token);
-            bourseCode.setToken(token);
-        } else {
-            bourseCode.getToken().setToken(tokenString);
-            tokenRepository.save(bourseCode.getToken());
-        }
+        Token token = new Token()
+            .bourseCode(bourseCode)
+            .token(tokenString);
+        tokenRepository.save(token);
+        bourseCode.addToken(token);
         bourseCode = bourseCodeRepository.save(bourseCode);
         updateRemain(bourseCode);
         updatePortfolio(bourseCode);
@@ -180,10 +177,5 @@ public class TadbirBourseCodeManager implements CommandLineRunner {
             }
         }
         return captchaNum;
-    }
-
-    @Override
-    public void run(String... args) {
-        updateTokens();
     }
 }

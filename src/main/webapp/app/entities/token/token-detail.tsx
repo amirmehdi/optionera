@@ -32,12 +32,6 @@ export const TokenDetail = (props: ITokenDetailProps) => {
           </dt>
           <dd>{tokenEntity.token}</dd>
           <dt>
-            <span id="broker">
-              <Translate contentKey="eTradeApp.token.broker">Broker</Translate>
-            </span>
-          </dt>
-          <dd>{tokenEntity.broker}</dd>
-          <dt>
             <span id="createdAt">
               <Translate contentKey="eTradeApp.token.createdAt">Created At</Translate>
             </span>
@@ -45,6 +39,16 @@ export const TokenDetail = (props: ITokenDetailProps) => {
           <dd>
             <TextFormat value={tokenEntity.createdAt} type="date" format={APP_DATE_FORMAT} />
           </dd>
+          <dt>
+            <span id="securityFields">
+              <Translate contentKey="eTradeApp.token.securityFields">Security Fields</Translate>
+            </span>
+          </dt>
+          <dd>{tokenEntity.securityFields}</dd>
+          <dt>
+            <Translate contentKey="eTradeApp.token.bourseCode">Bourse Code</Translate>
+          </dt>
+          <dd>{tokenEntity.bourseCode ? tokenEntity.bourseCode.name : ''}</dd>
         </dl>
         <Button tag={Link} to="/token" replace color="info">
           <FontAwesomeIcon icon="arrow-left" />{' '}

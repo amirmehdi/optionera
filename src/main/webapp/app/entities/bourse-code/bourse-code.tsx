@@ -94,9 +94,6 @@ export const BourseCode = (props: IBourseCodeProps) => {
                 <th className="hand" onClick={sort('conditions')}>
                   <Translate contentKey="eTradeApp.bourseCode.conditions">Conditions</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th>
-                  <Translate contentKey="eTradeApp.bourseCode.token">Token</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
                 <th />
               </tr>
             </thead>
@@ -120,7 +117,6 @@ export const BourseCode = (props: IBourseCodeProps) => {
                   <td>{bourseCode.remain}</td>
                   <td>{bourseCode.credit}</td>
                   <td>{bourseCode.conditions}</td>
-                  <td>{bourseCode.token ? <Link to={`token/${bourseCode.token.id}`}>{bourseCode.token.id}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${bourseCode.id}`} color="info" size="sm">

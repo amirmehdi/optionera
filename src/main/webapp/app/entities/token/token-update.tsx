@@ -96,21 +96,6 @@ export const TokenUpdate = (props: ITokenUpdateProps) => {
                 />
               </AvGroup>
               <AvGroup>
-                <Label id="brokerLabel" for="token-broker">
-                  <Translate contentKey="eTradeApp.token.broker">Broker</Translate>
-                </Label>
-                <AvInput
-                  id="token-broker"
-                  type="select"
-                  className="form-control"
-                  name="broker"
-                  value={(!isNew && tokenEntity.broker) || 'REFAH'}
-                >
-                  <option value="REFAH">{translate('eTradeApp.Broker.REFAH')}</option>
-                  <option value="FIROOZE_ASIA">{translate('eTradeApp.Broker.FIROOZE_ASIA')}</option>
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
                 <Label id="createdAtLabel" for="token-createdAt">
                   <Translate contentKey="eTradeApp.token.createdAt">Created At</Translate>
                 </Label>
@@ -122,6 +107,36 @@ export const TokenUpdate = (props: ITokenUpdateProps) => {
                   placeholder={'YYYY-MM-DD HH:mm'}
                   value={isNew ? displayDefaultDateTime() : convertDateTimeFromServer(props.tokenEntity.createdAt)}
                 />
+              </AvGroup>
+              <AvGroup>
+                <Label id="securityFieldsLabel" for="token-securityFields">
+                  <Translate contentKey="eTradeApp.token.securityFields">Security Fields</Translate>
+                </Label>
+                <AvField id="token-securityFields" type="text" name="securityFields" />
+              </AvGroup>
+              <AvGroup>
+                <Label for="token-bourseCode">
+                  <Translate contentKey="eTradeApp.token.bourseCode">Bourse Code</Translate>
+                </Label>
+                <AvInput
+                  id="token-bourseCode"
+                  type="select"
+                  className="form-control"
+                  name="bourseCode.id"
+                  value={isNew ? bourseCodes[0] && bourseCodes[0].id : tokenEntity.bourseCode.id}
+                  required
+                >
+                  {bourseCodes
+                    ? bourseCodes.map(otherEntity => (
+                        <option value={otherEntity.id} key={otherEntity.id}>
+                          {otherEntity.name}
+                        </option>
+                      ))
+                    : null}
+                </AvInput>
+                <AvFeedback>
+                  <Translate contentKey="entity.validation.required">This field is required.</Translate>
+                </AvFeedback>
               </AvGroup>
               <Button tag={Link} id="cancel-save" to="/token" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />

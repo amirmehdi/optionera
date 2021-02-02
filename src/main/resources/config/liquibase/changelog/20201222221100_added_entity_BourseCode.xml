@@ -45,13 +45,6 @@
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
     </changeSet>
-    <changeSet id="20201222221100-1-token" author="amirmehdi">
-        <addColumn tableName="bourse_code">
-            <column name="token_id" type="bigint">
-                <constraints unique="true" nullable="true" uniqueConstraintName="ux_bourse_code_token_id" />
-            </column>
-        </addColumn>
-    </changeSet>
     <changeSet id="20201222221100-1-conditions" author="amirmehdi">
         <addColumn tableName="bourse_code">
             <column name="conditions" type="varchar(255)">

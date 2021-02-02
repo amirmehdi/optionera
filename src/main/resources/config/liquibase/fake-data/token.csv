@@ -1,11 +1,11 @@
-id;token;broker;created_at
-1;Awesome Wooden Towels;REFAH;2020-10-12T05:59:31
-2;Sports Associate;REFAH;2020-10-12T04:09:27
-3;red Corporate;REFAH;2020-10-11T20:02:22
-4;parsing;REFAH;2020-10-11T17:23:51
-5;applications standardization;REFAH;2020-10-12T13:27:27
-6;convergence card payment;REFAH;2020-10-11T20:20:16
-7;Communications e-enable;FIROOZE_ASIA;2020-10-11T19:32:07
-8;Towels Fresh Functionality;REFAH;2020-10-11T17:41:25
-9;Toys deposit Books;FIROOZE_ASIA;2020-10-12T14:42:00
-10;channels orchestrate cyan;REFAH;2020-10-12T01:29:59
+id;token;created_at;security_fields;bourse_code_id
+1;Awesome Wooden Towels;2020-10-12T02:11:12;Dynamic Ergonomic;1
+2;Checking Account parsing;2020-10-12T13:39:45;Garden;2
+3;Plain red;2020-10-11T17:07:22;Kids;3
+4;Secured;2020-10-12T10:36:52;Supervisor quantify support;4
+5;applications standardization;2020-10-12T08:01:37;Rustic Handmade Cotton Hat card;5
+6;Checking Account Mobility;2020-10-12T12:35:03;compelling Investment Account GB;6
+7;Toys;2020-10-11T19:32:07;Towels Fresh Functionality;7
+8;olive primary;2020-10-12T11:21:35;auxiliary North Carolina Chair;8
+9;Costa Rican Colon;2020-10-12T01:29:40;teal circuit Outdoors;9
+10;grey Bike;2020-10-11T17:51:37;Credit Card Account;10

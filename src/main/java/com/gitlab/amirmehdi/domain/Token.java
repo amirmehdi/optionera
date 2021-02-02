@@ -1,15 +1,15 @@
 package com.gitlab.amirmehdi.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gitlab.amirmehdi.domain.enumeration.Broker;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.gitlab.amirmehdi.service.dto.sahra.SahraSecurityObject;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
 
 /**
  * A Token.
@@ -30,18 +30,16 @@ public class Token implements Serializable {
     @Column(name = "token", nullable = false)
     private String token;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "broker", nullable = false)
-    private Broker broker;
-
     @Column(name = "created_at")
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    @CreationTimestamp
+    private Instant createdAt;
 
-    @OneToOne(mappedBy = "token")
-    @JsonIgnore
+    @Column(name = "security_fields")
+    private String securityFields;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties("tokens")
     private BourseCode bourseCode;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -66,30 +64,30 @@ public class Token implements Serializable {
         this.token = token;
     }
 
-    public Broker getBroker() {
-        return broker;
-    }
-
-    public Token broker(Broker broker) {
-        this.broker = broker;
-        return this;
-    }
-
-    public void setBroker(Broker broker) {
-        this.broker = broker;
-    }
-
-    public Date getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public Token createdAt(Date createdAt) {
+    public Token createdAt(Instant createdAt) {
         this.createdAt = createdAt;
         return this;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getSecurityFields() {
+        return securityFields;
+    }
+
+    public Token securityFields(String securityFields) {
+        this.securityFields = securityFields;
+        return this;
+    }
+
+    public void setSecurityFields(String securityFields) {
+        this.securityFields = securityFields;
     }
 
     public BourseCode getBourseCode() {
@@ -105,6 +103,10 @@ public class Token implements Serializable {
         this.bourseCode = bourseCode;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    public SahraSecurityObject toSecurityFields() {
+        return new SahraSecurityObject(securityFields);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -127,8 +129,8 @@ public class Token implements Serializable {
         return "Token{" +
             "id=" + getId() +
             ", token='" + getToken() + "'" +
-            ", broker='" + getBroker() + "'" +
             ", createdAt='" + getCreatedAt() + "'" +
+            ", securityFields='" + getSecurityFields() + "'" +
             "}";
     }
 }

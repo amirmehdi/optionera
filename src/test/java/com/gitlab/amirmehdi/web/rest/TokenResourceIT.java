@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,8 +37,8 @@ public class TokenResourceIT {
     private static final Broker DEFAULT_BROKER = Broker.REFAH;
     private static final Broker UPDATED_BROKER = Broker.FIROOZE_ASIA;
 
-    private static final Date DEFAULT_CREATED_AT = new Date();
-    private static final Date UPDATED_CREATED_AT = new Date();
+    private static final Instant DEFAULT_CREATED_AT = Instant.now();
+    private static final Instant UPDATED_CREATED_AT = Instant.now();
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -60,7 +60,6 @@ public class TokenResourceIT {
     public static Token createEntity(EntityManager em) {
         Token token = new Token()
             .token(DEFAULT_TOKEN)
-            .broker(DEFAULT_BROKER)
             .createdAt(DEFAULT_CREATED_AT);
         return token;
     }
@@ -73,7 +72,6 @@ public class TokenResourceIT {
     public static Token createUpdatedEntity(EntityManager em) {
         Token token = new Token()
             .token(UPDATED_TOKEN)
-            .broker(UPDATED_BROKER)
             .createdAt(UPDATED_CREATED_AT);
         return token;
     }
@@ -99,7 +97,6 @@ public class TokenResourceIT {
         assertThat(tokenList).hasSize(databaseSizeBeforeCreate + 1);
         Token testToken = tokenList.get(tokenList.size() - 1);
         assertThat(testToken.getToken()).isEqualTo(DEFAULT_TOKEN);
-        assertThat(testToken.getBroker()).isEqualTo(DEFAULT_BROKER);
         assertThat(testToken.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
     }
 
@@ -146,7 +143,6 @@ public class TokenResourceIT {
     public void checkBrokerIsRequired() throws Exception {
         int databaseSizeBeforeTest = tokenRepository.findAll().size();
         // set the field null
-        token.setBroker(null);
 
         // Create the Token, which fails.
 
@@ -213,7 +209,6 @@ public class TokenResourceIT {
         em.detach(updatedToken);
         updatedToken
             .token(UPDATED_TOKEN)
-            .broker(UPDATED_BROKER)
             .createdAt(UPDATED_CREATED_AT);
 
         restTokenMockMvc.perform(put("/api/tokens")
@@ -226,7 +221,6 @@ public class TokenResourceIT {
         assertThat(tokenList).hasSize(databaseSizeBeforeUpdate);
         Token testToken = tokenList.get(tokenList.size() - 1);
         assertThat(testToken.getToken()).isEqualTo(UPDATED_TOKEN);
-        assertThat(testToken.getBroker()).isEqualTo(UPDATED_BROKER);
         assertThat(testToken.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
     }
 
