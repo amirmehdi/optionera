@@ -18,7 +18,7 @@ public class SendRequest {
     @JsonProperty("A")
     private List<Object> args = null;
     @JsonProperty("I")
-    private long i;
+    private int i;
 
     public SendRequest(String method, List<Object> args) {
         this.method = method;

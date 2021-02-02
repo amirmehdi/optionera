@@ -1,7 +1,6 @@
 package com.gitlab.amirmehdi.web.rest;
 
 import com.gitlab.amirmehdi.domain.Token;
-import com.gitlab.amirmehdi.domain.enumeration.OMS;
 import com.gitlab.amirmehdi.repository.TokenRepository;
 import com.gitlab.amirmehdi.security.AuthoritiesConstants;
 import com.gitlab.amirmehdi.service.sahra.SahraRequestService;
@@ -73,11 +72,7 @@ public class TokenResource {
     }
 
     private Token save(Token token) {
-        token = tokenRepository.save(token);
-        if (OMS.SAHRA.equals(token.getBroker().oms)) {
-            sahraRequestService.connectAndStart(token.getBourseCode());
-        }
-        return token;
+        return tokenRepository.save(token);
     }
 
     /**

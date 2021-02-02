@@ -85,10 +85,6 @@ export const BourseCodeDetail = (props: IBourseCodeDetailProps) => {
             </span>
           </dt>
           <dd>{bourseCodeEntity.conditions}</dd>
-          <dt>
-            <Translate contentKey="eTradeApp.bourseCode.token">Token</Translate>
-          </dt>
-          <dd>{bourseCodeEntity.token ? bourseCodeEntity.token.id : ''}</dd>
         </dl>
         <Button tag={Link} to="/bourse-code" replace color="info">
           <FontAwesomeIcon icon="arrow-left" />{' '}

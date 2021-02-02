@@ -6,6 +6,10 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 /**
  * A BourseCode.
@@ -53,9 +57,9 @@ public class BourseCode implements Serializable {
     @Column(name = "conditions")
     private String conditions;
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private Token token;
+    @OneToMany(mappedBy = "bourseCode",fetch = FetchType.EAGER)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private List<Token> tokens = new ArrayList<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -199,17 +203,35 @@ public class BourseCode implements Serializable {
         this.conditions = conditions;
     }
 
-    public Token getToken() {
-        return token;
+    public List<Token> getTokens() {
+        return tokens;
     }
-
-    public BourseCode token(Token token) {
-        this.token = token;
+    public Optional<Token> getRandomToken() {
+        if (tokens.isEmpty()){
+            return Optional.empty();
+        }
+        Random rand = new Random();
+       return Optional.of(tokens.get(rand.nextInt(tokens.size())));
+    }
+    public BourseCode tokens(List<Token> tokens) {
+        this.tokens = tokens;
         return this;
     }
 
-    public void setToken(Token token) {
-        this.token = token;
+    public BourseCode addToken(Token token) {
+        this.tokens.add(token);
+        token.setBourseCode(this);
+        return this;
+    }
+
+    public BourseCode removeToken(Token token) {
+        this.tokens.remove(token);
+        token.setBourseCode(null);
+        return this;
+    }
+
+    public void setTokens(List<Token> tokens) {
+        this.tokens = tokens;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

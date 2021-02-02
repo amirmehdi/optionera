@@ -4,7 +4,7 @@
         {
             "fieldName": "broker",
             "fieldType": "Broker",
-            "fieldValues": "REFAH,FIROOZE_ASIA"
+            "fieldValues": "REFAH,FIROOZE_ASIA,AGAH,MOBIN,KHOBREGAN,HAFEZ,GANJINE"
         },
         {
             "fieldName": "name",
@@ -45,12 +45,10 @@
     ],
     "relationships": [
         {
-            "relationshipType": "one-to-one",
-            "otherEntityName": "token",
-            "otherEntityRelationshipName": "bourseCode",
             "relationshipName": "token",
-            "otherEntityField": "id",
-            "ownerSide": true
+            "otherEntityName": "token",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "bourseCode"
         }
     ],
     "changelogDate": "20201222221100",

@@ -13,7 +13,7 @@ export interface IBourseCode {
   remain?: number;
   credit?: number;
   conditions?: string;
-  token?: IToken;
+  tokens?: IToken[];
 }
 
 export const defaultValue: Readonly<IBourseCode> = {};
