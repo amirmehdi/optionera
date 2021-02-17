@@ -16,4 +16,6 @@ import java.util.List;
 @Repository
 public interface PortfolioRepository extends JpaRepository<Portfolio, AssetCompositeKey> {
     List<Portfolio> findAllByDate(LocalDate localDate);
+
+    List<Portfolio> findAllByUserIdAndDate(long userId, LocalDate localDate);
 }

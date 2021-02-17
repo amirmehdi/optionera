@@ -36,7 +36,6 @@ public class Portfolio implements Serializable {
     @Id
     @Column(name = "user_id", nullable = false)
     @NotNull
-    //TODO should be long
     private long userId;
 
     @Id

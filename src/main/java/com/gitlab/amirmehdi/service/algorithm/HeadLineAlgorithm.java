@@ -6,6 +6,7 @@ import com.gitlab.amirmehdi.domain.enumeration.OrderState;
 import com.gitlab.amirmehdi.domain.enumeration.Side;
 import com.gitlab.amirmehdi.service.Market;
 import com.gitlab.amirmehdi.service.OrderService;
+import com.gitlab.amirmehdi.service.PortfolioService;
 import com.gitlab.amirmehdi.service.dto.core.StockWatch;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.TaskScheduler;
@@ -27,12 +28,14 @@ public class HeadLineAlgorithm {
     private final ApplicationProperties properties;
     private final Market market;
     private final TaskScheduler executor;
+    private final PortfolioService portfolioService;
 
-    public HeadLineAlgorithm(OrderService orderService, ApplicationProperties properties, Market market, TaskScheduler executor) {
+    public HeadLineAlgorithm(OrderService orderService, ApplicationProperties properties, Market market, TaskScheduler executor, PortfolioService portfolioService) {
         this.orderService = orderService;
         this.properties = properties;
         this.market = market;
         this.executor = executor;
+        this.portfolioService = portfolioService;
     }
 
 
@@ -60,12 +63,14 @@ public class HeadLineAlgorithm {
                 continue;
             }
             int price;
+            int quantity;
             if (Side.BUY.equals(order.getSide())) {
                 price = stockWatch.getMax();
+                quantity = (int) (order.getBourseCode().getBuyingPower() * 0.99 / (ordersSize * price));
             } else {
                 price = stockWatch.getMin();
+                quantity = order.getQuantity();
             }
-            int quantity = (int) (order.getBourseCode().getBuyingPower() * 0.99 / (ordersSize * price));
             List<String> sentIsins = new ArrayList<>();
 //            Instant marketOpen = new Date().toInstant().atZone(ZoneId.of("Asia/Tehran")).withHour(8)
 //                .withMinute(45)

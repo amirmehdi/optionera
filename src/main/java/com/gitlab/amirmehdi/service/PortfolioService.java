@@ -87,4 +87,8 @@ public class PortfolioService {
         log.info(stopWatch.prettyPrint());
     }
 
+    public void findAllAssetOfUser(long userId){
+        //TODO
+    }
+
 }
