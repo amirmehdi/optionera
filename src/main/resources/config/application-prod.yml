@@ -35,7 +35,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://37.152.176.175:5432/eTrade
     username: eTrade
-    password: eTrade2020
+    password: completehere
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -58,7 +58,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: optionera@gmail.com
-    password: EbDcfKe43K8KQah
+    password: completehere
     protocol: smtp
     tls: true
     properties.mail.smtp:
